@@ -1,23 +1,18 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
+package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 
-public class Bateau
+public class Bateau extends Entity
 {
-    private String type;
     private int life;
     private Position position;
     private String name;
     private Deck deck;
-    private Entity[] entities;
+    private OnboardEntity[] entities;
     private Shape shape;
-
-    public String getType()
-    {
-        return type;
-    }
 
     public int getLife()
     {
