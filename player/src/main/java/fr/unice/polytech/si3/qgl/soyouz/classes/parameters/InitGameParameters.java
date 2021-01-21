@@ -10,4 +10,24 @@ public class InitGameParameters
     private Bateau ship;
     private Marin[] sailors;
     private int shipCount;
+
+    public GameGoal getGoal()
+    {
+        return goal;
+    }
+
+    public Bateau getShip()
+    {
+        return ship;
+    }
+
+    public Marin[] getSailors()
+    {
+        return sailors.clone();
+    }
+
+    public int getShipCount()
+    {
+        return shipCount;
+    }
 }

@@ -7,4 +7,14 @@ public class Checkpoint
 {
     private Position position;
     private Shape shape;
+
+    public Position getPosition()
+    {
+        return position;
+    }
+
+    public Shape getShape()
+    {
+        return shape;
+    }
 }

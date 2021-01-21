@@ -6,4 +6,24 @@ public class Marin
     private int x;
     private int y;
     private String name;
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
 }
