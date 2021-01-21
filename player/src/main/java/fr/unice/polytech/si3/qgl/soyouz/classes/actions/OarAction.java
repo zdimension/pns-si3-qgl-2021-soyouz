@@ -5,5 +5,4 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("OAR")
 public class OarAction extends GameAction
 {
-    private int sailorId;
 }
