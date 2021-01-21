@@ -17,7 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>fr.unice.polytech.si3.qgl</groupId>
-			<artifactId>teamid</artifactId> <!-- CHANGE ME -->
+			<artifactId>soyouz</artifactId> <!-- CHANGE ME -->
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
