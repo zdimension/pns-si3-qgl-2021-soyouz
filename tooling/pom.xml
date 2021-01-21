@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>fr.unice.polytech.si3.qgl</groupId>
-	<artifactId>teamid.tooling</artifactId> <!-- CHANGE ME -->
+	<artifactId>soyouz.tooling</artifactId> <!-- CHANGE ME -->
 	<version>0.1-SNAPSHOT</version>
 
 	<properties>
