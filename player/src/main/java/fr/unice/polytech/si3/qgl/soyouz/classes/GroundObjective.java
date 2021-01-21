@@ -7,6 +7,7 @@ public class GroundObjective extends Objective{
 
     private GameAction action;
 
+    //TODO
     public GroundObjective(InitGameParameters init, GameAction action) {
         super(init);
         this.action = action;

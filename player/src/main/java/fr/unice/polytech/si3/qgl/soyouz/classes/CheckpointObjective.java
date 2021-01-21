@@ -27,6 +27,7 @@ public class CheckpointObjective extends CompositeObjective{
     }
 
 
+    //TODO
     //alors speed c'est un double mais c'est arbitraire
     private double maxSpeedPossible(){
         return 165*ip.getSailors().length/ip.getShip().getNumberOar();

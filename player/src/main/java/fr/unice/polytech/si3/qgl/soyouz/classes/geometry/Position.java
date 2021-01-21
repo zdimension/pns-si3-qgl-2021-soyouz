@@ -23,6 +23,7 @@ public class Position
         return orientation;
     }
 
+    //TODO pour l'instant tient uniquement compte de la distance depuis le centre
     public Pair<Double, Double> getDistance(Position pos){
         return Pair.of(Math.abs(this.getX() - pos.getX()), Math.abs(this.getY() - pos.getY()));
     }

@@ -41,7 +41,7 @@ public class Bateau extends Entity
 
     public int getNumberOar(){
         return 2;
-    }
+    } //TODO
 
     public Shape getShape()
     {

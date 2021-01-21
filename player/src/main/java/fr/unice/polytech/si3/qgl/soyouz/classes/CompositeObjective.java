@@ -7,6 +7,7 @@ import java.util.Collection;
 public class CompositeObjective extends Objective {
     protected Collection<Objective> intermediateObjective;
 
+    //TODO
     public CompositeObjective(InitGameParameters ip) {
         super(ip);
     }
