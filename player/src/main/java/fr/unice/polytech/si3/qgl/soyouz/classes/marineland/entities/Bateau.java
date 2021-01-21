@@ -39,6 +39,10 @@ public class Bateau extends Entity
         return entities.clone();
     }
 
+    public int getNumberOar(){
+        return 2;
+    }
+
     public Shape getShape()
     {
         return shape;
