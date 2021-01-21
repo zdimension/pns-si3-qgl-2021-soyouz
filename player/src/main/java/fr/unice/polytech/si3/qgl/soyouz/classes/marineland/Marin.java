@@ -26,4 +26,11 @@ public class Marin
     {
         return name;
     }
+
+    public Marin(int id, int x, int y, String name) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.name = name;
+    }
 }
