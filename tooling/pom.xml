@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>fr.unice.polytech.si3.qgl</groupId>
+	<artifactId>teamid.tooling</artifactId> <!-- CHANGE ME -->
+	<version>0.1-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- CHANGE ME IF NEEDED, other : ISO-8859-1 -->
+		<java.version>11</java.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>fr.unice.polytech.si3.qgl</groupId>
+			<artifactId>teamid</artifactId> <!-- CHANGE ME -->
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+</project>
