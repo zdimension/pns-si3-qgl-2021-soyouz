@@ -82,7 +82,7 @@ public class Marin {
      *
      * @param xDist distance on X axis
      * @param yDist distance on X axis
-     * @return if the sailor can move the number of cells specified
+     * @return if this sailor can move the number of cells specified
      */
     public boolean isRelPosReachable(int xDist, int yDist){
         return Math.abs(xDist) + Math.abs(yDist) <= maxMove;

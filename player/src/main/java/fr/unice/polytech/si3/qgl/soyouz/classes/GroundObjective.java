@@ -12,6 +12,11 @@ public class GroundObjective extends Objective{
     public GroundObjective(InitGameParameters ip, NextRoundParameters np, GameAction action) {
         super(ip, np);
         //checker si l'action est faisable
+        if(action.entityNeeded.isPresent())
+            if(!this.getShip().getEntityHere(action.getSailor().getGridPosition()).equals(action.entityNeeded.get())){
+                throw new IllegalArgumentException("Sailor cannot perform this action Here");
+            }
+
         this.action = action;
     }
 
