@@ -11,6 +11,7 @@ public class GroundObjective extends Objective{
     //TODO
     public GroundObjective(InitGameParameters ip, NextRoundParameters np, GameAction action) {
         super(ip, np);
+        //checker si l'action est faisable
         this.action = action;
     }
 
