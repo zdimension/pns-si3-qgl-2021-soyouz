@@ -27,6 +27,7 @@ hs_err_pid*
 **/*.iml
 .idea
 **/.idea
+!.idea/compiler.xml
 **/*.exe
 
 **/.classpath

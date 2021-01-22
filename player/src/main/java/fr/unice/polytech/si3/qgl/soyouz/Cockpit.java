@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
@@ -13,6 +14,11 @@ public class Cockpit implements ICockpit
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private InitGameParameters ip;
     private NextRoundParameters np;
+
+    static
+    {
+        OBJECT_MAPPER.registerModule(new ParameterNamesModule());
+    }
 
     @Override
     public void initGame(String game)
