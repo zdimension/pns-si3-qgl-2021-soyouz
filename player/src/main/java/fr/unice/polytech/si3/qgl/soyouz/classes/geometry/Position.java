@@ -2,22 +2,37 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.Pair;
 
+/**
+ * Position of a Shape : Defined by the coords of its central Point and its orientation.
+ */
 public class Position
 {
     private double x;
     private double y;
     private double orientation;
 
+    /**
+     * Getter.
+     * @return the abscissa of the central Point.
+     */
     public double getX()
     {
         return x;
     }
 
+    /**
+     * Getter.
+     * @return the ordinate of the central Point.
+     */
     public double getY()
     {
         return y;
     }
 
+    /**
+     * Getter.
+     * @return the orientation of the Shape.
+     */
     public double getOrientation()
     {
         return orientation;

@@ -2,6 +2,9 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.Pair;
 
+/**
+ * He Ho Freshwater sailor !
+ */
 public class Marin {
     private int id;
     private int x;
@@ -10,26 +13,53 @@ public class Marin {
 
     public static final int maxMove = 5;
 
+    /**
+     * Getter.
+     * @return the Id of the Sailor.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Getter.
+     * @return the x position of the Sailor on the Deck.
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Getter.
+     * @return the y position of the Sailor on the Deck.
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Getter.
+     * @return the coords of the Sailor on the Deck.
+     */
     public Pair<Integer, Integer> getGridPosition() {
         return Pair.of(x, y);
     }
 
+    /**
+     * Getter.
+     * @return the Name of the Sailor.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Constructor.
+     * @param id Its Id.
+     * @param x Its base x position.
+     * @param y Its base y position.
+     * @param name Its name.
+     */
     public Marin(int id, int x, int y, String name) {
         this.id = id;
         this.x = x;
@@ -41,10 +71,10 @@ public class Marin {
     /**
      * Moves this sailor the number of cells specified. This sailor can move up to 5 cells.
      *
-     * @param xDist to move on X axis
-     * @param yDist to move on Y axis
-     * @return new absolute position
-     * @throws IllegalArgumentException
+     * @param xDist to move on X axis.
+     * @param yDist to move on Y axis.
+     * @return new absolute position.
+     * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
     public Pair<Integer, Integer> moveRelative(int xDist, int yDist) throws IllegalArgumentException {
         if (!isRelPosReachable(xDist, yDist))
@@ -54,6 +84,13 @@ public class Marin {
         return this.getGridPosition();
     }
 
+    /**
+     * Moves this sailor the number of cells specified. This sailor can move up to 5 cells.
+     *
+     * @param dist to move on x and y axis.
+     * @return new absolute position.
+     * @throws IllegalArgumentException if it wants to move further than 5 cells.
+     */
     public Pair<Integer, Integer> moveRelative(Pair<Integer, Integer> dist) throws IllegalArgumentException {
         return moveRelative(dist.getFirst(), dist.getSecond());
     }
@@ -61,10 +98,10 @@ public class Marin {
     /**
      * Moves this sailor at the specified cell. This sailor can move up to 5 cells.
      *
-     * @param xPos to reach on X axis
-     * @param yPos to reach on Y axis
-     * @return new absolute position
-     * @throws IllegalArgumentException
+     * @param xPos to reach on X axis.
+     * @param yPos to reach on Y axis.
+     * @return new absolute position.
+     * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
     public Pair<Integer, Integer> moveAbsolute(int xPos, int yPos) throws  IllegalArgumentException{
         if(!this.isAbsPosReachable(xPos, yPos))
@@ -74,11 +111,19 @@ public class Marin {
         return this.getGridPosition();
     }
 
+    /**
+     * Moves this sailor at the specified cell. This sailor can move up to 5 cells.
+     *
+     * @param pos to move on x and y axis.
+     * @return new absolute position.
+     * @throws IllegalArgumentException
+     */
     public Pair<Integer, Integer> moveAbsolute(Pair<Integer, Integer> pos) throws  IllegalArgumentException{
         return moveAbsolute(pos.getFirst(), pos.getSecond());
     }
 
     /**
+     * Determine if a Cell is reachable.
      *
      * @param xDist distance on X axis
      * @param yDist distance on X axis
@@ -89,6 +134,7 @@ public class Marin {
     }
 
     /**
+     * Determine if a Cell is reachable.
      *
      * @param xPos cell on X axis
      * @param yPos cell on Y axis

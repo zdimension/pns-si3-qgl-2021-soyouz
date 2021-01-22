@@ -5,6 +5,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 
 import java.util.Optional;
 
+/**
+ * Action to move a Sailor.
+ */
 @JsonTypeName("MOVING")
 public class MoveAction extends GameAction{
 

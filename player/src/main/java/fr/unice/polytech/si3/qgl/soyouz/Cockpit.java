@@ -20,6 +20,11 @@ public class Cockpit implements ICockpit
         OBJECT_MAPPER.registerModule(new ParameterNamesModule());
     }
 
+    /**
+     * Parse all the initial Game Parameters into a InitGameParameters object.
+     *
+     * @param game The Json to init the game.
+     */
     @Override
     public void initGame(String game)
     {
@@ -34,6 +39,13 @@ public class Cockpit implements ICockpit
         }
     }
 
+    /**
+     * Parse all the current Game Parameters into a NextRoundParameters object.
+     * Determine which actions to do in order to win and create a matching Json.
+     *
+     * @param round The Json of the current state of the Game.
+     * @return the corresponding Json.
+     */
     @Override
     public String nextRound(String round)
     {
