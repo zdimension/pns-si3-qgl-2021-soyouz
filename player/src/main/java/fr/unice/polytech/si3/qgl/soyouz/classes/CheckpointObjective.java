@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
 import java.util.Arrays;
 
@@ -11,16 +12,16 @@ public class CheckpointObjective extends CompositeObjective{
 
 
     //TODO
-    public CheckpointObjective(InitGameParameters init, Checkpoint checkpoint) {
-        super(init);
+    public CheckpointObjective(InitGameParameters ip, NextRoundParameters np, Checkpoint checkpoint) {
+        super(ip, np);
 
-        var dist = this.ip.getShip().getPosition().getDistance(checkpoint.getPosition()); //distance au centre pour l'instant
+        var dist = this.getShip().getPosition().getDistance(checkpoint.getPosition()); //distance au centre pour l'instant
         //on vérifie la rotation
         var maxSpeed = this.maxSpeedPossible();
-        if(this.ip.getShip().getPosition().isPositionReachable(checkpoint.getPosition(), maxSpeed)){
+        if(this.getShip().getPosition().isPositionReachable(checkpoint.getPosition(), maxSpeed)){
             //on envoie le nombre de marins nécessaire aux rames
             for (Marin s : this.ip.getSailors()) {
-                this.intermediateObjective.add(new GroundObjective(init, new OarAction(s)));
+                this.intermediateObjective.add(new GroundObjective(this.ip, this.np, new OarAction(s)));
             }
         }
         //sinon, pas encore géré
@@ -30,6 +31,6 @@ public class CheckpointObjective extends CompositeObjective{
     //TODO
     //alors speed c'est un double mais c'est arbitraire
     private double maxSpeedPossible(){
-        return 165*ip.getSailors().length/ip.getShip().getNumberOar();
+        return 165.0*this.getSailors().length/this.getShip().getNumberOar();
     }
 }
