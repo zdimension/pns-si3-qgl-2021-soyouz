@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
+import java.util.Objects;
+
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
  */
@@ -10,6 +12,16 @@ public class Position
     private double x;
     private double y;
     private double orientation;
+
+    public Position(){
+        //TODO ?
+    }
+    //TODO ?
+    public Position(double x, double y, double orientation) {
+        this.x = x;
+        this.y = y;
+        this.orientation = orientation;
+    }
 
     /**
      * Getter.
@@ -49,5 +61,20 @@ public class Position
 
     public boolean isPositionReachable(Position toReach, double speed){
         return true; //TODO
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Position position = (Position) o;
+        return Double.compare(position.x, x) == 0 &&
+                Double.compare(position.y, y) == 0 &&
+                Double.compare(position.orientation, orientation) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, orientation);
     }
 }
