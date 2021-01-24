@@ -12,8 +12,7 @@ public class Application {
 	{
 		Cockpit cockpit = new Cockpit();
 		cockpit.initGame(Files.readString(Path.of("initGame.json")));
-		cockpit.nextRound(Files.readString(Path.of("NextRound.json")));
 		System.out.println("An instance of my team player: " + cockpit);
-		System.out.println("When called, it returns some JSON: " + cockpit.nextRound(""));
+		System.out.println("When called, it returns some JSON: " + cockpit.nextRound(Files.readString(Path.of("NextRound.json"))));
 	}
 }
