@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.GameGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;

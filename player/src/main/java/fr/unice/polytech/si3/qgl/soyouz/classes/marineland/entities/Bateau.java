@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.Pair;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
@@ -9,7 +9,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Ship entity.

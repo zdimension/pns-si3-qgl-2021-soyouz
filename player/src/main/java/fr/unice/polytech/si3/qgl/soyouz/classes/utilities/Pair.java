@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes;
+package fr.unice.polytech.si3.qgl.soyouz.classes.utilities;
 
 import java.util.Comparator;
 

@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.Pair;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
