@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
@@ -17,7 +18,9 @@ public class Position
         //TODO ?
     }
     //TODO ?
-    public Position(double x, double y, double orientation) {
+    public Position(@JsonProperty("x") double x,
+                    @JsonProperty("y") double y,
+                    @JsonProperty("orientation")double orientation) {
         this.x = x;
         this.y = y;
         this.orientation = orientation;
