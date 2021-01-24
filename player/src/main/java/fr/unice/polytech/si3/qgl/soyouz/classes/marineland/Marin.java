@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.Pair;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
  * He Ho Freshwater sailor !
