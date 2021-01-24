@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
@@ -60,7 +61,10 @@ public class Marin {
      * @param y Its base y position.
      * @param name Its name.
      */
-    public Marin(int id, int x, int y, String name) {
+    public Marin(@JsonProperty("id") int id,
+                 @JsonProperty("x") int x,
+                 @JsonProperty("y") int y,
+                 @JsonProperty("name") String name) {
         this.id = id;
         this.x = x;
         this.y = y;
