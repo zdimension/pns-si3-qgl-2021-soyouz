@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = Rame.class, name = "oar")
 })
-public abstract class OnboardEntity extends Entity
+public abstract class OnboardEntity
 {
     private int x;
     private int y;
