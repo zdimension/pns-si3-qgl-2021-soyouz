@@ -13,13 +13,10 @@ import static java.lang.Math.atan2;
  */
 public class Position
 {
-    private double x;
-    private double y;
-    private double orientation;
+    private final double x;
+    private final double y;
+    private final double orientation;
 
-    public Position(){
-        //TODO ?
-    }
     //TODO ?
     public Position(@JsonProperty("x") double x,
                     @JsonProperty("y") double y,
@@ -61,10 +58,6 @@ public class Position
         return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
     }
 
-    public Position getPositionPlusPath(double speed){
-        return new Position(); //TODO
-    }
-
     public boolean isPositionReachable(Position toReach, double speed){
         return true; //TODO
     }
@@ -84,8 +77,12 @@ public class Position
         return Objects.hash(x, y, orientation);
     }
 
-    public boolean inLine(Position pos)
-    {
+    public boolean inLine(Position pos) {
         return abs(atan2(pos.getY() - this.getY(), pos.getX() - this.getX()) - this.getOrientation()) < 0.01;
+    }
+
+    public Position add(double x, double y, double rot)
+    {
+        return new Position(this.x + x, this.y + y, this.orientation + rot);
     }
 }

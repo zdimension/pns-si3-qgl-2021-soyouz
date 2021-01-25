@@ -1,5 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
@@ -13,32 +16,14 @@ import java.util.Optional;
 /**
  * Ship entity.
  */
-public class Bateau extends Entity
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Bateau.class, name = "ship")
+})
+public class Bateau extends AutreBateau
 {
-    private int life;
-    private Position position;
     private String name;
     private Deck deck;
     private OnboardEntity[] entities;
-    private Shape shape;
-
-    /**
-     * Getter.
-     * @return the health of the ship.
-     */
-    public int getLife()
-    {
-        return life;
-    }
-
-    /**
-     * Getter.
-     * @return the position of the ship.
-     */
-    public Position getPosition()
-    {
-        return position;
-    }
 
     /**
      * Getter.
@@ -71,18 +56,10 @@ public class Bateau extends Entity
      * Getter.
      * @return the number of Oar onboard.
      */
+    @JsonIgnore
     public int getNumberOar(){
         return (int) Arrays.stream(getEntities()).filter(e -> e instanceof Rame).count();
     } //TODO : A verifier je ne suis pas dutout un AS en stream #Alexis
-
-    /**
-     * Getter.
-     * @return the Shape of the Boat.
-     */
-    public Shape getShape()
-    {
-        return shape;
-    }
 
     /**
      * Determine which Entity is set on a specific Point.

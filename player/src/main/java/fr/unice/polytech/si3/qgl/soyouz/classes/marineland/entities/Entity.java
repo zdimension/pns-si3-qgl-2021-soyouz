@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = Bateau.class, name = "ship")
+    @JsonSubTypes.Type(value = AutreBateau.class, name = "ship")
 })
 public abstract class Entity
 {

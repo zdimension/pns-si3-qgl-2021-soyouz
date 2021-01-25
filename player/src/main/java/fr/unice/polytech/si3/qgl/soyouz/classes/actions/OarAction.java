@@ -9,7 +9,6 @@ import java.util.Optional;
 /**
  * Rowing action. Need a Sailor on a oar to be done.
  */
-@JsonTypeName("OAR")
 public class OarAction extends GameAction
 {
     /**

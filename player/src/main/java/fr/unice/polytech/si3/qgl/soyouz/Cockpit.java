@@ -3,10 +3,12 @@ package fr.unice.polytech.si3.qgl.soyouz;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Cockpit implements ICockpit
@@ -48,12 +50,13 @@ public class Cockpit implements ICockpit
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             System.out.println("Next round input: " + np);
+            return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).map(OarAction::new).toArray(OarAction[]::new));
         }
         catch (Exception e)
         {
             e.printStackTrace();
+            return "[]";
         }
-        return "[]";
     }
 
     @Override
