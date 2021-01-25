@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -42,6 +43,7 @@ public class Marin {
      * Getter.
      * @return the coords of the Sailor on the Deck.
      */
+    @JsonIgnore
     public Pair<Integer, Integer> getGridPosition() {
         return Pair.of(x, y);
     }
