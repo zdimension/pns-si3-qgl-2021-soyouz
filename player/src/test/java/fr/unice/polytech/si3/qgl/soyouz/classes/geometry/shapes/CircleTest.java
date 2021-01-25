@@ -1,22 +1,19 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow;
+package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CheckpointTest {
+class CircleTest {
 
-    Cockpit cockpit;
-    Checkpoint[] checkpoints;
-    RegattaGoal rg;
+    Circle circle;
 
     @BeforeEach
     void init() {
-        cockpit = new Cockpit();
+        Cockpit cockpit = new Cockpit();
         cockpit.initGame("{\"goal\": {\n" +
                 "    \"mode\": \"REGATTA\",\n" +
                 "    \"checkpoints\": [\n" +
@@ -33,19 +30,12 @@ class CheckpointTest {
                 "      }\n" +
                 "    ]\n" +
                 "  }}");
-        rg = (RegattaGoal) cockpit.getIp().getGoal();
-        checkpoints = rg.getCheckpoints();
+        RegattaGoal rg = (RegattaGoal) cockpit.getIp().getGoal();
+        circle = (Circle) rg.getCheckpoints()[0].getShape();
     }
 
     @Test
-    void getPositionTest() {
-        assertEquals(1000, checkpoints[0].getPosition().getX());
-        assertEquals(0, checkpoints[0].getPosition().getY());
-        assertEquals(0, checkpoints[0].getPosition().getOrientation());
-    }
-
-    @Test
-    void getShapeTest() {
-        assertTrue(checkpoints[0].getShape() instanceof Circle);
+    void getRadius() {
+        assertEquals(50, circle.getRadius());
     }
 }

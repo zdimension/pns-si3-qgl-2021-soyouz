@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegattaGoalTest {
 
     Cockpit cockpit;
-    Checkpoint[] checkpoints;
     RegattaGoal rg;
 
     @BeforeEach
