@@ -85,4 +85,9 @@ public class Position
     {
         return new Position(this.x + x, this.y + y, this.orientation + rot);
     }
+
+    public Position add(Position other)
+    {
+        return add(other.x, other.y, other.orientation);
+    }
 }

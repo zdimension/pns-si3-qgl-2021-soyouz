@@ -13,20 +13,23 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SimulatorCanvas extends Canvas
+public class SimulatorCanvas extends JPanel
 {
     private static final Color BACKGROUND = new Color(202, 219, 255);
     private static final Color BOAT = new Color(193, 169, 134);
     private static final Color OBSTACLE = new Color(102, 186, 90);
 
     private static final Map<Class<?>, Image> ENTITY_ICONS;
-    private static final double SCALE = 1;
+    private static double SCALE = 1;
     private static final int MARGIN = 40;
     private static final int DECK_GRID_SIZE = 40;
     private static final int DECK_MARGIN = 30;
@@ -59,9 +62,21 @@ public class SimulatorCanvas extends Canvas
     private Graphics dbGraphics;
     private InitGameParameters model;
 
+    private static final double SCALE_WHEEL_FACTOR = 0.1;
+
     public SimulatorCanvas(InitGameParameters model)
     {
         this.model = model;
+
+        addMouseWheelListener(e ->
+        {
+            System.out.println(e.getPreciseWheelRotation());
+            var factor = 1 + SCALE_WHEEL_FACTOR;
+            if (e.getPreciseWheelRotation() < 0)
+                factor = 1 / factor;
+            SCALE *= factor;
+            repaint();
+        });
     }
 
     /**
@@ -70,8 +85,11 @@ public class SimulatorCanvas extends Canvas
      * @param g objet {@link Graphics} sur lequel dessiner
      */
     @Override
-    public void paint(Graphics g)
+    public void paintComponent(Graphics g)
     {
+        paintBuffer((Graphics2D)g);
+        return;
+        /*
         // met à jour l'image virtuelle et la recrée si besoin
         if (dbImage == null ||
             this.getWidth() != dbImage.getWidth(this)
@@ -101,7 +119,7 @@ public class SimulatorCanvas extends Canvas
             paintBuffer((Graphics2D) dbGraphics);
 
             g.drawImage(dbImage, 0, 0, this);
-        }
+        }*/
     }
 
     /**
@@ -152,6 +170,21 @@ public class SimulatorCanvas extends Canvas
         drawShip(g, model.getShip());
 
         drawShipDeck(g, model.getShip(), model.getSailors());
+
+        drawShipVision(g, model.getShip());
+    }
+
+    private void drawShipVision(Graphics2D g, Bateau b)
+    {
+        g = (Graphics2D) g.create();
+
+        Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+        g.setStroke(dashed);
+        g.setColor(Color.BLACK);
+
+        var mp = mapToScreen(b.getPosition());
+        var md = mapToScreen(1000);
+        g.drawOval(mp.x - md, mp.y - md, 2 * md, 2 * md);
     }
 
     private void drawShipDeck(Graphics2D g, Bateau b, Marin[] sailors)

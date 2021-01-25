@@ -18,7 +18,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -28,12 +31,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class Simulator extends Frame
+public class Simulator extends JFrame
 {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    private final Timer timer;
+
     public Simulator() throws IOException
     {
+        System.setProperty("sun.awt.noerasebackground", "true");
         setTitle("Soyouz Simulator");
         setLayout(new BorderLayout());
         setSize(600, 600);
@@ -61,7 +67,7 @@ public class Simulator extends Frame
             });
         }});
 
-        var btnNext = new Button("Next");
+        var btnNext = new JButton("Next");
         add(btnNext, BorderLayout.NORTH);
 
         var canvas = new SimulatorCanvas(model);
@@ -76,8 +82,23 @@ public class Simulator extends Frame
             }
         });
 
+        timer = new Timer(5, new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent event)
+            {
+                model.getShip().setPosition(model.getShip().getPosition().add(increment));
+                canvas.repaint();
+                if (++currentStep >= COMP_STEPS)
+                {
+                    timer.stop();
+                    btnNext.setEnabled(true);
+                }
+            }
+        });
         btnNext.addActionListener(event ->
         {
+            btnNext.setEnabled(false);
             var np = new NextRoundParameters(model.getShip(), new Entity[0]);
             try
             {
@@ -100,8 +121,9 @@ public class Simulator extends Frame
                 var activeOarsRight = activeOars.size() - activeOarsLeft;
                 var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
                 System.out.println("Moving ship by " + vx + ";" + vy + " m/s, " + oarRot + " rad/s");
-                model.getShip().setPosition(model.getShip().getPosition().add(vx, vy, oarRot));
-                canvas.repaint();
+                this.increment = new Position(vx / COMP_STEPS, vy / COMP_STEPS, oarRot / COMP_STEPS);
+                currentStep = 0;
+                timer.start();
             }
             catch (JsonProcessingException e)
             {
@@ -109,4 +131,8 @@ public class Simulator extends Frame
             }
         });
     }
+
+    private final int COMP_STEPS = 30;
+    private int currentStep = 0;
+    private Position increment;
 }
