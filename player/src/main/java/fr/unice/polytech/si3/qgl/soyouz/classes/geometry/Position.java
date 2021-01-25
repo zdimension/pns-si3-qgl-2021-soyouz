@@ -10,13 +10,10 @@ import java.util.Objects;
  */
 public class Position
 {
-    private double x;
-    private double y;
-    private double orientation;
+    private final double x;
+    private final double y;
+    private final double orientation;
 
-    public Position(){
-        //TODO ?
-    }
     //TODO ?
     public Position(@JsonProperty("x") double x,
                     @JsonProperty("y") double y,
@@ -58,10 +55,6 @@ public class Position
         return Pair.of(Math.abs(this.getX() - pos.getX()), Math.abs(this.getY() - pos.getY()));
     }
 
-    public Position getPositionPlusPath(double speed){
-        return new Position(); //TODO
-    }
-
     public boolean isPositionReachable(Position toReach, double speed){
         return true; //TODO
     }
@@ -79,5 +72,10 @@ public class Position
     @Override
     public int hashCode() {
         return Objects.hash(x, y, orientation);
+    }
+
+    public Position add(double x, double y, double rot)
+    {
+        return new Position(this.x + x, this.y + y, this.orientation + rot);
     }
 }
