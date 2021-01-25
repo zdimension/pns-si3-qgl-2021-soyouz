@@ -5,6 +5,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.atan2;
+
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
  */
@@ -55,7 +58,7 @@ public class Position
 
     //TODO pour l'instant tient uniquement compte de la distance depuis le centre
     public Pair<Double, Double> getDistance(Position pos){
-        return Pair.of(Math.abs(this.getX() - pos.getX()), Math.abs(this.getY() - pos.getY()));
+        return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
     }
 
     public Position getPositionPlusPath(double speed){
@@ -79,5 +82,10 @@ public class Position
     @Override
     public int hashCode() {
         return Objects.hash(x, y, orientation);
+    }
+
+    public boolean inLine(Position pos)
+    {
+        return abs(atan2(pos.getY() - this.getY(), pos.getX() - this.getX()) - this.getOrientation()) < 0.01;
     }
 }
