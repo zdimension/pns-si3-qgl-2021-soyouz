@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
@@ -11,6 +12,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -24,6 +26,15 @@ public class Bateau extends AutreBateau
     private String name;
     private Deck deck;
     private OnboardEntity[] entities;
+
+    public Bateau(@JsonProperty("name") String name,
+                  @JsonProperty("deck") Deck deck,
+                  @JsonProperty("entities") OnboardEntity[] entities)
+    {
+        this.name = name;
+        this.deck = deck;
+        this.entities = Arrays.stream(entities).filter(Objects::nonNull).toArray(OnboardEntity[]::new);
+    }
 
     /**
      * Getter.

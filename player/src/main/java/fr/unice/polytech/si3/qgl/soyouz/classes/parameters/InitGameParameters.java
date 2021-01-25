@@ -4,6 +4,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.GameGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
  * Stock all parameters given to init the Game.
  */
@@ -48,5 +51,10 @@ public class InitGameParameters
     public int getShipCount()
     {
         return shipCount;
+    }
+
+    public Optional<Marin> getSailorById(int id)
+    {
+        return Arrays.stream(sailors).filter(m -> m.getId() == id).findFirst();
     }
 }

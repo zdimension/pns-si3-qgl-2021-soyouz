@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
@@ -49,7 +50,9 @@ public class Cockpit implements ICockpit
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             System.out.println("Next round input: " + np);
-            return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).map(OarAction::new).toArray(OarAction[]::new));
+            return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).filter(
+                m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
+            ).map(OarAction::new).toArray(OarAction[]::new));
         }
         catch (Exception e)
         {
