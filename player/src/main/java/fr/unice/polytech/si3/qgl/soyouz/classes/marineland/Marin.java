@@ -122,7 +122,7 @@ public class Marin {
      *
      * @param pos to move on x and y axis.
      * @return new absolute position.
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
     public Pair<Integer, Integer> moveAbsolute(Pair<Integer, Integer> pos) throws  IllegalArgumentException{
         return moveAbsolute(pos.getFirst(), pos.getSecond());

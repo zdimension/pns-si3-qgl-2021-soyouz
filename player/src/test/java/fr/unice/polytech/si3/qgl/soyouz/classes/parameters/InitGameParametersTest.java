@@ -1,5 +1,6 @@
-package fr.unice.polytech.si3.qgl.soyouz;
+package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;

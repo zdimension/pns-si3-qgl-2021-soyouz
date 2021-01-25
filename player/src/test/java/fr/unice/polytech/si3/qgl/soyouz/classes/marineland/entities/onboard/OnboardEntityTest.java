@@ -1,24 +1,20 @@
-package fr.unice.polytech.si3.qgl.soyouz;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
+package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
+
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-public class NextRoundParametersTest {
-    Cockpit cockpit;
-    NextRoundParameters np;
+
+class OnboardEntityTest {
+
+    OnboardEntity[] entities;
 
     @BeforeEach
-    void setUp() {
-        this.cockpit = new Cockpit();
-    }
+    void init() {
+        Cockpit cockpit = new Cockpit();
 
-    @Test
-    void shipTest(){
         cockpit.nextRound("{\"ship\": {\n" +
                 "    \"type\": \"ship\",\n" +
                 "    \"life\": 100,\n" +
@@ -45,17 +41,19 @@ public class NextRoundParametersTest {
                 "      }\n" +
                 "    ]\n" +
                 "  }}");
-        np = cockpit.getNp();
-        Bateau bateau = np.getShip();
-        assertEquals("Les copaings d'abord!", bateau.getName());
-        assertEquals(100, bateau.getLife());
-        assertEquals(2, bateau.getEntities().length);
-        //Boat position
-        Position pos = new Position(10.654,3,2.05);
-        assertTrue(bateau.getPosition().equals(pos));
-        //Deck size
-        assertEquals(2,bateau.getDeck().getWidth());
-        assertEquals(1,bateau.getDeck().getLength());
+
+        entities = cockpit.getNp().getShip().getEntities();
     }
-    //TODO visibleEntities for next release
+
+    @Test
+    void getX() {
+        assertEquals(0, entities[0].getX());
+        assertEquals(1, entities[1].getX());
+    }
+
+    @Test
+    void getY() {
+        assertEquals(0, entities[0].getY());
+        assertEquals(0, entities[1].getY());
+    }
 }
