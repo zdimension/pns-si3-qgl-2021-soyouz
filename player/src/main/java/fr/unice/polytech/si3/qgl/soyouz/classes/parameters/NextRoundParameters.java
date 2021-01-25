@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 
@@ -8,8 +9,15 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
  */
 public class NextRoundParameters
 {
-    private Bateau ship;
-    private Entity[] visibleEntities;
+    private final Bateau ship;
+    private final Entity[] visibleEntities;
+
+    public NextRoundParameters(@JsonProperty("ship") Bateau ship,
+                               @JsonProperty("visibleEntities") Entity[] visibleEntities)
+    {
+        this.ship = ship;
+        this.visibleEntities = visibleEntities;
+    }
 
     /**
      * Getter.
