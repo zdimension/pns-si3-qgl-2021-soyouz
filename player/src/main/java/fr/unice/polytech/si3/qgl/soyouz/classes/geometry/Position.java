@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
@@ -77,7 +78,7 @@ public class Position
         return Objects.hash(x, y, orientation);
     }
 
-    public boolean inLine(Position pos) {
+    public boolean isFacingPosition(Position pos) {
         return abs(atan2(pos.getY() - this.getY(), pos.getX() - this.getX()) - this.getOrientation()) < 0.01;
     }
 
