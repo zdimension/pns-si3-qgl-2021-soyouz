@@ -15,10 +15,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -29,10 +27,12 @@ public class SimulatorCanvas extends JPanel
     private static final Color OBSTACLE = new Color(102, 186, 90);
 
     private static final Map<Class<?>, Image> ENTITY_ICONS;
-    private static double SCALE = 1;
     private static final int MARGIN = 40;
     private static final int DECK_GRID_SIZE = 40;
     private static final int DECK_MARGIN = 30;
+    private static final double SCALE_WHEEL_FACTOR = 0.1;
+    public static final int SHAPE_CROSS_SIZE = 10;
+    private static double SCALE = 1;
 
     static
     {
@@ -52,6 +52,7 @@ public class SimulatorCanvas extends JPanel
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+    private final ArrayList<OnboardEntity> usedEntities;
     /**
      * Image virtuelle de dessin
      */
@@ -61,19 +62,22 @@ public class SimulatorCanvas extends JPanel
      */
     private Graphics dbGraphics;
     private InitGameParameters model;
+    private final Stroke DASHED = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
+    private final Stroke SHAPE_CROSS = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
 
-    private static final double SCALE_WHEEL_FACTOR = 0.1;
-
-    public SimulatorCanvas(InitGameParameters model)
+    public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
     {
         this.model = model;
+        this.usedEntities = usedEntities;
 
         addMouseWheelListener(e ->
         {
             System.out.println(e.getPreciseWheelRotation());
             var factor = 1 + SCALE_WHEEL_FACTOR;
             if (e.getPreciseWheelRotation() < 0)
+            {
                 factor = 1 / factor;
+            }
             SCALE *= factor;
             repaint();
         });
@@ -87,7 +91,7 @@ public class SimulatorCanvas extends JPanel
     @Override
     public void paintComponent(Graphics g)
     {
-        paintBuffer((Graphics2D)g);
+        paintBuffer((Graphics2D) g);
         return;
         /*
         // met à jour l'image virtuelle et la recrée si besoin
@@ -178,8 +182,7 @@ public class SimulatorCanvas extends JPanel
     {
         g = (Graphics2D) g.create();
 
-        Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
-        g.setStroke(dashed);
+        g.setStroke(DASHED);
         g.setColor(Color.BLACK);
 
         var mp = mapToScreen(b.getPosition());
@@ -191,13 +194,31 @@ public class SimulatorCanvas extends JPanel
     {
         g = (Graphics2D) g.create();
 
+        g.translate(DECK_MARGIN, DECK_MARGIN);
+
+        for (OnboardEntity entity : b.getEntities())
+        {
+            var img = ENTITY_ICONS.get(entity.getClass());
+            g.drawImage(img, entity.getY() * DECK_GRID_SIZE, entity.getX() * DECK_GRID_SIZE, DECK_GRID_SIZE, DECK_GRID_SIZE,
+                usedEntities.contains(entity) ? Color.RED : new Color(0, true), null);
+        }
+        var simg = ENTITY_ICONS.get(Marin.class);
+        for (Marin sailor : sailors)
+        {
+            g.drawImage(simg, sailor.getY() * DECK_GRID_SIZE + DECK_GRID_SIZE / 2, sailor.getX() * DECK_GRID_SIZE + DECK_GRID_SIZE / 2, DECK_GRID_SIZE / 2, DECK_GRID_SIZE / 2, null);
+        }
+
+        drawDeckGrid(g, b);
+    }
+
+    private void drawDeckGrid(Graphics2D g, Bateau b)
+    {
+        g.setColor(Color.BLACK);
+
         var w = b.getDeck().getWidth();
         var rw = w * DECK_GRID_SIZE;
         var h = b.getDeck().getLength();
         var rh = h * DECK_GRID_SIZE;
-
-        g.setColor(Color.BLACK);
-        g.translate(DECK_MARGIN, DECK_MARGIN);
         for (var x = 0; x <= w; x++)
         {
             int rx = x * DECK_GRID_SIZE;
@@ -207,16 +228,6 @@ public class SimulatorCanvas extends JPanel
         {
             int ry = y * DECK_GRID_SIZE;
             g.drawLine(0, ry, rw, ry);
-        }
-        for (OnboardEntity entity : b.getEntities())
-        {
-            var img = ENTITY_ICONS.get(entity.getClass());
-            g.drawImage(img, entity.getY() * DECK_GRID_SIZE, entity.getX() * DECK_GRID_SIZE, DECK_GRID_SIZE, DECK_GRID_SIZE, null);
-        }
-        var simg = ENTITY_ICONS.get(Marin.class);
-        for (Marin sailor : sailors)
-        {
-            g.drawImage(simg, sailor.getY() * DECK_GRID_SIZE + DECK_GRID_SIZE / 2, sailor.getX() * DECK_GRID_SIZE + DECK_GRID_SIZE / 2, DECK_GRID_SIZE / 2, DECK_GRID_SIZE / 2, null);
         }
     }
 
@@ -247,27 +258,34 @@ public class SimulatorCanvas extends JPanel
         drawShape(g, s, p, false);
     }
 
-    private void drawShape(Graphics2D g, Shape s, Position p, boolean noRot)
+    private void drawShape(Graphics2D gt, Shape s, Position p, boolean noRot)
     {
-        g = (Graphics2D) g.create();
+        gt = (Graphics2D) gt.create();
         var mp = mapToScreen(p);
+        gt.translate(mp.x, mp.y);
+
+        var gtr = (Graphics2D)gt.create();
         if (s instanceof Circle)
         {
             var c = (Circle) s;
             var rad = mapToScreen(c.getRadius());
-            g.fillOval(mp.x - rad / 2, mp.y - rad / 2, rad, rad);
+            gtr.fillOval(-rad / 2, -rad / 2, rad, rad);
         }
         else if (s instanceof Rectangle)
         {
             var r = (Rectangle) s;
-            var h = mapToScreen(r.getWidth()) * 10;
-            var w = mapToScreen(r.getHeight()) * 10;
-            g.translate(mp.x, mp.y);
+            var h = mapToScreen(r.getWidth());
+            var w = mapToScreen(r.getHeight());
             if (!noRot)
             {
-                g.rotate(-(p.getOrientation() + r.getOrientation()), 0, 0);
+                gtr.rotate(-(p.getOrientation() + r.getOrientation()), 0, 0);
             }
-            g.fillRect(-w / 2, -h / 2, w, h);
+            gtr.fillRect(-w / 2, -h / 2, w, h);
         }
+
+        gt.setStroke(SHAPE_CROSS);
+        gt.setColor(Color.BLACK);
+        gt.drawLine(-SHAPE_CROSS_SIZE, -SHAPE_CROSS_SIZE,  +SHAPE_CROSS_SIZE, +SHAPE_CROSS_SIZE);
+        gt.drawLine(-SHAPE_CROSS_SIZE, +SHAPE_CROSS_SIZE,  +SHAPE_CROSS_SIZE, -SHAPE_CROSS_SIZE);
     }
 }

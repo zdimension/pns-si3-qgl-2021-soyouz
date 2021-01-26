@@ -14,6 +14,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
@@ -44,7 +45,7 @@ public class Simulator extends JFrame
         setLayout(new BorderLayout());
         setSize(600, 600);
 
-        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("initGameLong.json")), InitGameParameters.class);
+        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("initGame.json")), InitGameParameters.class);
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
 
@@ -70,7 +71,9 @@ public class Simulator extends JFrame
         var btnNext = new JButton("Next");
         add(btnNext, BorderLayout.NORTH);
 
-        var canvas = new SimulatorCanvas(model);
+        var usedEntities = new ArrayList<OnboardEntity>();
+
+        var canvas = new SimulatorCanvas(model, usedEntities);
         add(canvas, BorderLayout.CENTER);
 
         addWindowListener(new WindowAdapter()
@@ -88,12 +91,13 @@ public class Simulator extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 model.getShip().setPosition(model.getShip().getPosition().add(increment));
-                canvas.repaint();
                 if (++currentStep >= COMP_STEPS)
                 {
                     timer.stop();
                     btnNext.setEnabled(true);
+                    usedEntities.clear();
                 }
+                canvas.repaint();
             }
         });
         btnNext.addActionListener(event ->
@@ -106,10 +110,34 @@ public class Simulator extends JFrame
                 var activeOars = new ArrayList<Rame>();
                 for (GameAction act : res)
                 {
-                    if (act instanceof OarAction)
+                    var entType = act.entityNeeded;
+                    entType.ifPresentOrElse(type ->
                     {
-                        activeOars.add((Rame)model.getShip().getEntityHere(act.getSailor().getGridPosition()).get());
-                    }
+                        model.getShip().getEntityHere(act.getSailor().getGridPosition()).ifPresentOrElse(ent ->
+                        {
+                            if (!(type.isInstance(ent)))
+                                return;
+
+                            if (usedEntities.contains(ent))
+                            {
+                                System.err.println("ENTITY ALREADY USED FOR ACTION " + act);
+                                return;
+                            }
+
+                            usedEntities.add(ent);
+
+                            if (act instanceof OarAction)
+                            {
+                                activeOars.add((Rame)ent);
+                            }
+                        }, () ->
+                        {
+                            System.err.println("ENTITY MISSING FOR ACTION " + act);
+                        });
+                    }, () ->
+                    {
+
+                    });
                 }
                 var noars = model.getShip().getNumberOar();
                 var oarFactor = 165.0 * activeOars.size() / noars;
