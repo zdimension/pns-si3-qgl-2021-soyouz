@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
@@ -17,6 +18,11 @@ public class Cockpit implements ICockpit
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private InitGameParameters ip;
     private NextRoundParameters np;
+
+    static
+    {
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     /**
      * Parse all the initial Game Parameters into a InitGameParameters object.
