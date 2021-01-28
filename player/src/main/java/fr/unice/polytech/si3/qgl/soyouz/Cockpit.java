@@ -3,9 +3,11 @@ package fr.unice.polytech.si3.qgl.soyouz;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
@@ -20,6 +22,7 @@ public class Cockpit implements ICockpit
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private InitGameParameters ip;
     private NextRoundParameters np;
+    private RootObjective objective;
 
     static
     {
@@ -43,6 +46,7 @@ public class Cockpit implements ICockpit
         try
         {
             ip = OBJECT_MAPPER.readValue(game, InitGameParameters.class);
+            objective = ip.getGoal().getObjective();
             log("Init game input: " + ip);
         }
         catch (Exception e)
@@ -65,9 +69,8 @@ public class Cockpit implements ICockpit
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             log("Next round input: " + np);
-            return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).filter(
-                m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
-            ).map(OarAction::new).toArray(OarAction[]::new));
+            objective.update(new GameState(ip, np));
+            return OBJECT_MAPPER.writeValueAsString(objective.resolve(new GameState(ip, np)).toArray());
         }
         catch (Exception e)
         {
