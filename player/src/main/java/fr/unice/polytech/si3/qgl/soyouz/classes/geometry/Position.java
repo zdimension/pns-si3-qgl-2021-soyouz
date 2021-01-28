@@ -91,4 +91,14 @@ public class Position
     {
         return add(other.x, other.y, other.orientation);
     }
+
+    @Override
+    public String toString()
+    {
+        return "{" +
+            "x=" + x +
+            ", y=" + y +
+            "; " + orientation +
+            " rad}";
+    }
 }

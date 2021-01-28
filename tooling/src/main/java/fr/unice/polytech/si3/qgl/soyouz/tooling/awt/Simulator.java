@@ -45,7 +45,7 @@ public class Simulator extends JFrame
         setLayout(new BorderLayout());
         setSize(600, 600);
 
-        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("initGameLong.json")), InitGameParameters.class);
+        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("initGame.json")), InitGameParameters.class);
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
 
@@ -90,7 +90,12 @@ public class Simulator extends JFrame
             @Override
             public void actionPerformed(ActionEvent event)
             {
-                model.getShip().setPosition(model.getShip().getPosition().add(increment));
+                var cur = model.getShip().getPosition();
+                model.getShip().setPosition(cur.add(new Position(
+                    spdIncrement * Math.cos(cur.getOrientation()),
+                    spdIncrement * Math.sin(cur.getOrientation()),
+                    rotIncrement)));
+                System.out.println(model.getShip().getPosition());
                 if (++currentStep >= COMP_STEPS)
                 {
                     timer.stop();
@@ -143,13 +148,13 @@ public class Simulator extends JFrame
                 var oarFactor = 165.0 * activeOars.size() / noars;
                 var windSpeed = 0;
                 var dirSpeed = oarFactor + windSpeed;
-                var vx = dirSpeed * Math.cos(model.getShip().getPosition().getOrientation());
-                var vy = dirSpeed * Math.sin(model.getShip().getPosition().getOrientation());
                 var activeOarsLeft = activeOars.stream().filter(o -> o.getY() == 0).count();
                 var activeOarsRight = activeOars.size() - activeOarsLeft;
                 var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
-                System.out.println("Moving ship by " + vx + ";" + vy + " m/s, " + oarRot + " rad/s");
-                this.increment = new Position(vx / COMP_STEPS, vy / COMP_STEPS, oarRot / COMP_STEPS);
+                rotIncrement = oarRot / COMP_STEPS;
+                spdIncrement = dirSpeed / COMP_STEPS;
+                rotIncrement = 0.1;
+                spdIncrement = 10;
                 currentStep = 0;
                 timer.start();
             }
@@ -160,7 +165,8 @@ public class Simulator extends JFrame
         });
     }
 
-    private final int COMP_STEPS = 30;
+    private final int COMP_STEPS =10;
     private int currentStep = 0;
-    private Position increment;
+    private double rotIncrement;
+    private double spdIncrement;
 }

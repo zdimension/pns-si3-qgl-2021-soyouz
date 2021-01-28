@@ -70,7 +70,10 @@ public class Cockpit implements ICockpit
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             log("Next round input: " + np);
             objective.update(new GameState(ip, np));
-            return OBJECT_MAPPER.writeValueAsString(objective.resolve(new GameState(ip, np)).toArray());
+            return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).filter(
+                m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
+            ).map(OarAction::new).toArray(OarAction[]::new));
+            //return OBJECT_MAPPER.writeValueAsString(objective.resolve(new GameState(ip, np)).toArray());
         }
         catch (Exception e)
         {
