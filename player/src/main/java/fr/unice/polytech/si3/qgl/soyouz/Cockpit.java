@@ -9,12 +9,14 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
+import java.util.logging.MemoryHandler;
 
 public class Cockpit implements ICockpit
 {
+    private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private InitGameParameters ip;
     private NextRoundParameters np;
@@ -22,6 +24,12 @@ public class Cockpit implements ICockpit
     static
     {
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    public static void log(String message)
+    {
+        System.out.println(message);
+        logList.add(message);
     }
 
     /**
@@ -35,7 +43,7 @@ public class Cockpit implements ICockpit
         try
         {
             ip = OBJECT_MAPPER.readValue(game, InitGameParameters.class);
-            System.out.println("Init game input: " + ip);
+            log("Init game input: " + ip);
         }
         catch (Exception e)
         {
@@ -56,7 +64,7 @@ public class Cockpit implements ICockpit
         try
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
-            System.out.println("Next round input: " + np);
+            log("Next round input: " + np);
             return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).filter(
                 m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
             ).map(OarAction::new).toArray(OarAction[]::new));
@@ -71,7 +79,7 @@ public class Cockpit implements ICockpit
     @Override
     public List<String> getLogs()
     {
-        return new ArrayList<>();
+        return new ArrayList<>(logList);
     }
 
     public InitGameParameters getIp()
