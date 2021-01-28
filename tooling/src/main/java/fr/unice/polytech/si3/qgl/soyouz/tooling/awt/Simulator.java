@@ -103,7 +103,7 @@ public class Simulator extends JFrame
         btnNext.addActionListener(event ->
         {
             btnNext.setEnabled(false);
-            var np = new NextRoundParameters(model.getShip(), new Entity[0]);
+            var np = new NextRoundParameters(model.getShip(), null, new Entity[0]); //TODO J'ai mis null a la place du vent
             try
             {
                 var res = OBJECT_MAPPER.readValue(cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np)), GameAction[].class);
