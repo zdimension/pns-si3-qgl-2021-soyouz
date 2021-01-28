@@ -10,25 +10,23 @@ public class CheckpointObjective extends CompositeObjective{
 
 
     //TODO
-    public CheckpointObjective(InitGameParameters ip, NextRoundParameters np, Checkpoint checkpoint) {
-        super(ip, np);
-
-        var dist = this.getShip().getPosition().getDistance(checkpoint.getPosition()); //distance au centre pour l'instant
+    public CheckpointObjective(Checkpoint checkpoint) {
+        /*var dist = this.getShip().getPosition().getDistance(checkpoint.getPosition()); //distance au centre pour l'instant
         //on vérifie la rotation
         var maxSpeed = this.maxSpeedPossible();
         if(this.getShip().getPosition().isPositionReachable(checkpoint.getPosition(), maxSpeed)){
             //on envoie le nombre de marins nécessaire aux rames
             for (Marin s : this.ip.getSailors()) {
-                this.intermediateObjective.add(new GroundObjective(this.ip, this.np, new OarAction(s)));
+                this.intermediateObjective.add(new GroundObjective(new OarAction(s)));
             }
-        }
+        }*/
         //sinon, pas encore géré
     }
 
 
     //TODO
     //alors speed c'est un double mais c'est arbitraire
-    private double maxSpeedPossible(){
+    /*private double maxSpeedPossible(){
         return 165.0*this.getSailors().length/this.getShip().getNumberOar();
-    }
+    }*/
 }
