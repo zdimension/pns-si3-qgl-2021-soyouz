@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
@@ -15,6 +16,14 @@ public abstract class OnboardEntity
 {
     private int x;
     private int y;
+    private boolean isUsed;
+
+    public OnboardEntity(@JsonProperty("x") int x,
+                         @JsonProperty("y")int y) {
+        this.x = x;
+        this.y = y;
+        this.isUsed = false;
+    }
 
     /**
      * Getter.
@@ -32,5 +41,21 @@ public abstract class OnboardEntity
     public int getY()
     {
         return y;
+    }
+
+    /**
+     * Getter.
+     * @return the used state of the object.
+     */
+    public boolean isUsed() {
+        return isUsed;
+    }
+
+    /**
+     * Setter.
+     * @param used the value to set the use state.
+     */
+    public void setUsed(boolean used) {
+        isUsed = used;
     }
 }
