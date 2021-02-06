@@ -17,5 +17,8 @@ public class OarAction extends GameAction
      */
     public OarAction(Marin sailor) {
         super(sailor, Optional.of(Rame.class));
+        if(!this.entityNeeded.isEmpty()){ //TODO : autre manière ?
+            this.entityNeeded.get().cast(Rame.class).setUsed(true);
+        }
     }
 }

@@ -69,6 +69,7 @@ public class Cockpit implements ICockpit
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             log("Next round input: " + np);
+            Arrays.stream(ip.getShip().getEntities()).filter(x-> x.isUsed()).forEach(x -> x.setUsed(false)); // At each start of round, the entities are no longer used
             objective.update(new GameState(ip, np));
             return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).filter(
                 m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
