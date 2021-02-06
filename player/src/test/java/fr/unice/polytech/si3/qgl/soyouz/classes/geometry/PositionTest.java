@@ -38,10 +38,6 @@ class PositionTest {
     }
 
     @Test
-    void getPositionPlusPath() {
-    }
-
-    @Test
     void isPositionReachable() {
     }
 
@@ -58,5 +54,34 @@ class PositionTest {
     @Test
     void testHashCode() {
         assertNotNull(position.hashCode());
+    }
+
+    @Test
+    void isFacingPositionTest() {
+        Position pos2 = new Position(10, 0, Math.PI/2);
+        assertTrue(pos2.isFacingPosition(position));
+        assertFalse(position.isFacingPosition(pos2));
+    }
+
+    @Test
+    void addTest() {
+        Position pos2 = new Position(10, 0, Math.PI/2);
+        Position pos3 = position.add(pos2);
+        Position pos4 = position.add(pos2.getX(), pos2.getY(), pos2.getOrientation());
+
+        assertEquals(pos3, pos4);
+        assertEquals(20, pos3.getX());
+        assertEquals(20, pos3.getY());
+        assertEquals(30 + Math.PI/2, pos3.getOrientation());
+    }
+
+    @Test
+    void toStringTest() {
+        String posToString = "{" +
+                "x=" + position.getX() +
+                ", y=" + position.getY() +
+                "; " + position.getOrientation() +
+                " rad}";
+        assertEquals(posToString, position.toString());
     }
 }
