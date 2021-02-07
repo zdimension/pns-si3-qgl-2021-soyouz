@@ -5,6 +5,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class OnboardEntityTest {
@@ -55,5 +57,12 @@ class OnboardEntityTest {
     void getY() {
         assertEquals(0, entities[0].getY());
         assertEquals(0, entities[1].getY());
+    }
+
+    @Test
+    void isUsedTest() {
+        Arrays.asList(entities).forEach(ent -> assertFalse(ent.isUsed()));
+        Arrays.asList(entities).forEach(ent -> ent.setUsed(true));
+        Arrays.asList(entities).forEach(ent -> assertTrue(ent.isUsed()));
     }
 }

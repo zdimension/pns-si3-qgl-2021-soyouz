@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
@@ -12,6 +13,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 public class Cockpit implements ICockpit
 {
@@ -66,8 +68,15 @@ public class Cockpit implements ICockpit
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             log("Next round input: " + np);
+            // TODO X.isUsed THROW NULLPOINTEREXCEPTION
             Arrays.stream(ip.getShip().getEntities()).filter(x-> x.isUsed()).forEach(x -> x.setUsed(false)); // At each start of round, the entities are no longer used
             objective.update(new GameState(ip, np));
+
+            // TODO Check if it work
+            List<Marin> sailorWithoutOar = Arrays.stream(ip.getSailors()).filter(m ->
+                    ip.getShip().getEntityHere(m.getX(), m.getY()).equals(null)).collect(Collectors.toList());
+            // TODO Stream to put every sailor on an Oar
+
             return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).filter(
                 m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
             ).map(OarAction::new).toArray(OarAction[]::new));

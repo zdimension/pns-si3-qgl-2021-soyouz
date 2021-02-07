@@ -53,10 +53,10 @@ public class NextRoundParametersTest {
         assertEquals(2, bateau.getEntities().length);
         //Boat position
         Position pos = new Position(10.654,3,2.05);
-        assertTrue(bateau.getPosition().equals(pos));
+        assertEquals(pos, bateau.getPosition());
         //Deck size
         assertEquals(2,bateau.getDeck().getWidth());
         assertEquals(1,bateau.getDeck().getLength());
     }
-    //TODO visibleEntities for next release
+    //TODO visibleEntities and Wind for next release
 }

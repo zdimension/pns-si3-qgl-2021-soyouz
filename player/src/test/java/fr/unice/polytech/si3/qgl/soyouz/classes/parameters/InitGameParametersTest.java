@@ -11,6 +11,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class InitGameParametersTest {
@@ -121,7 +123,7 @@ public class InitGameParametersTest {
         assertEquals(Pair.of(0,0),marins[0].getGridPosition());
         assertEquals("Tom Pouce",marins[1].getName());
         assertEquals(Pair.of(1,0),marins[1].getGridPosition());
-
+        assertEquals("Tom Pouce", ip.getSailorById(1).get().getName());
     }
 
 }

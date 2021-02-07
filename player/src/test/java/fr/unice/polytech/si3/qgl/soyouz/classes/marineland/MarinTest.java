@@ -62,7 +62,7 @@ class MarinTest {
         sailor.moveAbsolute(5, 3);
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(7,6));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(17,6));
     }
 
     @Test
@@ -70,7 +70,7 @@ class MarinTest {
         sailor.moveAbsolute(Pair.of(5,3));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(Pair.of(7, 6)));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(Pair.of(17, 6)));
     }
 
     @Test

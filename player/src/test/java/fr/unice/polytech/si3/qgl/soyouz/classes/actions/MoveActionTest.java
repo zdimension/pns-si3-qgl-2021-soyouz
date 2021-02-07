@@ -14,16 +14,16 @@ class MoveActionTest {
     @BeforeEach
     void init() {
         sailor = new Marin(1, 0, 0, "Tom Pouce");
-        moveAction = new MoveAction(sailor);
+        moveAction = new MoveAction(sailor, 3, 2);
     }
 
     @Test
     void getXDistanceTest() {
-        assertEquals(0, moveAction.getXdistance());
+        assertEquals(3, moveAction.getXDistance());
     }
 
     @Test
     void getYDistanceTest() {
-        assertEquals(0, moveAction.getYdistance());
+        assertEquals(2, moveAction.getYDistance());
     }
 }

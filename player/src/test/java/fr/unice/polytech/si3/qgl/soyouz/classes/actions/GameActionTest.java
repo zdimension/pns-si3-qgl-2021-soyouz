@@ -18,7 +18,7 @@ class GameActionTest {
         sailor = new Marin(1, 0, 0, "Tom Pouce");
         pirate = new Marin(2, 1,1, "Jack Sparrow");
         oarAction = new OarAction(sailor);
-        moveAction = new MoveAction(sailor);
+        moveAction = new MoveAction(sailor, 0, 0);
     }
 
     @Test

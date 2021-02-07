@@ -9,20 +9,24 @@ import java.util.Optional;
  * Action to move a Sailor.
  */
 public class MoveAction extends GameAction{
-    private int xdistance;
-    private int ydistance;
+    private int xDistance;
+    private int yDistance;
     //TODO
-    public MoveAction(Marin sailor) {
+    public MoveAction(Marin sailor, int x, int y) {
         super(sailor, Optional.empty());
+        if (x + y <= 5) {
+            xDistance = x;
+            yDistance = y;
+        }
     }
 
-    public int getXdistance()
+    public int getXDistance()
     {
-        return xdistance;
+        return xDistance;
     }
 
-    public int getYdistance()
+    public int getYDistance()
     {
-        return ydistance;
+        return yDistance;
     }
 }
