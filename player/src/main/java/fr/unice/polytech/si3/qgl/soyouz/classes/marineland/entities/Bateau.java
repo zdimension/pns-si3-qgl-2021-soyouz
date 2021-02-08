@@ -73,6 +73,16 @@ public class Bateau extends AutreBateau
     } //TODO : A verifier je ne suis pas dutout un AS en stream #Alexis
 
     /**
+     *
+     * @param posObs position of obstacle
+     * @return true if the obstacle is on the left of the boat
+     */
+    public boolean isPositionLeft(Position posObs){
+        var angle = Math.atan((posObs.getX() - this.getPosition().getX())/(1+this.getPosition().getY()*posObs.getY()));
+        return  angle >= 0 && angle <= Math.PI;
+    }
+
+    /**
      * Determine which Entity is set on a specific Point.
      *
      * @param xPos The abscissa of the Point to analyse.
