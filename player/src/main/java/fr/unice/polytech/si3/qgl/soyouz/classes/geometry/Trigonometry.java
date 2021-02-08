@@ -8,5 +8,9 @@ public class Trigonometry {
     static Pair<Double, Double> oarLinearSpeed(double orientation, int activeOarNb, int totalOarNb){
         return Pair.of(orientation, (double) (165 * activeOarNb / totalOarNb));
     }
+
+    static Double newOrientation(int activeRightOar, int activeLeftOar, int totalOarNb) {
+        return Math.PI*(activeRightOar - activeLeftOar)/totalOarNb;
+    }
 }
     
