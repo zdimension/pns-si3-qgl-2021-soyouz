@@ -77,8 +77,10 @@ public class Bateau extends AutreBateau
      * @param posObs position of obstacle
      * @return true if the obstacle is on the left of the boat
      */
-    public boolean isPositionLeft(Position posObs){
-        var angle = Math.atan((posObs.getX() - this.getPosition().getX())/(1+this.getPosition().getY()*posObs.getY()));
+    public boolean isPositionOnLeft(Position posObs){
+        var angle =
+                Math.atan((posObs.getX() - (this.getPosition().getX()+Math.cos(this.getPosition().getOrientation())))
+                        /(1+(this.getPosition().getY() + Math.sin(this.getPosition().getOrientation()))*posObs.getY()));
         return  angle >= 0 && angle <= Math.PI;
     }
 
