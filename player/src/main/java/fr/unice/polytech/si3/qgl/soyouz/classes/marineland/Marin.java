@@ -39,6 +39,10 @@ public class Marin {
         return y;
     }
 
+    public Pair<Integer,Integer> getPos(){
+        return Pair.of(getX(),getY());
+    }
+
     /**
      * Getter.
      * @return the coords of the Sailor on the Deck.

@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Optional;
 
@@ -28,5 +29,23 @@ public class MoveAction extends GameAction{
     public int getYDistance()
     {
         return yDistance;
+    }
+
+    public Pair<Integer,Integer> newPos(Pair<Integer,Integer> oldSailorPosition){
+        return Pair.of(oldSailorPosition.first+xDistance, oldSailorPosition.second+yDistance);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MoveAction))
+        {
+            return false;
+        }
+        if (this == obj)
+        {
+            return true;
+        }
+        var move = (MoveAction) obj;
+        return this.xDistance == move.getXDistance() && this.yDistance == move.getYDistance() ;
     }
 }
