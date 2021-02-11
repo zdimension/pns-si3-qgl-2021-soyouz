@@ -65,7 +65,7 @@ public class Position
     }
 
     /**
-     * Method to determine the distance between two points.
+     * Determine the distance between two points.
      *
      * @param pos The second point.
      * @return a pair that represent the distance between those two points.
@@ -107,7 +107,7 @@ public class Position
     }
 
     /**
-     * Method to determine if a point is facing another (with a 0.01 error %).
+     * Determine if a point is facing another (with a 0.01 error %).
      *
      * @param pos The second point position.
      * @return true if they are facing, false otherwise.
@@ -117,7 +117,7 @@ public class Position
     }
 
     /**
-     * Method to get a new position after adding some parameters.
+     * Get a new position after adding some parameters.
      *
      * @param x A X translation.
      * @param y A Y translation.
@@ -130,7 +130,7 @@ public class Position
     }
 
     /**
-     * Method to add a Position to another.
+     * Add a Position to another.
      *
      * @param other The second position
      * @return the new position.
@@ -141,7 +141,7 @@ public class Position
     }
 
     /**
-     * Method to transform a position into a String.
+     * Transform a position into a String.
      *
      * @return the corresponding string.
      */

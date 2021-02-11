@@ -19,6 +19,7 @@ public class InitGameParameters
 
     /**
      * Getter.
+     *
      * @return the Goal of the game.
      */
     public GameGoal getGoal()
@@ -28,6 +29,7 @@ public class InitGameParameters
 
     /**
      * Getter.
+     *
      * @return our Ship.
      */
     public Bateau getShip()
@@ -37,6 +39,7 @@ public class InitGameParameters
 
     /**
      * Getter.
+     *
      * @return our crew members.
      */
     public Marin[] getSailors()
@@ -46,6 +49,7 @@ public class InitGameParameters
 
     /**
      * Getter.
+     *
      * @return the number of ships in competition.
      */
     public int getShipCount()
@@ -53,6 +57,12 @@ public class InitGameParameters
         return shipCount;
     }
 
+    /**
+     * Getters.
+     *
+     * @param id The id of the wanted sailor.
+     * @return the sailor attached to this id.
+     */
     public Optional<Marin> getSailorById(int id)
     {
         return Arrays.stream(sailors).filter(m -> m.getId() == id).findFirst();

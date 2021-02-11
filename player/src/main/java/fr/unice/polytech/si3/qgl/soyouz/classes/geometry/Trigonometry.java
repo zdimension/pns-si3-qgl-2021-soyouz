@@ -39,7 +39,7 @@ public class Trigonometry {
     }
 
     /**
-     * Method to determine every angle of rotation possible according to the game parameters.
+     * Determine every angle of rotation possible according to the game parameters.
      * Then they are stocked into two maps, one for each side (right/left).
      *
      * @param nbSailor The number of sailor on the boat.

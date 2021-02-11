@@ -17,6 +17,7 @@ public class Marin {
 
     /**
      * Getter.
+     *
      * @return the Id of the Sailor.
      */
     public int getId() {
@@ -25,6 +26,7 @@ public class Marin {
 
     /**
      * Getter.
+     *
      * @return the x position of the Sailor on the Deck.
      */
     public int getX() {
@@ -33,6 +35,7 @@ public class Marin {
 
     /**
      * Getter.
+     *
      * @return the y position of the Sailor on the Deck.
      */
     public int getY() {
@@ -45,6 +48,7 @@ public class Marin {
 
     /**
      * Getter.
+     *
      * @return the coords of the Sailor on the Deck.
      */
     @JsonIgnore
@@ -54,6 +58,7 @@ public class Marin {
 
     /**
      * Getter.
+     *
      * @return the Name of the Sailor.
      */
     public String getName() {
@@ -62,6 +67,7 @@ public class Marin {
 
     /**
      * Constructor.
+     *
      * @param id Its Id.
      * @param x Its base x position.
      * @param y Its base y position.
@@ -154,6 +160,12 @@ public class Marin {
         return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) <= maxMove;
     }
 
+    /**
+     * Method to determine if two sailors are equals.
+     *
+     * @param obj The second sailor.
+     * @return true if they are, false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Marin))
@@ -168,6 +180,11 @@ public class Marin {
         return this.id == mar.id && this.x == mar.x && this.y == mar.y && this.name.equals(mar.name);
     }
 
+    /**
+     * Method to create an unique id for a sailor.
+     *
+     * @return the created code.
+     */
     @Override
     public int hashCode() {
         return id;

@@ -15,6 +15,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
+/**
+ * Control panel of the whole game. Here happens all the magic.
+ */
 public class Cockpit implements ICockpit
 {
     private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
@@ -28,6 +31,11 @@ public class Cockpit implements ICockpit
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
+    /**
+     * Print the logs on the console and put them to the log file.
+     *
+     * @param message The logs
+     */
     public static void log(String message)
     {
         System.out.println(message);
@@ -90,17 +98,32 @@ public class Cockpit implements ICockpit
         }
     }
 
+    /**
+     * Getters.
+     *
+     * @return a list of log.
+     */
     @Override
     public List<String> getLogs()
     {
         return new ArrayList<>(logList);
     }
 
+    /**
+     * Getters.
+     *
+     * @return the Init Game Parameters.
+     */
     public InitGameParameters getIp()
     {
         return ip;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the Next Round Parameters.
+     */
     public  NextRoundParameters getNp()
     {
         return np;

@@ -58,7 +58,7 @@ public class MoveAction extends GameAction{
     }
 
     /**
-     * Method to find if two Move Action are equals or not, only based on their translations.
+     * Find if two Move Action are equals or not, only based on their translations.
      *
      * @param obj The other Move Action.
      * @return true if they are equals, false otherwise.

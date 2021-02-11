@@ -27,6 +27,13 @@ public class Bateau extends AutreBateau
     private Deck deck;
     private OnboardEntity[] entities;
 
+    /**
+     * Constructor.
+     *
+     * @param name The name of the boat.
+     * @param deck The deck of the boat.
+     * @param entities The entities on board.
+     */
     public Bateau(@JsonProperty("name") String name,
                   @JsonProperty("deck") Deck deck,
                   @JsonProperty("entities") OnboardEntity[] entities)
@@ -38,6 +45,7 @@ public class Bateau extends AutreBateau
 
     /**
      * Getter.
+     *
      * @return the name of the ship.
      */
     public String getName()
@@ -47,6 +55,7 @@ public class Bateau extends AutreBateau
 
     /**
      * Getter.
+     *
      * @return the deck of the ship.
      */
     public Deck getDeck()
@@ -56,6 +65,7 @@ public class Bateau extends AutreBateau
 
     /**
      * Getter.
+     *
      * @return the Entities around the ship.
      */
     public OnboardEntity[] getEntities()
@@ -65,6 +75,7 @@ public class Bateau extends AutreBateau
 
     /**
      * Getter.
+     *
      * @return the number of Oar onboard.
      */
     @JsonIgnore
@@ -73,9 +84,10 @@ public class Bateau extends AutreBateau
     } //TODO : A verifier je ne suis pas dutout un AS en stream #Alexis
 
     /**
+     * Method to determine if a position is on the left of the boat.
      *
-     * @param posObs position of obstacle
-     * @return true if the obstacle is on the left of the boat
+     * @param posObs Position of obstacle.
+     * @return true if the obstacle is on the left of the boat.
      */
     public boolean isPositionOnLeft(Position posObs){
         var angle =
@@ -100,6 +112,7 @@ public class Bateau extends AutreBateau
 
     /**
      * Determine which Entity is set on a specific Point.
+     *
      * @param pos The coords we want to analyse.
      * @return optional entity on the given cell.
      */

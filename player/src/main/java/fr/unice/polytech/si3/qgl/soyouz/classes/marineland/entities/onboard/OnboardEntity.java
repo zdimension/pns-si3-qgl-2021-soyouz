@@ -21,6 +21,12 @@ public abstract class OnboardEntity
     private int y;
     private boolean isUsed;
 
+    /**
+     * Constructor.
+     *
+     * @param x Abscissa of the entity.
+     * @param y Ordinate of the entity.
+     */
     public OnboardEntity(@JsonProperty("x") int x,
                          @JsonProperty("y")int y) {
         this.x = x;
@@ -30,6 +36,7 @@ public abstract class OnboardEntity
 
     /**
      * Getter.
+     *
      * @return the abscissa of the object.
      */
     public int getX()
@@ -39,6 +46,7 @@ public abstract class OnboardEntity
 
     /**
      * Getter.
+     *
      * @return the ordinate of the object.
      */
     public int getY()
@@ -46,10 +54,16 @@ public abstract class OnboardEntity
         return y;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the position of the entity.
+     */
     public Pair<Integer,Integer> getPos(){return Pair.of(getX(),getY());}
 
     /**
      * Getter.
+     *
      * @return the used state of the object.
      */
     public boolean isUsed() {
@@ -58,12 +72,19 @@ public abstract class OnboardEntity
 
     /**
      * Setter.
+     *
      * @param used the value to set the use state.
      */
     public void setUsed(boolean used) {
         isUsed = used;
     }
 
+    /**
+     * Method to determine if two entities are equals.
+     *
+     * @param o The second entity.
+     * @return true if they are equals, false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,6 +93,11 @@ public abstract class OnboardEntity
         return x == that.x && y == that.y;
     }
 
+    /**
+     * Method to create a unique code to identify the entity.
+     *
+     * @return the hash code.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
