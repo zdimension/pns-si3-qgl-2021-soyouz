@@ -77,6 +77,7 @@ public class Cockpit implements ICockpit
                     ip.getShip().getEntityHere(m.getX(), m.getY()).equals(null)).collect(Collectors.toList());
             // TODO Stream to put every sailor on an Oar
 
+
             return OBJECT_MAPPER.writeValueAsString(Arrays.stream(ip.getSailors()).filter(
                 m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
             ).map(OarAction::new).toArray(OarAction[]::new));

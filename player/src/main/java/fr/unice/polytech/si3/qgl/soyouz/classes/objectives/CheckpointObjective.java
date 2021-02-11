@@ -11,6 +11,7 @@ public class CheckpointObjective extends CompositeObjective{
 
     //TODO
     public CheckpointObjective(Checkpoint checkpoint) {
+
         /*var dist = this.getShip().getPosition().getDistance(checkpoint.getPosition()); //distance au centre pour l'instant
         //on vérifie la rotation
         var maxSpeed = this.maxSpeedPossible();
