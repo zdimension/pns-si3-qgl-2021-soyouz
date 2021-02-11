@@ -9,6 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * Class storing intended action for the next round.
+ */
 public class TempRoundChoice {
     final HashMap<Marin, Pair<Pair<Integer,Integer>, Pair<GameAction, @Nullable GameAction>>> sailorsJob;
     final HashMap<OnboardEntity, Boolean> usedOnBoardEntity;
@@ -35,6 +38,14 @@ public class TempRoundChoice {
         return Collections.unmodifiableCollection(vacantSailors);
     }
 
+    /**
+     * Making a sailor perform an action and updating onBoardEntity usage
+     *
+     * @param sailor to perform action
+     * @param pos new position of the sailor
+     * @param action for sailor to perform (anyAction, null) (moveAction, null) or (moveAction, AnyAction)
+     * @throws IllegalArgumentException when illegal arguments
+     */
     public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, Pair<GameAction, @Nullable GameAction> action) throws IllegalArgumentException{
         if(sailorsJob.containsKey(sailor))
             throw new IllegalArgumentException("Sailor not vacant");
