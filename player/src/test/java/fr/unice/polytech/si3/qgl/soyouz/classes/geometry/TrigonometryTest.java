@@ -118,13 +118,14 @@ class TrigonometryTest {
                 "  ]\n" +
                 "}");
         InitGameParameters ip = cp.getIp();
-        assertEquals(0, Trigonometry.turnPossibilities.size());
+        assertEquals(0, Trigonometry.rightTurnPossibilities.size());
+        assertEquals(0, Trigonometry.leftTurnPossibilities.size());
         int nbOarLeft = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
         int nbOarRight = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==ip.getShip().getDeck().getWidth()-1).count(); //Oar à droite
-        Checkpoint checkpoint = ((RegattaGoal) ip.getGoal()).getCheckpoints()[0];
-        Trigonometry.setTurnPossibilities(ip.getShip().isPositionOnLeft(
-                checkpoint.getPosition()), ip.getSailors().length, nbOarLeft, nbOarRight);
-        assertEquals(3, Trigonometry.turnPossibilities.size());
-        Trigonometry.turnPossibilities.keySet().forEach(System.out::println);
+        Trigonometry.setTurnPossibilities(ip.getSailors().length, nbOarLeft, nbOarRight);
+        assertEquals(3, Trigonometry.rightTurnPossibilities.size());
+        assertEquals(3, Trigonometry.leftTurnPossibilities.size());
+        Trigonometry.rightTurnPossibilities.keySet().forEach(System.out::println);
+        Trigonometry.leftTurnPossibilities.keySet().forEach(System.out::println);
     }
 }

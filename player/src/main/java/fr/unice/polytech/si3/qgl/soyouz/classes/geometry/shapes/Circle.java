@@ -9,6 +9,7 @@ public class Circle extends Shape
 
     /**
      * Getter.
+     *
      * @return the radius of the circle.
      */
     public double getRadius()

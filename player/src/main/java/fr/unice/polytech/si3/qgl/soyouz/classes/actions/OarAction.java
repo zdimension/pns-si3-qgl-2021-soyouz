@@ -14,6 +14,7 @@ public class OarAction extends GameAction
 {
     /**
      * Constructor.
+     *
      * @param sailor The needed Sailor to perform the action.
      */
     public OarAction(Marin sailor) {

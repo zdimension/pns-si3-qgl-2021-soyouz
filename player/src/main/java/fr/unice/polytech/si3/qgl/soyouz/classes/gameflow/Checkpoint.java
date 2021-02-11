@@ -13,6 +13,7 @@ public class Checkpoint
 
     /**
      * Getter.
+     *
      * @return the position of the checkpoint.
      */
     public Position getPosition()
@@ -22,6 +23,7 @@ public class Checkpoint
 
     /**
      * Getter.
+     *
      * @return the shape of the checkpoint.
      */
     public Shape getShape()

@@ -10,6 +10,7 @@ public class Point
 
     /**
      * Getter.
+     *
      * @return the abscissa of the Point.
      */
     public double getX()
@@ -19,6 +20,7 @@ public class Point
 
     /**
      * Getter.
+     *
      * @return the ordinate of the Point.
      */
     public double getY()

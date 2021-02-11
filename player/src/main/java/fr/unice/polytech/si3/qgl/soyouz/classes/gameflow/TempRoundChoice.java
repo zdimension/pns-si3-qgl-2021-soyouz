@@ -71,7 +71,7 @@ public class TempRoundChoice {
 
             var actionMove = (MoveAction)action.first;
 
-            if(!actionMove.newPos(sailor.getPos()).equals(pos)){
+            if(!actionMove.newPos().equals(pos)){
                 throw new IllegalArgumentException("Incoherent sailor position (position not coherent with moveAction)");
             }
         }
@@ -83,6 +83,4 @@ public class TempRoundChoice {
     public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, GameAction act1, @Nullable GameAction act2) throws IllegalArgumentException{
         hireSailor(sailor, pos, Pair.of(act1, act2));
     }
-
-
 }
