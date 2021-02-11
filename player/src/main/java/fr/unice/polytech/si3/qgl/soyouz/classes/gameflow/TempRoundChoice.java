@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class TempRoundChoice {
-    final HashMap<Marin, Pair<Pair<Integer,Integer>, @Nullable GameAction>> sailorsJob;
+    final HashMap<Marin, Pair<Pair<Integer,Integer>, Pair<GameAction, @Nullable GameAction>>> sailorsJob;
     final HashMap<OnboardEntity, Boolean> usedOnBoardEntity;
     final Collection<Marin> vacantSailors;
 
@@ -22,7 +22,7 @@ public class TempRoundChoice {
         }
     }
 
-    public Map<Marin, Pair<Pair<Integer, Integer>, GameAction>> getSailorsJob() {
+    public Map<Marin, Pair<Pair<Integer, Integer>, Pair<GameAction, @Nullable GameAction>>> getSailorsJob() {
         return Collections.unmodifiableMap(sailorsJob);
     }
 
@@ -34,7 +34,7 @@ public class TempRoundChoice {
         return Collections.unmodifiableCollection(vacantSailors);
     }
 
-    public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, @Nullable GameAction action) throws IllegalArgumentException{
+    public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, Pair<GameAction, @Nullable GameAction> action) throws IllegalArgumentException{
         if(sailorsJob.containsKey(sailor))
             throw new IllegalArgumentException("Sailor not vacant");
 
@@ -51,6 +51,9 @@ public class TempRoundChoice {
 
         sailorsJob.put(sailor, Pair.of( pos, action));
         usedOnBoardEntity.replace(entity, true);
+    }
+    public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, GameAction act1, @Nullable GameAction act2) throws IllegalArgumentException{
+        hireSailor(sailor, pos, Pair.of(act1, act2));
     }
 
 
