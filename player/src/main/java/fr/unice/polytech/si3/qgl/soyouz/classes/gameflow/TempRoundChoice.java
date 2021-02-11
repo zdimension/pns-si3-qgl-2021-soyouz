@@ -63,7 +63,7 @@ public class TempRoundChoice {
 
 
         if(!sailor.getPos().equals(pos)){
-            var isActionMove = MoveAction.class.isInstance(action.first);
+            var isActionMove = action.first instanceof MoveAction;
 
             if(!isActionMove){
                 throw new IllegalArgumentException("Incoherent sailor position (position changed but no moveAction)");
@@ -80,6 +80,16 @@ public class TempRoundChoice {
         sailorsJob.put(sailor, Pair.of( pos, action));
         usedOnBoardEntity.replace(entity, true);
     }
+
+    /**
+     * Making a sailor perform an action and updating onBoardEntity usage
+     *
+     * @param sailor to perform action
+     * @param pos  new position of the sailor
+     * @param act1 for sailor to perform
+     * @param act2 for sailor to perform (only if the first action is MoveAction
+     * @throws IllegalArgumentException when illegal arguments
+     */
     public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, GameAction act1, @Nullable GameAction act2) throws IllegalArgumentException{
         hireSailor(sailor, pos, Pair.of(act1, act2));
     }
