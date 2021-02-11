@@ -149,4 +149,23 @@ public class Marin {
     public boolean isAbsPosReachable(int xPos, int yPos){
         return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) <= maxMove;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Marin))
+        {
+            return false;
+        }
+        if (this == obj)
+        {
+            return true;
+        }
+        var mar = (Marin) obj;
+        return this.id == mar.id && this.x == mar.x && this.y == mar.y && this.name.equals(mar.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

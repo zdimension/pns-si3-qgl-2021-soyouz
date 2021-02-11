@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
+
+import java.util.Objects;
 
 /**
  * Super Class for every entities on the deck.
@@ -43,6 +46,8 @@ public abstract class OnboardEntity
         return y;
     }
 
+    public Pair<Integer,Integer> getPos(){return Pair.of(getX(),getY());}
+
     /**
      * Getter.
      * @return the used state of the object.
@@ -57,5 +62,18 @@ public abstract class OnboardEntity
      */
     public void setUsed(boolean used) {
         isUsed = used;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OnboardEntity that = (OnboardEntity) o;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 }
