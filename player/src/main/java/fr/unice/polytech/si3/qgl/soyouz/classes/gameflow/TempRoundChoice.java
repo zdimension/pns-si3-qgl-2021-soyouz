@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
@@ -46,9 +47,25 @@ public class TempRoundChoice {
         if(usedOnBoardEntity.get(entity))
             throw new IllegalArgumentException("Entity already used");
 
-        if(!vacantSailors.remove(sailor))
+        if(!vacantSailors.contains(sailor))
             throw new IllegalArgumentException("Sailor not found");
 
+
+        if(!sailor.getPos().equals(pos)){
+            var isActionMove = MoveAction.class.isInstance(action.first);
+
+            if(!isActionMove){
+                throw new IllegalArgumentException("Incoherent sailor position (position changed but no moveAction)");
+            }
+
+            var actionMove = (MoveAction)action.first;
+
+            if(!actionMove.newPos(sailor.getPos()).equals(pos)){
+                throw new IllegalArgumentException("Incoherent sailor position (position not coherent with moveAction)");
+            }
+        }
+
+        vacantSailors.remove(sailor);
         sailorsJob.put(sailor, Pair.of( pos, action));
         usedOnBoardEntity.replace(entity, true);
     }
