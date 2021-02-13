@@ -25,29 +25,28 @@ class PolygonTest {
                 "          \"y\": 0,\n" +
                 "          \"orientation\": 0\n" +
                 "        },\n" +
-                "   \"shape\": {\n" +
-                "       \"type\": \"polygon\",\n" +
-                "       \"orientation\": 1\n" +
-                "       \"vertices\": [\n" +
-                "         {\n" +
-                "           \"point\": {\n"+
-                "             \"x\": 1,\n" +
-                "             \"y\": 0,\n" +
-                "             }\n" +
-                "         },\n" +
-                "         {\n" +
-                "           \"point\": {\n"+
-                "           \"x\": 2,\n" +
-                "           \"y\": 1,\n" +
-                "             }\n" +
-                "         },\n" +
-                "         {\n" +
-                "           \"point\": {\n"+
-                "           \"x\": 3,\n" +
-                "           \"y\": 0,\n" +
-                "             }\n" +
-                "         }\n" +
-                "         ]\n" +
+                "        \"shape\": {\n" +
+                "          \"type\": \"polygon\",\n" +
+                "          \"orientation\": 1,\n" +
+                "          \"vertices\" : [\n" +
+                "            {\n" +
+                "                \"x\" : 1005,\n" +
+                "                \"y\" : -5\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"x\" : 1005,\n" +
+                "                \"y\" : 5\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"x\" : 1010,\n" +
+                "                \"y\" : 5\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"x\" : 1010,\n" +
+                "                \"y\" : -5\n" +
+                "            }\n" +
+                "           ]\n" +
+                "        }\n" +
                 "      }\n" +
                 "    ]\n" +
                 "  }}");
@@ -57,13 +56,13 @@ class PolygonTest {
         polygon = (Polygon) rg.getCheckpoints()[0].getShape();
     }
 
-
+    @Test
     void getOrientationTest() {
         assertEquals(1, polygon.getOrientation());
     }
 
-
+    @Test
     void getVerticesTest() {
-        assertEquals(3, polygon.getVertices().length);
+        assertEquals(4, polygon.getVertices().length);
     }
 }
