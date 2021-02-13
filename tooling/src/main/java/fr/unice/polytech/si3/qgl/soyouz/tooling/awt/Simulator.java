@@ -116,11 +116,11 @@ public class Simulator extends JFrame
                 for (GameAction act : res)
                 {
                     var entType = act.entityNeeded;
-                    entType.ifPresentOrElse(type ->
-                    {
+                    if(entType != null){
+
                         model.getShip().getEntityHere(act.getSailor().getGridPosition()).ifPresentOrElse(ent ->
                         {
-                            if (!(type.isInstance(ent)))
+                            if (!(entType.isInstance(ent)))
                                 return;
 
                             if (usedEntities.contains(ent))
@@ -139,10 +139,9 @@ public class Simulator extends JFrame
                         {
                             System.err.println("ENTITY MISSING FOR ACTION " + act);
                         });
-                    }, () ->
-                    {
 
-                    });
+                }
+
                 }
                 var noars = model.getShip().getNumberOar();
                 var oarFactor = 165.0 * activeOars.size() / noars;

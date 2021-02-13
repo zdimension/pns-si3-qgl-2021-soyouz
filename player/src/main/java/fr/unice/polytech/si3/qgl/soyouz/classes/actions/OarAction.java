@@ -18,6 +18,6 @@ public class OarAction extends GameAction
      * @param sailor The needed Sailor to perform the action.
      */
     public OarAction(Marin sailor) {
-        super(sailor, Optional.of(Rame.class));
+        super(sailor, Rame.class);
     }
 }

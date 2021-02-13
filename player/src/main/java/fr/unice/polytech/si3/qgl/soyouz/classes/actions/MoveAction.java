@@ -21,7 +21,7 @@ public class MoveAction extends GameAction{
      */
     //TODO
     public MoveAction(Marin sailor, int x, int y) {
-        super(sailor, Optional.empty());
+        super(sailor, null);
         if (x + y <= 5) {
             xDistance = x;
             yDistance = y;
