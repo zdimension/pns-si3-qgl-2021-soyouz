@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
@@ -21,32 +20,24 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
-/**
- * Control panel of the whole game. Here happens all the magic.
- */
-public class Cockpit implements ICockpit
-{
-    private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private InitGameParameters ip;
-    private NextRoundParameters np;
-    private RootObjective objective;
+/** Control panel of the whole game. Here happens all the magic. */
+public class Cockpit implements ICockpit {
+  private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   static {
     OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
-    /**
-     * Print the logs on the console and put them to the log file.
-     *
-     * @param message The logs
-     */
-    public static void log(String message)
-    {
-        System.out.println(message);
-        logList.add(message);
-    }
+  private InitGameParameters ip;
+  private NextRoundParameters np;
+  private RootObjective objective;
 
+  /**
+   * Print the logs on the console and put them to the log file.
+   *
+   * @param message The logs
+   */
   public static void log(String message) {
     System.out.println(message);
     logList.add(message);
@@ -125,46 +116,43 @@ public class Cockpit implements ICockpit
       }
       return OBJECT_MAPPER.writeValueAsString(acts.toArray(GameAction[]::new));
       /*return OBJECT_MAPPER.writeValueAsString(
-          Arrays.stream(ip.getSailors())
-              .filter(
-                  m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame)
-              .map(OarAction::new)
-              .toArray(OarAction[]::new));*/
+      Arrays.stream(ip.getSailors())
+          .filter(
+              m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame)
+          .map(OarAction::new)
+          .toArray(OarAction[]::new));*/
 
       // return OBJECT_MAPPER.writeValueAsString(objective.resolve(new GameState(ip,
       // np)).toArray());
     } catch (Exception e) {
       e.printStackTrace();
       return "[]";
-    /**
-     * Getters.
-     *
-     * @return a list of log.
-     */
-    @Override
-    public List<String> getLogs()
-    {
-        return new ArrayList<>(logList);
     }
   }
+  /**
+   * Getters.
+   *
+   * @return a list of log.
+   */
+  @Override
+  public List<String> getLogs() {
+    return new ArrayList<>(logList);
+  }
+  /**
+   * Getters.
+   *
+   * @return the Init Game Parameters.
+   */
+  public InitGameParameters getIp() {
+    return ip;
+  }
 
-    /**
-     * Getters.
-     *
-     * @return the Init Game Parameters.
-     */
-    public InitGameParameters getIp()
-    {
-        return ip;
-    }
-
-    /**
-     * Getters.
-     *
-     * @return the Next Round Parameters.
-     */
-    public  NextRoundParameters getNp()
-    {
-        return np;
-    }
+  /**
+   * Getters.
+   *
+   * @return the Next Round Parameters.
+   */
+  public NextRoundParameters getNp() {
+    return np;
+  }
 }

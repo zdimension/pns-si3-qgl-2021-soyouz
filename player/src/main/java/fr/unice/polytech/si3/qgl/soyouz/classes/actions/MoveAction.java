@@ -12,12 +12,18 @@ import java.util.Optional;
 public class MoveAction extends GameAction{
     private int xdistance;
     private int ydistance;
-    //TODO
+    /**
+     * Constructor.
+     *
+     * @param sailor The sailor that we want to move.
+     * @param x Horizontal movement.
+     * @param y Vertical movement.
+     */
     public MoveAction(
         @JsonProperty("sailor") Marin sailor,
         @JsonProperty("xdistance") int x,
         @JsonProperty("ydistance") int y) {
-        super(sailor, Optional.empty());
+        super(sailor, null);
         if (x + y <= 5) {
             xdistance = x;
             ydistance = y;
@@ -50,7 +56,7 @@ public class MoveAction extends GameAction{
      * @return the new position of the sailor after moving him.
      */
     public Pair<Integer,Integer> newPos(){
-        return Pair.of(getSailor().getPos().first+xDistance, getSailor().getPos().second+yDistance);
+        return Pair.of(getSailor().getPos().first+xdistance, getSailor().getPos().second+ydistance);
     }
 
     /**
