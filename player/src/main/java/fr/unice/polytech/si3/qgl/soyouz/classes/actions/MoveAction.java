@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -10,29 +10,32 @@ import java.util.Optional;
  * Action to move a Sailor.
  */
 public class MoveAction extends GameAction{
-    private int xDistance;
-    private int yDistance;
+    private int xdistance;
+    private int ydistance;
     //TODO
-    public MoveAction(Marin sailor, int x, int y) {
+    public MoveAction(
+        @JsonProperty("sailor") Marin sailor,
+        @JsonProperty("xdistance") int x,
+        @JsonProperty("ydistance") int y) {
         super(sailor, Optional.empty());
         if (x + y <= 5) {
-            xDistance = x;
-            yDistance = y;
+            xdistance = x;
+            ydistance = y;
         }
     }
 
     public int getXDistance()
     {
-        return xDistance;
+        return xdistance;
     }
 
     public int getYDistance()
     {
-        return yDistance;
+        return ydistance;
     }
 
     public Pair<Integer,Integer> newPos(Pair<Integer,Integer> oldSailorPosition){
-        return Pair.of(oldSailorPosition.first+xDistance, oldSailorPosition.second+yDistance);
+        return Pair.of(oldSailorPosition.first+ xdistance, oldSailorPosition.second+ ydistance);
     }
 
     @Override
@@ -46,6 +49,6 @@ public class MoveAction extends GameAction{
             return true;
         }
         var move = (MoveAction) obj;
-        return this.xDistance == move.getXDistance() && this.yDistance == move.getYDistance() ;
+        return this.xdistance == move.getXDistance() && this.ydistance == move.getYDistance() ;
     }
 }

@@ -39,6 +39,17 @@ public class Marin {
         return y;
     }
 
+    public void setX(int x)
+    {
+        this.x = x;
+    }
+
+    public void setY(int y)
+    {
+        this.y = y;
+    }
+
+    @JsonIgnore
     public Pair<Integer,Integer> getPos(){
         return Pair.of(getX(),getY());
     }

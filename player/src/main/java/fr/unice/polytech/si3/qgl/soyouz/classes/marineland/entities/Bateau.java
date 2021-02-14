@@ -98,6 +98,11 @@ public class Bateau extends AutreBateau
         return Optional.empty();
     }
 
+    public boolean hasAt(int xPos, int yPos, Class<?> cls)
+    {
+        return cls.isInstance(getEntityHere(xPos, yPos).orElse(null));
+    }
+
     /**
      * Determine which Entity is set on a specific Point.
      * @param pos The coords we want to analyse.

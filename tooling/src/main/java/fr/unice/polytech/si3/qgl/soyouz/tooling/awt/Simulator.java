@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.IntNode;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
@@ -45,7 +46,7 @@ public class Simulator extends JFrame
         setLayout(new BorderLayout());
         setSize(600, 600);
 
-        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("initGame.json")), InitGameParameters.class);
+        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("initGameLong.json")), InitGameParameters.class);
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
 
@@ -64,6 +65,18 @@ public class Simulator extends JFrame
                 public OarAction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
                 {
                     return new OarAction(model.getSailorById(((IntNode)OBJECT_MAPPER.readTree(jsonParser).get("sailorId")).asInt()).get());
+                }
+            });
+            addDeserializer(MoveAction.class, new JsonDeserializer<>()
+            {
+                @Override
+                public MoveAction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                {
+                    var tree = OBJECT_MAPPER.readTree(jsonParser);
+                    return new MoveAction(model.getSailorById(((IntNode)tree.get("sailorId")).asInt()).get(),
+                        ((IntNode)tree.get("xdistance")).asInt(),
+                        ((IntNode)tree.get("ydistance")).asInt()
+                    );
                 }
             });
         }});
@@ -141,7 +154,11 @@ public class Simulator extends JFrame
                         });
                     }, () ->
                     {
-
+                        if (act instanceof MoveAction)
+                        {
+                            var mv = (MoveAction)act;
+                            mv.getSailor().moveRelative(mv.getXDistance(), mv.getYDistance());
+                        }
                     });
                 }
                 var noars = model.getShip().getNumberOar();
@@ -153,8 +170,6 @@ public class Simulator extends JFrame
                 var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
                 rotIncrement = oarRot / COMP_STEPS;
                 spdIncrement = dirSpeed / COMP_STEPS;
-                rotIncrement = 0.1;
-                spdIncrement = 10;
                 currentStep = 0;
                 timer.start();
             }
