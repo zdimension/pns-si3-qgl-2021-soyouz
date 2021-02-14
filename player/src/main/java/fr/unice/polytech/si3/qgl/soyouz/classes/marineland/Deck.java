@@ -16,6 +16,7 @@ public class Deck
 
     /**
      * Getter.
+     *
      * @return the Width of the Deck.
      */
     public int getWidth()
@@ -25,6 +26,7 @@ public class Deck
 
     /**
      * Getter.
+     *
      * @return the Length of the Deck.
      */
     public int getLength()

@@ -14,6 +14,13 @@ public class NextRoundParameters
     private final Wind wind;
     private final Entity[] visibleEntities;
 
+    /**
+     * Constructor.
+     *
+     * @param ship The current state of the ship.
+     * @param wind The current state of the wind.
+     * @param visibleEntities The current state of onboard entities.
+     */
     public NextRoundParameters(@JsonProperty("ship") Bateau ship,
                                @JsonProperty("wind") Wind wind,
                                @JsonProperty("visibleEntities") Entity[] visibleEntities)
@@ -25,6 +32,7 @@ public class NextRoundParameters
 
     /**
      * Getter.
+     *
      * @return our Ship.
      */
     public Bateau getShip()
@@ -34,6 +42,7 @@ public class NextRoundParameters
 
     /**
      * Getter.
+     *
      * @return all Entities around and close enough to be seen.
      */
     public Entity[] getVisibleEntities()
@@ -43,6 +52,7 @@ public class NextRoundParameters
 
     /**
      * Getter.
+     *
      * @return the wind if there is a blow this turn.
      */
     public Wind getWind() {

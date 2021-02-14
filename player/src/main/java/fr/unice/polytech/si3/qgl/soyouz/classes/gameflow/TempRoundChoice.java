@@ -17,6 +17,12 @@ public class TempRoundChoice {
     final HashMap<OnboardEntity, Boolean> usedOnBoardEntity;
     final Collection<Marin> vacantSailors;
 
+    /**
+     * Constructor.
+     *
+     * @param entity All entities on board.
+     * @param sailors All sailors on board.
+     */
     public TempRoundChoice(Collection<OnboardEntity> entity, Collection<Marin> sailors){
         sailorsJob = new HashMap<>();
         usedOnBoardEntity = new HashMap<>();
@@ -26,25 +32,40 @@ public class TempRoundChoice {
         }
     }
 
+    /**
+     * Getters;
+     *
+     * @return all sailors jobs.
+     */
     public Map<Marin, Pair<Pair<Integer, Integer>, Pair<GameAction, @Nullable GameAction>>> getSailorsJob() {
         return Collections.unmodifiableMap(sailorsJob);
     }
 
+    /**
+     * Getters.
+     *
+     * @return all on board entities that are used.
+     */
     public Map<OnboardEntity, Boolean> getUsedOnBoardEntity() {
         return Collections.unmodifiableMap(usedOnBoardEntity);
     }
 
+    /**
+     * Getters.
+     *
+     * @return all vacant sailors.
+     */
     public Collection<Marin> getVacantSailors() {
         return Collections.unmodifiableCollection(vacantSailors);
     }
 
     /**
-     * Making a sailor perform an action and updating onBoardEntity usage
+     * Making a sailor perform an action and updating onBoardEntity usage.
      *
-     * @param sailor to perform action
-     * @param pos new position of the sailor
-     * @param action for sailor to perform (anyAction, null) (moveAction, null) or (moveAction, AnyAction)
-     * @throws IllegalArgumentException when illegal arguments
+     * @param sailor to perform action.
+     * @param pos new position of the sailor.
+     * @param action for sailor to perform (anyAction, null) (moveAction, null) or (moveAction, AnyAction).
+     * @throws IllegalArgumentException when illegal arguments.
      */
     public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, Pair<GameAction, @Nullable GameAction> action) throws IllegalArgumentException{
         if(sailorsJob.containsKey(sailor))
@@ -71,7 +92,7 @@ public class TempRoundChoice {
 
             var actionMove = (MoveAction)action.first;
 
-            if(!actionMove.newPos(sailor.getPos()).equals(pos)){
+            if(!actionMove.newPos().equals(pos)){
                 throw new IllegalArgumentException("Incoherent sailor position (position not coherent with moveAction)");
             }
         }
@@ -93,6 +114,4 @@ public class TempRoundChoice {
     public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, GameAction act1, @Nullable GameAction act2) throws IllegalArgumentException{
         hireSailor(sailor, pos, Pair.of(act1, act2));
     }
-
-
 }

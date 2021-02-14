@@ -18,6 +18,13 @@ public class Position
     private final double y;
     private final double orientation;
 
+    /**
+     * Constructor.
+     *
+     * @param x Abscissa of the point.
+     * @param y Ordinate of the point.
+     * @param orientation Orientation of the point.
+     */
     //TODO ?
     public Position(@JsonProperty("x") double x,
                     @JsonProperty("y") double y,
@@ -29,6 +36,7 @@ public class Position
 
     /**
      * Getter.
+     *
      * @return the abscissa of the central Point.
      */
     public double getX()
@@ -38,6 +46,7 @@ public class Position
 
     /**
      * Getter.
+     *
      * @return the ordinate of the central Point.
      */
     public double getY()
@@ -47,6 +56,7 @@ public class Position
 
     /**
      * Getter.
+     *
      * @return the orientation of the Shape.
      */
     public double getOrientation()
@@ -54,15 +64,28 @@ public class Position
         return orientation;
     }
 
+    /**
+     * Determine the distance between two points.
+     *
+     * @param pos The second point.
+     * @return a pair that represent the distance between those two points.
+     */
     //TODO pour l'instant tient uniquement compte de la distance depuis le centre
     public Pair<Double, Double> getDistance(Position pos){
         return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
     }
 
+
     public boolean isPositionReachable(Position toReach, double speed){
         return true; //TODO
     }
 
+    /**
+     * Compare two position and determine if they are equals or not.
+     *
+     * @param o The second position.
+     * @return true if they are, false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,25 +96,55 @@ public class Position
                 Double.compare(position.orientation, orientation) == 0;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the hashcode of the position.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(x, y, orientation);
     }
 
+    /**
+     * Determine if a point is facing another (with a 0.01 error %).
+     *
+     * @param pos The second point position.
+     * @return true if they are facing, false otherwise.
+     */
     public boolean isFacingPosition(Position pos) {
         return abs(atan2(pos.getY() - this.getY(), pos.getX() - this.getX()) - this.getOrientation()) < 0.01;
     }
 
+    /**
+     * Get a new position after adding some parameters.
+     *
+     * @param x A X translation.
+     * @param y A Y translation.
+     * @param rot A rotation.
+     * @return the new position after adding the new parameters.
+     */
     public Position add(double x, double y, double rot)
     {
         return new Position(this.x + x, this.y + y, this.orientation + rot);
     }
 
+    /**
+     * Add a Position to another.
+     *
+     * @param other The second position
+     * @return the new position.
+     */
     public Position add(Position other)
     {
         return add(other.x, other.y, other.orientation);
     }
 
+    /**
+     * Transform a position into a String.
+     *
+     * @return the corresponding string.
+     */
     @Override
     public String toString()
     {

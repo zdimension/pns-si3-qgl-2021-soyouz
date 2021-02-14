@@ -11,6 +11,7 @@ public class Rectangle extends Shape
 
     /**
      * Getter.
+     *
      * @return the Width of the Rectangle.
      */
     public double getWidth()
@@ -20,6 +21,7 @@ public class Rectangle extends Shape
 
     /**
      * Getter.
+     *
      * @return the Height of the Rectangle.
      */
     public double getHeight()
@@ -29,6 +31,7 @@ public class Rectangle extends Shape
 
     /**
      * Getter.
+     *
      * @return the Orientation of the Rectangle.
      */
     public double getOrientation()

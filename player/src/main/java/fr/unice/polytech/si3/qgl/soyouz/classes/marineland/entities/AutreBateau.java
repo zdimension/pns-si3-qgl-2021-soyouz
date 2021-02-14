@@ -21,6 +21,7 @@ public class AutreBateau extends Entity
 
     /**
      * Getter.
+     *
      * @return the health of the ship.
      */
     public int getLife()
@@ -30,6 +31,7 @@ public class AutreBateau extends Entity
 
     /**
      * Getter.
+     *
      * @return the position of the ship.
      */
     public Position getPosition()
@@ -37,6 +39,11 @@ public class AutreBateau extends Entity
         return position;
     }
 
+    /**
+     * Setters.
+     *
+     * @param position Set the position of the boat.
+     */
     public void setPosition(Position position)
     {
         this.position = position;
@@ -44,6 +51,7 @@ public class AutreBateau extends Entity
 
     /**
      * Getter.
+     *
      * @return the Shape of the Boat.
      */
     public Shape getShape()

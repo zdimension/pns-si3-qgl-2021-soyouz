@@ -12,6 +12,7 @@ public class Polygon extends Shape
 
     /**
      * Getter.
+     *
      * @return the Orientation of the Polygon.
      */
     public double getOrientation()
@@ -21,6 +22,7 @@ public class Polygon extends Shape
 
     /**
      * Getter.
+     *
      * @return all Points that compose the Polygon.
      */
     public Point[] getVertices()

@@ -24,20 +24,41 @@ public class MoveAction extends GameAction{
         }
     }
 
+    /**
+     * Getters.
+     *
+     * @return the X number of horizontal cells to cross.
+     */
     public int getXDistance()
     {
         return xdistance;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the Y number of vertical cells to cross.
+     */
     public int getYDistance()
     {
         return ydistance;
     }
 
-    public Pair<Integer,Integer> newPos(Pair<Integer,Integer> oldSailorPosition){
-        return Pair.of(oldSailorPosition.first+ xdistance, oldSailorPosition.second+ ydistance);
+    /**
+     * Getters.
+     *
+     * @return the new position of the sailor after moving him.
+     */
+    public Pair<Integer,Integer> newPos(){
+        return Pair.of(getSailor().getPos().first+xDistance, getSailor().getPos().second+yDistance);
     }
 
+    /**
+     * Find if two Move Action are equals or not, only based on their translations.
+     *
+     * @param obj The other Move Action.
+     * @return true if they are equals, false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof MoveAction))
