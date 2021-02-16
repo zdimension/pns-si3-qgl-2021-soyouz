@@ -7,8 +7,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
@@ -33,6 +35,7 @@ public class Cockpit implements ICockpit {
   private InitGameParameters ip;
   private NextRoundParameters np;
   private RootObjective objective;
+  private int numCheckpoint =0;
 
   /**
    * Print the logs on the console and put them to the log file.
@@ -92,7 +95,15 @@ public class Cockpit implements ICockpit {
 
       var xb = ip.getShip().getPosition().getX();
       var yb = ip.getShip().getPosition().getY();
-      var nextCp = ((RegattaGoal) ip.getGoal()).getCheckpoints()[0];
+      //TODO : c'est moche, mais sa regarde si le centre du bateau est dans le checkpoint, bon c'est pas garanti que ça marche pour la week 4...
+      if (ip.getShip().getPosition().getLength(((RegattaGoal) ip.getGoal()).getCheckpoints()[numCheckpoint].getPosition())
+              < (((Circle)((RegattaGoal) ip.getGoal()).getCheckpoints()[numCheckpoint].getShape())).getRadius()){
+        if(numCheckpoint<((RegattaGoal) ip.getGoal()).getCheckpoints().length-1){
+          numCheckpoint++;
+        }
+      }
+
+      var nextCp = ((RegattaGoal) ip.getGoal()).getCheckpoints()[numCheckpoint];
       var xo = nextCp.getPosition().getX();
       var yo = nextCp.getPosition().getY();
       var da = Math.atan2(yo - yb, xo - xb);
