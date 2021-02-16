@@ -219,9 +219,9 @@ public class Cockpit implements ICockpit {
         oarsMinusThis.remove(r);
         var actPlusThis = new ArrayList<>(act);
         actPlusThis.add(new MoveAction(m, r.getX() - m.getX(), r.getY() - m.getY()));
-        firstSailorConfig(wantedConfig,sailorsMinusThis,oarsMinusThis,actPlusThis);
-        if(isConfigurationReached(wantedConfig, actPlusThis)){
-          return actPlusThis;
+        var allMoves = firstSailorConfig(wantedConfig,sailorsMinusThis,oarsMinusThis,actPlusThis);
+        if(isConfigurationReached(wantedConfig, allMoves)){
+          return allMoves;
         }
       }
     }
