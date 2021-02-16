@@ -234,7 +234,7 @@ public class Cockpit implements ICockpit {
       var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY()+g.getYDistance());
       Rame oar;
       try{
-        if(getIp().getShip().getEntityHere(entity).get().equals(Rame.class)){
+        if(getIp().getShip().getEntityHere(entity).get() instanceof Rame){
           oar = (Rame) getIp().getShip().getEntityHere(entity).get();
           if(getIp().getShip().isOarLeft(oar)){
             obj = Pair.of(obj.first+1, obj.second);
