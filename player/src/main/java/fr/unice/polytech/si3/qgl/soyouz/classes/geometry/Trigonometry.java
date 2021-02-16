@@ -44,54 +44,43 @@ public class Trigonometry {
      * Then they are stocked into two maps, one for each side (right/left).
      *
      * @param nbSailor The number of sailor on the boat.
-     * @param nbOarLeft The number of oar on the left side of the boat.
-     * @param nbOarRight The number of oar on the rignt side of the boat.
+     * @param nbOarOnEachSide The number of oar on each side of the boat.
      */
     //TODO OAR ONLY, does not take in count the future RUDDER
-    //TODO OAR ARE SYMETRIC SO LEFT = RIGHT :: REFACTO
-    static void setTurnPossibilities(int nbSailor, int nbOarLeft, int nbOarRight) {
-        for (int i = 0; i <= nbOarRight && i <= nbSailor; i++) {
-            for (int j = 0; j <= nbOarLeft && j <= nbSailor; j++) {
+    static void setTurnPossibilities(int nbSailor, int nbOarOnSide) {
+        for (int i = 0; i <= nbOarOnSide && i <= nbSailor; i++) {
+            for (int j = 0; j <= nbOarOnSide && j <= nbSailor; j++) {
                     if (i > j && i + j <= nbSailor)
-                        leftTurnPossibilities.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarLeft + nbOarRight));
+                        leftTurnPossibilities.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
                     if (i < j && i + j <= nbSailor)
-                        rightTurnPossibilities.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarLeft + nbOarRight));
+                        rightTurnPossibilities.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
             }
         }
     }
 
-    // TODO A REFACTO
-    static void findOptOarConfig(int nbSailor, int nbOarLeft, int nbOarRight, Pair<Double, Double> opt) {
-        Pair<Integer, Integer> optimal = null;
-        Pair<Double, Double> config = null;
-        double diff = 0.0;
-        setTurnPossibilities(nbSailor, nbOarLeft, nbOarRight);
+
+    static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt) {
+        setTurnPossibilities(nbSailor, nbOarOnSide);
         if (opt.second > 0) {
-            for (Map.Entry<Pair<Integer, Integer>, Double> entry : leftTurnPossibilities.entrySet()) {
-                double vl = oarLinearSpeed(entry.getKey().first + entry.getKey().second, nbOarLeft + nbOarRight);
-                double vr = entry.getValue();
-                double difference = (opt.first - vl) + (opt.second - vr);
-                if (diff == 0 || difference < diff) {
-                    optimal = entry.getKey();
-                    config = Pair.of(vl, vr);
-                    diff = difference;
-                }
-            }
+            return findOptConfig(leftTurnPossibilities, opt, nbOarOnSide * 2);
         } else {
-            for (Map.Entry<Pair<Integer, Integer>, Double> entry : rightTurnPossibilities.entrySet()) {
-                double vl = oarLinearSpeed(entry.getKey().first + entry.getKey().second, nbOarLeft + nbOarRight);
-                double vr = entry.getValue();
-                double difference = opt.first % vl + opt.second % vr;
-                if (diff == 0 || difference < diff) {
-                    optimal = entry.getKey();
-                    config = Pair.of(vl, vr);
-                    diff = difference;
-                }
+            return findOptConfig(rightTurnPossibilities, opt, nbOarOnSide * 2);
+        }
+    }
+
+    private static Pair<Integer, Integer> findOptConfig(HashMap<Pair<Integer, Integer>, Double> givenSide, Pair<Double, Double> opt, int nbTotalOar) {
+        Pair<Integer, Integer> optimal = null;
+        double diff = 0.0;
+        for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
+            double vl = oarLinearSpeed(entry.getKey().first + entry.getKey().second, nbTotalOar);
+            double vr = entry.getValue();
+            double difference = (opt.first - vl) + (opt.second - vr);
+            if (diff == 0 || difference < diff) {
+                optimal = entry.getKey();
+                diff = difference;
             }
         }
-        System.out.println(optimal);
-        System.out.println(config);
-        System.out.println(diff);
+        return optimal;
     }
 }
     

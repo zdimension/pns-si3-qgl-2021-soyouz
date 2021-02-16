@@ -130,9 +130,8 @@ class TrigonometryTest {
         InitGameParameters ip = cp.getIp();
         assertEquals(0, Trigonometry.rightTurnPossibilities.size());
         assertEquals(0, Trigonometry.leftTurnPossibilities.size());
-        int nbOarLeft = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
-        int nbOarRight = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==ip.getShip().getDeck().getWidth()-1).count(); //Oar à droite
-        Trigonometry.setTurnPossibilities(ip.getSailors().length, nbOarLeft, nbOarRight);
+        int nbOarOnSide = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
+        Trigonometry.setTurnPossibilities(ip.getSailors().length, nbOarOnSide);
         assertEquals(3, Trigonometry.rightTurnPossibilities.size());
         assertEquals(3, Trigonometry.leftTurnPossibilities.size());
         Trigonometry.rightTurnPossibilities.keySet().forEach(System.out::println);
@@ -149,10 +148,9 @@ class TrigonometryTest {
         var da = Math.atan2(yo - yb, xo - xb);
         var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
         var vr = 2 * da;
-        int nbOarLeft = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
-        int nbOarRight = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==ip.getShip().getDeck().getWidth()-1).count(); //Oar à droite
+        int nbOarOnSide = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
         Pair<Double, Double> opt = Pair.of(vl, vr);
         System.out.println(opt);
-        Trigonometry.findOptOarConfig(ip.getSailors().length, nbOarLeft, nbOarRight, opt);
+        System.out.println(Trigonometry.findOptOarConfig(ip.getSailors().length, nbOarOnSide, opt));
     }
 }
