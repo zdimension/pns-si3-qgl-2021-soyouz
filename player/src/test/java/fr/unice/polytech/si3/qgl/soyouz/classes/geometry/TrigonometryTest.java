@@ -148,11 +148,9 @@ class TrigonometryTest {
         var da = Math.atan2(yo - yb, xo - xb);
         var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
         var vr = 2 * da;
-        vl = 1000;
-        vr = -0.20;
         int nbOarOnSide = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
         Pair<Double, Double> opt = Pair.of(vl, vr);
         System.out.println(opt);
-        System.out.println(Trigonometry.findOptOarConfig(ip.getSailors().length, nbOarOnSide, opt));
+        System.out.println(Trigonometry.findOptOarConfig(ip.getSailors().length, nbOarOnSide * 2, opt));
     }
 }
