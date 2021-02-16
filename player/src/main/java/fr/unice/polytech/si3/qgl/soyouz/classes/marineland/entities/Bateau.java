@@ -133,7 +133,7 @@ public class Bateau extends AutreBateau
      */
     public boolean isOarLeft(Rame rame) throws IllegalArgumentException{
         try{
-            if(!getEntityHere(rame.getPos()).get().equals(Rame.class))
+            if(!(getEntityHere(rame.getPos()).get() instanceof Rame))
                 throw new IllegalArgumentException("corrupted position of Oar");
 
         }
