@@ -58,7 +58,7 @@ public class Trigonometry {
         }
     }
 
-    static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt) {
+    public static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt) {
         setTurnPossibilities(nbSailor, nbOarOnSide);
         double maxSpeed = oarLinearSpeed(nbSailor, nbOarOnSide * 2);
         double minTurn = Math.abs(rotatingSpeed(1, 0, nbOarOnSide * 2));
