@@ -104,12 +104,12 @@ public class Trigonometry {
         for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
             double difference = Math.abs(opt.second - entry.getValue());
 
-
+            /*
             System.out.println(entry.getValue());
             System.out.println(difference);
             System.out.println(entry.getKey());
             System.out.println("\n");
-
+            */
 
             if (diff == 0 || (difference <= diff && (entry.getKey().first + entry.getKey().second) > (optimal.first + optimal.second))) {
                 optimal = entry.getKey();
@@ -127,10 +127,12 @@ public class Trigonometry {
         for (int i = 2; i <= nbSailor; i+=2) {
             double difference = opt.first - oarLinearSpeed(i, nbTotalOar);
 
+            /*
             System.out.println(oarLinearSpeed(i, nbTotalOar));
             System.out.println(difference);
             System.out.println(Pair.of(i / 2, i / 2));
             System.out.println("\n");
+             */
 
             if (diff == 0 || difference <= diff && difference > 0) {
                 optimal = Pair.of(i / 2, i / 2);
