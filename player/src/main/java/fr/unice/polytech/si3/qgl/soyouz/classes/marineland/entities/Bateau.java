@@ -124,4 +124,22 @@ public class Bateau extends AutreBateau
     public Optional<OnboardEntity> getEntityHere(Pair<Integer, Integer> pos){
         return getEntityHere(pos.getFirst(), pos.getSecond());
     }
+
+    /**
+     *
+     * @param rame to find position from
+     * @return true if the oar is on the left side of this boat
+     * @throws IllegalArgumentException if the oar is invalid
+     */
+    public boolean isOarLeft(Rame rame) throws IllegalArgumentException{
+        try{
+            if(!getEntityHere(rame.getPos()).get().equals(Rame.class))
+                throw new IllegalArgumentException("corrupted position of Oar");
+
+        }
+        catch (Exception e){
+            throw e;
+        }
+        return rame.getPos().getSecond() == 0;
+    }
 }
