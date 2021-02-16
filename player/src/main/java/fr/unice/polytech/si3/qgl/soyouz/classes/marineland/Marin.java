@@ -171,6 +171,10 @@ public class Marin {
         return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) <= maxMove;
     }
 
+    public boolean isAbsPosReachable(Pair<Integer,Integer> pos){
+        return isAbsPosReachable(pos.getFirst(), pos.getSecond());
+    }
+
     /**
      * Method to determine if two sailors are equals.
      *
