@@ -6,8 +6,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.atan2;
+import static java.lang.Math.*;
 
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
@@ -75,6 +74,9 @@ public class Position
         return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
     }
 
+    public double getLength(Position pos){
+        return sqrt(pow(this.getX() - pos.getX(),2) + pow(this.getY() - pos.getY(),2));
+    }
 
     public boolean isPositionReachable(Position toReach, double speed){
         return true; //TODO
