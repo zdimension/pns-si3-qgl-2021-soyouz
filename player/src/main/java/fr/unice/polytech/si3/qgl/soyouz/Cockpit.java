@@ -136,7 +136,23 @@ public class Cockpit implements ICockpit {
       var moves = firstSailorConfig(wantedOarConfig, oarReachableForSailors, allOars, actsMoves);
       if(moves == null){
         //rien de possible en un tour seulement
-        return "";
+        for (Marin m : ip.getSailors()) {
+          if (!ip.getShip().hasAt(m.getX(), m.getY(), Rame.class)) {
+            var rame =
+                Arrays.stream(ip.getShip().getEntities())
+                    .filter(
+                        e ->
+                            e instanceof Rame
+                                && !(Arrays.stream(ip.getSailors())
+                                    .anyMatch(n -> n.getX() == e.getX() && n.getY() == e.getY())))
+                    .findFirst()
+                    .get();
+            acts.add(new MoveAction(m, rame.getX() - m.getX(), rame.getY() - m.getY()));
+            m.setX(rame.getX());
+            m.setY(rame.getY());
+          }
+        }
+        return OBJECT_MAPPER.writeValueAsString(acts.toArray(GameAction[]::new));
       }
       else{
         var oaring = whoShouldOar(wantedOarConfig, moves);
