@@ -44,7 +44,7 @@ public class Trigonometry {
      * Then they are stocked into two maps, one for each side (right/left).
      *
      * @param nbSailor The number of sailor on the boat.
-     * @param nbOarOnEachSide The number of oar on each side of the boat.
+     * @param nbOarOnSide The number of oar on each side of the boat.
      */
     //TODO OAR ONLY, does not take in count the future RUDDER
     static void setTurnPossibilities(int nbSailor, int nbOarOnSide) {
@@ -58,28 +58,86 @@ public class Trigonometry {
         }
     }
 
-
     static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt) {
         setTurnPossibilities(nbSailor, nbOarOnSide);
-        if (opt.second > 0) {
-            return findOptConfig(leftTurnPossibilities, opt, nbOarOnSide * 2);
-        } else {
-            return findOptConfig(rightTurnPossibilities, opt, nbOarOnSide * 2);
-        }
+        double maxSpeed = oarLinearSpeed(nbSailor, nbOarOnSide * 2);
+        double minTurn = Math.abs(rotatingSpeed(1, 0, nbOarOnSide * 2));
+        final boolean cond = opt.first > maxSpeed && Math.abs(opt.second) > minTurn;
+        if (cond)
+            return opt.second > 0 ? findOptConfigBasedOnVr(leftTurnPossibilities, opt)
+                    : findOptConfigBasedOnVr(rightTurnPossibilities, opt);
+        else
+            return findOptConfigBasedOnVl(opt, nbOarOnSide * 2, nbSailor);
     }
 
-    private static Pair<Integer, Integer> findOptConfig(HashMap<Pair<Integer, Integer>, Double> givenSide, Pair<Double, Double> opt, int nbTotalOar) {
+    /*
+    private static Pair<Integer, Integer> findOptOarConfig(HashMap<Pair<Integer, Integer>, Double> givenSide, Pair<Double, Double> opt, int nbTotalOar) {
         Pair<Integer, Integer> optimal = null;
         double diff = 0.0;
         for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
             double vl = oarLinearSpeed(entry.getKey().first + entry.getKey().second, nbTotalOar);
             double vr = entry.getValue();
-            double difference = (opt.first - vl) + (opt.second - vr);
+
+            double difference = Math.abs((vl - opt.first) / opt.first * 100) + Math.abs((vr - opt.second) / opt.second * 100);
+
+
+            System.out.println(entry.getKey());
+            System.out.println(Pair.of(vl, vr));
+            System.out.println("Vl % : " + Math.abs((vl - opt.first) / opt.first * 100));
+            System.out.println("Vr %: " + Math.abs((vr - opt.second) / opt.second * 100));
+            System.out.println(Math.abs((vl - opt.first) / opt.first * 100) + Math.abs((vr - opt.second) / opt.second * 100));
+            System.out.println("\n");
+
+
             if (diff == 0 || difference < diff) {
                 optimal = entry.getKey();
                 diff = difference;
             }
         }
+        return optimal;
+    }
+    */
+
+    private static Pair<Integer, Integer> findOptConfigBasedOnVr(HashMap<Pair<Integer, Integer>, Double> givenSide, Pair<Double, Double> opt) {
+        Pair<Integer, Integer> optimal = null;
+        double diff = 0.0;
+        for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
+            double difference = Math.abs(opt.second - entry.getValue());
+
+
+            System.out.println(entry.getValue());
+            System.out.println(difference);
+            System.out.println(entry.getKey());
+            System.out.println("\n");
+
+
+            if (diff == 0 || (difference <= diff && (entry.getKey().first + entry.getKey().second) > (optimal.first + optimal.second))) {
+                optimal = entry.getKey();
+                diff = difference;
+            }
+        }
+        System.out.println(optimal);
+        return optimal;
+    }
+
+    private static Pair<Integer, Integer> findOptConfigBasedOnVl(Pair<Double, Double> opt, int nbTotalOar, int nbSailor) {
+        Pair<Integer, Integer> optimal = null;
+        double diff = 0.0;
+
+        for (int i = 2; i <= nbSailor; i+=2) {
+            double difference = opt.first - oarLinearSpeed(i, nbTotalOar);
+
+            System.out.println(oarLinearSpeed(i, nbTotalOar));
+            System.out.println(difference);
+            System.out.println(Pair.of(i / 2, i / 2));
+            System.out.println("\n");
+
+            if (diff == 0 || difference <= diff && difference > 0) {
+                optimal = Pair.of(i / 2, i / 2);
+                diff = difference;
+            }
+        }
+        System.out.println(optimal);
         return optimal;
     }
 }
