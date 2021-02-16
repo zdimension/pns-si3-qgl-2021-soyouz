@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Trigonometry;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
@@ -16,10 +19,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
@@ -111,23 +111,63 @@ public class Cockpit implements ICockpit {
       var vr = 2 * da;
       Pair<Double, Double> opt = Pair.of(vl, vr);
       var acts = new ArrayList<GameAction>();
-      for (Marin m : ip.getSailors()) {
-        if (!ip.getShip().hasAt(m.getX(), m.getY(), Rame.class)) {
-          var rame =
-              Arrays.stream(ip.getShip().getEntities())
-                  .filter(
-                      e ->
-                          e instanceof Rame
-                              && !(Arrays.stream(ip.getSailors())
-                                  .anyMatch(n -> n.getX() == e.getX() && n.getY() == e.getY())))
-                  .findFirst()
-                  .get();
-          acts.add(new MoveAction(m, rame.getX() - m.getX(), rame.getY() - m.getY()));
-          m.setX(rame.getX());
-          m.setY(rame.getY());
+      //-----------------------------------
+      //computing how to move sailors
+      var sailors = ip.getSailors();
+      var oarReachableForSailors = new HashMap<Marin, Set<Rame>>();
+      var allOars = new HashSet<Rame>();
+      for(Marin m : ip.getSailors()){
+        oarReachableForSailors.put(m, new HashSet<>());
+      }
+      var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, ip.getShip().getNumberOar(),opt);
+      //calculer toutes les rames atteignables par tous les marins
+      for(OnboardEntity ent : ip.getShip().getEntities()){
+        if(!(ent instanceof Rame))
+          continue;
+        var r = (Rame) ent;
+        allOars.add(r);
+        for(Marin m : ip.getSailors()){
+          if(m.isAbsPosReachable(r.getPos()))
+            oarReachableForSailors.get(m).add(r);
         }
       }
-      return OBJECT_MAPPER.writeValueAsString(acts.toArray(GameAction[]::new));
+      //essayer d'atteindre la configuration de maniere itérative
+      var actsMoves = new ArrayList<MoveAction>();
+      var moves = firstSailorConfig(wantedOarConfig, oarReachableForSailors, allOars, actsMoves);
+      if(moves == null){
+        //rien de possible en un tour seulement
+        return "";
+      }
+      else{
+        var oaring = whoShouldOar(wantedOarConfig, moves);
+        if(oaring == null)
+          return "";
+        var actions = new ArrayList<GameAction>();
+        actions.addAll(moves);
+        actions.addAll(oaring);
+        return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));
+        //concat oaring et moves
+      }
+
+      //-----------------------------------
+      //for (Marin m : ip.getSailors()) {
+      //  if (!ip.getShip().hasAt(m.getX(), m.getY(), Rame.class)) {
+      //    var rame =
+      //        Arrays.stream(ip.getShip().getEntities())
+      //            .filter(
+      //                e ->
+      //                    e instanceof Rame
+      //                        && !(Arrays.stream(ip.getSailors())
+      //                            .anyMatch(n -> n.getX() == e.getX() && n.getY() == e.getY())))
+      //            .findFirst()
+      //            .get();
+      //    acts.add(new MoveAction(m, rame.getX() - m.getX(), rame.getY() - m.getY()));
+      //    m.setX(rame.getX());
+      //    m.setY(rame.getY());
+      //  }
+      //}
+
+
       /*return OBJECT_MAPPER.writeValueAsString(
       Arrays.stream(ip.getSailors())
           .filter(
@@ -168,4 +208,89 @@ public class Cockpit implements ICockpit {
   public NextRoundParameters getNp() {
     return np;
   }
+
+  private ArrayList<MoveAction> firstSailorConfig(Pair<Integer,Integer> wantedConfig, HashMap<Marin, Set<Rame>> possibleSailorConfig, Set<Rame> currentOars, ArrayList<MoveAction> act){
+    var marins = possibleSailorConfig.keySet();
+    for(Rame r : currentOars){
+      for(Marin m : marins){
+        var sailorsMinusThis = new HashMap<>(possibleSailorConfig);
+        sailorsMinusThis.remove(m);
+        var oarsMinusThis = new HashSet<Rame>(currentOars);
+        oarsMinusThis.remove(r);
+        var actPlusThis = new ArrayList<>(act);
+        actPlusThis.add(new MoveAction(m, r.getX() - m.getX(), r.getY() - m.getY()));
+        firstSailorConfig(wantedConfig,sailorsMinusThis,oarsMinusThis,actPlusThis);
+        if(isConfigurationReached(wantedConfig, act)){
+          return actPlusThis;
+        }
+      }
+    }
+    return null;
+  }
+
+  private boolean isConfigurationReached(Pair<Integer,Integer> wantedConfig, ArrayList<MoveAction> act){
+    var obj = Pair.of(0,0);
+    for(MoveAction g : act){
+      var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY()+g.getYDistance());
+      Rame oar;
+      try{
+        if(getIp().getShip().getEntityHere(entity).get().equals(Rame.class)){
+          oar = (Rame) getIp().getShip().getEntityHere(entity).get();
+          if(getIp().getShip().isOarLeft(oar)){
+            obj = Pair.of(obj.first+1, obj.second);
+          }
+          else{
+            obj = Pair.of(obj.first, obj.second+1);
+          }
+        }
+      }
+      catch(Exception e){
+        return false;
+      }
+      if(obj.first>=wantedConfig.first && obj.second >= wantedConfig.second)
+        return true;
+    }
+    return false;
+  }
+
+  private ArrayList<OarAction> whoShouldOar(Pair<Integer,Integer> wantedConfig, ArrayList<MoveAction> act){
+    var oaring = new ArrayList<OarAction>();
+    var obj = Pair.of(0,0);
+    for(MoveAction g : act){
+      var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY()+g.getYDistance());
+      Rame oar;
+      try{
+        if(getIp().getShip().getEntityHere(entity).get().equals(Rame.class)){
+          oar = (Rame) getIp().getShip().getEntityHere(entity).get();
+          if(getIp().getShip().isOarLeft(oar)){
+            if(obj.first.equals(wantedConfig.first)){
+              continue;
+            }
+            else{
+              obj = Pair.of(obj.first+1, obj.second);
+              oaring.add(new OarAction(g.getSailor()));
+            }
+          }
+          else{
+            if(obj.second.equals(wantedConfig.second)){
+              continue;
+            }
+            else{
+              obj = Pair.of(obj.first, obj.second+1);
+              oaring.add(new OarAction(g.getSailor()));
+            }
+          }
+        }
+      }
+      catch(Exception e){
+        return null;
+      }
+      if(obj.equals(wantedConfig))
+        return oaring;
+    }
+    return null;
+
+  }
 }
+
+
