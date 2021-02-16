@@ -5,6 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -13,13 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TrigonometryTest {
 
-    @Test
-    void oarLinearSpeed() {
-        assertEquals(Pair.of(20.0, (double) (165 * 3 / 6)), Trigonometry.oarLinearSpeed(20, 3, 6));
-    }
+    Cockpit cp;
+    InitGameParameters ip;
 
-    @Test
-    void setTurnPossibilitiesTest() {
+    @BeforeEach
+    void init() {
         Cockpit cp = new Cockpit();
         cp.initGame("{\n" +
                 "  \"goal\": {\n" +
@@ -117,6 +116,17 @@ class TrigonometryTest {
                 "    }\n" +
                 "  ]\n" +
                 "}");
+        ip = cp.getIp();
+    }
+
+
+    @Test
+    void oarLinearSpeed() {
+        assertEquals((165 * 3 / 6), Trigonometry.oarLinearSpeed(3, 6));
+    }
+
+    @Test
+    void setTurnPossibilitiesTest() {
         InitGameParameters ip = cp.getIp();
         assertEquals(0, Trigonometry.rightTurnPossibilities.size());
         assertEquals(0, Trigonometry.leftTurnPossibilities.size());
@@ -127,5 +137,22 @@ class TrigonometryTest {
         assertEquals(3, Trigonometry.leftTurnPossibilities.size());
         Trigonometry.rightTurnPossibilities.keySet().forEach(System.out::println);
         Trigonometry.leftTurnPossibilities.keySet().forEach(System.out::println);
+    }
+
+    @Test
+    void findOptOarConfigTest() {
+        var xb = ip.getShip().getPosition().getX();
+        var yb = ip.getShip().getPosition().getY();
+        var nextCp = ((RegattaGoal) ip.getGoal()).getCheckpoints()[0];
+        var xo = nextCp.getPosition().getX();
+        var yo = nextCp.getPosition().getY();
+        var da = Math.atan2(yo - yb, xo - xb);
+        var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
+        var vr = 2 * da;
+        int nbOarLeft = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
+        int nbOarRight = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==ip.getShip().getDeck().getWidth()-1).count(); //Oar à droite
+        Pair<Double, Double> opt = Pair.of(vl, vr);
+        System.out.println(opt);
+        Trigonometry.findOptOarConfig(ip.getSailors().length, nbOarLeft, nbOarRight, opt);
     }
 }

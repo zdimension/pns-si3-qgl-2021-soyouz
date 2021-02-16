@@ -12,6 +12,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,6 +98,7 @@ public class Cockpit implements ICockpit {
       var da = Math.atan2(yo - yb, xo - xb);
       var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
       var vr = 2 * da;
+      Pair<Double, Double> opt = Pair.of(vl, vr);
       var acts = new ArrayList<GameAction>();
       for (Marin m : ip.getSailors()) {
         if (!ip.getShip().hasAt(m.getX(), m.getY(), Rame.class)) {
