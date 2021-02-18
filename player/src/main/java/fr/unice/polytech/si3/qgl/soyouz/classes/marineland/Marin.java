@@ -204,4 +204,15 @@ public class Marin {
     public int hashCode() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Marin{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", x=" + x +
+                ", y=" + y +
+
+                '}';
+    }
 }

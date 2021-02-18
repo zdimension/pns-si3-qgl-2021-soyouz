@@ -78,4 +78,9 @@ public class MoveAction extends GameAction{
         var move = (MoveAction) obj;
         return this.xdistance == move.getXDistance() && this.ydistance == move.getYDistance() ;
     }
+
+    @Override
+    public String toString() {
+        return "MoveAction : x = "+xdistance+" y = "+ ydistance+" | sailor : "+getSailor().toString();
+    }
 }

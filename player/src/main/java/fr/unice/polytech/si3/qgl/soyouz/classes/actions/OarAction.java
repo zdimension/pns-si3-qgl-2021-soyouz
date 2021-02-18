@@ -20,4 +20,9 @@ public class OarAction extends GameAction
     public OarAction(Marin sailor) {
         super(sailor, Rame.class);
     }
+
+    @Override
+    public String toString() {
+        return "OarAction : sailor : "+getSailor().toString();
+    }
 }
