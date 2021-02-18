@@ -128,9 +128,14 @@ public class Cockpit implements ICockpit {
       }
       //essayer d'atteindre la configuration de maniere itérative
       var actsMoves = new ArrayList<MoveAction>();
-      var moves = firstSailorConfig(wantedOarConfig, oarReachableForSailors, allOars, actsMoves);
+      if(!isConfigurationReached(wantedOarConfig, actsMoves)){
+        actsMoves = firstSailorConfig(wantedOarConfig, oarReachableForSailors, allOars, actsMoves);
+      }
+      System.out.println("out of functions");
+      System.out.println(actsMoves);
       //when no moves are found, random
-      if(moves == null){
+      if(actsMoves == null){
+        System.out.println("no move found");
         //rien de possible en un tour seulement
         for (Marin m : ip.getSailors()) {
           if (!ip.getShip().hasAt(m.getX(), m.getY(), Rame.class)) {
@@ -151,12 +156,17 @@ public class Cockpit implements ICockpit {
         return OBJECT_MAPPER.writeValueAsString(acts.toArray(GameAction[]::new));
       }
       else{
-        var oaring = whoShouldOar(wantedOarConfig, moves);
-        if(oaring == null)
+        var oaring = whoShouldOar(wantedOarConfig, actsMoves);
+        if(oaring == null){
           return "";
+        }
         var actions = new ArrayList<GameAction>();
-        actions.addAll(moves);
+        actions.addAll(actsMoves);
         actions.addAll(oaring);
+        //update sailors
+        for(MoveAction m : actsMoves){
+          m.getSailor().moveRelative(m.getXDistance(), m.getYDistance());
+        }
         return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));
       }
 
@@ -221,7 +231,12 @@ public class Cockpit implements ICockpit {
   }
 
   private ArrayList<MoveAction> firstSailorConfig(Pair<Integer,Integer> wantedConfig, HashMap<Marin, Set<Rame>> possibleSailorConfig, Set<Rame> currentOars, ArrayList<MoveAction> act){
+    //System.out.println("---------------------------");
+    //act.forEach(a -> System.out.println(a));
+    //System.out.println(act);
     var marins = possibleSailorConfig.keySet();
+    if(marins.isEmpty())
+      return act;
     for(Rame r : currentOars){
       for(Marin m : marins){
         var sailorsMinusThis = new HashMap<>(possibleSailorConfig);
@@ -230,10 +245,16 @@ public class Cockpit implements ICockpit {
         oarsMinusThis.remove(r);
         var actPlusThis = new ArrayList<>(act);
         actPlusThis.add(new MoveAction(m, r.getX() - m.getX(), r.getY() - m.getY()));
+        //System.out.println(actPlusThis);
         var allMoves = firstSailorConfig(wantedConfig,sailorsMinusThis,oarsMinusThis,actPlusThis);
-        if(allMoves != null)
-        if(isConfigurationReached(wantedConfig, allMoves)){
-          return allMoves;
+        //System.out.println("Full tasked ---------------");
+        if(allMoves != null){
+          //System.out.println("allMoves not NULL");
+          if(isConfigurationReached(wantedConfig, allMoves)){
+            //System.out.println("FOUND-------------------------------------");
+            //System.out.println(allMoves);
+            return allMoves;
+          }
         }
       }
     }
@@ -241,12 +262,17 @@ public class Cockpit implements ICockpit {
   }
 
   private boolean isConfigurationReached(Pair<Integer,Integer> wantedConfig, ArrayList<MoveAction> act){
+    //System.out.println("isConfifurationReched");
+    //System.out.println(act);
     var obj = Pair.of(0,0);
+    //System.out.println("obj evolution");
     for(MoveAction g : act){
+      //System.out.println("---");
       var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY()+g.getYDistance());
       Rame oar;
       try{
         if(getIp().getShip().getEntityHere(entity).get() instanceof Rame){
+          //System.out.println(obj);
           oar = (Rame) getIp().getShip().getEntityHere(entity).get();
           if(getIp().getShip().isOarLeft(oar)){
             obj = Pair.of(obj.first+1, obj.second);
@@ -257,22 +283,34 @@ public class Cockpit implements ICockpit {
         }
       }
       catch(Exception e){
+        //System.out.println("error");
         return false;
       }
-      if(obj.first>=wantedConfig.first && obj.second >= wantedConfig.second)
+      //System.out.println(obj);
+      //System.out.println(wantedConfig);
+      if(obj.first>=wantedConfig.first && obj.second >= wantedConfig.second){
+        //System.out.println(obj);
+        //System.out.println(wantedConfig);
+        //System.out.println("true");
+
         return true;
+      }
     }
+    //System.out.println(obj);
+    //System.out.println(wantedConfig);
+    //System.out.println("returns false");
     return false;
   }
 
   private ArrayList<OarAction> whoShouldOar(Pair<Integer,Integer> wantedConfig, ArrayList<MoveAction> act){
+    System.out.println("oaring");
     var oaring = new ArrayList<OarAction>();
     var obj = Pair.of(0,0);
     for(MoveAction g : act){
       var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY()+g.getYDistance());
       Rame oar;
       try{
-        if(getIp().getShip().getEntityHere(entity).get().equals(Rame.class)){
+        if(getIp().getShip().getEntityHere(entity).get().getClass().equals(Rame.class)){
           oar = (Rame) getIp().getShip().getEntityHere(entity).get();
           if(getIp().getShip().isOarLeft(oar)){
             if(obj.first.equals(wantedConfig.first)){
@@ -295,10 +333,15 @@ public class Cockpit implements ICockpit {
         }
       }
       catch(Exception e){
+        System.out.println("error");
         return null;
       }
-      if(obj.equals(wantedConfig))
+      if(obj.equals(wantedConfig)){
+        System.out.println("return oaring");
+        System.out.println(oaring);
+
         return oaring;
+      }
     }
     return null;
 
