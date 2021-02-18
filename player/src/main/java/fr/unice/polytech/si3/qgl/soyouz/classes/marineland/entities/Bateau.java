@@ -182,6 +182,9 @@ public class Bateau extends AutreBateau
             //Canon
         }
 
-        return Arrays.stream(str).map(String::new).collect(Collectors.joining("\n"));
+        var strBateau = Arrays.stream(str).map(String::new).collect(Collectors.joining("\n"));
+        String info = name+" | life : "+getLife()+" Position : "+getPosition()+"\n";
+
+        return info+strBateau;
     }
 }

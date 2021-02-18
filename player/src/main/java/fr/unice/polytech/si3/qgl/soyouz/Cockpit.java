@@ -115,7 +115,7 @@ public class Cockpit implements ICockpit {
         oarReachableForSailors.put(m, new HashSet<>());
       }
       var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, ip.getShip().getNumberOar(),opt);
-      System.out.println("wanted config"+wantedOarConfig);
+
       //calculer toutes les rames atteignables par tous les marins
       for(OnboardEntity ent : ip.getShip().getEntities()){
         if(!(ent instanceof Rame))
@@ -274,9 +274,6 @@ public class Cockpit implements ICockpit {
         return true;
       }
     }
-    //System.out.println(obj);
-    //System.out.println(wantedConfig);
-    //System.out.println("returns false");
     return false;
   }
 
@@ -310,7 +307,6 @@ public class Cockpit implements ICockpit {
         }
       }
       catch(Exception e){
-        System.out.println("error");
         return null;
       }
       if(obj.equals(wantedConfig)){
