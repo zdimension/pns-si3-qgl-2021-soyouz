@@ -62,8 +62,8 @@
     ],
     "shape": {
       "type": "rectangle",
-      "width": 3,
-      "height": 6,
+      "width": 2,
+      "height": 4,
       "orientation": 0
     }
   },
