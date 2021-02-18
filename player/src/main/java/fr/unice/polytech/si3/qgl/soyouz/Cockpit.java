@@ -32,6 +32,8 @@ public class Cockpit implements ICockpit {
     OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
+  static int i = 0;
+
   private InitGameParameters ip;
   private NextRoundParameters np;
   private RootObjective objective;
@@ -72,6 +74,7 @@ public class Cockpit implements ICockpit {
    */
   @Override
   public String nextRound(String round) {
+    i++;
     try {
       np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
       log("Next round input: " + np);
@@ -104,7 +107,9 @@ public class Cockpit implements ICockpit {
       var da = Math.atan2(yo - yb, xo - xb);
       var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
       var vr = 2 * da;
-      Pair<Double, Double> opt = Pair.of(vl, vr);
+      //TODO Ignoble d'appeller 2 fois la meme instance du bateau
+      var vrr = Trigonometry.neededRotation(np.getShip(), ip.getShip(), nextCp.getPosition());
+      Pair<Double, Double> opt = Pair.of(vl, -vrr);
       var acts = new ArrayList<GameAction>();
       //-----------------------------------
       //computing how to move sailors
@@ -116,7 +121,7 @@ public class Cockpit implements ICockpit {
         oarReachableForSailors.put(m, new HashSet<>());
         sailorsNotMoving.add(new MoveAction(m, 0,0));
       }
-      var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, ip.getShip().getNumberOar(),opt);
+      var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, ip.getShip().getNumberOar() / 2,opt);
 
       //calculer toutes les rames atteignables par tous les marins
       for(OnboardEntity ent : ip.getShip().getEntities()){

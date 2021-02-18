@@ -146,8 +146,8 @@ public class Trigonometry {
         return optimal != null ? optimal : Pair.of(1, 1);
     }
 
-    public static double neededRotation(Bateau boat, Position objectivePosition){
-        return (boat.getPosition().getOrientation()+((Rectangle) boat.getShape()).getOrientation()) - 2*Math.atan2(objectivePosition.getY() -boat.getPosition().getY(), objectivePosition.getX() - boat.getPosition().getX());
+    public static double neededRotation(Bateau boat, Bateau boatt, Position objectivePosition){
+        return (boat.getPosition().getOrientation()+((Rectangle) boatt.getShape()).getOrientation()) - 2*Math.atan2(objectivePosition.getY() -boat.getPosition().getY(), objectivePosition.getX() - boat.getPosition().getX());
     }
 
     public static boolean rudderRotationIsInRange (Double neededRotation){
