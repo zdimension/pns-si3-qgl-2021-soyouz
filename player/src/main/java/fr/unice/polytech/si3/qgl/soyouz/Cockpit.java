@@ -75,11 +75,6 @@ public class Cockpit implements ICockpit {
     try {
       np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
       log("Next round input: " + np);
-      // TODO X.isUsed THROW NULLPOINTEREXCEPTION
-      Arrays.stream(ip.getShip().getEntities())
-          .filter(x -> x.isUsed())
-          .forEach(
-              x -> x.setUsed(false)); // At each start of round, the entities are no longer used
       objective.update(new GameState(ip, np));
 
       // TODO Check if it work
