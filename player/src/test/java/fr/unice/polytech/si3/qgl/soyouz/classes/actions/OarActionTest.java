@@ -19,9 +19,5 @@ class OarActionTest {
         oarAction = new OarAction(sailor);
     }
 
-    @Disabled
-    @Test
-    void isUsedTest(){
-        //assertTrue();
-    }
+
 }

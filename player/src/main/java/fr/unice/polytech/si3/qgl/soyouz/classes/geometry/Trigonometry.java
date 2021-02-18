@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -142,6 +144,10 @@ public class Trigonometry {
         }
         //System.out.println(optimal);
         return optimal != null ? optimal : Pair.of(1, 1);
+    }
+
+    public static double neededRotation(Bateau boat, Position objectivePosition){
+        return (boat.getPosition().getOrientation()+((Rectangle) boat.getShape()).getOrientation()) - 2*Math.atan2(objectivePosition.getY() -boat.getPosition().getY(), objectivePosition.getX() - boat.getPosition().getX());
     }
 
     public static boolean rudderRotationIsInRange (Double neededRotation){

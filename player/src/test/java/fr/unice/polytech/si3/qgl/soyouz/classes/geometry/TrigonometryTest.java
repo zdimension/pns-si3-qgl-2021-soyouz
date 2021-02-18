@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,5 +153,7 @@ class TrigonometryTest {
         System.out.println(opt);
         System.out.println(Trigonometry.findOptOarConfig(ip.getSailors().length, nbOarOnSide * 2, opt));
     }
-    
+
+
+
 }

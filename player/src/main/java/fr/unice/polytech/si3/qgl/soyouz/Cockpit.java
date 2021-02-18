@@ -59,7 +59,7 @@ public class Cockpit implements ICockpit {
       objective = ip.getGoal().getObjective();
       log("Init game input: " + ip);
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
     }
   }
 
@@ -199,7 +199,7 @@ public class Cockpit implements ICockpit {
       // return OBJECT_MAPPER.writeValueAsString(objective.resolve(new GameState(ip,
       // np)).toArray());
     } catch (Exception e) {
-      e.printStackTrace();
+      //e.printStackTrace();
       return "[]";
     }
   }
