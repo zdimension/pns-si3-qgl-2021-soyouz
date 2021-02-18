@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
@@ -14,6 +15,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Ship entity.
@@ -141,5 +143,45 @@ public class Bateau extends AutreBateau
             throw e;
         }
         return rame.getPos().getSecond() == 0;
+    }
+
+    @Override
+    public String toString() {
+        var len = 2*deck.getLength()+2;
+        var wid = 2* deck.getWidth() +1;
+        var str = new char[len][wid];
+        var nbEnt = entities.length;
+
+        for (char[] line : str)
+        {
+            Arrays.fill(line, ' ');
+        }
+        str[0][1] = '/';
+        str[0][wid-2] = '\\';
+        for(int y = 0; y < wid; y++){
+            for(int x = 1; x < len; x++){
+                str[x][y] = ((y%2 ==0) && (x%2==0) ? '|' : ((y%2 == 1) && (x%2== 1) ? '_' : ' '));
+            }
+        }
+
+        for(int i = 0; i < nbEnt; i++){
+            var ent = entities[i];
+            if(ent instanceof Rame){
+                str[ent.getX()*2 +2][ent.getY()*2+1] = 'R';
+            }
+            else if(ent instanceof Gouvernail){
+                str[ent.getX()*2 +2][ent.getY()*2+1] = 'G';
+            }
+            else{
+                str[ent.getX()*2 +2][ent.getY()*2+1] = 'E';
+            }
+            //Rame
+            //voiLe
+            //Gouvernail
+            //Vigie
+            //Canon
+        }
+
+        return Arrays.stream(str).map(String::new).collect(Collectors.joining("\n"));
     }
 }
