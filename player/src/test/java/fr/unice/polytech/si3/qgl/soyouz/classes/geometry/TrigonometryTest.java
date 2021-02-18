@@ -152,4 +152,5 @@ class TrigonometryTest {
         System.out.println(opt);
         System.out.println(Trigonometry.findOptOarConfig(ip.getSailors().length, nbOarOnSide * 2, opt));
     }
+    
 }
