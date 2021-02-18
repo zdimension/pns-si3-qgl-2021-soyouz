@@ -116,7 +116,7 @@ public class Trigonometry {
                 diff = difference;
             }
         }
-        System.out.println(optimal);
+        //System.out.println(optimal);
         return optimal;
     }
 
@@ -139,8 +139,8 @@ public class Trigonometry {
                 diff = difference;
             }
         }
-        System.out.println(optimal);
-        return optimal;
+        //System.out.println(optimal);
+        return optimal != null ? optimal : Pair.of(1, 1);
     }
 }
     

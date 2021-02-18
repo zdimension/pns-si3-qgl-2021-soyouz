@@ -19,7 +19,7 @@ class TrigonometryTest {
 
     @BeforeEach
     void init() {
-        Cockpit cp = new Cockpit();
+        cp = new Cockpit();
         cp.initGame("{\n" +
                 "  \"goal\": {\n" +
                 "    \"mode\": \"REGATTA\",\n" +
@@ -127,13 +127,12 @@ class TrigonometryTest {
 
     @Test
     void setTurnPossibilitiesTest() {
-        InitGameParameters ip = cp.getIp();
         assertEquals(0, Trigonometry.rightTurnPossibilities.size());
         assertEquals(0, Trigonometry.leftTurnPossibilities.size());
         int nbOarOnSide = (int) Arrays.stream(ip.getShip().getEntities()).filter(oar -> oar.getY()==0).count(); //Oar à gauche
         Trigonometry.setTurnPossibilities(ip.getSailors().length, nbOarOnSide);
-        assertEquals(3, Trigonometry.rightTurnPossibilities.size());
-        assertEquals(3, Trigonometry.leftTurnPossibilities.size());
+        assertEquals(5, Trigonometry.rightTurnPossibilities.size());
+        assertEquals(5, Trigonometry.leftTurnPossibilities.size());
         Trigonometry.rightTurnPossibilities.keySet().forEach(System.out::println);
         Trigonometry.leftTurnPossibilities.keySet().forEach(System.out::println);
     }
