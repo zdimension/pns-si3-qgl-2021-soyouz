@@ -13,7 +13,10 @@ import java.util.Objects;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = Rame.class, name = "oar")
+    @JsonSubTypes.Type(value = Rame.class, name = "oar"),
+    @JsonSubTypes.Type(value = Gouvernail.class, name = "rudder")
+
+
 })
 public abstract class OnboardEntity
 {
