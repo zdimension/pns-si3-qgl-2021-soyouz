@@ -215,14 +215,18 @@ public class Cockpit implements ICockpit {
     var marins = possibleSailorConfig.keySet();
     if (marins.isEmpty())
       return act;
-    for (Rame r : currentOars) {
-      for (Marin m : marins) {
+
+    for (Map.Entry<Marin, Set<Rame>> pair : possibleSailorConfig.entrySet()) {
+      var marin = pair.getKey();
+      for(var rame : pair.getValue()){
+        if(!currentOars.contains(rame))
+          continue;
         var sailorsMinusThis = new HashMap<>(possibleSailorConfig);
-        sailorsMinusThis.remove(m);
+        sailorsMinusThis.remove(marin);
         var oarsMinusThis = new HashSet<Rame>(currentOars);
-        oarsMinusThis.remove(r);
+        oarsMinusThis.remove(rame);
         var actPlusThis = new ArrayList<>(act);
-        actPlusThis.add(new MoveAction(m, r.getX() - m.getX(), r.getY() - m.getY()));
+        actPlusThis.add(new MoveAction(marin, rame.getX() - marin.getX(), rame.getY() - marin.getY()));
         var allMoves = firstSailorConfig(wantedConfig, sailorsMinusThis, oarsMinusThis, actPlusThis);
         if (allMoves != null) {
           if (isOarConfigurationReached(wantedConfig, allMoves)) {
@@ -231,6 +235,8 @@ public class Cockpit implements ICockpit {
         }
       }
     }
+
+
     return null;
   }
 
