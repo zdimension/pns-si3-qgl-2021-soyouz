@@ -129,6 +129,7 @@ public class Cockpit implements ICockpit {
       //essayer d'atteindre la configuration de maniere itérative
       var actsMoves = new ArrayList<MoveAction>();
       var moves = firstSailorConfig(wantedOarConfig, oarReachableForSailors, allOars, actsMoves);
+      //when no moves are found, random
       if(moves == null){
         //rien de possible en un tour seulement
         for (Marin m : ip.getSailors()) {
@@ -157,7 +158,6 @@ public class Cockpit implements ICockpit {
         actions.addAll(moves);
         actions.addAll(oaring);
         return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));
-        //concat oaring et moves
       }
 
       //-----------------------------------
