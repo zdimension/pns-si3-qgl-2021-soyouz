@@ -111,8 +111,10 @@ public class Cockpit implements ICockpit {
       var sailors = ip.getSailors();
       var oarReachableForSailors = new HashMap<Marin, Set<Rame>>();
       var allOars = new HashSet<Rame>();
+      var sailorsNotMoving = new ArrayList<MoveAction>();
       for(Marin m : ip.getSailors()){
         oarReachableForSailors.put(m, new HashSet<>());
+        sailorsNotMoving.add(new MoveAction(m, 0,0));
       }
       var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, ip.getShip().getNumberOar(),opt);
 
@@ -129,7 +131,11 @@ public class Cockpit implements ICockpit {
       }
       //essayer d'atteindre la configuration de maniere itérative
       var actsMoves = new ArrayList<MoveAction>();
+
+
+      //todo mais pourquoi ÇA plante???
       if(!isConfigurationReached(wantedOarConfig, actsMoves)){
+      //if(!isConfigurationReached(wantedOarConfig, sailorsNotMoving)){
         actsMoves = firstSailorConfig(wantedOarConfig, oarReachableForSailors, allOars, actsMoves);
       }
       //when no moves are found, random
@@ -165,37 +171,9 @@ public class Cockpit implements ICockpit {
         for(MoveAction m : actsMoves){
           m.getSailor().moveRelative(m.getXDistance(), m.getYDistance());
         }
+        System.out.println(actions);
         return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));
       }
-
-      //-----------------------------------
-      //for (Marin m : ip.getSailors()) {
-      //  if (!ip.getShip().hasAt(m.getX(), m.getY(), Rame.class)) {
-      //    var rame =
-      //        Arrays.stream(ip.getShip().getEntities())
-      //            .filter(
-      //                e ->
-      //                    e instanceof Rame
-      //                        && !(Arrays.stream(ip.getSailors())
-      //                            .anyMatch(n -> n.getX() == e.getX() && n.getY() == e.getY())))
-      //            .findFirst()
-      //            .get();
-      //    acts.add(new MoveAction(m, rame.getX() - m.getX(), rame.getY() - m.getY()));
-      //    m.setX(rame.getX());
-      //    m.setY(rame.getY());
-      //  }
-      //}
-
-
-      /*return OBJECT_MAPPER.writeValueAsString(
-      Arrays.stream(ip.getSailors())
-          .filter(
-              m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame)
-          .map(OarAction::new)
-          .toArray(OarAction[]::new));*/
-
-      // return OBJECT_MAPPER.writeValueAsString(objective.resolve(new GameState(ip,
-      // np)).toArray());
     } catch (Exception e) {
       //e.printStackTrace();
       return "[]";
@@ -268,6 +246,7 @@ public class Cockpit implements ICockpit {
         }
       }
       catch(Exception e){
+        System.out.println("mais porquoi ça marche pas???");
         return false;
       }
       if(obj.first>=wantedConfig.first && obj.second >= wantedConfig.second){
