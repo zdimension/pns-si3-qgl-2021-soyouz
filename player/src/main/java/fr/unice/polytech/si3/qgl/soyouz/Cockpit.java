@@ -88,10 +88,10 @@ public class Cockpit implements ICockpit {
           m -> ip.getShip().getEntityHere(m.getX(), m.getY()).orElse(null) instanceof Rame
       ).map(OarAction::new).toArray(OarAction[]::new));*/
 
-      var xb = ip.getShip().getPosition().getX();
-      var yb = ip.getShip().getPosition().getY();
+      var xb = np.getShip().getPosition().getX();
+      var yb = np.getShip().getPosition().getY();
       //TODO : c'est moche, mais sa regarde si le centre du bateau est dans le checkpoint, bon c'est pas garanti que ça marche pour la week 4...
-      if (ip.getShip().getPosition().getLength(((RegattaGoal) ip.getGoal()).getCheckpoints()[numCheckpoint].getPosition())
+      if (np.getShip().getPosition().getLength(((RegattaGoal) ip.getGoal()).getCheckpoints()[numCheckpoint].getPosition())
               < (((Circle)((RegattaGoal) ip.getGoal()).getCheckpoints()[numCheckpoint].getShape())).getRadius()){
         if(numCheckpoint<((RegattaGoal) ip.getGoal()).getCheckpoints().length-1){
           numCheckpoint++;
