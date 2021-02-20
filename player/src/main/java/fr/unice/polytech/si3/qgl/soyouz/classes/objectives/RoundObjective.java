@@ -132,7 +132,6 @@ public class RoundObjective extends Objective {
 		return null;
 	}
 
-	//TODO
 	@Override
 	public boolean isValidated(GameState state) {
 		return false;
