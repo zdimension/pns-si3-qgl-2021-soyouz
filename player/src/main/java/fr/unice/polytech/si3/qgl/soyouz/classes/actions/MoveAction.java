@@ -7,11 +7,12 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import java.util.Optional;
 
 /**
- * Action to move a Sailor.
+ * Action to move a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin}.
  */
 public class MoveAction extends GameAction{
     private int xdistance;
     private int ydistance;
+
     /**
      * Constructor.
      *
@@ -51,20 +52,13 @@ public class MoveAction extends GameAction{
     }
 
     /**
-     * Getters.
      *
-     * @return the new position of the sailor after moving him.
+     * @return the new position of the sailor if moved according to this.
      */
     public Pair<Integer,Integer> newPos(){
         return Pair.of(getSailor().getPos().first+xdistance, getSailor().getPos().second+ydistance);
     }
 
-    /**
-     * Find if two Move Action are equals or not, only based on their translations.
-     *
-     * @param obj The other Move Action.
-     * @return true if they are equals, false otherwise.
-     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof MoveAction))

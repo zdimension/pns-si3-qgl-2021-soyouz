@@ -30,7 +30,7 @@ public abstract class Objective {
     }
 
     /**
-     * Actions to perform. The state of the game is being updated too
+     * Defines actions to perform. The state of the game is being updated too
      *
      * @param state of the game
      * @return a list of all actions to send to JSON

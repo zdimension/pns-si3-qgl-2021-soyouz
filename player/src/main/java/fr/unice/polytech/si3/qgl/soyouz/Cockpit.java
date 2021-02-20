@@ -79,6 +79,7 @@ public class Cockpit implements ICockpit {
       np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
       log("Next round input: " + np);
       objective.update(new GameState(ip, np));
+      //querying actions to perform and updates game status
       var actions = objective.resolve(new GameState(ip, np));
 
       // TODO Check if it work
@@ -126,107 +127,6 @@ public class Cockpit implements ICockpit {
     return np;
   }
 
-  private ArrayList<MoveAction> firstSailorConfig(Pair<Integer, Integer> wantedConfig, HashMap<Marin, Set<Rame>> possibleSailorConfig, Set<Rame> currentOars, ArrayList<MoveAction> act) {
-    var marins = possibleSailorConfig.keySet();
-    if (marins.isEmpty())
-      return act;
-
-    for (Map.Entry<Marin, Set<Rame>> pair : possibleSailorConfig.entrySet()) {
-      var marin = pair.getKey();
-      for(var rame : pair.getValue()){
-        if(!currentOars.contains(rame))
-          continue;
-        var sailorsMinusThis = new HashMap<>(possibleSailorConfig);
-        sailorsMinusThis.remove(marin);
-        var oarsMinusThis = new HashSet<Rame>(currentOars);
-        oarsMinusThis.remove(rame);
-        var actPlusThis = new ArrayList<>(act);
-        actPlusThis.add(new MoveAction(marin, rame.getX() - marin.getX(), rame.getY() - marin.getY()));
-        var allMoves = firstSailorConfig(wantedConfig, sailorsMinusThis, oarsMinusThis, actPlusThis);
-        if (allMoves != null) {
-          if (isOarConfigurationReached(wantedConfig, allMoves)) {
-            return allMoves;
-          }
-        }
-      }
-    }
 
 
-    return null;
-  }
-
-  private boolean isOarConfigurationReached(Pair<Integer, Integer> wantedConfig, ArrayList<MoveAction> act) {
-    var obj = Pair.of(0, 0);
-    for (MoveAction g : act) {
-      var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY() + g.getYDistance());
-      Rame oar;
-      try {
-        var entHere = getIp().getShip().getEntityHere(entity);
-        if (entHere.isEmpty()) {
-          //no entity here
-          continue;
-        }
-        if (entHere.get() instanceof Rame) {
-          oar = (Rame) entHere.get();
-          if (getIp().getShip().isOarLeft(oar)) {
-            obj = Pair.of(obj.first + 1, obj.second);
-          } else {
-            obj = Pair.of(obj.first, obj.second + 1);
-          }
-        }
-      } catch (Exception e) {
-        return false;
-      }
-      if (obj.first >= wantedConfig.first && obj.second >= wantedConfig.second) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private ArrayList<OarAction> whoShouldOar(Pair<Integer, Integer> wantedConfig, ArrayList<MoveAction> act, ArrayList<Marin> unmovedSailors) {
-    var oaring = new ArrayList<OarAction>();
-    var obj = Pair.of(0, 0);
-    ArrayList<Marin> sailorAndDistance = new ArrayList<>();
-    for (var move : act) {
-      sailorAndDistance.add(new Marin(move.getSailorId(), move.getSailor().getX() + move.getXDistance(), move.getSailor().getY() + move.getYDistance(), move.getSailor().getName()));
-    }
-    sailorAndDistance.addAll(unmovedSailors);
-    for (var s : sailorAndDistance) {
-      var m = s;
-      var pos = s.getPos();
-      Rame oar;
-      try {
-        var entHere = getIp().getShip().getEntityHere(pos);
-        if (entHere.isEmpty()) {
-          //no entity here
-          continue;
-        }
-        if (entHere.get() instanceof Rame) {
-          oar = (Rame) entHere.get();
-          if (getIp().getShip().isOarLeft(oar)) {
-            if (obj.first.equals(wantedConfig.first)) {
-              continue;
-            } else {
-              obj = Pair.of(obj.first + 1, obj.second);
-              oaring.add(new OarAction(m));
-            }
-          } else {
-            if (obj.second.equals(wantedConfig.second)) {
-              continue;
-            } else {
-              obj = Pair.of(obj.first, obj.second + 1);
-              oaring.add(new OarAction(m));
-            }
-          }
-        }
-      } catch (Exception e) {
-        return null;
-      }
-      if (obj.equals(wantedConfig)) {
-        return oaring;
-      }
-    }
-    return null;
-  }
 }

@@ -8,14 +8,17 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import java.util.Optional;
 
 /**
- * Rowing action. Need a Sailor on a oar to be done.
+ * <p>
+ * Rowing action. Needs the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin} to be located on
+ * a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame}.
+ * </p>
  */
 public class OarAction extends GameAction
 {
     /**
      * Constructor.
      *
-     * @param sailor The needed Sailor to perform the action.
+     * @param sailor to perform the action.
      */
     public OarAction(Marin sailor) {
         super(sailor, Rame.class);

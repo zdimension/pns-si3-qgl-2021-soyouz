@@ -24,7 +24,6 @@ public class CheckpointObjective extends CompositeObjective{
 
     private Checkpoint cp;
 
-    //TODO
     public CheckpointObjective(Checkpoint checkpoint) {
         cp = checkpoint;
     }

@@ -31,11 +31,6 @@ public class RegattaObjective extends RootObjective
         currentCheckpoint = null;
     }
 
-    /**
-     * Method to update the state of the goal.
-     *
-     * @param state New state to set.
-     */
     @Override
     public void update(GameState state)
     {
