@@ -20,4 +20,13 @@ public class TurnAction extends GameAction{
         super(sailor, Gouvernail.class);
         this.rotation = rotation;
     }
+
+    public double getRotation() {
+        return rotation;
+    }
+
+    @Override
+    public String toString() {
+        return "MoveAction : rotation = "+rotation+" | sailor : "+getSailor().toString();
+    }
 }

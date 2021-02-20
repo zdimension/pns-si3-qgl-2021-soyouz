@@ -38,6 +38,7 @@ public class RegattaObjective extends RootObjective
         if(currentCheckpoint != null)
         if(currentCheckpoint.isValidated(state)){
             if(goalData.getCheckpoints().length - 1 > numCheckpoint){
+                //System.out.println("Checkpoint reached------------------------------------------------------------");
                 numCheckpoint++;
             }
         }
