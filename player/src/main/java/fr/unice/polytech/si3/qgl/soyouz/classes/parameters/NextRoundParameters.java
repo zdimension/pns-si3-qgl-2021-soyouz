@@ -60,13 +60,4 @@ public class NextRoundParameters
     public Wind getWind() {
         return wind;
     }
-
-    @Override
-    public String toString() {
-        return "NextRoundParameters{" +
-                "ship=" + ship +
-                ", wind=" + wind +
-                ", visibleEntities=" + Arrays.toString(visibleEntities) +
-                '}';
-    }
 }

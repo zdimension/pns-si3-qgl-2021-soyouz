@@ -23,20 +23,17 @@ public class CheckpointObjective extends CompositeObjective{
 
     //TODO
     public CheckpointObjective(Checkpoint checkpoint) {
-        System.out.println("creating checkpointobjective");
         cp = checkpoint;
     }
 
     @Override
     public boolean isValidated(GameState state) {
-        System.out.println("validating checkpointobjective");
         return state.getNp().getShip().getPosition().getLength(cp.getPosition())
                 < (((Circle) cp.getShape())).getRadius();
     }
 
     @Override
     public List<GameAction> resolve(GameState state) {
-        System.out.println("solving checkpointobjective");
         var xb = state.getNp().getShip().getPosition().getX();
         var yb = state.getNp().getShip().getPosition().getY();
 
@@ -50,14 +47,9 @@ public class CheckpointObjective extends CompositeObjective{
         Pair<Double, Double> opt = Pair.of(vl, -vrr);
 
         var sailors = state.getIp().getSailors();
-        var oarReachableForSailors = new HashMap<Marin, Set<Rame>>();
-        var allOars = new HashSet<Rame>();
-        var sailorsNotMoving = new ArrayList<MoveAction>();
-        for (Marin m : state.getIp().getSailors()) {
-            oarReachableForSailors.put(m, new HashSet<>());
-            sailorsNotMoving.add(new MoveAction(m, 0, 0));
-        }
+
         var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt);
+
         var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
         wantedConfig.put(Rame.class, wantedOarConfig);
 

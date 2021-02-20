@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class CompositeObjective extends Objective {
-    protected Collection<Objective> intermediateObjective = new ArrayList<>();
+    protected ArrayList<Objective> intermediateObjective = new ArrayList<>();
 
     @Override
     public boolean isValidated(GameState state)
