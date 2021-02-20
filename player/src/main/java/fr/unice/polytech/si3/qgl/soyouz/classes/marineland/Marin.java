@@ -18,7 +18,7 @@ public class Marin {
     /**
      * Getter.
      *
-     * @return the Id of the Sailor.
+     * @return the Id of this.
      */
     public int getId() {
         return id;
@@ -27,7 +27,7 @@ public class Marin {
     /**
      * Getter.
      *
-     * @return the x position of the Sailor on the Deck.
+     * @return the x position of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
      */
     public int getX() {
         return x;
@@ -36,7 +36,7 @@ public class Marin {
     /**
      * Getter.
      *
-     * @return the y position of the Sailor on the Deck.
+     * @return the y position of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
      */
     public int getY() {
         return y;
@@ -60,7 +60,7 @@ public class Marin {
     /**
      * Getter.
      *
-     * @return the coords of the Sailor on the Deck.
+     * @return the coordinates of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
      */
     @JsonIgnore
     public Pair<Integer, Integer> getGridPosition() {
@@ -70,7 +70,7 @@ public class Marin {
     /**
      * Getter.
      *
-     * @return the Name of the Sailor.
+     * @return the Name of this.
      */
     public String getName() {
         return name;
@@ -175,12 +175,6 @@ public class Marin {
         return isAbsPosReachable(pos.getFirst(), pos.getSecond());
     }
 
-    /**
-     * Method to determine if two sailors are equals.
-     *
-     * @param obj The second sailor.
-     * @return true if they are, false otherwise.
-     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Marin))
@@ -195,11 +189,6 @@ public class Marin {
         return this.id == mar.id && this.x == mar.x && this.y == mar.y && this.name.equals(mar.name);
     }
 
-    /**
-     * Method to create an unique id for a sailor.
-     *
-     * @return the created code.
-     */
     @Override
     public int hashCode() {
         return id;

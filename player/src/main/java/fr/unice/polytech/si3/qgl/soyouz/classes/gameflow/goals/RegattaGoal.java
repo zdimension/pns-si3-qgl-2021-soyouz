@@ -22,11 +22,6 @@ public class RegattaGoal extends GameGoal
         return checkpoints.clone();
     }
 
-    /**
-     * Getters.
-     *
-     * @return a new objective based on the current game mode.
-     */
     @Override
     public RootObjective getObjective()
     {

@@ -86,7 +86,7 @@ public class Bateau extends AutreBateau
     } //TODO : A verifier je ne suis pas dutout un AS en stream #Alexis
 
     /**
-     * Method to determine if a position is on the left of the boat.
+     * Method to determine if a position is on the left of this.
      *
      * @param posObs Position of obstacle.
      * @return true if the obstacle is on the left of the boat.
@@ -99,7 +99,8 @@ public class Bateau extends AutreBateau
     }
 
     /**
-     * Determine which Entity is set on a specific Point.
+     * Determines which {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
+     * set on a specific {@link fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point}.
      *
      * @param xPos The abscissa of the Point to analyse.
      * @param yPos The ordinate of the Point to analyse.
@@ -118,7 +119,8 @@ public class Bateau extends AutreBateau
     }
 
     /**
-     * Determine which Entity is set on a specific Point.
+     * Determines which {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
+     * set on a specific {@link fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point}.
      *
      * @param pos The coords we want to analyse.
      * @return optional entity on the given cell.

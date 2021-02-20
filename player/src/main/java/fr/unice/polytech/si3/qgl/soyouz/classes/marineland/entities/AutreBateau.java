@@ -42,7 +42,7 @@ public class AutreBateau extends Entity
     /**
      * Setters.
      *
-     * @param position Set the position of the boat.
+     * @param position to set.
      */
     public void setPosition(Position position)
     {

@@ -15,6 +15,11 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 })
 public abstract class GameGoal
 {
+    /**
+     * Getters.
+     *
+     * @return a new objective based on the current game mode.
+     */
     @JsonIgnore
     public abstract RootObjective getObjective();
 }

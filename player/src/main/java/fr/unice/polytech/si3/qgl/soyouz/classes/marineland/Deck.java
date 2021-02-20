@@ -1,7 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
 /**
- * The Deck of a boat.
+ * The Deck of a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau}.
  */
 public class Deck
 {
@@ -17,7 +17,7 @@ public class Deck
     /**
      * Getter.
      *
-     * @return the Width of the Deck.
+     * @return the Width of this.
      */
     public int getWidth()
     {
@@ -27,7 +27,7 @@ public class Deck
     /**
      * Getter.
      *
-     * @return the Length of the Deck.
+     * @return the Length of this.
      */
     public int getLength()
     {
