@@ -7,6 +7,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
@@ -36,39 +37,60 @@ public class RoundObjective extends Objective {
 		var gameShip = state.getIp().getShip();
 		try {
 			var oarReachableForSailors = new HashMap<Marin, Set<Rame>>();
+			var absReachableForSailors = new HashMap<Marin, Set<Pair<Integer, Integer>>>();
 			var allOars = new HashSet<Rame>();
+			var allAbsEnt = new HashSet<Pair<Integer, Integer>>();
 			var sailorsNotMoving = new ArrayList<MoveAction>();
 			for (Marin m : sailors) {
 				oarReachableForSailors.put(m, new HashSet<>());
+				absReachableForSailors.put(m, new HashSet<>());
 				sailorsNotMoving.add(new MoveAction(m, 0, 0));
 			}
+			//how many sailors on the left and the right
 			Pair<Integer, Integer> wantedOarConfig;
+			//coordinates of entities having only one instance on the ship
+			HashSet<Pair<Integer, Integer>> wantedAbsConfig = new HashSet<>();
 			try {
+				if (wantedConfiguration.containsKey(Rame.class)) ;
 				wantedOarConfig = Pair.of((Integer) ((Pair) wantedConfiguration.get(Rame.class)).first, (Integer) ((Pair) wantedConfiguration.get(Rame.class)).second);
+				if (wantedConfiguration.containsKey(Gouvernail.class))
+					wantedAbsConfig.add(Pair.of((Integer) ((Pair) wantedConfiguration.get(Gouvernail.class)).first, (Integer) ((Pair) wantedConfiguration.get(Gouvernail.class)).second));
+
 			} catch (Exception e) {
+				Cockpit.log("Here are Java's limits");
 				throw new RuntimeException("Java is a fucking piece of shit");
 			}
 
 			//compute all reachable oars
 			for (OnboardEntity ent : gameShip.getEntities()) {
-				if (!(ent instanceof Rame))
-					continue;
-				var r = (Rame) ent;
-				allOars.add(r);
-				for (Marin m : sailors) {
-					if (m.isAbsPosReachable(r.getPos()))
-						oarReachableForSailors.get(m).add(r);
+				if (ent instanceof Rame) {
+					var r = (Rame) ent;
+					allOars.add(r);
+					for (Marin m : sailors) {
+						if (m.isAbsPosReachable(r.getPos()))
+							oarReachableForSailors.get(m).add(r);
+					}
+				} else {
+					allAbsEnt.add(ent.getPos());
+					for (Marin m : sailors) {
+						if (m.isAbsPosReachable(ent.getPos()))
+							absReachableForSailors.get(m).add(ent.getPos());
+					}
 				}
 			}
 
 			var actsMoves = new ArrayList<MoveAction>();
 
-			if (!isOarConfigurationReached(wantedOarConfig, sailorsNotMoving, gameShip)) {
-				actsMoves = firstSailorConfig(wantedOarConfig, oarReachableForSailors, allOars, actsMoves, gameShip);
+			if (!isOarConfigurationReached(wantedOarConfig, sailorsNotMoving, gameShip) || !isAbsConfigurationReached(wantedAbsConfig, sailorsNotMoving, gameShip)) {
+				actsMoves = firstSailorConfig(wantedOarConfig, wantedAbsConfig, oarReachableForSailors, absReachableForSailors, allOars, allAbsEnt, actsMoves, gameShip);
 			}
 
 			//when no moves are found, random
 			if (actsMoves == null) {
+				var unmovedSailors = new ArrayList<Marin>(sailors);
+				Cockpit.log("No sailor MoveAction matches the wanted sailor configuration");
+				Cockpit.log("wanted oar config" + wantedOarConfig);
+				Cockpit.log("wanted absolute configuration" + wantedAbsConfig.toString());
 				for (Marin m : sailors) {
 					if (!gameShip.hasAt(m.getX(), m.getY(), Rame.class)) {
 						var rame =
@@ -81,10 +103,20 @@ public class RoundObjective extends Objective {
 										.findFirst()
 										.get();
 						acts.add(new MoveAction(m, rame.getX() - m.getX(), rame.getY() - m.getY()));
+						acts.add(new OarAction(m));
+						unmovedSailors.remove(m);
 						m.setX(rame.getX());
 						m.setY(rame.getY());
 					}
 				}
+				for (Marin m : unmovedSailors) {
+					var e = gameShip.getEntityHere(m.getPos());
+					if(e.isPresent()){
+						if(e.get() instanceof Rame)
+							acts.add(new OarAction(m));
+					}
+				}
+				acts.forEach(a -> Cockpit.log(a.toString()));
 				return acts;
 			} else {
 
@@ -96,6 +128,9 @@ public class RoundObjective extends Objective {
 				if (oaring == null) {
 					return new ArrayList<GameAction>();
 				}
+
+				//TODO faire executer l'action qui n'est pas OAR
+
 				var actions = new ArrayList<GameAction>();
 				actions.addAll(actsMoves);
 				actions.addAll(oaring);
@@ -113,38 +148,91 @@ public class RoundObjective extends Objective {
 		}
 	}
 
-
-
-	private ArrayList<MoveAction> firstSailorConfig(Pair<Integer, Integer> wantedConfig, HashMap<Marin, Set<Rame>> possibleSailorConfig, Set<Rame> currentOars, ArrayList<MoveAction> act, Bateau gameShip) {
-		var marins = possibleSailorConfig.keySet();
+	private ArrayList<MoveAction> firstSailorConfig(Pair<Integer, Integer> wantedOarConfig, Set<Pair<Integer, Integer>> wantedAbsConfig, HashMap<Marin, Set<Rame>> possibleSailorOarConfig, HashMap<Marin, Set<Pair<Integer, Integer>>> possibleSailorAbsConfig, Set<Rame> currentOars, Set<Pair<Integer, Integer>> currentEntities, ArrayList<MoveAction> act, Bateau gameShip) {
+		var marins = possibleSailorOarConfig.keySet();
 		if (marins.isEmpty())
 			return act;
 
-		for (Map.Entry<Marin, Set<Rame>> pair : possibleSailorConfig.entrySet()) {
+		for (Map.Entry<Marin, Set<Rame>> pair : possibleSailorOarConfig.entrySet()) {
 			var marin = pair.getKey();
 			for (var rame : pair.getValue()) {
 				if (!currentOars.contains(rame))
 					continue;
-				var sailorsMinusThis = new HashMap<>(possibleSailorConfig);
-				sailorsMinusThis.remove(marin);
+				var oarSailorsMinusThis = new HashMap<>(possibleSailorOarConfig);
+				oarSailorsMinusThis.remove(marin);
+				var absSailorsMinusThis = new HashMap<>(possibleSailorAbsConfig);
+				absSailorsMinusThis.remove(marin);
 				var oarsMinusThis = new HashSet<Rame>(currentOars);
 				oarsMinusThis.remove(rame);
 				var actPlusThis = new ArrayList<>(act);
 				actPlusThis.add(new MoveAction(marin, rame.getX() - marin.getX(), rame.getY() - marin.getY()));
-				var allMoves = firstSailorConfig(wantedConfig, sailorsMinusThis, oarsMinusThis, actPlusThis, gameShip);
+				var allMoves = firstSailorConfig(wantedOarConfig, wantedAbsConfig, oarSailorsMinusThis, absSailorsMinusThis, oarsMinusThis, currentEntities, actPlusThis, gameShip);
 				if (allMoves != null) {
-					if (isOarConfigurationReached(wantedConfig, allMoves, gameShip)) {
+					if (isOarConfigurationReached(wantedOarConfig, allMoves, gameShip)) {
+						var absMoves = firstSailorAbsConfig(wantedAbsConfig, absSailorsMinusThis, currentEntities, new ArrayList<MoveAction>(), gameShip);
+						if (absMoves != null) {
+							var moves = new ArrayList<MoveAction>();
+							moves.addAll(allMoves);
+							moves.addAll(absMoves);
+							return moves;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	private ArrayList<MoveAction> firstSailorAbsConfig(Set<Pair<Integer, Integer>> wantedAbsConfig, HashMap<Marin, Set<Pair<Integer, Integer>>> possibleSailorAbsConfig, Set<Pair<Integer, Integer>> currentEntities, ArrayList<MoveAction> act, Bateau gameShip) {
+		var marins = possibleSailorAbsConfig.keySet();
+		if (marins.isEmpty())
+			return act;
+		if(wantedAbsConfig.isEmpty())
+			return act;
+
+		for (Map.Entry<Marin, Set<Pair<Integer, Integer>>> pair : possibleSailorAbsConfig.entrySet()) {
+			var marin = pair.getKey();
+			for (var ent : pair.getValue()) {
+				if (!currentEntities.contains(ent))
+					continue;
+				var sailorsMinusThis = new HashMap<>(possibleSailorAbsConfig);
+				sailorsMinusThis.remove(marin);
+				var entsMinusThis = new HashSet<Pair<Integer, Integer>>(currentEntities);
+				entsMinusThis.remove(ent);
+				var actPlusThis = new ArrayList<>(act);
+				actPlusThis.add(new MoveAction(marin, ent.first - marin.getX(), ent.second - marin.getY()));
+				var allMoves = firstSailorAbsConfig(wantedAbsConfig, sailorsMinusThis, entsMinusThis, actPlusThis, gameShip);
+				if (allMoves != null) {
+					if (isAbsConfigurationReached(wantedAbsConfig, allMoves, gameShip)) {
 						return allMoves;
 					}
 				}
 			}
 		}
-
-
 		return null;
 	}
 
-	private boolean isOarConfigurationReached(Pair<Integer, Integer> wantedConfig, ArrayList<MoveAction> act, Bateau gameShip) {
+	private boolean isAbsConfigurationReached(Set<Pair<Integer, Integer>> wantedAbsConfig, ArrayList<MoveAction> act, Bateau gameShip) {
+		if(wantedAbsConfig.isEmpty())
+			return true;
+
+		var obj = new HashSet<Pair<Integer, Integer>>();
+		for (MoveAction g : act) {
+			var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY() + g.getYDistance());
+
+			try {
+				obj.add(entity);
+			} catch (Exception e) {
+				Cockpit.log(e.getMessage());
+				return false;
+			}
+			if (obj.containsAll(wantedAbsConfig))
+				return true;
+		}
+		return false;
+	}
+
+	private boolean isOarConfigurationReached(Pair<Integer, Integer> wantedOarConfig, ArrayList<MoveAction> act, Bateau gameShip) {
 		var obj = Pair.of(0, 0);
 		for (MoveAction g : act) {
 			var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY() + g.getYDistance());
@@ -164,16 +252,17 @@ public class RoundObjective extends Objective {
 					}
 				}
 			} catch (Exception e) {
+				Cockpit.log(e.getMessage());
 				return false;
 			}
-			if (obj.first >= wantedConfig.first && obj.second >= wantedConfig.second) {
+			if (obj.first >= wantedOarConfig.first && obj.second >= wantedOarConfig.second) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private ArrayList<OarAction> whoShouldOar(Pair<Integer, Integer> wantedConfig, ArrayList<MoveAction> act, ArrayList<Marin> unmovedSailors, Bateau gameShip) {
+	private ArrayList<OarAction> whoShouldOar(Pair<Integer, Integer> wantedOarConfig, ArrayList<MoveAction> act, ArrayList<Marin> unmovedSailors, Bateau gameShip) {
 		var oaring = new ArrayList<OarAction>();
 		var obj = Pair.of(0, 0);
 		ArrayList<Marin> sailorAndDistance = new ArrayList<>();
@@ -194,14 +283,14 @@ public class RoundObjective extends Objective {
 				if (entHere.get() instanceof Rame) {
 					oar = (Rame) entHere.get();
 					if (gameShip.isOarLeft(oar)) {
-						if (obj.first.equals(wantedConfig.first)) {
+						if (obj.first.equals(wantedOarConfig.first)) {
 							continue;
 						} else {
 							obj = Pair.of(obj.first + 1, obj.second);
 							oaring.add(new OarAction(m));
 						}
 					} else {
-						if (obj.second.equals(wantedConfig.second)) {
+						if (obj.second.equals(wantedOarConfig.second)) {
 							continue;
 						} else {
 							obj = Pair.of(obj.first, obj.second + 1);
@@ -210,12 +299,14 @@ public class RoundObjective extends Objective {
 					}
 				}
 			} catch (Exception e) {
+				Cockpit.log(e.getMessage());
 				return null;
 			}
-			if (obj.equals(wantedConfig)) {
+			if (obj.equals(wantedOarConfig)) {
 				return oaring;
 			}
 		}
+		Cockpit.log("Could not establish who should row");
 		return null;
 	}
 

@@ -54,6 +54,7 @@ public class CheckpointObjective extends CompositeObjective{
 
         var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
         wantedConfig.put(Rame.class, wantedOarConfig);
+        //TODO ajouter à wantedConfig pour que le marin aille au gourvnail
 
         var roundObj = new RoundObjective(wantedConfig);
 
