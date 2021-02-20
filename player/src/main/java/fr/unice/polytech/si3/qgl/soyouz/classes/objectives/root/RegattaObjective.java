@@ -41,6 +41,9 @@ public class RegattaObjective extends RootObjective
                 //System.out.println("Checkpoint reached------------------------------------------------------------");
                 numCheckpoint++;
             }
+            else{
+                numCheckpoint = 0;
+            }
         }
     }
 
