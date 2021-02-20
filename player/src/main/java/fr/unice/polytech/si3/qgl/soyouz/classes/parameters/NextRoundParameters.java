@@ -5,6 +5,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
+import java.util.Arrays;
+
 /**
  * Stock all current parameters to Play the next round.
  */
@@ -57,5 +59,14 @@ public class NextRoundParameters
      */
     public Wind getWind() {
         return wind;
+    }
+
+    @Override
+    public String toString() {
+        return "NextRoundParameters{" +
+                "ship=" + ship +
+                ", wind=" + wind +
+                ", visibleEntities=" + Arrays.toString(visibleEntities) +
+                '}';
     }
 }

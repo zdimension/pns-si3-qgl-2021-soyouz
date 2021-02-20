@@ -33,4 +33,12 @@ public class Deck
     {
         return length;
     }
+
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "width=" + width +
+                ", length=" + length +
+                '}';
+    }
 }

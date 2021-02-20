@@ -22,4 +22,12 @@ public class GameState
         this.ip = ip;
         this.np = np;
     }
+
+    public InitGameParameters getIp() {
+        return ip;
+    }
+
+    public NextRoundParameters getNp() {
+        return np;
+    }
 }
