@@ -12,16 +12,6 @@ public class CheckpointObjective extends CompositeObjective{
     //TODO
     public CheckpointObjective(Checkpoint checkpoint) {
 
-        /*var dist = this.getShip().getPosition().getDistance(checkpoint.getPosition()); //distance au centre pour l'instant
-        //on vérifie la rotation
-        var maxSpeed = this.maxSpeedPossible();
-        if(this.getShip().getPosition().isPositionReachable(checkpoint.getPosition(), maxSpeed)){
-            //on envoie le nombre de marins nécessaire aux rames
-            for (Marin s : this.ip.getSailors()) {
-                this.intermediateObjective.add(new GroundObjective(new OarAction(s)));
-            }
-        }*/
-        //sinon, pas encore géré
     }
 
 

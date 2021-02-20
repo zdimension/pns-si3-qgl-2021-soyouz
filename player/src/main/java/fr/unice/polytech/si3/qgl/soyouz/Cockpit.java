@@ -252,7 +252,7 @@ public class Cockpit implements ICockpit {
           continue;
         }
         if (entHere.get() instanceof Rame) {
-          oar = (Rame) getIp().getShip().getEntityHere(entity).get();
+          oar = (Rame) entHere.get();
           if (getIp().getShip().isOarLeft(oar)) {
             obj = Pair.of(obj.first + 1, obj.second);
           } else {
