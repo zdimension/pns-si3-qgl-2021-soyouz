@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
@@ -34,8 +35,6 @@ public class RoundObjective extends Objective {
 		var sailors = new ArrayList<>(Arrays.asList(state.getIp().getSailors()));
 		var gameShip = state.getIp().getShip();
 		try {
-
-
 			var oarReachableForSailors = new HashMap<Marin, Set<Rame>>();
 			var allOars = new HashSet<Rame>();
 			var sailorsNotMoving = new ArrayList<MoveAction>();
@@ -47,7 +46,7 @@ public class RoundObjective extends Objective {
 			try {
 				wantedOarConfig = Pair.of((Integer) ((Pair) wantedConfiguration.get(Rame.class)).first, (Integer) ((Pair) wantedConfiguration.get(Rame.class)).second);
 			} catch (Exception e) {
-				throw new RuntimeException("Java is a fucking trash");
+				throw new RuntimeException("Java is a fucking piece of shit");
 			}
 
 			//compute all reachable oars
@@ -108,7 +107,8 @@ public class RoundObjective extends Objective {
 				return actions;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			Cockpit.log(e.getMessage());
 			return new ArrayList<GameAction>();
 		}
 	}

@@ -95,6 +95,7 @@ public class Cockpit implements ICockpit {
       return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));
 
     } catch (Exception e) {
+      log(e.getMessage());
       return "[]";
     }
   }

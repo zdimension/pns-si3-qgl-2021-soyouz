@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root;
 
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
@@ -38,10 +39,11 @@ public class RegattaObjective extends RootObjective
         if(currentCheckpoint != null)
         if(currentCheckpoint.isValidated(state)){
             if(goalData.getCheckpoints().length - 1 > numCheckpoint){
-                //System.out.println("Checkpoint reached------------------------------------------------------------");
+                Cockpit.log("Checkpoint "+ numCheckpoint+" reached");
                 numCheckpoint++;
             }
             else{
+                Cockpit.log("Regatta ended");
                 numCheckpoint = 0;
             }
         }
