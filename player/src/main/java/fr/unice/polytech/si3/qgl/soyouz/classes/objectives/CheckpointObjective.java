@@ -17,6 +17,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.*;
 
+/**
+ * Checkpoint type of objective
+ */
 public class CheckpointObjective extends CompositeObjective{
 
     private Checkpoint cp;

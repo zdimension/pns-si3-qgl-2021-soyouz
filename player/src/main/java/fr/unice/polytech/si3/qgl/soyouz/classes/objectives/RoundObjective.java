@@ -13,6 +13,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.*;
 
+/**
+ * Objective to be performed in a round
+ */
 public class RoundObjective extends Objective {
 
 	private final Map<Class<? extends OnboardEntity>, Class<?>> configurationShape = Map.of(

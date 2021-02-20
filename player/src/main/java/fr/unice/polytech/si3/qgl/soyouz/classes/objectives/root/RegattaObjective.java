@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Race type goal.
+ * Race type objective.
  */
 public class RegattaObjective extends RootObjective
 {
