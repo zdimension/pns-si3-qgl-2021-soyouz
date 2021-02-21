@@ -1,18 +1,12 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Trigonometry;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.*;
@@ -23,9 +17,15 @@ import java.util.*;
 public class CheckpointObjective extends CompositeObjective{
 
     private Checkpoint cp;
+    private HashMap<Pair<Integer, Integer>, Double> leftTurnPossibilities;
+    private HashMap<Pair<Integer, Integer>, Double> rightTurnPossibilities;
+    private Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities;
 
     public CheckpointObjective(Checkpoint checkpoint) {
         cp = checkpoint;
+        leftTurnPossibilities = new HashMap<>();
+        rightTurnPossibilities = new HashMap<>();
+        turnPossibilities = Pair.of(leftTurnPossibilities, rightTurnPossibilities);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CheckpointObjective extends CompositeObjective{
 
         var sailors = state.getIp().getSailors();
 
-        var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt);
+        var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt, turnPossibilities);
 
         var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
         wantedConfig.put(Rame.class, wantedOarConfig);
