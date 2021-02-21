@@ -7,16 +7,11 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A class to do some math/trigonometric stuff. Ewww.
  */
 public class Trigonometry {
-
-    // TODO POSSIBILITE DE PASSER LA PAIR EN CLE POUR POUVOIR AVOIR DIVERSES VITESSES POSSIBLES AVEC DES ANGLES SIMILAIRES
-    static HashMap<Pair<Integer, Integer>, Double> leftTurnPossibilities = new HashMap<>();
-    static HashMap<Pair<Integer, Integer>, Double> rightTurnPossibilities = new HashMap<>();
 
     /**
      * Determine the orientation and the linear speed of the boat in a specific configuration.
@@ -50,25 +45,25 @@ public class Trigonometry {
      * @param nbOarOnSide The number of oar on each side of the boat.
      */
     //TODO OAR ONLY, does not take in count the future RUDDER
-    static void setTurnPossibilities(int nbSailor, int nbOarOnSide) {
+    static private void setTurnPossibilities(int nbSailor, int nbOarOnSide, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         for (int i = 0; i <= nbOarOnSide && i <= nbSailor; i++) {
             for (int j = 0; j <= nbOarOnSide && j <= nbSailor; j++) {
                     if (i > j && i + j <= nbSailor)
-                        leftTurnPossibilities.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
+                        turnPossibilities.first.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
                     if (i < j && i + j <= nbSailor)
-                        rightTurnPossibilities.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
+                        turnPossibilities.second.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
             }
         }
     }
 
-    public static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt) {
-        setTurnPossibilities(nbSailor, nbOarOnSide);
+    public static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
+        setTurnPossibilities(nbSailor, nbOarOnSide, turnPossibilities);
         double maxSpeed = oarLinearSpeed(nbSailor, nbOarOnSide * 2);
         double minTurn = Math.abs(rotatingSpeed(1, 0, nbOarOnSide * 2));
         final boolean cond = opt.first > maxSpeed && Math.abs(opt.second) > minTurn;
         if (cond)
-            return opt.second > 0 ? findOptConfigBasedOnVr(leftTurnPossibilities, opt)
-                    : findOptConfigBasedOnVr(rightTurnPossibilities, opt);
+            return opt.second > 0 ? findOptConfigBasedOnVr(turnPossibilities.first, opt)
+                    : findOptConfigBasedOnVr(turnPossibilities.second, opt);
         else
             return findOptConfigBasedOnVl(opt, nbOarOnSide * 2, nbSailor);
     }
@@ -106,43 +101,24 @@ public class Trigonometry {
         double diff = 0.0;
         for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
             double difference = Math.abs(opt.second - entry.getValue());
-
-            /*
-            System.out.println(entry.getValue());
-            System.out.println(difference);
-            System.out.println(entry.getKey());
-            System.out.println("\n");
-            */
-
             if (diff == 0 || (difference <= diff && (entry.getKey().first + entry.getKey().second) > (optimal.first + optimal.second))) {
                 optimal = entry.getKey();
                 diff = difference;
             }
         }
-        //System.out.println(optimal);
         return optimal;
     }
 
     private static Pair<Integer, Integer> findOptConfigBasedOnVl(Pair<Double, Double> opt, int nbTotalOar, int nbSailor) {
         Pair<Integer, Integer> optimal = null;
         double diff = 0.0;
-
         for (int i = 2; i <= nbSailor; i+=2) {
             double difference = opt.first - oarLinearSpeed(i, nbTotalOar);
-
-            /*
-            System.out.println(oarLinearSpeed(i, nbTotalOar));
-            System.out.println(difference);
-            System.out.println(Pair.of(i / 2, i / 2));
-            System.out.println("\n");
-             */
-
-            if (diff == 0 || difference <= diff && difference > 0) {
+             if (diff == 0 || difference <= diff && difference > 0) {
                 optimal = Pair.of(i / 2, i / 2);
                 diff = difference;
             }
         }
-        //System.out.println(optimal);
         return optimal != null ? optimal : Pair.of(1, 1);
     }
 
