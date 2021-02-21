@@ -116,7 +116,6 @@ public class RoundObjective extends Objective {
 							acts.add(new OarAction(m));
 					}
 				}
-				acts.forEach(a -> Cockpit.log(a.toString()));
 				return acts;
 			} else {
 

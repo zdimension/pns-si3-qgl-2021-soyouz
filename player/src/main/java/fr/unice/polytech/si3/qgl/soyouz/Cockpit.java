@@ -46,7 +46,10 @@ public class Cockpit implements ICockpit {
    */
   public static void log(String message) {
     System.out.println(message);
-    logList.add(message);
+    if(message == null)
+      logList.add("NULL MESSAGE");
+    else
+      logList.add(message);
   }
 
   /**
