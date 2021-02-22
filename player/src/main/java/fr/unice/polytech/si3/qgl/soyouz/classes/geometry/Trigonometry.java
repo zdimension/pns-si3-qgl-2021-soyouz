@@ -44,19 +44,24 @@ public class Trigonometry {
      * @param nbSailor The number of sailor on the boat.
      * @param nbOarOnSide The number of oar on each side of the boat.
      */
-    //TODO OAR ONLY, does not take in count the future RUDDER
     static private void setTurnPossibilities(int nbSailor, int nbOarOnSide, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
-        for (int i = 0; i <= nbOarOnSide && i <= nbSailor; i++) {
-            for (int j = 0; j <= nbOarOnSide && j <= nbSailor; j++) {
-                    if (i > j && i + j <= nbSailor)
+        for (int i = 0; i <= nbOarOnSide && i < nbSailor; i++) {
+            for (int j = 0; j <= nbOarOnSide && j < nbSailor; j++) {
+                    if (i > j && i + j < nbSailor)
                         turnPossibilities.first.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
-                    if (i < j && i + j <= nbSailor)
+                    if (i < j && i + j < nbSailor)
                         turnPossibilities.second.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
             }
         }
     }
 
-    public static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
+    public static Pair<Pair<Integer, Integer>, Double> findOptTurnConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
+        var neededOarRotation = findOptOarConfig(nbSailor, nbOarOnSide, opt, turnPossibilities);
+        var neededRudderRotation = findOptRudderRotation(opt.second - rotatingSpeed(neededOarRotation.first, neededOarRotation.second, nbOarOnSide * 2));
+        return Pair.of(neededOarRotation, neededRudderRotation);
+    }
+
+    private static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         setTurnPossibilities(nbSailor, nbOarOnSide, turnPossibilities);
         double maxSpeed = oarLinearSpeed(nbSailor, nbOarOnSide * 2);
         double minTurn = Math.abs(rotatingSpeed(1, 0, nbOarOnSide * 2));
@@ -132,7 +137,7 @@ public class Trigonometry {
         return neededRotation > Gouvernail.ALLOWED_ROTATION.first && neededRotation < Gouvernail.ALLOWED_ROTATION.second;
     }
 
-    public static Double optimizedRudderRotation (Double neededRotation) {
+    public static Double findOptRudderRotation (Double neededRotation) {
         if (rudderRotationIsInRange(neededRotation)){
             return neededRotation;
         }else{

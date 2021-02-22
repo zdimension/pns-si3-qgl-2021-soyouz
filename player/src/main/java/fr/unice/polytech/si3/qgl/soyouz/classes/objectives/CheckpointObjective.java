@@ -45,12 +45,14 @@ public class CheckpointObjective extends CompositeObjective{
         var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
         var vr = 2 * da;
         //TODO Ignoble d'appeller 2 fois la meme instance du bateau
-        var vrr = Trigonometry.neededRotation(state.getNp().getShip(), state.getIp().getShip(), cp.getPosition());
-        Pair<Double, Double> opt = Pair.of(vl, -vrr);
+        var neededRotation = Trigonometry.neededRotation(state.getNp().getShip(), state.getIp().getShip(), cp.getPosition());
+        Pair<Double, Double> opt = Pair.of(vl, -neededRotation);
 
         var sailors = state.getIp().getSailors();
 
-        var wantedOarConfig = Trigonometry.findOptOarConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt, turnPossibilities);
+        var wantedTurnConfig = Trigonometry.findOptTurnConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt, turnPossibilities);
+        var wantedOarConfig = wantedTurnConfig.first;
+        var wantedRudderConfig = wantedTurnConfig.second;
 
         var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
         wantedConfig.put(Rame.class, wantedOarConfig);
