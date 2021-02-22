@@ -56,8 +56,15 @@ public class Trigonometry {
     }
 
     public static Pair<Pair<Integer, Integer>, Double> findOptTurnConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
-        var neededOarRotation = findOptOarConfig(nbSailor, nbOarOnSide, opt, turnPossibilities);
-        var neededRudderRotation = findOptRudderRotation(opt.second - rotatingSpeed(neededOarRotation.first, neededOarRotation.second, nbOarOnSide * 2));
+        Pair<Integer, Integer> neededOarRotation;
+        double neededRudderRotation;
+        if (rudderRotationIsInRange(opt.second)) {
+            neededOarRotation = findOptConfigBasedOnVl(opt, nbOarOnSide * 2, nbSailor);
+            neededRudderRotation = findOptRudderRotation(opt.second);
+        } else {
+            neededOarRotation = findOptOarConfig(nbSailor, nbOarOnSide, opt, turnPossibilities);
+            neededRudderRotation = findOptRudderRotation(opt.second - rotatingSpeed(neededOarRotation.first, neededOarRotation.second, nbOarOnSide * 2));
+        }
         return Pair.of(neededOarRotation, neededRudderRotation);
     }
 
