@@ -16,7 +16,7 @@ public class TurnAction extends GameAction{
      *
      * @param sailor A Sailor.
      */
-    protected TurnAction(Marin sailor, Double rotation) {
+    public TurnAction(Marin sailor, Double rotation) {
         super(sailor, Gouvernail.class);
         this.rotation = rotation;
     }

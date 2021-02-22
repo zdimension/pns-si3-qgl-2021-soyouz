@@ -147,6 +147,16 @@ public class Bateau extends AutreBateau
         return rame.getPos().getSecond() == 0;
     }
 
+    /**
+     *
+     * @param ent to find the position of
+     * @return the fist position found of the given entity
+     */
+    public Pair<Integer,Integer> findFirstPosOfEntity(Class<? extends OnboardEntity> ent){
+        var first = Arrays.stream(this.entities).filter(ent::isInstance).findFirst();
+        return first.map(OnboardEntity::getPos).orElse(null);
+    }
+
     @Override
     public String toString() {
         var len = 2*deck.getLength()+2;
