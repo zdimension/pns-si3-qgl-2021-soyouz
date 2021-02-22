@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
@@ -20,7 +21,8 @@ import java.util.*;
 public class RoundObjective extends Objective {
 
 	private final Map<Class<? extends OnboardEntity>, Class<?>> configurationShape = Map.of(
-			Rame.class, Pair.class  //rajouter que c'est Pair<Integer, Integer>
+			Rame.class, Pair.class,  //rajouter que c'est Pair<Integer, Integer>
+			Gouvernail.class, Double.class
 	);
 
 	private final HashMap<Class<? extends OnboardEntity>, Object> wantedConfiguration;
@@ -53,8 +55,9 @@ public class RoundObjective extends Objective {
 			try {
 				if (wantedConfiguration.containsKey(Rame.class)) ;
 				wantedOarConfig = Pair.of((Integer) ((Pair) wantedConfiguration.get(Rame.class)).first, (Integer) ((Pair) wantedConfiguration.get(Rame.class)).second);
-				if (wantedConfiguration.containsKey(Gouvernail.class))
-					wantedAbsConfig.add(Pair.of((Integer) ((Pair) wantedConfiguration.get(Gouvernail.class)).first, (Integer) ((Pair) wantedConfiguration.get(Gouvernail.class)).second));
+				if (wantedConfiguration.containsKey(Gouvernail.class)) {
+					wantedAbsConfig.add(state.getNp().getShip().findFirstPosOfEntity(Gouvernail.class));
+				}
 
 			} catch (Exception e) {
 				Cockpit.log("Here are Java's limits");
@@ -85,7 +88,7 @@ public class RoundObjective extends Objective {
 				actsMoves = firstSailorConfig(wantedOarConfig, wantedAbsConfig, oarReachableForSailors, absReachableForSailors, allOars, allAbsEnt, actsMoves, gameShip);
 			}
 
-			//when no moves are found, random
+			//when no moves are found, all sailors will row
 			if (actsMoves == null) {
 				var unmovedSailors = new ArrayList<Marin>(sailors);
 				Cockpit.log("No sailor MoveAction matches the wanted sailor configuration");
@@ -111,8 +114,8 @@ public class RoundObjective extends Objective {
 				}
 				for (Marin m : unmovedSailors) {
 					var e = gameShip.getEntityHere(m.getPos());
-					if(e.isPresent()){
-						if(e.get() instanceof Rame)
+					if (e.isPresent()) {
+						if (e.get() instanceof Rame)
 							acts.add(new OarAction(m));
 					}
 				}
@@ -128,9 +131,42 @@ public class RoundObjective extends Objective {
 					return new ArrayList<GameAction>();
 				}
 
-				//TODO faire executer l'action qui n'est pas OAR
+				//all sailors, removing busy sailors
+				Pair<ArrayList<Marin>, ArrayList<MoveAction>> vacantSailors = Pair.of(new ArrayList<>(unmovedSailors), new ArrayList<>(actsMoves));
+				for (var oar : oaring) {
+					if (vacantSailors.first.contains(oar.getSailor())) {
+						vacantSailors.first.remove(oar.getSailor());
+					} else {
+						for (var m : actsMoves) {
+							if (m.getSailor().equals(oar.getSailor())) {
+								vacantSailors.second.remove(m);
+								break;
+							}
+						}
+					}
+				}
+
 
 				var actions = new ArrayList<GameAction>();
+
+				for (Map.Entry<Class<? extends OnboardEntity>, Object> pair : wantedConfiguration.entrySet()) {
+					if (pair.getKey().equals(Rame.class))
+						continue;
+					if (pair.getKey().equals(Gouvernail.class)) {
+
+						var pos = wantedAbsConfig.add(state.getNp().getShip().findFirstPosOfEntity(pair.getKey()));
+						var unmoved = vacantSailors.first.stream().filter(m -> m.getPos().equals(pos)).findFirst();
+						if (unmoved.isPresent()) {
+							actions.add(new TurnAction(unmoved.get(), (Double) pair.getValue()));
+							continue;
+						}
+					}
+
+					//todo on recupere parmi tous les marins le premier qui est sur la bonne case
+					//todo puis on lui demande d'agir selon ce qui est donné en 2e element
+				}
+
+
 				actions.addAll(actsMoves);
 				actions.addAll(oaring);
 				//update sailors
@@ -152,41 +188,65 @@ public class RoundObjective extends Objective {
 		if (marins.isEmpty())
 			return act;
 
-		for (Map.Entry<Marin, Set<Rame>> pair : possibleSailorOarConfig.entrySet()) {
-			var marin = pair.getKey();
-			for (var rame : pair.getValue()) {
-				if (!currentOars.contains(rame))
-					continue;
-				var oarSailorsMinusThis = new HashMap<>(possibleSailorOarConfig);
-				oarSailorsMinusThis.remove(marin);
-				var absSailorsMinusThis = new HashMap<>(possibleSailorAbsConfig);
-				absSailorsMinusThis.remove(marin);
-				var oarsMinusThis = new HashSet<Rame>(currentOars);
-				oarsMinusThis.remove(rame);
-				var actPlusThis = new ArrayList<>(act);
-				actPlusThis.add(new MoveAction(marin, rame.getX() - marin.getX(), rame.getY() - marin.getY()));
-				var allMoves = firstSailorConfig(wantedOarConfig, wantedAbsConfig, oarSailorsMinusThis, absSailorsMinusThis, oarsMinusThis, currentEntities, actPlusThis, gameShip);
-				if (allMoves != null) {
-					if (isOarConfigurationReached(wantedOarConfig, allMoves, gameShip)) {
-						var absMoves = firstSailorAbsConfig(wantedAbsConfig, absSailorsMinusThis, currentEntities, new ArrayList<MoveAction>(), gameShip);
-						if (absMoves != null) {
-							var moves = new ArrayList<MoveAction>();
-							moves.addAll(allMoves);
-							moves.addAll(absMoves);
-							return moves;
+		if (isOarConfigurationReached(wantedOarConfig, act, gameShip)) {
+			if (isAbsConfigurationReached(wantedAbsConfig, act, gameShip)) {
+				return act;
+			}
+			var absMoves = firstSailorAbsConfig(wantedAbsConfig, possibleSailorAbsConfig, currentEntities, new ArrayList<MoveAction>(), gameShip);
+			if (absMoves != null) {
+				var moves = new ArrayList<MoveAction>();
+				moves.addAll(act);
+				moves.addAll(absMoves);
+				return moves;
+			}
+			return null;
+
+		} else {
+
+
+			for (Map.Entry<Marin, Set<Rame>> pair : possibleSailorOarConfig.entrySet()) {
+				var marin = pair.getKey();
+				for (var rame : pair.getValue()) {
+					if (!currentOars.contains(rame))
+						continue;
+					var oarSailorsMinusThis = new HashMap<>(possibleSailorOarConfig);
+					oarSailorsMinusThis.remove(marin);
+					var absSailorsMinusThis = new HashMap<>(possibleSailorAbsConfig);
+					absSailorsMinusThis.remove(marin);
+					var oarsMinusThis = new HashSet<Rame>(currentOars);
+					oarsMinusThis.remove(rame);
+					var actPlusThis = new ArrayList<>(act);
+					actPlusThis.add(new MoveAction(marin, rame.getX() - marin.getX(), rame.getY() - marin.getY()));
+					var allMoves = firstSailorConfig(wantedOarConfig, wantedAbsConfig, oarSailorsMinusThis, absSailorsMinusThis, oarsMinusThis, currentEntities, actPlusThis, gameShip);
+					if (allMoves != null) {
+						if (isOarConfigurationReached(wantedOarConfig, allMoves, gameShip)) {
+							if (!isAbsConfigurationReached(wantedAbsConfig, allMoves, gameShip)) {
+								if (!oarSailorsMinusThis.isEmpty()) {
+									var absMoves = firstSailorAbsConfig(wantedAbsConfig, absSailorsMinusThis, currentEntities, new ArrayList<MoveAction>(), gameShip);
+									if (absMoves != null) {
+										var moves = new ArrayList<MoveAction>();
+										moves.addAll(allMoves);
+										moves.addAll(absMoves);
+										return moves;
+									}
+								}
+							}
+							else{
+								return allMoves;
+							}
 						}
 					}
 				}
 			}
+			return null;
 		}
-		return null;
 	}
 
 	private ArrayList<MoveAction> firstSailorAbsConfig(Set<Pair<Integer, Integer>> wantedAbsConfig, HashMap<Marin, Set<Pair<Integer, Integer>>> possibleSailorAbsConfig, Set<Pair<Integer, Integer>> currentEntities, ArrayList<MoveAction> act, Bateau gameShip) {
 		var marins = possibleSailorAbsConfig.keySet();
 		if (marins.isEmpty())
 			return act;
-		if(wantedAbsConfig.isEmpty())
+		if (wantedAbsConfig.isEmpty())
 			return act;
 
 		for (Map.Entry<Marin, Set<Pair<Integer, Integer>>> pair : possibleSailorAbsConfig.entrySet()) {
@@ -212,7 +272,7 @@ public class RoundObjective extends Objective {
 	}
 
 	private boolean isAbsConfigurationReached(Set<Pair<Integer, Integer>> wantedAbsConfig, ArrayList<MoveAction> act, Bateau gameShip) {
-		if(wantedAbsConfig.isEmpty())
+		if (wantedAbsConfig.isEmpty())
 			return true;
 
 		var obj = new HashSet<Pair<Integer, Integer>>();

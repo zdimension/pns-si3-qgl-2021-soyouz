@@ -5,6 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Trigonometry;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
@@ -56,7 +57,7 @@ public class CheckpointObjective extends CompositeObjective{
 
         var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
         wantedConfig.put(Rame.class, wantedOarConfig);
-        //TODO ajouter à wantedConfig pour que le marin aille au gourvnail
+        wantedConfig.put(Gouvernail.class, wantedRudderConfig);
 
         var roundObj = new RoundObjective(wantedConfig);
 
