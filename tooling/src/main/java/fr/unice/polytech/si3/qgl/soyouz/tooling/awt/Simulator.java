@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
@@ -76,6 +78,17 @@ public class Simulator extends JFrame
                     return new MoveAction(model.getSailorById(((IntNode)tree.get("sailorId")).asInt()).get(),
                         ((IntNode)tree.get("xdistance")).asInt(),
                         ((IntNode)tree.get("ydistance")).asInt()
+                    );
+                }
+            });
+            addDeserializer(TurnAction.class, new JsonDeserializer<>()
+            {
+                @Override
+                public TurnAction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                {
+                    var tree = OBJECT_MAPPER.readTree(jsonParser);
+                    return new TurnAction(model.getSailorById(((IntNode)tree.get("sailorId")).asInt()).get(),
+                            ((DoubleNode)tree.get("rotation")).asDouble()
                     );
                 }
             });

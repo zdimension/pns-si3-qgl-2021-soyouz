@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 
@@ -16,7 +17,7 @@ public class TurnAction extends GameAction{
      *
      * @param sailor A Sailor.
      */
-    public TurnAction(Marin sailor, Double rotation) {
+    public TurnAction(Marin sailor, @JsonProperty("rotation") Double rotation) {
         super(sailor, Gouvernail.class);
         this.rotation = rotation;
     }

@@ -154,16 +154,20 @@ public class RoundObjective extends Objective {
 						continue;
 					if (pair.getKey().equals(Gouvernail.class)) {
 
-						var pos = wantedAbsConfig.add(state.getNp().getShip().findFirstPosOfEntity(pair.getKey()));
+							//todo store it rather than get multiple times
+						var pos = state.getNp().getShip().findFirstPosOfEntity(Gouvernail.class);
+
 						var unmoved = vacantSailors.first.stream().filter(m -> m.getPos().equals(pos)).findFirst();
 						if (unmoved.isPresent()) {
 							actions.add(new TurnAction(unmoved.get(), (Double) pair.getValue()));
 							continue;
 						}
+						var moved = vacantSailors.second.stream().filter(m -> m.newPos().equals(pos)).findFirst();
+						if(moved.isPresent()){
+							actions.add(new TurnAction(moved.get().getSailor(), (Double) pair.getValue()));
+						}
 					}
 
-					//todo on recupere parmi tous les marins le premier qui est sur la bonne case
-					//todo puis on lui demande d'agir selon ce qui est donné en 2e element
 				}
 
 
@@ -220,6 +224,7 @@ public class RoundObjective extends Objective {
 					var allMoves = firstSailorConfig(wantedOarConfig, wantedAbsConfig, oarSailorsMinusThis, absSailorsMinusThis, oarsMinusThis, currentEntities, actPlusThis, gameShip);
 					if (allMoves != null) {
 						if (isOarConfigurationReached(wantedOarConfig, allMoves, gameShip)) {
+							//au pire, appel recusrif avec wanted oar config vide
 							if (!isAbsConfigurationReached(wantedAbsConfig, allMoves, gameShip)) {
 								if (!oarSailorsMinusThis.isEmpty()) {
 									var absMoves = firstSailorAbsConfig(wantedAbsConfig, absSailorsMinusThis, currentEntities, new ArrayList<MoveAction>(), gameShip);
@@ -230,8 +235,7 @@ public class RoundObjective extends Objective {
 										return moves;
 									}
 								}
-							}
-							else{
+							} else {
 								return allMoves;
 							}
 						}
