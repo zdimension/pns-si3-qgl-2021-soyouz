@@ -16,6 +16,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -27,12 +30,13 @@ public class SimulatorCanvas extends JPanel {
 	private static final Color OBSTACLE = new Color(102, 186, 90);
 
 	private static final Map<Class<?>, Image> ENTITY_ICONS;
-	private static final int MARGIN = 40;
 	private static final int DECK_GRID_SIZE = 40;
 	private static final int DECK_MARGIN = 30;
 	private static final double SCALE_WHEEL_FACTOR = 0.1;
 	public static final int SHAPE_CROSS_SIZE = 10;
-	private static double SCALE = 1;
+	private double scale = 1;
+	private Point2d cameraPos = new Point2d(0, 0);
+	private Point2d moveOrigin = null;
 
 	static {
 		ENTITY_ICONS = Map.of(
@@ -50,17 +54,20 @@ public class SimulatorCanvas extends JPanel {
 	}
 
 	private final ArrayList<OnboardEntity> usedEntities;
-	/**
-	 * Image virtuelle de dessin
-	 */
-	private Image dbImage;
-	/**
-	 * Objet <code>Graphics</code> correspond à {@link #dbImage l'image de dessin}
-	 */
-	private Graphics dbGraphics;
-	private InitGameParameters model;
+
+	private final InitGameParameters model;
 	private final Stroke DASHED = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
 	private final Stroke SHAPE_CROSS = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
+
+	private Point2d getViewCenter()
+    {
+        return new Point2d(getWidth(), getHeight()).mul(0.5);
+    }
+
+    private Point2d getPos(MouseEvent e)
+    {
+        return new Point2d(e.getX(), e.getY());
+    }
 
 	public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities) {
 		this.model = model;
@@ -68,14 +75,52 @@ public class SimulatorCanvas extends JPanel {
 
 		addMouseWheelListener(e ->
 		{
-			System.out.println(e.getPreciseWheelRotation());
 			var factor = 1 + SCALE_WHEEL_FACTOR;
-			if (e.getPreciseWheelRotation() < 0) {
+			if (e.getPreciseWheelRotation() > 0) {
 				factor = 1 / factor;
 			}
-			SCALE *= factor;
+			var dz = 1 / scale - 1 / (scale * factor);
+			cameraPos = cameraPos.add(
+			    getPos(e)
+                    .sub(getViewCenter())
+                    .mul(dz)
+                    .invY()
+            );
+			scale *= factor;
 			repaint();
 		});
+
+		addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                moveOrigin = getPos(e)
+                    .sub(getViewCenter())
+                    .mul(1 / scale)
+                    .invY()
+                    .add(cameraPos);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                moveOrigin = null;
+            }
+        });
+
+		addMouseMotionListener(new MouseMotionAdapter()
+        {
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                if (moveOrigin != null)
+                {
+                    cameraPos = moveOrigin.sub(((getPos(e).sub(getViewCenter()).mul(1 / scale))).invY());
+                    repaint();
+                }
+            }
+        });
 	}
 
 	/**
@@ -86,38 +131,6 @@ public class SimulatorCanvas extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		paintBuffer((Graphics2D) g);
-		return;
-        /*
-        // met à jour l'image virtuelle et la recrée si besoin
-        if (dbImage == null ||
-            this.getWidth() != dbImage.getWidth(this)
-            || this.getHeight() != dbImage.getHeight(this))
-        {
-            if (dbGraphics != null)
-            {
-                dbGraphics.dispose();
-            }
-
-            if (dbImage != null)
-            {
-                dbImage.flush();
-            }
-
-            System.gc();
-
-            dbImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
-            dbGraphics = dbImage.getGraphics();
-        }
-
-        // met à jour l'affichage réel
-        if (dbGraphics != null)
-        {
-            dbGraphics.clearRect(0, 0, dbImage.getWidth(this), dbImage.getHeight(this));
-
-            paintBuffer((Graphics2D) dbGraphics);
-
-            g.drawImage(dbImage, 0, 0, this);
-        }*/
 	}
 
 	/**
@@ -143,6 +156,11 @@ public class SimulatorCanvas extends JPanel {
 		// effacement de l'écran
 		g2d.setColor(BACKGROUND);
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+		var center = mapToScreen(Position.ZERO);
+		g2d.setColor(Color.BLACK);
+		g2d.drawLine(center.x, 0, center.x, getHeight());
+		g2d.drawLine(0, center.y, getWidth(), center.y);
 
 		drawGame(g2d);
 	}
@@ -225,11 +243,11 @@ public class SimulatorCanvas extends JPanel {
 	}
 
 	private Point mapToScreen(Position p) {
-		return new Point(mapToScreen(p.getX()) + MARGIN, this.getHeight() - mapToScreen(p.getY()) - MARGIN);
+		return new Point(getWidth() / 2 + mapToScreen(p.getX() - cameraPos.x), this.getHeight() / 2 - mapToScreen(p.getY() - cameraPos.y));
 	}
 
 	private int mapToScreen(double dist) {
-		return (int) (dist * SCALE);
+		return (int) (dist * scale);
 	}
 
 	private void drawShape(Graphics2D g, Shape s, Position p) {
