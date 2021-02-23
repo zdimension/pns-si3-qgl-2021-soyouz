@@ -263,7 +263,7 @@ public class SimulatorCanvas extends JPanel {
 		if (s instanceof Circle) {
 			var c = (Circle) s;
 			var rad = mapToScreen(c.getRadius());
-			gtr.fillOval(-rad / 2, -rad / 2, rad, rad);
+			gtr.fillOval(-rad, -rad, 2 * rad, 2 * rad);
 		} else if (s instanceof Rectangle) {
 			var r = (Rectangle) s;
 			var h = mapToScreen(r.getWidth());
