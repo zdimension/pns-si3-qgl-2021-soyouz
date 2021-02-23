@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.KeyDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.DoubleNode;
@@ -32,8 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Simulator extends JFrame
 {
@@ -139,6 +137,7 @@ public class Simulator extends JFrame
             {
                 var res = OBJECT_MAPPER.readValue(cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np)), GameAction[].class);
                 var activeOars = new ArrayList<Rame>();
+                AtomicReference<Double> rudderRotate = new AtomicReference<>((double) 0);
                 for (GameAction act : res)
                 {
                     var entType = act.entityNeeded;
@@ -161,6 +160,10 @@ public class Simulator extends JFrame
                             {
                                 activeOars.add((Rame)ent);
                             }
+                            if(act instanceof TurnAction)
+                            {
+                                rudderRotate.set(((TurnAction) act).getRotation());
+                            }
                         }, () ->
                         {
                             System.err.println("ENTITY MISSING FOR ACTION " + act);
@@ -182,7 +185,8 @@ public class Simulator extends JFrame
                 var activeOarsLeft = activeOars.stream().filter(o -> o.getY() == 0).count();
                 var activeOarsRight = activeOars.size() - activeOarsLeft;
                 var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
-                rotIncrement = oarRot / COMP_STEPS;
+                var totalRot = oarRot + rudderRotate.get();
+                rotIncrement = totalRot / COMP_STEPS;
                 spdIncrement = dirSpeed / COMP_STEPS;
                 currentStep = 0;
                 timer.start();
