@@ -60,55 +60,16 @@ public class Trigonometry {
         double neededRudderRotation;
         if (rudderRotationIsInRange(opt.second)) {
             neededOarRotation = findOptConfigBasedOnVl(opt, nbOarOnSide * 2, nbSailor);
-            neededRudderRotation = findOptRudderRotation(opt.second);
         } else {
-            neededOarRotation = findOptOarConfig(nbSailor, nbOarOnSide, opt, turnPossibilities);
-            neededRudderRotation = findOptRudderRotation(opt.second - rotatingSpeed(neededOarRotation.first, neededOarRotation.second, nbOarOnSide * 2));
+            neededOarRotation = findOptConfigBasedOnVr(nbSailor, nbOarOnSide, opt, turnPossibilities);
         }
+        neededRudderRotation = findOptRudderRotation(opt.second - rotatingSpeed(neededOarRotation.first, neededOarRotation.second, nbOarOnSide * 2));
         return Pair.of(neededOarRotation, neededRudderRotation);
     }
 
-    private static Pair<Integer, Integer> findOptOarConfig(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
+    private static Pair<Integer, Integer> findOptConfigBasedOnVr(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         setTurnPossibilities(nbSailor, nbOarOnSide, turnPossibilities);
-        double maxSpeed = oarLinearSpeed(nbSailor, nbOarOnSide * 2);
-        double minTurn = Math.abs(rotatingSpeed(1, 0, nbOarOnSide * 2));
-        final boolean cond = opt.first > maxSpeed && Math.abs(opt.second) > minTurn;
-        if (cond)
-            return opt.second > 0 ? findOptConfigBasedOnVr(turnPossibilities.first, opt)
-                    : findOptConfigBasedOnVr(turnPossibilities.second, opt);
-        else
-            return findOptConfigBasedOnVl(opt, nbOarOnSide * 2, nbSailor);
-    }
-
-    /*
-    private static Pair<Integer, Integer> findOptOarConfig(HashMap<Pair<Integer, Integer>, Double> givenSide, Pair<Double, Double> opt, int nbTotalOar) {
-        Pair<Integer, Integer> optimal = null;
-        double diff = 0.0;
-        for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
-            double vl = oarLinearSpeed(entry.getKey().first + entry.getKey().second, nbTotalOar);
-            double vr = entry.getValue();
-
-            double difference = Math.abs((vl - opt.first) / opt.first * 100) + Math.abs((vr - opt.second) / opt.second * 100);
-
-
-            System.out.println(entry.getKey());
-            System.out.println(Pair.of(vl, vr));
-            System.out.println("Vl % : " + Math.abs((vl - opt.first) / opt.first * 100));
-            System.out.println("Vr %: " + Math.abs((vr - opt.second) / opt.second * 100));
-            System.out.println(Math.abs((vl - opt.first) / opt.first * 100) + Math.abs((vr - opt.second) / opt.second * 100));
-            System.out.println("\n");
-
-
-            if (diff == 0 || difference < diff) {
-                optimal = entry.getKey();
-                diff = difference;
-            }
-        }
-        return optimal;
-    }
-    */
-
-    private static Pair<Integer, Integer> findOptConfigBasedOnVr(HashMap<Pair<Integer, Integer>, Double> givenSide, Pair<Double, Double> opt) {
+        var givenSide = opt.second > 0 ? turnPossibilities.first : turnPossibilities.second;
         Pair<Integer, Integer> optimal = null;
         double diff = 0.0;
         for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
@@ -131,7 +92,13 @@ public class Trigonometry {
                 diff = difference;
             }
         }
-        return optimal != null ? optimal : Pair.of(1, 1);
+        if (diff < 0) {
+            if (opt.second < 0)
+                optimal = Pair.of(1, 0);
+            else
+                optimal = Pair.of(0,1);
+        }
+        return optimal;
     }
 
     public static double neededRotation(Bateau boat, Bateau boatt, Position objectivePosition){
@@ -155,6 +122,4 @@ public class Trigonometry {
             }
         }
     }
-
 }
-    
