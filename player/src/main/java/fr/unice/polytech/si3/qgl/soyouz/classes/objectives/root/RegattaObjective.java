@@ -4,7 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CheckpointObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint.CheckpointObjective;
 
 import java.util.List;
 

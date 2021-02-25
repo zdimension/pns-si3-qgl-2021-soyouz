@@ -1,13 +1,16 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Trigonometry;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.RoundObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.*;
@@ -15,7 +18,7 @@ import java.util.*;
 /**
  * Checkpoint type of objective
  */
-public class CheckpointObjective extends CompositeObjective{
+public class CheckpointObjective extends CompositeObjective {
 
     private Checkpoint cp;
     private HashMap<Pair<Integer, Integer>, Double> leftTurnPossibilities;
@@ -48,6 +51,9 @@ public class CheckpointObjective extends CompositeObjective{
     //TODO A REFACTO
     @Override
     public List<GameAction> resolve(GameState state) {
+
+        Double neededRotation2 = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip(), cp);
+
         var xBoat = state.getNp().getShip().getPosition().getX();
         var yBoat = state.getNp().getShip().getPosition().getY();
 
@@ -56,7 +62,7 @@ public class CheckpointObjective extends CompositeObjective{
         var da = Math.atan2(yObjective - yBoat, xObjective - xBoat);
         var vl = da == 0 ? xObjective - xBoat : da * (Math.pow(xObjective - xBoat, 2) + Math.pow(yObjective - yBoat, 2)) / (yObjective - yBoat);
         var neededRotation = Trigonometry.calculateAngle(state.getNp().getShip(), cp);
-        Pair<Double, Double> opt = Pair.of(vl, -neededRotation);
+        Pair<Double, Double> opt = Pair.of(vl, neededRotation);
 
         var sailors = state.getIp().getSailors();
 
@@ -71,5 +77,18 @@ public class CheckpointObjective extends CompositeObjective{
         var roundObj = new RoundObjective(wantedConfig);
 
         return roundObj.resolve(state);
+    }
+
+    public double calculateAngleBetweenBoatAndCheckpoint(Bateau boat, Checkpoint checkpoint) {
+        double boatOrientation = boat.getPosition().getOrientation();
+        var boatVect = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
+        var cpVect = Pair.of(checkpoint.getPosition().getX() - boat.getPosition().getX(), checkpoint.getPosition().getY() - boat.getPosition().getY());
+        var normeDirection = Math.sqrt(Math.pow(cpVect.first, 2) + Math.pow(cpVect.second, 2));
+        var scalaire = boatVect.first * cpVect.first + boatVect.second * cpVect.second;
+
+        var angle = Math.acos(scalaire / normeDirection);
+        if (cpVect.second - boatVect.second < 0)
+            angle = -angle;
+        return angle;
     }
 }
