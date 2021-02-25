@@ -3,7 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 /**
  * Rectangle Shape.
  */
-public class Rectangle extends Shape
+public class Rectangle implements Shape
 {
     private double width;
     private double height;

@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
@@ -22,7 +21,7 @@ public class Trigonometry {
      * @return a pair that contains all the information.
      */
     static Double oarLinearSpeed(int activeOarNb, int totalOarNb){
-        return (double) (165 * activeOarNb / totalOarNb);
+        return (165.0 * activeOarNb / totalOarNb);
     }
 
     /**
@@ -45,7 +44,7 @@ public class Trigonometry {
      * @param nbSailor The number of sailor on the boat.
      * @param nbOarOnSide The number of oar on each side of the boat.
      */
-    static private void setTurnPossibilities(int nbSailor, int nbOarOnSide, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
+    private static void setTurnPossibilities(int nbSailor, int nbOarOnSide, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         for (int i = 0; i <= nbOarOnSide && i < nbSailor; i++) {
             for (int j = 0; j <= nbOarOnSide && j < nbSailor; j++) {
                     if (i > j && i + j < nbSailor)
@@ -70,8 +69,9 @@ public class Trigonometry {
 
     private static Pair<Integer, Integer> findOptConfigBasedOnVr(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         setTurnPossibilities(nbSailor, nbOarOnSide, turnPossibilities);
-        var givenSide = opt.second > 0 ? turnPossibilities.first : turnPossibilities.second;
-        Pair<Integer, Integer> optimal = null;
+        boolean left = opt.second > 0;
+        var givenSide = left ? turnPossibilities.first : turnPossibilities.second;
+        Pair<Integer, Integer> optimal = left ? Pair.of(0,1) : Pair.of(1,0);
         double diff = 0.0;
         for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
             double difference = Math.abs(opt.second - entry.getValue());
@@ -84,7 +84,7 @@ public class Trigonometry {
     }
 
     private static Pair<Integer, Integer> findOptConfigBasedOnVl(Pair<Double, Double> opt, int nbTotalOar, int nbSailor) {
-        Pair<Integer, Integer> optimal = null;
+        Pair<Integer, Integer> optimal = Pair.of(1, 1);
         double diff = 0.0;
         for (int i = 2; i <= nbSailor; i+=2) {
             double difference = opt.first - oarLinearSpeed(i, nbTotalOar);
@@ -118,31 +118,17 @@ public class Trigonometry {
         }
     }
 
-    public static double neededRotation(Bateau boat, Checkpoint checkpoint) {
-        var relativeCheckpointPosition = checkpointPositionRelativeToBoatPosition(boat, checkpoint);
-        return boat.getPosition().getOrientation() - 2*Math.atan2(relativeCheckpointPosition.second, relativeCheckpointPosition.first);
-    }
-
-    private static Pair<Double, Double> checkpointPositionRelativeToBoatPosition(Bateau boat, Checkpoint checkpoint) {
-        double boatOrientation = boat.getPosition().getOrientation() + ((Rectangle)boat.getShape()).getOrientation();
-        double xDiff = checkpoint.getPosition().getX() - boat.getPosition().getX();
-        double yDiff = checkpoint.getPosition().getY() - boat.getPosition().getY();
-        double xProjection = Math.cos(boatOrientation) * xDiff + Math.sin(boatOrientation) * yDiff;
-        double yProjection = Math.cos(boatOrientation) * yDiff - Math.sin(boatOrientation) * xDiff;
-        return Pair.of(xProjection, yProjection);
-    }
-
     public static double calculateAngle(Bateau boat, Checkpoint checkpoint) {
-        double boatOrientation = boat.getPosition().getOrientation(); // + ((Rectangle)boat.getShape()).getOrientation();
+        double boatOrientation = boat.getPosition().getOrientation();
         var boatVect = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
         var cpVect = Pair.of(checkpoint.getPosition().getX() - boat.getPosition().getX(), checkpoint.getPosition().getY() - boat.getPosition().getY());
-        var normeBoat = Math.sqrt(Math.pow(boatVect.first, 2) + Math.pow(boatVect.second, 2));
         var normeDirection = Math.sqrt(Math.pow(cpVect.first, 2) + Math.pow(cpVect.second, 2));
         var scalaire = boatVect.first * cpVect.first + boatVect.second * cpVect.second;
 
-        var angle = Math.acos(scalaire / (normeBoat * normeDirection));
+        var angle = Math.acos(scalaire / normeDirection);
         if (cpVect.second - boatVect.second < 0)
             angle = -angle;
         return angle;
     }
+
 }

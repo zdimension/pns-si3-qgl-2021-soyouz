@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
-import java.util.Optional;
-
 /**
  * Action to move a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin}.
  */
@@ -71,6 +69,11 @@ public class MoveAction extends GameAction{
         }
         var move = (MoveAction) obj;
         return this.xdistance == move.getXDistance() && this.ydistance == move.getYDistance() ;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override

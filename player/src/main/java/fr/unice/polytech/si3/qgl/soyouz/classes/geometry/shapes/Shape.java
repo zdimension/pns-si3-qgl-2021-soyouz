@@ -13,6 +13,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = Polygon.class, name = "polygon"),
     @Type(value = Rectangle.class, name = "rectangle")
 })
-public abstract class Shape
+public interface Shape
 {
 }

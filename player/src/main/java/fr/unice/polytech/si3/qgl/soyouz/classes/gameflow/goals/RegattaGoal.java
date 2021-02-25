@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
@@ -8,7 +7,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 /**
  * RegattaGoal : Cross all the checkpoints to win.
  */
-public class RegattaGoal extends GameGoal
+public class RegattaGoal implements GameGoal
 {
     private Checkpoint[] checkpoints;
 

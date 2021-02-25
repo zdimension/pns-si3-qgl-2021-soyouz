@@ -96,10 +96,10 @@ public class RoundObjective extends Objective {
 				Cockpit.log("wanted absolute configuration" + wantedAbsConfig.toString());
 				for (Marin m : sailors) {
 					if (!gameShip.hasAt(m.getX(), m.getY(), Rame.class)) {
+						//TODO A REFACTO CA OPTIONAL CAN BE NULLABLE
 						var rame =
 								Arrays.stream(gameShip.getEntities())
-										.filter(
-												e ->
+										.filter(e ->
 														e instanceof Rame
 																&& !(sailors.stream()
 																.anyMatch(n -> n.getX() == e.getX() && n.getY() == e.getY())))
@@ -124,7 +124,7 @@ public class RoundObjective extends Objective {
 
 				var unmovedSailors = new ArrayList<Marin>(sailors);
 				for (MoveAction m : actsMoves) {
-					unmovedSailors.remove(m);
+					unmovedSailors.remove(m.getSailor());
 				}
 				var oaring = whoShouldOar(wantedOarConfig, actsMoves, unmovedSailors, gameShip);
 				if (oaring == null) {
@@ -175,7 +175,8 @@ public class RoundObjective extends Objective {
 				actions.addAll(oaring);
 				//update sailors
 				for (MoveAction m : actsMoves) {
-					state.getIp().getSailorById(m.getSailorId()).get().moveRelative(m.getXDistance(), m.getYDistance());
+					var sailor = state.getIp().getSailorById(m.getSailorId());
+					sailor.ifPresent(marin -> marin.moveRelative(m.getXDistance(), m.getYDistance()));
 				}
 
 				return actions;

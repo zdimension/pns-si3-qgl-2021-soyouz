@@ -3,11 +3,9 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
@@ -83,7 +81,7 @@ public class Bateau extends AutreBateau
     @JsonIgnore
     public int getNumberOar(){
         return (int) Arrays.stream(getEntities()).filter(e -> e instanceof Rame).count();
-    } //TODO : A verifier je ne suis pas dutout un AS en stream #Alexis
+    }
 
     /**
      * Method to determine if a position is on the left of this.
@@ -135,15 +133,10 @@ public class Bateau extends AutreBateau
      * @return true if the oar is on the left side of this boat
      * @throws IllegalArgumentException if the oar is invalid
      */
-    public boolean isOarLeft(Rame rame) throws IllegalArgumentException{
-        try{
-            if(!(getEntityHere(rame.getPos()).get() instanceof Rame))
-                throw new IllegalArgumentException("corrupted position of Oar");
-
-        }
-        catch (Exception e){
-            throw e;
-        }
+    public boolean isOarLeft(Rame rame) {
+        var entity = getEntityHere(rame.getPos());
+        if (entity.isPresent() && !(entity.get() instanceof Rame))
+            throw new IllegalArgumentException("corrupted position of Oar");
         return rame.getPos().getSecond() == 0;
     }
 

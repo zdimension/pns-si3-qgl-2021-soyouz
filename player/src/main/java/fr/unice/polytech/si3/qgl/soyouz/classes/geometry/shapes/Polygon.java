@@ -5,7 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point;
 /**
  * Polygon shape.
  */
-public class Polygon extends Shape
+public class Polygon implements Shape
 {
     private double orientation;
     private Point[] vertices;
