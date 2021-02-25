@@ -18,18 +18,13 @@ import java.util.*;
 /**
  * Objective to be performed in a round
  */
-public class RoundObjective extends Objective {
-
-	private final Map<Class<? extends OnboardEntity>, Class<?>> configurationShape = Map.of(
-			Rame.class, Pair.class,  //rajouter que c'est Pair<Integer, Integer>
-			Gouvernail.class, Double.class
-	);
+public class RoundObjective implements Objective {
 
 	private final HashMap<Class<? extends OnboardEntity>, Object> wantedConfiguration;
 
 
-	public RoundObjective(HashMap<Class<? extends OnboardEntity>, Object> wantedConfiguration) {
-		this.wantedConfiguration = wantedConfiguration;
+	public RoundObjective(Map<Class<? extends OnboardEntity>, Object> wantedConfiguration) {
+		this.wantedConfiguration = new HashMap<>(wantedConfiguration);
 	}
 
 	@Override
@@ -84,7 +79,7 @@ public class RoundObjective extends Objective {
 
 			var actsMoves = new ArrayList<MoveAction>();
 
-			if (!isOarConfigurationReached(wantedOarConfig, sailorsNotMoving, gameShip) || !isAbsConfigurationReached(wantedAbsConfig, sailorsNotMoving, gameShip)) {
+			if (!isOarConfigurationReached(wantedOarConfig, sailorsNotMoving, gameShip) || !isAbsConfigurationReached(wantedAbsConfig, sailorsNotMoving)) {
 				actsMoves = firstSailorConfig(wantedOarConfig, wantedAbsConfig, oarReachableForSailors, absReachableForSailors, allOars, allAbsEnt, actsMoves, gameShip);
 			}
 
@@ -114,10 +109,8 @@ public class RoundObjective extends Objective {
 				}
 				for (Marin m : unmovedSailors) {
 					var e = gameShip.getEntityHere(m.getPos());
-					if (e.isPresent()) {
-						if (e.get() instanceof Rame)
-							acts.add(new OarAction(m));
-					}
+					if (e.isPresent() && e.get() instanceof Rame)
+						acts.add(new OarAction(m));
 				}
 				return acts;
 			} else {
@@ -128,7 +121,7 @@ public class RoundObjective extends Objective {
 				}
 				var oaring = whoShouldOar(wantedOarConfig, actsMoves, unmovedSailors, gameShip);
 				if (oaring == null) {
-					return new ArrayList<GameAction>();
+					return new ArrayList<>();
 				}
 
 				//all sailors, removing busy sailors
@@ -182,9 +175,8 @@ public class RoundObjective extends Objective {
 				return actions;
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
 			Cockpit.log(e.getMessage());
-			return new ArrayList<GameAction>();
+			return new ArrayList<>();
 		}
 	}
 
@@ -194,17 +186,17 @@ public class RoundObjective extends Objective {
 			return act;
 
 		if (isOarConfigurationReached(wantedOarConfig, act, gameShip)) {
-			if (isAbsConfigurationReached(wantedAbsConfig, act, gameShip)) {
+			if (isAbsConfigurationReached(wantedAbsConfig, act)) {
 				return act;
 			}
-			var absMoves = firstSailorAbsConfig(wantedAbsConfig, possibleSailorAbsConfig, currentEntities, new ArrayList<MoveAction>(), gameShip);
+			var absMoves = firstSailorAbsConfig(wantedAbsConfig, possibleSailorAbsConfig, currentEntities, new ArrayList<>(), gameShip);
 			if (absMoves != null) {
 				var moves = new ArrayList<MoveAction>();
 				moves.addAll(act);
 				moves.addAll(absMoves);
 				return moves;
 			}
-			return null;
+			return new ArrayList<>();
 
 		} else {
 
@@ -226,9 +218,9 @@ public class RoundObjective extends Objective {
 					if (allMoves != null) {
 						if (isOarConfigurationReached(wantedOarConfig, allMoves, gameShip)) {
 							//au pire, appel recusrif avec wanted oar config vide
-							if (!isAbsConfigurationReached(wantedAbsConfig, allMoves, gameShip)) {
+							if (!isAbsConfigurationReached(wantedAbsConfig, allMoves)) {
 								if (!oarSailorsMinusThis.isEmpty()) {
-									var absMoves = firstSailorAbsConfig(wantedAbsConfig, absSailorsMinusThis, currentEntities, new ArrayList<MoveAction>(), gameShip);
+									var absMoves = firstSailorAbsConfig(wantedAbsConfig, absSailorsMinusThis, currentEntities, new ArrayList<>(), gameShip);
 									if (absMoves != null) {
 										var moves = new ArrayList<MoveAction>();
 										moves.addAll(allMoves);
@@ -243,7 +235,7 @@ public class RoundObjective extends Objective {
 					}
 				}
 			}
-			return null;
+			return new ArrayList<>();
 		}
 	}
 
@@ -266,17 +258,14 @@ public class RoundObjective extends Objective {
 				var actPlusThis = new ArrayList<>(act);
 				actPlusThis.add(new MoveAction(marin, ent.first - marin.getX(), ent.second - marin.getY()));
 				var allMoves = firstSailorAbsConfig(wantedAbsConfig, sailorsMinusThis, entsMinusThis, actPlusThis, gameShip);
-				if (allMoves != null) {
-					if (isAbsConfigurationReached(wantedAbsConfig, allMoves, gameShip)) {
-						return allMoves;
-					}
-				}
+				if (allMoves != null && isAbsConfigurationReached(wantedAbsConfig, allMoves))
+					return allMoves;
 			}
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
-	private boolean isAbsConfigurationReached(Set<Pair<Integer, Integer>> wantedAbsConfig, ArrayList<MoveAction> act, Bateau gameShip) {
+	private boolean isAbsConfigurationReached(Set<Pair<Integer, Integer>> wantedAbsConfig, ArrayList<MoveAction> act) {
 		if (wantedAbsConfig == null || wantedAbsConfig.isEmpty())
 			return true;
 
@@ -374,12 +363,22 @@ public class RoundObjective extends Objective {
 			}
 		}
 		Cockpit.log("Could not establish who should row");
-		return null;
+		return new ArrayList<>();
 	}
 
+	//TODO PAS BEAU CA
 	@Override
 	public boolean isValidated(GameState state) {
 		return false;
 	}
 
+	/**
+	 * Updates this objective according to the state of the game
+	 *
+	 * @param state of the game
+	 */
+	@Override
+	public void update(GameState state) {
+
+	}
 }

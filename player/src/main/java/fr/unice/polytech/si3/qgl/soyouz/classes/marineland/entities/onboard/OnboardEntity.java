@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
@@ -30,7 +29,7 @@ public abstract class OnboardEntity
      * @param x Abscissa of the entity.
      * @param y Ordinate of the entity.
      */
-    public OnboardEntity(@JsonProperty("x") int x,
+    protected OnboardEntity(@JsonProperty("x") int x,
                          @JsonProperty("y")int y) {
         this.x = x;
         this.y = y;
