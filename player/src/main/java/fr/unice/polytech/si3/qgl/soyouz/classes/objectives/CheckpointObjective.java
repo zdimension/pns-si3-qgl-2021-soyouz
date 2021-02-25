@@ -45,8 +45,8 @@ public class CheckpointObjective extends CompositeObjective{
         var da = Math.atan2(yo - yb, xo - xb);
         var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
         var vr = 2 * da;
-        //TODO Ignoble d'appeller 2 fois la meme instance du bateau
-        var neededRotation = Trigonometry.neededRotation(state.getNp().getShip(), state.getIp().getShip(), cp.getPosition());
+        //var neededRotation = Trigonometry.neededRotation(state.getNp().getShip(), cp);
+        var neededRotation = Trigonometry.calculateAngle(state.getNp().getShip(), cp);
         Pair<Double, Double> opt = Pair.of(vl, -neededRotation);
 
         var sailors = state.getIp().getSailors();
