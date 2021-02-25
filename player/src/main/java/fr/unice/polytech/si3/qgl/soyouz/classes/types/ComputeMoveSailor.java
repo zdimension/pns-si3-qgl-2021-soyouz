@@ -32,7 +32,7 @@ public class ComputeMoveSailor {
 		return Collections.unmodifiableSet(entities);
 	}
 
-	public Set<? extends OnboardEntity> getLonelyEntity(){
+	public Set<? extends OnboardEntity> getLonelyEntities(){
 		return entities.stream().filter(ent -> ent instanceof Gouvernail).collect(Collectors.toSet());
 	}
 }
