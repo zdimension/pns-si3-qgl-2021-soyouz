@@ -16,7 +16,9 @@ import java.util.Optional;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = MoveAction.class, name = "MOVING"),
     @JsonSubTypes.Type(value = OarAction.class, name = "OAR"),
-    @JsonSubTypes.Type(value = TurnAction.class, name = "TURN")
+    @JsonSubTypes.Type(value = TurnAction.class, name = "TURN"),
+    @JsonSubTypes.Type(value = ListSailAction.class, name = "LIFT_SAIL"),
+    @JsonSubTypes.Type(value = LowerSailAction.class, name = "LOWER_SAIL")
 })
 public abstract class GameAction
 {
