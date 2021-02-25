@@ -49,12 +49,12 @@ public class RoundObjective extends Objective {
 				sailorsNotMoving.add(new MoveAction(m, 0, 0));
 			}
 			//how many sailors on the left and the right
-			Pair<Integer, Integer> wantedOarConfig;
+			Pair<Integer, Integer> wantedOarConfig = null;
 			//coordinates of entities having only one instance on the ship
 			HashSet<Pair<Integer, Integer>> wantedAbsConfig = new HashSet<>();
 			try {
-				if (wantedConfiguration.containsKey(Rame.class)) ;
-				wantedOarConfig = Pair.of((Integer) ((Pair) wantedConfiguration.get(Rame.class)).first, (Integer) ((Pair) wantedConfiguration.get(Rame.class)).second);
+				if (wantedConfiguration.containsKey(Rame.class))
+					wantedOarConfig = Pair.of((Integer) ((Pair) wantedConfiguration.get(Rame.class)).first, (Integer) ((Pair) wantedConfiguration.get(Rame.class)).second);
 				if (wantedConfiguration.containsKey(Gouvernail.class)) {
 					wantedAbsConfig.add(state.getNp().getShip().findFirstPosOfEntity(Gouvernail.class));
 				}
@@ -276,7 +276,7 @@ public class RoundObjective extends Objective {
 	}
 
 	private boolean isAbsConfigurationReached(Set<Pair<Integer, Integer>> wantedAbsConfig, ArrayList<MoveAction> act, Bateau gameShip) {
-		if (wantedAbsConfig.isEmpty())
+		if (wantedAbsConfig == null || wantedAbsConfig.isEmpty())
 			return true;
 
 		var obj = new HashSet<Pair<Integer, Integer>>();
@@ -296,6 +296,9 @@ public class RoundObjective extends Objective {
 	}
 
 	private boolean isOarConfigurationReached(Pair<Integer, Integer> wantedOarConfig, ArrayList<MoveAction> act, Bateau gameShip) {
+		if(wantedOarConfig == null){
+			return true;
+		}
 		var obj = Pair.of(0, 0);
 		for (MoveAction g : act) {
 			var entity = Pair.of(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY() + g.getYDistance());
