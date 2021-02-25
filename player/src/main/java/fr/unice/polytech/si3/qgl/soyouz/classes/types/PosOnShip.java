@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 public class PosOnShip {
@@ -12,6 +13,16 @@ public class PosOnShip {
 		this.y = y;
 	}
 
+	public PosOnShip(Pair<Integer, Integer> pos){
+		this.x = pos.first;
+		this.y = pos.second;
+	}
+
+	public PosOnShip(OnboardEntity ent){
+		this.x = ent.getX();
+		this.y = ent.getY();
+	}
+
 	public int getX() {
 		return x;
 	}
@@ -20,7 +31,8 @@ public class PosOnShip {
 		return y;
 	}
 
-	public Pair<Integer,Integer> getPos(){
+	public Pair<Integer,Integer> getPosCoord(){
 		return Pair.of(getX(), getY());
 	}
+
 }
