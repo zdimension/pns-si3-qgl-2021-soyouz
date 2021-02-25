@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Objective to be performed in a round
  */
-public class RoundObjective extends Objective {
+public class RoundObjective implements Objective {
 
 	private final Map<Class<? extends OnboardEntity>, Class<?>> configurationShape = Map.of(
 			Rame.class, Pair.class,  //rajouter que c'est Pair<Integer, Integer>
@@ -377,9 +377,19 @@ public class RoundObjective extends Objective {
 		return null;
 	}
 
+	//TODO PAS BEAU CA
 	@Override
 	public boolean isValidated(GameState state) {
 		return false;
 	}
 
+	/**
+	 * Updates this objective according to the state of the game
+	 *
+	 * @param state of the game
+	 */
+	@Override
+	public void update(GameState state) {
+
+	}
 }

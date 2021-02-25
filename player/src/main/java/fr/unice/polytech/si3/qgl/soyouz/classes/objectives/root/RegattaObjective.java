@@ -35,7 +35,6 @@ public class RegattaObjective extends RootObjective
     @Override
     public void update(GameState state)
     {
-        super.update(state);
         if(currentCheckpoint != null)
         if(currentCheckpoint.isValidated(state)){
             if(goalData.getCheckpoints().length - 1 > numCheckpoint){

@@ -32,20 +32,29 @@ public class CheckpointObjective extends CompositeObjective{
     @Override
     public boolean isValidated(GameState state) {
         return state.getNp().getShip().getPosition().getLength(cp.getPosition())
-                < (((Circle) cp.getShape())).getRadius();
+                < ((Circle) cp.getShape()).getRadius();
     }
 
+    /**
+     * Updates this objective according to the state of the game
+     *
+     * @param state of the game
+     */
+    @Override
+    public void update(GameState state) {
+
+    }
+
+    //TODO A REFACTO
     @Override
     public List<GameAction> resolve(GameState state) {
-        var xb = state.getNp().getShip().getPosition().getX();
-        var yb = state.getNp().getShip().getPosition().getY();
+        var xBoat = state.getNp().getShip().getPosition().getX();
+        var yBoat = state.getNp().getShip().getPosition().getY();
 
-        var xo = cp.getPosition().getX();
-        var yo = cp.getPosition().getY();
-        var da = Math.atan2(yo - yb, xo - xb);
-        var vl = da == 0 ? xo - xb : da * (Math.pow(xo - xb, 2) + Math.pow(yo - yb, 2)) / (yo - yb);
-        var vr = 2 * da;
-        //var neededRotation = Trigonometry.neededRotation(state.getNp().getShip(), cp);
+        var xObjective = cp.getPosition().getX();
+        var yObjective = cp.getPosition().getY();
+        var da = Math.atan2(yObjective - yBoat, xObjective - xBoat);
+        var vl = da == 0 ? xObjective - xBoat : da * (Math.pow(xObjective - xBoat, 2) + Math.pow(yObjective - yBoat, 2)) / (yObjective - yBoat);
         var neededRotation = Trigonometry.calculateAngle(state.getNp().getShip(), cp);
         Pair<Double, Double> opt = Pair.of(vl, -neededRotation);
 
