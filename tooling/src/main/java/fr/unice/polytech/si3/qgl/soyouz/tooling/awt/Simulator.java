@@ -119,7 +119,7 @@ public class Simulator extends JFrame
                     spdIncrement * Math.cos(cur.getOrientation()),
                     spdIncrement * Math.sin(cur.getOrientation()),
                     rotIncrement)));
-                System.out.println(model.getShip().getPosition());
+                System.out.println("Ship position : "+model.getShip().getPosition());
                 if (++currentStep >= COMP_STEPS)
                 {
                     timer.stop();

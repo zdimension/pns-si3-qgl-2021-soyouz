@@ -150,6 +150,11 @@ public class Bateau extends AutreBateau
         return first.map(OnboardEntity::getPos).orElse(null);
     }
 
+    public <T extends OnboardEntity> T findFirstEntity(Class<T> ent){
+        var first = Arrays.stream(this.entities).filter(ent::isInstance).findFirst();
+        return (T) first.orElse(null);
+    }
+
     @Override
     public String toString() {
         var len = 2*deck.getLength()+2;

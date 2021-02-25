@@ -4,7 +4,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 /**
  * The wind effect.
  */
-public class Wind extends Entity{
+public class Wind implements Entity{
     private double orientation;
     private double strength;
 
