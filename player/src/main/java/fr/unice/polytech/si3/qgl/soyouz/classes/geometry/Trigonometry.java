@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
@@ -20,7 +21,6 @@ public class Trigonometry {
      * @param totalOarNb The total number of oar.
      * @return a pair that contains all the information.
      */
-    //TODO maybe bad concept
     static Double oarLinearSpeed(int activeOarNb, int totalOarNb){
         return (double) (165 * activeOarNb / totalOarNb);
     }
@@ -33,10 +33,11 @@ public class Trigonometry {
      * @param totalOarNb The total number of oar.
      * @return the angle of the rotation.
      */
-    static Double rotatingSpeed(int activeLeftOar, int activeRightOar, int totalOarNb) {
+    static Double rotatingAngle(int activeLeftOar, int activeRightOar, int totalOarNb) {
         return Math.PI*(activeRightOar - activeLeftOar)/totalOarNb;
     }
 
+    //TODO A REFACTO DANS UNE CLASSE
     /**
      * Determine every angle of rotation possible according to the game parameters.
      * Then they are stocked into two maps, one for each side (right/left).
@@ -48,9 +49,9 @@ public class Trigonometry {
         for (int i = 0; i <= nbOarOnSide && i < nbSailor; i++) {
             for (int j = 0; j <= nbOarOnSide && j < nbSailor; j++) {
                     if (i > j && i + j < nbSailor)
-                        turnPossibilities.first.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
+                        turnPossibilities.first.put(Pair.of(j, i), rotatingAngle(j, i, nbOarOnSide * 2));
                     if (i < j && i + j < nbSailor)
-                        turnPossibilities.second.put(Pair.of(j, i), rotatingSpeed(j, i, nbOarOnSide * 2));
+                        turnPossibilities.second.put(Pair.of(j, i), rotatingAngle(j, i, nbOarOnSide * 2));
             }
         }
     }
@@ -63,7 +64,7 @@ public class Trigonometry {
         } else {
             neededOarRotation = findOptConfigBasedOnVr(nbSailor, nbOarOnSide, opt, turnPossibilities);
         }
-        neededRudderRotation = findOptRudderRotation(opt.second - rotatingSpeed(neededOarRotation.first, neededOarRotation.second, nbOarOnSide * 2));
+        neededRudderRotation = findOptRudderRotation(opt.second - rotatingAngle(neededOarRotation.first, neededOarRotation.second, nbOarOnSide * 2));
         return Pair.of(neededOarRotation, neededRudderRotation);
     }
 
@@ -101,12 +102,6 @@ public class Trigonometry {
         return optimal;
     }
 
-    public static double neededRotation(Bateau boat, Bateau boatt, Position objectivePosition){
-        return (boat.getPosition().getOrientation() + ((Rectangle) boatt.getShape()).getOrientation()
-                - boatt.getPosition().getOrientation() + boat.getPosition().getOrientation())
-                - 2*Math.atan2(objectivePosition.getY() -boat.getPosition().getY(), objectivePosition.getX() - boat.getPosition().getX());
-    }
-
     public static boolean rudderRotationIsInRange (Double neededRotation){
         return neededRotation > Gouvernail.ALLOWED_ROTATION.first && neededRotation < Gouvernail.ALLOWED_ROTATION.second;
     }
@@ -121,5 +116,33 @@ public class Trigonometry {
                 return Gouvernail.ALLOWED_ROTATION.second;
             }
         }
+    }
+
+    public static double neededRotation(Bateau boat, Checkpoint checkpoint) {
+        var relativeCheckpointPosition = checkpointPositionRelativeToBoatPosition(boat, checkpoint);
+        return boat.getPosition().getOrientation() - 2*Math.atan2(relativeCheckpointPosition.second, relativeCheckpointPosition.first);
+    }
+
+    private static Pair<Double, Double> checkpointPositionRelativeToBoatPosition(Bateau boat, Checkpoint checkpoint) {
+        double boatOrientation = boat.getPosition().getOrientation() + ((Rectangle)boat.getShape()).getOrientation();
+        double xDiff = checkpoint.getPosition().getX() - boat.getPosition().getX();
+        double yDiff = checkpoint.getPosition().getY() - boat.getPosition().getY();
+        double xProjection = Math.cos(boatOrientation) * xDiff + Math.sin(boatOrientation) * yDiff;
+        double yProjection = Math.cos(boatOrientation) * yDiff - Math.sin(boatOrientation) * xDiff;
+        return Pair.of(xProjection, yProjection);
+    }
+
+    public static double calculateAngle(Bateau boat, Checkpoint checkpoint) {
+        double boatOrientation = boat.getPosition().getOrientation(); // + ((Rectangle)boat.getShape()).getOrientation();
+        var boatVect = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
+        var cpVect = Pair.of(checkpoint.getPosition().getX() - boat.getPosition().getX(), checkpoint.getPosition().getY() - boat.getPosition().getY());
+        var normeBoat = Math.sqrt(Math.pow(boatVect.first, 2) + Math.pow(boatVect.second, 2));
+        var normeDirection = Math.sqrt(Math.pow(cpVect.first, 2) + Math.pow(cpVect.second, 2));
+        var scalaire = boatVect.first * cpVect.first + boatVect.second * cpVect.second;
+
+        var angle = Math.acos(scalaire / (normeBoat * normeDirection));
+        if (cpVect.second - boatVect.second < 0)
+            angle = -angle;
+        return angle;
     }
 }
