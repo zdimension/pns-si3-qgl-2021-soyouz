@@ -83,7 +83,7 @@ public class Bateau extends AutreBateau
     @JsonIgnore
     public int getNumberOar(){
         return (int) Arrays.stream(getEntities()).filter(e -> e instanceof Rame).count();
-    } //TODO : A verifier je ne suis pas dutout un AS en stream #Alexis
+    }
 
     /**
      * Method to determine if a position is on the left of this.
@@ -136,13 +136,10 @@ public class Bateau extends AutreBateau
      * @throws IllegalArgumentException if the oar is invalid
      */
     public boolean isOarLeft(Rame rame) throws IllegalArgumentException{
-        try{
-            if(!(getEntityHere(rame.getPos()).get() instanceof Rame))
+        var entity = getEntityHere(rame.getPos());
+        if (entity.isPresent()) {
+            if (!(entity.get() instanceof Rame))
                 throw new IllegalArgumentException("corrupted position of Oar");
-
-        }
-        catch (Exception e){
-            throw e;
         }
         return rame.getPos().getSecond() == 0;
     }

@@ -123,7 +123,7 @@ class TrigonometryTest {
 
     @Test
     void oarLinearSpeed() {
-        assertEquals((165 * 3 / 6), Trigonometry.oarLinearSpeed(3, 6));
+        assertEquals((165.0 * 3 / 6), Trigonometry.oarLinearSpeed(3, 6));
     }
 
     @Test
