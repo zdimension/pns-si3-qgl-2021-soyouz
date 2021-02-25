@@ -4,18 +4,21 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Class storing intended action for the next round.
  */
 public class TempRoundChoice {
-    final HashMap<Marin, Pair<Pair<Integer,Integer>, Pair<GameAction, @Nullable GameAction>>> sailorsJob;
-    final HashMap<OnboardEntity, Boolean> usedOnBoardEntity;
+    final HashMap<Marin, Pair<PosOnShip, Pair<GameAction, @Nullable GameAction>>> sailorsJob;
     final Collection<Marin> vacantSailors;
+    final HashMap<OnboardEntity, Boolean> usedOnBoardEntity;
 
     /**
      * Constructor.
@@ -37,7 +40,7 @@ public class TempRoundChoice {
      *
      * @return all sailors jobs.
      */
-    public Map<Marin, Pair<Pair<Integer, Integer>, Pair<GameAction, @Nullable GameAction>>> getSailorsJob() {
+    public Map<Marin, Pair<PosOnShip, Pair<GameAction, @Nullable GameAction>>> getSailorsJob() {
         return Collections.unmodifiableMap(sailorsJob);
     }
 
@@ -57,6 +60,20 @@ public class TempRoundChoice {
      */
     public Collection<Marin> getVacantSailors() {
         return Collections.unmodifiableCollection(vacantSailors);
+    }
+
+    public Collection<Marin> getBusySailors() { return Collections.unmodifiableCollection(sailorsJob.keySet());}
+
+    public Set<GameAction> getAllActions() {
+        return sailorsJob.values().stream().
+                map(Pair::getSecond).
+                flatMap(p -> Stream.of(p.getFirst(), p.getSecond())).
+                filter(Objects::nonNull).
+                collect(Collectors.toSet());
+    }
+
+    public Set<MoveAction> getAllMoves(){
+        return getAllActions().stream().filter(a -> a instanceof MoveAction).map(a -> (MoveAction)a).collect(Collectors.toSet());
     }
 
     /**
@@ -84,7 +101,7 @@ public class TempRoundChoice {
 
 
         if(!sailor.getPos().equals(pos)){
-            var isActionMove = action.first instanceof MoveAction;
+            var isActionMove = action != null && action.first instanceof MoveAction;
 
             if(!isActionMove){
                 throw new IllegalArgumentException("Incoherent sailor position (position changed but no moveAction)");
@@ -98,7 +115,7 @@ public class TempRoundChoice {
         }
 
         vacantSailors.remove(sailor);
-        sailorsJob.put(sailor, Pair.of( pos, action));
+        sailorsJob.put(sailor, Pair.of(new PosOnShip(pos.getFirst(), pos.getSecond()), action));
         usedOnBoardEntity.replace(entity, true);
     }
 
@@ -113,5 +130,9 @@ public class TempRoundChoice {
      */
     public void hireSailor(Marin sailor, Pair<Integer,Integer> pos, GameAction act1, @Nullable GameAction act2) throws IllegalArgumentException{
         hireSailor(sailor, pos, Pair.of(act1, act2));
+    }
+
+    public void hireSailor(Marin sailor, PosOnShip pos, GameAction act1, @Nullable GameAction act2) throws IllegalArgumentException{
+        hireSailor(sailor, pos.getPos(), Pair.of(act1, act2));
     }
 }
