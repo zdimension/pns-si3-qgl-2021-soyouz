@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
@@ -45,7 +44,7 @@ public class Trigonometry {
      * @param nbSailor The number of sailor on the boat.
      * @param nbOarOnSide The number of oar on each side of the boat.
      */
-    static private void setTurnPossibilities(int nbSailor, int nbOarOnSide, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
+    private static void setTurnPossibilities(int nbSailor, int nbOarOnSide, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         for (int i = 0; i <= nbOarOnSide && i < nbSailor; i++) {
             for (int j = 0; j <= nbOarOnSide && j < nbSailor; j++) {
                     if (i > j && i + j < nbSailor)
@@ -70,8 +69,9 @@ public class Trigonometry {
 
     private static Pair<Integer, Integer> findOptConfigBasedOnVr(int nbSailor, int nbOarOnSide, Pair<Double, Double> opt, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         setTurnPossibilities(nbSailor, nbOarOnSide, turnPossibilities);
-        var givenSide = opt.second > 0 ? turnPossibilities.first : turnPossibilities.second;
-        Pair<Integer, Integer> optimal = null;
+        boolean left = opt.second > 0;
+        var givenSide = left ? turnPossibilities.first : turnPossibilities.second;
+        Pair<Integer, Integer> optimal = left ? Pair.of(0,1) : Pair.of(1,0);
         double diff = 0.0;
         for (Map.Entry<Pair<Integer, Integer>, Double> entry : givenSide.entrySet()) {
             double difference = Math.abs(opt.second - entry.getValue());

@@ -13,7 +13,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 @JsonSubTypes({
     @Type(value = RegattaGoal.class, name = "REGATTA")
 })
-public abstract class GameGoal
+public interface GameGoal
 {
     /**
      * Getters.

@@ -26,7 +26,6 @@ public class Position
      * @param y Ordinate of the point.
      * @param orientation Orientation of the point.
      */
-    //TODO ?
     public Position(@JsonProperty("x") double x,
                     @JsonProperty("y") double y,
                     @JsonProperty("orientation")double orientation) {
@@ -71,17 +70,12 @@ public class Position
      * @param pos The second point.
      * @return a pair that represent the distance between those two points.
      */
-    //TODO pour l'instant tient uniquement compte de la distance depuis le centre
     public Pair<Double, Double> getDistance(Position pos){
         return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
     }
 
     public double getLength(Position pos){
         return sqrt(pow(this.getX() - pos.getX(),2) + pow(this.getY() - pos.getY(),2));
-    }
-
-    public boolean isPositionReachable(Position toReach, double speed){
-        return true; //TODO
     }
 
     /**

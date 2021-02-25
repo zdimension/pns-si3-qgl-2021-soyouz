@@ -13,7 +13,7 @@ public class Marin {
     private int y;
     private String name;
 
-    public static final int maxMove = 5;
+    public static final int MAX_MOVE = 5;
 
     /**
      * Getter.
@@ -94,7 +94,6 @@ public class Marin {
         this.name = name;
     }
 
-    //TODO checker si c'est sur le bateau ailleurs
     /**
      * Moves this sailor the number of cells specified. This sailor can move up to 5 cells.
      *
@@ -103,7 +102,7 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveRelative(int xDist, int yDist) throws IllegalArgumentException {
+    public Pair<Integer, Integer> moveRelative(int xDist, int yDist) {
         if (!isRelPosReachable(xDist, yDist))
             throw new IllegalArgumentException("Sailor must move 5 cells or lower");
         this.x += xDist;
@@ -118,7 +117,7 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveRelative(Pair<Integer, Integer> dist) throws IllegalArgumentException {
+    public Pair<Integer, Integer> moveRelative(Pair<Integer, Integer> dist) {
         return moveRelative(dist.getFirst(), dist.getSecond());
     }
 
@@ -130,7 +129,7 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveAbsolute(int xPos, int yPos) throws  IllegalArgumentException{
+    public Pair<Integer, Integer> moveAbsolute(int xPos, int yPos) {
         if(!this.isAbsPosReachable(xPos, yPos))
             throw new IllegalArgumentException("Sailor must move 5 cells or lower");
         this.x = xPos;
@@ -145,7 +144,7 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveAbsolute(Pair<Integer, Integer> pos) throws  IllegalArgumentException{
+    public Pair<Integer, Integer> moveAbsolute(Pair<Integer, Integer> pos) {
         return moveAbsolute(pos.getFirst(), pos.getSecond());
     }
 
@@ -157,7 +156,7 @@ public class Marin {
      * @return if this sailor can move the number of cells specified
      */
     public boolean isRelPosReachable(int xDist, int yDist){
-        return Math.abs(xDist) + Math.abs(yDist) <= maxMove;
+        return Math.abs(xDist) + Math.abs(yDist) <= MAX_MOVE;
     }
 
     /**
@@ -168,7 +167,7 @@ public class Marin {
      * @return if the absolute position is reachable for this sailor
      */
     public boolean isAbsPosReachable(int xPos, int yPos){
-        return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) <= maxMove;
+        return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) <= MAX_MOVE;
     }
 
     public boolean isAbsPosReachable(Pair<Integer,Integer> pos){

@@ -3,7 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 /**
  * Circle shape.
  */
-public class Circle extends Shape
+public class Circle implements Shape
 {
     private double radius;
 
