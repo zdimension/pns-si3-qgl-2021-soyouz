@@ -21,7 +21,7 @@ class PairTest {
 
     @Test
     void testHashCode() {
-        assertNotNull(coords.hashCode());
+        assertNotEquals(Pair.of(4,10).hashCode(), coords.hashCode());
     }
 
     @Test

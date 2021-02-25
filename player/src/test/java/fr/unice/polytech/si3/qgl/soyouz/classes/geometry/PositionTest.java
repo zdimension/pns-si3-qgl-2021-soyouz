@@ -53,7 +53,7 @@ class PositionTest {
 
     @Test
     void testHashCode() {
-        assertNotNull(position.hashCode());
+        assertNotEquals(new Position(10, 20, 29).hashCode(), position.hashCode());
     }
 
     @Test
