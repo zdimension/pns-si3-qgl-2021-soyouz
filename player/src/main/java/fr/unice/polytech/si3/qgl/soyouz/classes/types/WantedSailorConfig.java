@@ -44,7 +44,8 @@ public class WantedSailorConfig {
 
 	public Set<PosOnShip> getAbsConfigPos(){
 		var pos = new HashSet<PosOnShip>();
-		pos.add(new PosOnShip(gouvernail.getPos()));
+		if(gouvernail != null)
+			pos.add(new PosOnShip(gouvernail.getPos()));
 		return pos;
 	}
 
