@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class ComputeMoveSailor {
 	}
 
 	public Set<Rame> getOars(){
-		return entities.stream().filter(ent -> ent instanceof Rame).map(ent -> (Rame)ent).collect(Collectors.toSet());
+		return Util.filterType(entities.stream(), Rame.class).collect(Collectors.toSet());
 	}
 
 	public Set<? extends OnboardEntity> getEntities() {
@@ -33,6 +34,6 @@ public class ComputeMoveSailor {
 	}
 
 	public Set<? extends OnboardEntity> getLonelyEntities(){
-		return entities.stream().filter(ent -> ent instanceof Gouvernail).collect(Collectors.toSet());
+		return Util.filterType(entities.stream(), Gouvernail.class).collect(Collectors.toSet());
 	}
 }

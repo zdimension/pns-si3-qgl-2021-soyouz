@@ -16,6 +16,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.ComputeMoveSailor;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.WantedSailorConfig;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -189,8 +190,7 @@ public class RoundObjective implements Objective {
 		} else {
 			var possibleSailorConfigOar = new HashMap<Marin, Set<? extends Rame>>();
 			for (var p : possibleSailorConfig) {
-				var temp = p.getEntities().stream().filter(e -> e instanceof Rame).collect(Collectors.toSet());
-				possibleSailorConfigOar.put(p.getSailor(), (Set<Rame>) temp);
+				possibleSailorConfigOar.put(p.getSailor(), Util.filterType(p.getEntities().stream(), Rame.class).collect(Collectors.toSet()));
 			}
 
 			for (Map.Entry<Marin, Set<? extends Rame>> pair : possibleSailorConfigOar.entrySet()) {

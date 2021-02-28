@@ -6,6 +6,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -87,7 +88,7 @@ public class TempRoundChoice {
 	}
 
 	public Set<MoveAction> getAllMoves() {
-		return getAllActions().stream().filter(a -> a instanceof MoveAction).map(a -> (MoveAction) a).collect(Collectors.toSet());
+		return Util.filterType(getAllActions().stream(), MoveAction.class).collect(Collectors.toSet());
 	}
 
 	//todo check if sailor can perform action HERE
