@@ -87,7 +87,14 @@ public class CheckpointObjective extends CompositeObjective {
         //wantedConfig.put(Rame.class, wantedOarConfig);
         //wantedConfig.put(Gouvernail.class, wantedRudderConfig);
 
-        var wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), (wantedRudderRotation != 0 ? state.getIp().getShip().findFirstEntity(Gouvernail.class) : null), (wantedRudderRotation));
+        WantedSailorConfig wanted;
+        if (wantedRudderRotation != 0)
+            wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), state.getIp().getShip().findFirstEntity(Gouvernail.class), wantedRudderRotation);
+        else
+            wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(),null, null);
+
+
+        //var wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), (wantedRudderRotation != 0 ? state.getIp().getShip().findFirstEntity(Gouvernail.class) : null), (wantedRudderRotation));
 
         var roundObj = new RoundObjective(wanted);
 
