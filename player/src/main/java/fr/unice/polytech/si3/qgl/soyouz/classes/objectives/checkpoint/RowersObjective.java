@@ -1,12 +1,9 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RowersObjective {
 
