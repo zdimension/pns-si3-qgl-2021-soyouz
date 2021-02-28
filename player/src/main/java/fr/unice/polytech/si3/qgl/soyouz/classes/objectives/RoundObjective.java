@@ -190,6 +190,10 @@ public class RoundObjective extends Objective {
 
 				 */
 
+				//todo hiresailors dans tempChoice pour ceux qui rament
+				for(var oarAct : oaring){
+					tempChoice.hireSailor(oarAct.getSailor(), oarAct);
+				}
 
 				var actions = new ArrayList<GameAction>();
 				var wantedConfiguration = wanted.getAbsConfig();
@@ -221,9 +225,10 @@ public class RoundObjective extends Objective {
 
 				}
 
+				actions.addAll(tempChoice.getAllActions());
+				//actions.addAll(actsMoves);
+				//actions.addAll(oaring);
 
-				actions.addAll(actsMoves);
-				actions.addAll(oaring);
 				//update sailors
 				for (MoveAction m : actsMoves) {
 					var sailor = state.getIp().getSailorById(m.getSailorId());
@@ -314,7 +319,7 @@ public class RoundObjective extends Objective {
 			var absMoves = firstSailorAbsConfig(wantedConfig.getAbsConfigPos(), possibleSailorConfigAbs, currentEntities, act, gameShip, true);
 			if (absMoves != null) {
 				var moves = new ArrayList<MoveAction>();
-				moves.addAll(act);
+				//moves.addAll(act);
 				moves.addAll(absMoves);
 				return moves;
 			}
@@ -340,10 +345,10 @@ public class RoundObjective extends Objective {
 					var actPlusThis = new ArrayList<>(act);
 					actPlusThis.add(new MoveAction(marin, rame.getX() - marin.getX(), rame.getY() - marin.getY()));
 					//var possibleSailorConfigAbs = new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getLonelyEntity)));
-					var allMoves = firstSailorConfig(wantedConfig, sailorsMinusThis, currentOars, currentEntities, actPlusThis, gameShip);
+					var allMoves = firstSailorConfig(wantedConfig, sailorsMinusThis, oarsMinusThis, currentEntities, actPlusThis, gameShip);
 					if (allMoves != null) {
-						if (isOarConfigurationReached(wantedConfig.getOarConfig(), actPlusThis, gameShip)) {
-							if (!isAbsConfigurationReached(wantedConfig.getAbsConfigPos(), act, gameShip)) {
+						if (isOarConfigurationReached(wantedConfig.getOarConfig(), allMoves, gameShip)) {
+							if (!isAbsConfigurationReached(wantedConfig.getAbsConfigPos(), allMoves, gameShip)) {
 								if (!sailorsMinusThis.isEmpty()) {
 									var possibleSailorConfigAbs = new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getLonelyEntities)));
 									var absMoves = firstSailorAbsConfig(wantedConfig.getAbsConfigPos(), possibleSailorConfigAbs, currentEntities, actPlusThis, gameShip, true);
@@ -412,12 +417,12 @@ public class RoundObjective extends Objective {
 			var marin = pair.getKey();
 			for (var ent : pair.getValue()) {
 				//todo if contains of type
-				if (!currentEntities.contains(ent))
+				if (!currentEntities.contains(ent.getPos()))
 					continue;
 				var sailorsMinusThis = new HashMap<>(possibleSailorAbsConfig);
 				sailorsMinusThis.remove(marin);
 				var entsMinusThis = new HashSet<>(currentEntities);
-				entsMinusThis.remove(ent);
+				entsMinusThis.remove(ent.getPos());
 				var actPlusThis = new ArrayList<>(act);
 				actPlusThis.add(new MoveAction(marin, ent.getX() - marin.getX(), ent.getY() - marin.getY()));
 				var allMoves = firstSailorAbsConfig(wantedAbsConfig, sailorsMinusThis, entsMinusThis, actPlusThis, gameShip, true);
@@ -438,10 +443,10 @@ public class RoundObjective extends Objective {
 
 		var obj = new HashSet<PosOnShip>();
 		for (MoveAction g : act) {
-			var entity = new PosOnShip(g.getSailor().getX() + g.getXDistance(), g.getSailor().getY() + g.getYDistance());
+			var pos = new PosOnShip(g.newPos());
 
 			try {
-				obj.add(entity);
+				obj.add(pos);
 			} catch (Exception e) {
 				Cockpit.log("Error checking if configuration (not oars) reached : " + e.getMessage());
 				return false;
