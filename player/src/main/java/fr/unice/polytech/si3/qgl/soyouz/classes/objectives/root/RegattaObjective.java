@@ -11,8 +11,7 @@ import java.util.List;
 /**
  * Race type objective.
  */
-public class RegattaObjective extends RootObjective
-{
+public class RegattaObjective extends RootObjective {
     private RegattaGoal goalData;
 
     private int numCheckpoint = 0;

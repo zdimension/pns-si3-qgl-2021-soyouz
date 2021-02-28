@@ -360,13 +360,4 @@ public class RoundObjective implements Objective {
 		return false;
 	}
 
-	/**
-	 * Updates this objective according to the state of the game
-	 *
-	 * @param state of the game
-	 */
-	@Override
-	public void update(GameState state) {
-
-	}
 }
