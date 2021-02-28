@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.RoundObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.WantedSailorConfig;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.*;
@@ -69,12 +70,13 @@ public class CheckpointObjective extends CompositeObjective {
         var wantedTurnConfig = Trigonometry.findOptTurnConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt, turnPossibilities);
         var wantedOarConfig = wantedTurnConfig.first;
         var wantedRudderConfig = wantedTurnConfig.second;
+        var wanted = new WantedSailorConfig(wantedOarConfig, (wantedRudderConfig != null? state.getIp().getShip().findFirstEntity(Gouvernail.class) : null), (wantedRudderConfig));
 
-        var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
-        wantedConfig.put(Rame.class, wantedOarConfig);
-        wantedConfig.put(Gouvernail.class, wantedRudderConfig);
+        //var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
+        //wantedConfig.put(Rame.class, wantedOarConfig);
+        //wantedConfig.put(Gouvernail.class, wantedRudderConfig);
 
-        var roundObj = new RoundObjective(wantedConfig);
+        var roundObj = new RoundObjective(wanted);
 
         return roundObj.resolve(state);
     }
