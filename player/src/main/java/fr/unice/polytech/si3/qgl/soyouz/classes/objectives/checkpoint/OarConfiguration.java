@@ -4,9 +4,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 public class OarConfiguration {
 
-    Pair<Integer, Integer> sailorConfiguration;
-    double angleOfRotation;
-    double linearSpeed;
+    private final Pair<Integer, Integer> sailorConfiguration;
+    private final double angleOfRotation;
+    private final double linearSpeed;
 
     public OarConfiguration(int activeLeftOar, int activeRightOar, int totalOarNb) {
         sailorConfiguration = Pair.of(activeLeftOar, activeRightOar);

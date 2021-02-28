@@ -23,6 +23,8 @@ public class Cockpit implements ICockpit {
     OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
+  static int i = 0;
+
   private InitGameParameters ip;
   private NextRoundParameters np;
   private RootObjective objective;
@@ -65,6 +67,7 @@ public class Cockpit implements ICockpit {
    */
   @Override
   public String nextRound(String round) {
+    i++;
     try {
       np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
       log("Next round input: " + np);

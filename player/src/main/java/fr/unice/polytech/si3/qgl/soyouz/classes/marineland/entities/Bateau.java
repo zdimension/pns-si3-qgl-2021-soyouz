@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -138,6 +139,17 @@ public class Bateau extends AutreBateau
         if (entity.isPresent() && !(entity.get() instanceof Rame))
             throw new IllegalArgumentException("corrupted position of Oar");
         return rame.getPos().getSecond() == 0;
+    }
+
+    public Pair<Integer, Integer> getNbOfOarOnEachSide() {
+        List<OnboardEntity> oars = Arrays.stream(this.getEntities()).filter(ent -> ent instanceof Rame).collect(Collectors.toList());
+        int leftOar = 0, rightOar = 0;
+        for (OnboardEntity oar : oars) {
+            if (isOarLeft((Rame) oar))
+                leftOar++;
+            else rightOar++;
+        }
+        return Pair.of(leftOar, rightOar);
     }
 
     /**

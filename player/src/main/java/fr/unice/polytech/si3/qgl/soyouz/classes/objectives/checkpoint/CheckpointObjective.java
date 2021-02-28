@@ -53,41 +53,53 @@ public class CheckpointObjective extends CompositeObjective {
     @Override
     public List<GameAction> resolve(GameState state) {
 
-        Double neededRotation2 = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip(), cp);
+        Bateau boat = state.getNp().getShip();
+        double angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
+        double distanceToCp = boat.getPosition().getLength(cp.getPosition());
+        int nbSailors = state.getIp().getSailors().length;
+        Pair<Integer, Integer> nbOarOnEachSide = state.getIp().getShip().getNbOfOarOnEachSide();
 
-        var xBoat = state.getNp().getShip().getPosition().getX();
-        var yBoat = state.getNp().getShip().getPosition().getY();
+        RowersObjective rowersObjective = new RowersObjective(angleToCp, distanceToCp, nbSailors, nbOarOnEachSide.first, nbOarOnEachSide.second);
+        OarConfiguration wantedOarConfiguration = rowersObjective.resolve();
 
-        var xObjective = cp.getPosition().getX();
-        var yObjective = cp.getPosition().getY();
-        var da = Math.atan2(yObjective - yBoat, xObjective - xBoat);
-        var vl = da == 0 ? xObjective - xBoat : da * (Math.pow(xObjective - xBoat, 2) + Math.pow(yObjective - yBoat, 2)) / (yObjective - yBoat);
-        var neededRotation = Trigonometry.calculateAngle(state.getNp().getShip(), cp);
-        Pair<Double, Double> opt = Pair.of(vl, neededRotation);
+        RudderObjective rudderObjective = new RudderObjective(angleToCp - wantedOarConfiguration.getAngleOfRotation());
+        double wantedRudderRotation = rudderObjective.resolve();
 
-        var sailors = state.getIp().getSailors();
+        //var xBoat = state.getNp().getShip().getPosition().getX();
+        //var yBoat = state.getNp().getShip().getPosition().getY();
 
-        var wantedTurnConfig = Trigonometry.findOptTurnConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt, turnPossibilities);
-        var wantedOarConfig = wantedTurnConfig.first;
-        var wantedRudderConfig = wantedTurnConfig.second;
-        var wanted = new WantedSailorConfig(wantedOarConfig, (wantedRudderConfig != null? state.getIp().getShip().findFirstEntity(Gouvernail.class) : null), (wantedRudderConfig));
+        //var xObjective = cp.getPosition().getX();
+        //var yObjective = cp.getPosition().getY();
+        //var da = Math.atan2(yObjective - yBoat, xObjective - xBoat);
+        //var vl = da == 0 ? xObjective - xBoat : da * (Math.pow(xObjective - xBoat, 2) + Math.pow(yObjective - yBoat, 2)) / (yObjective - yBoat);
+        //var neededRotationn = Trigonometry.calculateAngle(state.getNp().getShip(), cp);
+        //Pair<Double, Double> opt = Pair.of(vl, neededRotation);
+
+        //var sailors = state.getIp().getSailors();
+
+        //var wantedTurnConfig = Trigonometry.findOptTurnConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt, turnPossibilities);
+        //var wantedOarConfig = wantedTurnConfig.first;
+        //var wantedRudderConfig = wantedTurnConfig.second;
+
+        //var wanted = new WantedSailorConfig(wantedOarConfig, (wantedRudderConfig != null? state.getIp().getShip().findFirstEntity(Gouvernail.class) : null), (wantedRudderConfig));
 
         //var wantedConfig = new HashMap<Class<? extends OnboardEntity>, Object>();
         //wantedConfig.put(Rame.class, wantedOarConfig);
         //wantedConfig.put(Gouvernail.class, wantedRudderConfig);
+
+        var wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), (wantedRudderRotation != 0 ? state.getIp().getShip().findFirstEntity(Gouvernail.class) : null), (wantedRudderRotation));
 
         var roundObj = new RoundObjective(wanted);
 
         return roundObj.resolve(state);
     }
 
-    public double calculateAngleBetweenBoatAndCheckpoint(Bateau boat, Checkpoint checkpoint) {
+    public double calculateAngleBetweenBoatAndCheckpoint(Bateau boat) {
         double boatOrientation = boat.getPosition().getOrientation();
         var boatVect = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
-        var cpVect = Pair.of(checkpoint.getPosition().getX() - boat.getPosition().getX(), checkpoint.getPosition().getY() - boat.getPosition().getY());
+        var cpVect = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(), cp.getPosition().getY() - boat.getPosition().getY());
         var normeDirection = Math.sqrt(Math.pow(cpVect.first, 2) + Math.pow(cpVect.second, 2));
         var scalaire = boatVect.first * cpVect.first + boatVect.second * cpVect.second;
-
         var angle = Math.acos(scalaire / normeDirection);
         if (cpVect.second - boatVect.second < 0)
             angle = -angle;
