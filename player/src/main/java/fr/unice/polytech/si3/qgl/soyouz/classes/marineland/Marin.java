@@ -185,7 +185,7 @@ public class Marin {
             return true;
         }
         var mar = (Marin) obj;
-        return this.id == mar.id && this.x == mar.x && this.y == mar.y && this.name.equals(mar.name);
+        return this.id == mar.id; //&& this.x == mar.x && this.y == mar.y && this.name.equals(mar.name);
     }
 
     @Override

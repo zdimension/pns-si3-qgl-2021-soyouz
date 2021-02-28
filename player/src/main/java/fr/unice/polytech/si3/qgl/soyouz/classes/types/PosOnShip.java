@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
+import java.util.Objects;
+
 public class PosOnShip {
 
 	private int x;
@@ -35,4 +37,28 @@ public class PosOnShip {
 		return Pair.of(getX(), getY());
 	}
 
+	@Override
+	public String toString() {
+		return "PosOnShip{" +
+				"x=" + x +
+				", y=" + y +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof PosOnShip)){
+			return false;
+		}
+		if(this == obj){
+			return true;
+		}
+		var pos = (PosOnShip)obj;
+		return this.x == pos.x && this.y == pos.y;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
 }

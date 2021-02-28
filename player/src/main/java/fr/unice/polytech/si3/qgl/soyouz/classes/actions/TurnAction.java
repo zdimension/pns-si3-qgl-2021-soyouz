@@ -28,6 +28,6 @@ public class TurnAction extends GameAction{
 
     @Override
     public String toString() {
-        return "MoveAction : rotation = "+rotation+" | sailor : "+getSailor().toString();
+        return "TurnAction : rotation = "+rotation+" | sailor : "+getSailor().toString();
     }
 }
