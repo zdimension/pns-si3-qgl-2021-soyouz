@@ -23,7 +23,7 @@ public class WantedSailorConfig {
 		this.rotation = rotation;
 		presentEntity = new HashMap<>();
 		presentEntity.put(Rame.class, rame != null);
-		presentEntity.put(Gouvernail.class, gouvernail != null);
+		presentEntity.put(Gouvernail.class, !rotation.equals((double)0));
 	}
 
 	public boolean contains(Class<? extends OnboardEntity> ent){
