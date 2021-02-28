@@ -154,6 +154,8 @@ public class Simulator extends JFrame
                                 return;
                             }
 
+                            //System.out.println("Entity " + ent + " used by sailor " + act.getSailorId());
+
                             usedEntities.add(ent);
 
                             if (act instanceof OarAction)

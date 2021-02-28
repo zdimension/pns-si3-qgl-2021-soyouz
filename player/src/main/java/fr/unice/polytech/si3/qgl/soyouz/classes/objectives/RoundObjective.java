@@ -195,7 +195,6 @@ public class RoundObjective extends Objective {
 					tempChoice.hireSailor(oarAct.getSailor(), oarAct);
 				}
 
-				var actions = new ArrayList<GameAction>();
 				var wantedConfiguration = wanted.getAbsConfig();
 
 				for (var ent : wantedConfiguration) {
@@ -209,7 +208,7 @@ public class RoundObjective extends Objective {
 						} else {
 							var turn = new TurnAction(gouvSailor, wanted.getRotation());
 							tempChoice.hireSailor(gouvSailor, turn);
-							actions.add(turn);
+							//actions.add(turn);
 						}
 						/*
 						var unmoved = vacantSailors.first.stream().filter(m -> m.getPos().equals(pos)).findFirst();
@@ -225,15 +224,32 @@ public class RoundObjective extends Objective {
 
 				}
 
-				actions.addAll(tempChoice.getAllActions());
+				var actions = new ArrayList<GameAction>(tempChoice.getAllActions());
 				//actions.addAll(actsMoves);
 				//actions.addAll(oaring);
 
 				//update sailors
-				for (MoveAction m : actsMoves) {
+				for (MoveAction m : tempChoice.getAllMoves()) {
 					var sailor = state.getIp().getSailorById(m.getSailorId());
 					sailor.ifPresent(marin -> marin.moveRelative(m.getXDistance(), m.getYDistance()));
 				}
+				//Deplacer marin
+				//ramer
+				//hisser la voile
+				//affaler la voile
+				//gouvernail
+				//monter la garde
+				//orienter canon
+				//charger canon
+				//tirer canon
+
+				var actTypes = List.of(
+						MoveAction.class,
+						OarAction.class,
+						TurnAction.class
+				);
+
+				actions.sort(Comparator.comparingInt(act -> actTypes.indexOf(act.getClass())));
 
 				return actions;
 			}
