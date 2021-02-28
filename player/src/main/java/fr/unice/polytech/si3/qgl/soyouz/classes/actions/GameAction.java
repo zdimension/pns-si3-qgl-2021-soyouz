@@ -7,8 +7,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 /**
  * Basis class for all actions that can be performed on board.
  */
@@ -17,7 +15,7 @@ import java.util.Optional;
     @JsonSubTypes.Type(value = MoveAction.class, name = "MOVING"),
     @JsonSubTypes.Type(value = OarAction.class, name = "OAR"),
     @JsonSubTypes.Type(value = TurnAction.class, name = "TURN"),
-    @JsonSubTypes.Type(value = ListSailAction.class, name = "LIFT_SAIL"),
+    @JsonSubTypes.Type(value = LiftSailAction.class, name = "LIFT_SAIL"),
     @JsonSubTypes.Type(value = LowerSailAction.class, name = "LOWER_SAIL")
 })
 public abstract class GameAction

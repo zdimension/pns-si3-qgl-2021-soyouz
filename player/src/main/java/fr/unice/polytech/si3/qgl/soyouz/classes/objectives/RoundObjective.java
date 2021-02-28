@@ -1,10 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.TempRoundChoice;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
@@ -26,17 +23,9 @@ import java.util.stream.Collectors;
  */
 public class RoundObjective implements Objective {
 
-	private final Map<Class<? extends OnboardEntity>, Class<?>> configurationShape = Map.of(
-			Rame.class, Pair.class,  //rajouter que c'est Pair<Integer, Integer>
-			Gouvernail.class, Double.class
-	);
-
-	//private final HashMap<Class<? extends OnboardEntity>, Object> wantedConfiguration;
 	private final WantedSailorConfig wanted;
 
-
 	public RoundObjective(WantedSailorConfig wanted) {
-		//this.wantedConfiguration = wantedConfiguration;
 		this.wanted = wanted;
 	}
 
@@ -45,7 +34,7 @@ public class RoundObjective implements Objective {
 		var acts = new ArrayList<GameAction>();
 		var sailors = new ArrayList<>(Arrays.asList(state.getIp().getSailors()));
 		var gameShip = state.getIp().getShip();
-		var tempChoice = new TempRoundChoice(new ArrayList<>(Arrays.asList(state.getIp().getShip().getEntities())), sailors);
+		var tempChoice = new TempRoundChoice(new ArrayList<>(Arrays.asList(gameShip.getEntities())), sailors);
 		try {
 			var reachableForSailors = new HashSet<ComputeMoveSailor>();
 			var allOars = new HashSet<Rame>();
@@ -152,8 +141,8 @@ public class RoundObjective implements Objective {
 				var actTypes = List.of(
 						MoveAction.class,
 						OarAction.class,
-						//hisser la voile
-						//affaler la voile
+						LiftSailAction.class,
+						LowerSailAction.class,
 						TurnAction.class
 						//monter la garde
 						//orienter canon
