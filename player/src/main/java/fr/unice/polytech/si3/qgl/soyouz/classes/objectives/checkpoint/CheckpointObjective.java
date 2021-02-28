@@ -70,7 +70,13 @@ public class CheckpointObjective extends CompositeObjective {
         var wantedTurnConfig = Trigonometry.findOptTurnConfig(sailors.length, state.getIp().getShip().getNumberOar() / 2, opt, turnPossibilities);
         var wantedOarConfig = wantedTurnConfig.first;
         var wantedRudderConfig = wantedTurnConfig.second;
-        var wanted = new WantedSailorConfig(wantedOarConfig, (wantedRudderConfig != null? state.getIp().getShip().findFirstEntity(Gouvernail.class) : null), (wantedRudderConfig));
+        WantedSailorConfig wanted;
+        if(wantedRudderConfig != null ){
+            wanted = new WantedSailorConfig(wantedOarConfig, state.getIp().getShip().findFirstEntity(Gouvernail.class), wantedRudderConfig);
+        }
+        else{
+            wanted = new WantedSailorConfig(wantedOarConfig,null, null);
+        }
 
         var roundObj = new RoundObjective(wanted);
 
