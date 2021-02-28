@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Objective to be performed in a round
  */
-public class RoundObjective extends Objective {
+public class RoundObjective implements Objective {
 
 	private final Map<Class<? extends OnboardEntity>, Class<?>> configurationShape = Map.of(
 			Rame.class, Pair.class,  //rajouter que c'est Pair<Integer, Integer>
@@ -100,10 +100,8 @@ public class RoundObjective extends Objective {
 				}
 				for (Marin m : unmovedSailors) {
 					var e = gameShip.getEntityHere(m.getPos());
-					if (e.isPresent()) {
-						if (e.get() instanceof Rame)
-							acts.add(new OarAction(m));
-					}
+					if (e.isPresent() && e.get() instanceof Rame)
+						acts.add(new OarAction(m));
 				}
 				return acts;
 				 */
@@ -119,7 +117,7 @@ public class RoundObjective extends Objective {
 
 				var oaring = whoShouldOar(wanted.getOarConfig(), actsMoves, new ArrayList<>(tempChoice.getUnmovedVacantSailors()), gameShip);
 				if (oaring == null) {
-					return new ArrayList<GameAction>();
+					return new ArrayList<>();
 				}
 
 				for(var oarAct : oaring){
@@ -261,7 +259,7 @@ public class RoundObjective extends Objective {
 				}
 			}
 		}
-		return null;
+		return new ArrayList<>();
 	}
 
 
@@ -364,12 +362,22 @@ public class RoundObjective extends Objective {
 			}
 		}
 		Cockpit.log("Could not establish who should row");
-		return null;
+		return new ArrayList<>();
 	}
 
+	//TODO PAS BEAU CA
 	@Override
 	public boolean isValidated(GameState state) {
 		return false;
 	}
 
+	/**
+	 * Updates this objective according to the state of the game
+	 *
+	 * @param state of the game
+	 */
+	@Override
+	public void update(GameState state) {
+
+	}
 }

@@ -13,37 +13,17 @@ import java.util.Map;
  */
 public class Trigonometry {
 
-    /**
-     * Determine the orientation and the linear speed of the boat in a specific configuration.
-     *
-     * @param activeOarNb The number of active oar.
-     * @param totalOarNb The total number of oar.
-     * @return a pair that contains all the information.
-     */
+    //TODO DONE
     static Double oarLinearSpeed(int activeOarNb, int totalOarNb){
         return (165.0 * activeOarNb / totalOarNb);
     }
 
-    /**
-     * Determine the angle of rotation of a specific combination of oar.
-     *
-     * @param activeLeftOar The number of active oar on the left side of the boat.
-     * @param activeRightOar The number of active oar on the right side of the boat.
-     * @param totalOarNb The total number of oar.
-     * @return the angle of the rotation.
-     */
+   //TODO DONE
     static Double rotatingAngle(int activeLeftOar, int activeRightOar, int totalOarNb) {
         return Math.PI*(activeRightOar - activeLeftOar)/totalOarNb;
     }
 
-    //TODO A REFACTO DANS UNE CLASSE
-    /**
-     * Determine every angle of rotation possible according to the game parameters.
-     * Then they are stocked into two maps, one for each side (right/left).
-     *
-     * @param nbSailor The number of sailor on the boat.
-     * @param nbOarOnSide The number of oar on each side of the boat.
-     */
+    //TODO DONE
     private static void setTurnPossibilities(int nbSailor, int nbOarOnSide, Pair<HashMap<Pair<Integer, Integer>, Double>, HashMap<Pair<Integer, Integer>, Double>> turnPossibilities) {
         for (int i = 0; i <= nbOarOnSide && i < nbSailor; i++) {
             for (int j = 0; j <= nbOarOnSide && j < nbSailor; j++) {
@@ -102,10 +82,12 @@ public class Trigonometry {
         return optimal;
     }
 
+    //TODO DONE
     public static boolean rudderRotationIsInRange (Double neededRotation){
         return neededRotation > Gouvernail.ALLOWED_ROTATION.first && neededRotation < Gouvernail.ALLOWED_ROTATION.second;
     }
 
+    //TODO DONE
     public static Double findOptRudderRotation (Double neededRotation) {
         if (rudderRotationIsInRange(neededRotation)){
             return neededRotation;
@@ -118,6 +100,7 @@ public class Trigonometry {
         }
     }
 
+    //TODO DONE
     public static double calculateAngle(Bateau boat, Checkpoint checkpoint) {
         double boatOrientation = boat.getPosition().getOrientation();
         var boatVect = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));

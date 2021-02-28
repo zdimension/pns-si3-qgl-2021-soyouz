@@ -24,4 +24,14 @@ public class Voile extends OnboardEntity {
     public void setOpenned(boolean openned) {
         this.openned = openned;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

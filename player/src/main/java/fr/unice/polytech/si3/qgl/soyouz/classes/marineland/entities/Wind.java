@@ -9,8 +9,8 @@ public class Wind implements Entity{
     private double strength;
 
     public double windAdditionnalSpeed(int nbOfSails,int openedSails, Bateau boat){
-        if (nbOfSails>0){
-            return (openedSails/nbOfSails)*strength*Math.cos(orientation - boat.getPosition().getOrientation());
+        if (nbOfSails>0) {
+            return ((double)openedSails/nbOfSails)*strength*Math.cos(orientation - boat.getPosition().getOrientation());
         }
         return 0;
     }

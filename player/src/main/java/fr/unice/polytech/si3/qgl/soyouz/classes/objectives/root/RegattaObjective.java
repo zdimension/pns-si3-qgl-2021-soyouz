@@ -4,10 +4,8 @@ import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CheckpointObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint.CheckpointObjective;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,9 +33,7 @@ public class RegattaObjective extends RootObjective
     @Override
     public void update(GameState state)
     {
-        super.update(state);
-        if(currentCheckpoint != null)
-        if(currentCheckpoint.isValidated(state)){
+        if(currentCheckpoint != null && currentCheckpoint.isValidated(state)) {
             if(goalData.getCheckpoints().length - 1 > numCheckpoint){
                 Cockpit.log("Checkpoint "+ numCheckpoint+" reached");
                 numCheckpoint++;

@@ -11,11 +11,13 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.*;
 
 /** Control panel of the whole game. Here happens all the magic. */
 public class Cockpit implements ICockpit {
   private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private static final Logger logger = Logger.getLogger("display");
 
   static {
     OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -31,7 +33,7 @@ public class Cockpit implements ICockpit {
    * @param message The logs
    */
   public static void log(String message) {
-    System.out.println(message);
+    logger.log(Level.ALL, message);
     if(message == null)
       logList.add("NULL MESSAGE");
     else
@@ -50,7 +52,7 @@ public class Cockpit implements ICockpit {
       objective = ip.getGoal().getObjective();
       log("Init game input: " + ip);
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.log(Level.SEVERE, e.getMessage());
     }
   }
 

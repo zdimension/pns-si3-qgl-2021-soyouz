@@ -2,15 +2,12 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class CompositeObjective extends Objective {
+public abstract class CompositeObjective implements Objective {
     protected ArrayList<Objective> intermediateObjective = new ArrayList<>();
 
     @Override
