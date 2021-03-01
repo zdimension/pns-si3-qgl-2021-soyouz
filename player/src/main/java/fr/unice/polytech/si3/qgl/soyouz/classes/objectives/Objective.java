@@ -7,6 +7,7 @@ import java.util.List;
 public interface Objective {
 
     /**
+     * Determine if the goal is reached.
      *
      * @param state of the game
      * @return true if this objective is validated

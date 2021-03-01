@@ -42,16 +42,31 @@ public class Marin {
         return y;
     }
 
+    /**
+     * Setters.
+     *
+     * @param x The abscissa to set.
+     */
     public void setX(int x)
     {
         this.x = x;
     }
 
+    /**
+     * Setters.
+     *
+     * @param y The ordinate to set.
+     */
     public void setY(int y)
     {
         this.y = y;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the position of the sailor.
+     */
     @JsonIgnore
     public Pair<Integer,Integer> getPos(){
         return Pair.of(getX(),getY());
@@ -170,6 +185,12 @@ public class Marin {
         return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) <= MAX_MOVE;
     }
 
+    /**
+     * Determine if a Cell is reachable.
+     *
+     * @param pos a Pair of coords (X,Y).
+     * @return if the absolute position is reachable for this sailor.
+     */
     public boolean isAbsPosReachable(Pair<Integer,Integer> pos){
         return isAbsPosReachable(pos.getFirst(), pos.getSecond());
     }
@@ -196,11 +217,21 @@ public class Marin {
         return this.id == mar.id; //&& this.x == mar.x && this.y == mar.y && this.name.equals(mar.name);
     }
 
+    /**
+     * Generic hash method override.
+     *
+     * @return the hash code associated to the current object.
+     */
     @Override
     public int hashCode() {
         return id;
     }
 
+    /**
+     * Generic toString method override.
+     *
+     * @return the string associated to the current object.
+     */
     @Override
     public String toString() {
         return "Marin{" +

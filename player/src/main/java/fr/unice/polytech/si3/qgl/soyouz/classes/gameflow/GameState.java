@@ -23,10 +23,20 @@ public class GameState
         this.np = np;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the initial game parameters.
+     */
     public InitGameParameters getIp() {
         return ip;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the next round parameters.
+     */
     public NextRoundParameters getNp() {
         return np;
     }

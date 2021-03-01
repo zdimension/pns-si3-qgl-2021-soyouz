@@ -74,6 +74,12 @@ public class Position
         return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
     }
 
+    /**
+     * Determine the distance between two positions.
+     *
+     * @param pos The second position.
+     * @return the distance between this and pos.
+     */
     public double getLength(Position pos){
         return sqrt(pow(this.getX() - pos.getX(),2) + pow(this.getY() - pos.getY(),2));
     }

@@ -10,12 +10,24 @@ import java.util.stream.Collectors;
 public abstract class CompositeObjective implements Objective {
     protected ArrayList<Objective> intermediateObjective = new ArrayList<>();
 
+    /**
+     * Determine if the goal is reached.
+     *
+     * @param state of the game
+     * @return true if this objective is validated
+     */
     @Override
     public boolean isValidated(GameState state)
     {
         return intermediateObjective.stream().allMatch(o -> o.isValidated(state));
     }
 
+    /**
+     * Defines actions to perform. The state of the game is being updated too
+     *
+     * @param state of the game
+     * @return a list of all actions to send to JSON
+     */
     @Override
     public List<GameAction> resolve(GameState state)
     {

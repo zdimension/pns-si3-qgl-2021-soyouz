@@ -2,9 +2,12 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Sail entity.
+ */
 public class Voile extends OnboardEntity {
 
-    private boolean openned;
+    private boolean opened;
 
     /**
      * Constructor.
@@ -12,24 +15,45 @@ public class Voile extends OnboardEntity {
      * @param x Abscissa of the entity.
      * @param y Ordinate of the entity.
      */
-    public Voile(@JsonProperty("x") int x,@JsonProperty("y") int y,@JsonProperty("openned") Boolean openned) {
+    public Voile(@JsonProperty("x") int x,@JsonProperty("y") int y,@JsonProperty("opened") Boolean opened) {
         super(x, y);
-        this.openned = openned;
+        this.opened = opened;
     }
 
-    public boolean isOpenned() {
-        return openned;
+    /**
+     * Getters.
+     *
+     * @return true if opened, false otherwise.
+     */
+    public boolean isOpened() {
+        return opened;
     }
 
-    public void setOpenned(boolean openned) {
-        this.openned = openned;
+    /**
+     * Setters.
+     *
+     * @param opened True if opened, false if closed.
+     */
+    public void setOpened(boolean opened) {
+        this.opened = opened;
     }
 
+    /**
+     * Generic Equals method override.
+     *
+     * @param o The second entity.
+     * @return true if the two objects are equals, false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
     }
 
+    /**
+     * Generic hash method override.
+     *
+     * @return the hash code associated to the current object.
+     */
     @Override
     public int hashCode() {
         return super.hashCode();

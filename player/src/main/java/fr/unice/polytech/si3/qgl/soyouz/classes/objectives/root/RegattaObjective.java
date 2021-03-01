@@ -29,6 +29,11 @@ public class RegattaObjective extends RootObjective {
         currentCheckpoint = null;
     }
 
+    /**
+     * Update the current checkpoint to reach.
+     *
+     * @param state of the game
+     */
     @Override
     public void update(GameState state)
     {
@@ -44,6 +49,12 @@ public class RegattaObjective extends RootObjective {
         }
     }
 
+    /**
+     * Defines actions to perform in order to reach the next checkpoint.
+     *
+     * @param state of the game
+     * @return a list of all actions to send to JSON
+     */
     @Override
     public List<GameAction> resolve(GameState state) {
         currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint]);

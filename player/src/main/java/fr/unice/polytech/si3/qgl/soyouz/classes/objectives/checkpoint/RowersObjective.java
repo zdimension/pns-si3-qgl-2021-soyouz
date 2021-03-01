@@ -5,6 +5,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to determine the optimal OarConfiguration to be the closest possible to the objective.
+ */
 public class RowersObjective {
 
     private final double neededRotation;
@@ -14,6 +17,15 @@ public class RowersObjective {
     private final List<OarConfiguration> rightTurnPossibilities;
     private final List<OarConfiguration> forwardPossibilities;
 
+    /**
+     * Constructor.
+     *
+     * @param neededRotation The angle between the boat and the checkpoint.
+     * @param distToCheckpoint The distance between the boat and the checkpoint.
+     * @param nbSailor The number of sailors able to oar.
+     * @param nbOarOnLeft The number of oars on the left side of the boat.
+     * @param nbOarOnRight The number of oars on the right side of the boat.
+     */
     public RowersObjective(double neededRotation, double distToCheckpoint, int nbSailor, int nbOarOnLeft, int nbOarOnRight) {
         this.neededRotation = neededRotation;
         this.distToCheckpoint = distToCheckpoint;
@@ -25,6 +37,13 @@ public class RowersObjective {
     }
 
     //TODO TROUVER UN MOYEN DE LE FAIRE QU'UNE FOIS PAR PARTIE
+    /**
+     * Determine if the boat should go straight or turn and call the respective method.
+     *
+     * @param nbSailor The number of sailors ready to oar.
+     * @param nbOarOnLeft The number of oars on the left side of the boat.
+     * @param nbOarOnRight The number of oars on the right side of the boat.
+     */
     private void setOaringPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight) {
         if (Gouvernail.ALLOWED_ROTATION.first < neededRotation && neededRotation < Gouvernail.ALLOWED_ROTATION.second)
             setForwardPossibilities(nbSailor);
@@ -32,6 +51,11 @@ public class RowersObjective {
             setTurnPossibilities(nbSailor, nbOarOnLeft, nbOarOnRight);
     }
 
+    /**
+     * Initialise all the possibles oar configuration to go straight forward.
+     *
+     * @param nbSailor The number of sailors ready to oar.
+     */
     private void setForwardPossibilities(int nbSailor) {
         for (int i = 2; i <= nbSailor; i += 2) {
             forwardPossibilities.add(new OarConfiguration(i / 2, i / 2, totalNbOfOar));
@@ -39,12 +63,11 @@ public class RowersObjective {
     }
 
     /**
-     * Determine every angle of rotation possible according to the game parameters.
-     * Then they are stocked into two maps, one for each side (right/left).
+     * Determine on which side the boat should turn and call the respective method.
      *
-     * @param nbSailor     The number of sailor on the boat.
-     * @param nbOarOnLeft  The number of oar on the left side of the boat.
-     * @param nbOarOnRight The number of oar on the right side of the boat.
+     * @param nbSailor     The number of sailors ready to oar.
+     * @param nbOarOnLeft  The number of oars on the left side of the boat.
+     * @param nbOarOnRight The number of oars on the right side of the boat.
      */
     private void setTurnPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight) {
         if (neededRotation > 0)
@@ -53,6 +76,13 @@ public class RowersObjective {
             setRightTurnPossibilities(nbSailor, nbOarOnLeft, nbOarOnRight);
     }
 
+    /**
+     * Set all the oar configuration to turn left.
+     *
+     * @param nbSailor The number of sailors ready to oar.
+     * @param nbOarOnLeft The number of oars on the left side of the boat.
+     * @param nbOarOnRight The number of oars on the right side of the boat.
+     */
     private void setLeftTurnPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight) {
         for (int rightNb = 0; (rightNb <= nbOarOnRight) && (rightNb <= nbSailor); rightNb++) {
             for (int leftNb = 0; (leftNb < rightNb) && (leftNb <= nbOarOnLeft) && (leftNb + rightNb <= nbSailor); leftNb++)
@@ -60,6 +90,13 @@ public class RowersObjective {
         }
     }
 
+    /**
+     * Set all the oar configuration to turn right.
+     *
+     * @param nbSailor The number of sailors ready to oar.
+     * @param nbOarOnLeft The number of oars on the left side of the boat.
+     * @param nbOarOnRight The number of oars on the right side of the boat.
+     */
     private void setRightTurnPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight) {
         for (int leftNb = 0; (leftNb <= nbOarOnLeft) && (leftNb <= nbSailor); leftNb++) {
             for (int rightNb = 0; (rightNb < leftNb) && (rightNb <= nbOarOnRight) && (leftNb + rightNb <= nbSailor); rightNb++)
@@ -67,6 +104,11 @@ public class RowersObjective {
         }
     }
 
+    /**
+     * Find the best oar configuration to get the closest to the goal.
+     *
+     * @return the wanted configuration.
+     */
     public OarConfiguration resolve() {
         if (Gouvernail.ALLOWED_ROTATION.first < neededRotation && neededRotation < Gouvernail.ALLOWED_ROTATION.second)
             return resolveBasedOnSpeed();
@@ -77,6 +119,12 @@ public class RowersObjective {
         }
     }
 
+    /**
+     * Find the best oar configuration to reduce as possible the angle between the boat and the checkpoint.
+     *
+     * @param turnPossibilities All the oar configuration to turn on the wanted side.
+     * @return the optimal configuration.
+     */
     private OarConfiguration resolveBasedOnRotation(List<OarConfiguration> turnPossibilities) {
         OarConfiguration optimalConfiguration = turnPossibilities.get(0);
         double difference = Math.abs(neededRotation - optimalConfiguration.getAngleOfRotation());
@@ -90,6 +138,11 @@ public class RowersObjective {
         return optimalConfiguration;
     }
 
+    /**
+     * Find the best oar configuration to reduce as possible the distance between the boat and the checkpoint.
+     *
+     * @return the optimal configuration.
+     */
     private OarConfiguration resolveBasedOnSpeed() {
         OarConfiguration optimalConfiguration = forwardPossibilities.get(0);
         double difference = distToCheckpoint - optimalConfiguration.getLinearSpeed();

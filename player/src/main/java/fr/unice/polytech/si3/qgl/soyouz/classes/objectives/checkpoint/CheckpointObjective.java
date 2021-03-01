@@ -20,16 +20,33 @@ public class CheckpointObjective extends CompositeObjective {
 
     private final Checkpoint cp;
 
+    /**
+     * Constructor.
+     *
+     * @param checkpoint The checkpoint to reach.
+     */
     public CheckpointObjective(Checkpoint checkpoint) {
         cp = checkpoint;
     }
 
+    /**
+     * Determine if the boat is inside the Checkpoint ot no.
+     *
+     * @param state The state of the game.
+     * @return true if the boat is in, false otherwise.
+     */
     @Override
     public boolean isValidated(GameState state) {
         return state.getNp().getShip().getPosition().getLength(cp.getPosition())
                 < ((Circle) cp.getShape()).getRadius();
     }
 
+    /**
+     * Resolve the current objective by finding the bests configuration for oars and rudder.
+     *
+     * @param state The current game state.
+     * @return a list of action to be closer of the goal.
+     */
     @Override
     public List<GameAction> resolve(GameState state) {
 
@@ -39,7 +56,7 @@ public class CheckpointObjective extends CompositeObjective {
         int nbSailors = state.getIp().getSailors().length;
         Pair<Integer, Integer> nbOarOnEachSide = state.getIp().getShip().getNbOfOarOnEachSide();
 
-        RowersObjective rowersObjective = new RowersObjective(angleToCp, distanceToCp, nbSailors, nbOarOnEachSide.first, nbOarOnEachSide.second);
+        RowersObjective rowersObjective = new RowersObjective(angleToCp, distanceToCp, nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
         OarConfiguration wantedOarConfiguration = rowersObjective.resolve();
 
         RudderObjective rudderObjective = new RudderObjective(angleToCp - wantedOarConfiguration.getAngleOfRotation());
@@ -55,6 +72,12 @@ public class CheckpointObjective extends CompositeObjective {
         return roundObj.resolve(state);
     }
 
+    /**
+     * Calculate the angle in rad between the boat and the current checkpoint.
+     *
+     * @param boat Our boat.
+     * @return an angle in rad.
+     */
     private double calculateAngleBetweenBoatAndCheckpoint(Bateau boat) {
         double boatOrientation = boat.getPosition().getOrientation();
         var boatVector = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));

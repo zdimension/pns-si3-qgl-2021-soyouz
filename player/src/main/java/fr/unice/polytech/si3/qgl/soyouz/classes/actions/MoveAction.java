@@ -50,6 +50,7 @@ public class MoveAction extends GameAction{
     }
 
     /**
+     * Determine the sailor's position after a potential movement.
      *
      * @return the new position of the sailor if moved according to this.
      */
@@ -57,6 +58,12 @@ public class MoveAction extends GameAction{
         return Pair.of(getSailor().getPos().first+xdistance, getSailor().getPos().second+ydistance);
     }
 
+    /**
+     * Generic equals method override.
+     *
+     * @param obj Another object.
+     * @return true if this and obj are equals, false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof MoveAction))
@@ -71,11 +78,21 @@ public class MoveAction extends GameAction{
         return this.xdistance == move.getXDistance() && this.ydistance == move.getYDistance() ;
     }
 
+    /**
+     * Generic hash method override.
+     *
+     * @return the hashcode linked to the current object.
+     */
     @Override
     public int hashCode() {
         return super.hashCode();
     }
 
+    /**
+     * Generic toString method override.
+     *
+     * @return the string associated to the current object.
+     */
     @Override
     public String toString() {
         return "MoveAction : x = "+xdistance+" y = "+ ydistance+" | sailor : "+getSailor().toString();

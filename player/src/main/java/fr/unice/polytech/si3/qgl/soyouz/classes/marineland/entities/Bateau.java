@@ -112,6 +112,14 @@ public class Bateau extends AutreBateau
         return Optional.empty();
     }
 
+    /**
+     * Determine if a specific object is places at a specific position.
+     *
+     * @param xPos The potential abscissa of the object.
+     * @param yPos The potential ordinate of the object.
+     * @param cls The Class of object researched.
+     * @return true if there is the object, false otherwise.
+     */
     public boolean hasAt(int xPos, int yPos, Class<?> cls)
     {
         return cls.isInstance(getEntityHere(xPos, yPos).orElse(null));
@@ -129,10 +137,11 @@ public class Bateau extends AutreBateau
     }
 
     /**
+     * Determine if an oar is on the left side of the boat.
      *
-     * @param rame to find position from
-     * @return true if the oar is on the left side of this boat
-     * @throws IllegalArgumentException if the oar is invalid
+     * @param rame to find position from.
+     * @return true if the oar is on the left side of this boat.
+     * @throws IllegalArgumentException if the oar is invalid.
      */
     public boolean isOarLeft(Rame rame) {
         var entity = getEntityHere(rame.getPos());
@@ -141,6 +150,11 @@ public class Bateau extends AutreBateau
         return rame.getPos().getSecond() == 0;
     }
 
+    /**
+     * Get all the oars on each side.
+     *
+     * @return a Pair of oars (left, right).
+     */
     public Pair<Integer, Integer> getNbOfOarOnEachSide() {
         List<OnboardEntity> oars = Arrays.stream(this.getEntities()).filter(ent -> ent instanceof Rame).collect(Collectors.toList());
         int leftOar = 0, rightOar = 0;
@@ -153,20 +167,33 @@ public class Bateau extends AutreBateau
     }
 
     /**
+     * Find the first occurrence of a given entity.
      *
-     * @param ent to find the position of
-     * @return the fist position found of the given entity
+     * @param ent to find the position of.
+     * @return the fist position found of the given entity.
      */
     public Pair<Integer,Integer> findFirstPosOfEntity(Class<? extends OnboardEntity> ent){
         var first = Arrays.stream(this.entities).filter(ent::isInstance).findFirst();
         return first.map(OnboardEntity::getPos).orElse(null);
     }
 
+    /**
+     * Find the first occurrence of a given entity.
+     *
+     * @param ent to find the position of.
+     * @param <T> the type of the entity.
+     * @return the fist position found of the given entity.
+     */
     public <T extends OnboardEntity> T findFirstEntity(Class<T> ent){
         var first = Arrays.stream(this.entities).filter(ent::isInstance).findFirst();
         return (T) first.orElse(null);
     }
 
+    /**
+     * Generic toString method override.
+     *
+     * @return the string associated to the current object.
+     */
     @Override
     public String toString() {
         var len = 2*deck.getLength()+2;

@@ -20,6 +20,11 @@ public class OarAction extends GameAction
         super(sailor, Rame.class);
     }
 
+    /**
+     * Generic toString method override.
+     *
+     * @return the string associated to the current object.
+     */
     @Override
     public String toString() {
         return "OarAction : sailor : "+getSailor().toString();
