@@ -22,10 +22,20 @@ public class TurnAction extends GameAction{
         this.rotation = rotation;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the rotation associated to this action.
+     */
     public double getRotation() {
         return rotation;
     }
 
+    /**
+     * Generic toString method override.
+     *
+     * @return the string associated to the current object.
+     */
     @Override
     public String toString() {
         return "TurnAction : rotation = "+rotation+" | sailor : "+getSailor().toString();

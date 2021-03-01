@@ -2,12 +2,22 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
+/**
+ * Class to stock all data related to an oar configuration.
+ */
 public class OarConfiguration {
 
     private final Pair<Integer, Integer> sailorConfiguration;
     private final double angleOfRotation;
     private final double linearSpeed;
 
+    /**
+     * Constructor.
+     *
+     * @param activeLeftOar The number of rowers on the left.
+     * @param activeRightOar The number of rowers on the right.
+     * @param totalOarNb The total number of oars on the boat.
+     */
     public OarConfiguration(int activeLeftOar, int activeRightOar, int totalOarNb) {
         sailorConfiguration = Pair.of(activeLeftOar, activeRightOar);
         angleOfRotation = calculateAngleOfRotation(activeLeftOar, activeRightOar, totalOarNb);
@@ -37,14 +47,29 @@ public class OarConfiguration {
         return (165.0 * activeOarNb / totalOarNb);
     }
 
+    /**
+     * Getters.
+     *
+     * @return the pair of rowers (left, right).
+     */
     public Pair<Integer, Integer> getSailorConfiguration() {
         return this.sailorConfiguration;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the angle in rad associated to the rowers configuration.
+     */
     public double getAngleOfRotation() {
         return this.angleOfRotation;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the speed associated to the rowers configuration.
+     */
     public double getLinearSpeed() {
         return this.linearSpeed;
     }

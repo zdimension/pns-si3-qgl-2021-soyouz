@@ -7,8 +7,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
  * Basic class of objective.
  */
 public abstract class RootObjective extends CompositeObjective {
+
     /**
-     * Determine if a goal is validate or not
+     * Determine if a goal is validate or not.
      *
      * @param state State of the goal.
      * @return true if it is, false otherwise.
@@ -20,9 +21,9 @@ public abstract class RootObjective extends CompositeObjective {
     }
 
     /**
-     * Updates this objective according to the state of the game
+     * Updates this objective according to the state of the game.
      *
-     * @param state of the game
+     * @param state of the game.
      */
     public abstract void update(GameState state);
 }

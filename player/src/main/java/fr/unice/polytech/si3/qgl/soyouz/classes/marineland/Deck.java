@@ -34,6 +34,11 @@ public class Deck
         return length;
     }
 
+    /**
+     * Generic toString method override.
+     *
+     * @return the string associated to the current object.
+     */
     @Override
     public String toString() {
         return "Deck{" +
