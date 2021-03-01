@@ -30,16 +30,6 @@ public class CheckpointObjective extends CompositeObjective {
                 < ((Circle) cp.getShape()).getRadius();
     }
 
-    /**
-     * Updates this objective according to the state of the game
-     *
-     * @param state of the game
-     */
-    @Override
-    public void update(GameState state) {
-
-    }
-
     @Override
     public List<GameAction> resolve(GameState state) {
 

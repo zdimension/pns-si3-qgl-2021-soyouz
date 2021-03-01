@@ -14,13 +14,6 @@ public interface Objective {
     boolean isValidated(GameState state);
 
     /**
-     * Updates this objective according to the state of the game
-     *
-     * @param state of the game
-     */
-    void update(GameState state);
-
-    /**
      * Defines actions to perform. The state of the game is being updated too
      *
      * @param state of the game
