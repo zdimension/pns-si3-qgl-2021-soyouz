@@ -33,7 +33,7 @@ public class OarConfiguration {
      * @param totalOarNb The total number of oar.
      * @return a pair that contains all the information.
      */
-    static Double calculateLinearSpeed(int activeOarNb, int totalOarNb){
+    private double calculateLinearSpeed(int activeOarNb, int totalOarNb){
         return (165.0 * activeOarNb / totalOarNb);
     }
 

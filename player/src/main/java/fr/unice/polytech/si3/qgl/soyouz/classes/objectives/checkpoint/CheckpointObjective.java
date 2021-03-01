@@ -40,7 +40,6 @@ public class CheckpointObjective extends CompositeObjective {
 
     }
 
-    //TODO A REFACTO
     @Override
     public List<GameAction> resolve(GameState state) {
 
@@ -66,7 +65,7 @@ public class CheckpointObjective extends CompositeObjective {
         return roundObj.resolve(state);
     }
 
-    public double calculateAngleBetweenBoatAndCheckpoint(Bateau boat) {
+    private double calculateAngleBetweenBoatAndCheckpoint(Bateau boat) {
         double boatOrientation = boat.getPosition().getOrientation();
         var boatVector = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
         var cpVector = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(), cp.getPosition().getY() - boat.getPosition().getY());
