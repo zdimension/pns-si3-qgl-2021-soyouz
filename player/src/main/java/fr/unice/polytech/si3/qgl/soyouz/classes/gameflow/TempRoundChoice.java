@@ -105,7 +105,7 @@ public class TempRoundChoice {
 
 		OnboardEntity entity = null;
 		if (action.getSecond() != null) {
-			var optEntity = usedOnBoardEntity.keySet().stream().filter(e -> e.getPos().equals(pos)).findAny();
+			var optEntity = usedOnBoardEntity.keySet().stream().filter(e -> e.getPosCoord().equals(pos)).findAny();
 			if (optEntity.isEmpty())
 				throw new IllegalArgumentException("Entity no found");
 
@@ -117,7 +117,7 @@ public class TempRoundChoice {
 				throw new IllegalArgumentException("Entity not compatible with action");
 		}
 		else if(!(action.getFirst() instanceof MoveAction)){
-			var optEntity = usedOnBoardEntity.keySet().stream().filter(e -> e.getPos().equals(pos)).findAny();
+			var optEntity = usedOnBoardEntity.keySet().stream().filter(e -> e.getPosCoord().equals(pos)).findAny();
 			if (optEntity.isEmpty())
 				throw new IllegalArgumentException("Entity to act with not found");
 

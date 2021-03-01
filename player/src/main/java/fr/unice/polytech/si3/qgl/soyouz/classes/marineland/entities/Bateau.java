@@ -144,10 +144,10 @@ public class Bateau extends AutreBateau
      * @throws IllegalArgumentException if the oar is invalid.
      */
     public boolean isOarLeft(Rame rame) {
-        var entity = getEntityHere(rame.getPos());
+        var entity = getEntityHere(rame.getPosCoord());
         if (entity.isPresent() && !(entity.get() instanceof Rame))
             throw new IllegalArgumentException("corrupted position of Oar");
-        return rame.getPos().getSecond() == 0;
+        return rame.getPosCoord().getSecond() == 0;
     }
 
     /**
@@ -174,7 +174,7 @@ public class Bateau extends AutreBateau
      */
     public Pair<Integer,Integer> findFirstPosOfEntity(Class<? extends OnboardEntity> ent){
         var first = Arrays.stream(this.entities).filter(ent::isInstance).findFirst();
-        return first.map(OnboardEntity::getPos).orElse(null);
+        return first.map(OnboardEntity::getPosCoord).orElse(null);
     }
 
     /**

@@ -38,7 +38,7 @@ public class RoundObjective implements Objective {
 		try {
 			var reachableForSailors = new HashSet<ComputeMoveSailor>();
 			var allOars = new HashSet<Rame>();
-			var allAbsEnt = new HashSet<Pair<Integer, Integer>>();
+			var allAbsEnt = new HashSet<PosOnShip>();
 			var sailorsNotMoving = new ArrayList<MoveAction>();
 			for (Marin m : sailors) {
 
@@ -119,7 +119,7 @@ public class RoundObjective implements Objective {
 				for (var ent : wantedConfiguration) {
 					if (ent instanceof Gouvernail) {
 						//todo store it rather than get multiple times
-						var pos = ((Gouvernail) ent).getPos();
+						var pos = ((Gouvernail) ent).getPosCoord();
 						var gouvSailor = tempChoice.findFirstVacantSailorHere(pos);
 						if (gouvSailor == null) {
 							Cockpit.log("No sailor could move to Rudder");
@@ -161,7 +161,7 @@ public class RoundObjective implements Objective {
 		}
 	}
 
-	private ArrayList<MoveAction> firstSailorConfig(WantedSailorConfig wantedConfig, HashSet<ComputeMoveSailor> possibleSailorConfig, Set<Rame> currentOars, Set<Pair<Integer, Integer>> currentEntities, ArrayList<MoveAction> act, Bateau gameShip) {
+	private ArrayList<MoveAction> firstSailorConfig(WantedSailorConfig wantedConfig, HashSet<ComputeMoveSailor> possibleSailorConfig, Set<Rame> currentOars, Set<PosOnShip> currentEntities, ArrayList<MoveAction> act, Bateau gameShip) {
 		var marins = possibleSailorConfig.stream().map(ComputeMoveSailor::getSailor).collect(Collectors.toSet());
 		if (marins.isEmpty()) {
 			return act;
@@ -221,7 +221,7 @@ public class RoundObjective implements Objective {
 
 	}
 
-	private ArrayList<MoveAction> firstSailorAbsConfig(Set<PosOnShip> wantedAbsConfig, HashMap<Marin, Set<? extends OnboardEntity>> possibleSailorAbsConfig, Set<Pair<Integer, Integer>> currentEntities, ArrayList<MoveAction> act, Bateau gameShip, boolean placeholder) {
+	private ArrayList<MoveAction> firstSailorAbsConfig(Set<PosOnShip> wantedAbsConfig, HashMap<Marin, Set<? extends OnboardEntity>> possibleSailorAbsConfig, Set<PosOnShip> currentEntities, ArrayList<MoveAction> act, Bateau gameShip, boolean placeholder) {
 		var marins = possibleSailorAbsConfig.keySet();
 		if (marins.isEmpty())
 			return act;

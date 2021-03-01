@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
@@ -61,8 +62,9 @@ public abstract class OnboardEntity
      *
      * @return the position of the entity.
      */
-    public Pair<Integer,Integer> getPos(){return Pair.of(getX(),getY());}
+    public Pair<Integer,Integer> getPosCoord(){return Pair.of(getX(),getY());}
 
+    public PosOnShip getPos(){ return new PosOnShip(getX(), getY());}
     /**
      * Getter.
      *

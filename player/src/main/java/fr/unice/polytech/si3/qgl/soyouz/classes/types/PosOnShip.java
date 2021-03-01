@@ -5,6 +5,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
 
+/**
+ * PosOnShip replaces the Pair &lt Integer, Integer &gt type when used to describe a position on the
+ * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck} for readability
+ */
 public class PosOnShip {
 
 	private int x;
