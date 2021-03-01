@@ -171,7 +171,7 @@ public class RoundObjective implements Objective {
 			if (isAbsConfigurationReached(wantedConfig.getAbsConfigPos(), act, gameShip)) {
 				return act;
 			}
-			var possibleSailorConfigAbs = new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getLonelyEntities)));
+			var possibleSailorConfigAbs = new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getReachableSingleEntities)));
 			var absMoves = firstSailorAbsConfig(wantedConfig.getAbsConfigPos(), possibleSailorConfigAbs, currentEntities, act, gameShip, true);
 			if (absMoves != null) {
 				return absMoves;
@@ -179,7 +179,7 @@ public class RoundObjective implements Objective {
 		} else {
 			var possibleSailorConfigOar = new HashMap<Marin, Set<? extends Rame>>();
 			for (var p : possibleSailorConfig) {
-				possibleSailorConfigOar.put(p.getSailor(), Util.filterType(p.getEntities().stream(), Rame.class).collect(Collectors.toSet()));
+				possibleSailorConfigOar.put(p.getSailor(), Util.filterType(p.getReachableEntities().stream(), Rame.class).collect(Collectors.toSet()));
 			}
 
 			for (Map.Entry<Marin, Set<? extends Rame>> pair : possibleSailorConfigOar.entrySet()) {
@@ -197,7 +197,7 @@ public class RoundObjective implements Objective {
 						if (isOarConfigurationReached(wantedConfig.getOarConfig(), allMoves, gameShip)) {
 							if (!isAbsConfigurationReached(wantedConfig.getAbsConfigPos(), allMoves, gameShip)) {
 								if (!sailorsMinusThis.isEmpty()) {
-									var possibleSailorConfigAbs = new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getLonelyEntities)));
+									var possibleSailorConfigAbs = new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getReachableSingleEntities)));
 									var absMoves = firstSailorAbsConfig(wantedConfig.getAbsConfigPos(), possibleSailorConfigAbs, currentEntities, actPlusThis, gameShip, true);
 									if (absMoves != null) {
 										var moves = new ArrayList<MoveAction>();

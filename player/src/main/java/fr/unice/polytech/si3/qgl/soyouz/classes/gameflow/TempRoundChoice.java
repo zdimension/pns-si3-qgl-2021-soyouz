@@ -91,8 +91,6 @@ public class TempRoundChoice {
 		return Util.filterType(getAllActions().stream(), MoveAction.class).collect(Collectors.toSet());
 	}
 
-	//todo check if sailor can perform action HERE
-
 	/**
 	 * Making a sailor perform an action and updating onBoardEntity usage.
 	 *
