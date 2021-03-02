@@ -16,6 +16,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class RoundObjective implements Objective {
 
 	private final WantedSailorConfig wanted;
+	private static final Logger logger = Logger.getLogger(RoundObjective.class.getSimpleName());
 
 	public RoundObjective(WantedSailorConfig wanted) {
 		this.wanted = wanted;
@@ -63,7 +66,8 @@ public class RoundObjective implements Objective {
 
 			//when no moves are found, all sailors will row
 			if (actsMoves == null) {
-				Cockpit.log("Sailor configuration cannot be respected");
+				//Cockpit.log("Sailor configuration cannot be respected");
+				logger.log(Level.INFO, "Sailor configuration cannot be respected");
 				return acts;
 				/*
 				var unmovedSailors = new ArrayList<Marin>(sailors);
@@ -100,7 +104,8 @@ public class RoundObjective implements Objective {
 					try {
 						tempChoice.moveSailor(m);
 					} catch (Exception e) {
-						Cockpit.log("Error moving sailors : " + e.getMessage());
+						//Cockpit.log("Error moving sailors : " + e.getMessage());
+						logger.log(Level.SEVERE, "Error moving sailors : " + e.getMessage());
 						throw e;
 					}
 				}
@@ -122,7 +127,8 @@ public class RoundObjective implements Objective {
 						var pos = ((Gouvernail) ent).getPosCoord();
 						var gouvSailor = tempChoice.findFirstVacantSailorHere(pos);
 						if (gouvSailor == null) {
-							Cockpit.log("No sailor could move to Rudder");
+							//Cockpit.log("No sailor could move to Rudder");
+							logger.log(Level.SEVERE, "No sailor could move to Rudder");
 							continue;
 						} else {
 							var turn = new TurnAction(gouvSailor, wanted.getRotation());
@@ -156,7 +162,8 @@ public class RoundObjective implements Objective {
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
-			Cockpit.log("Error resolving RoundObjective : " + e.getMessage());
+			//Cockpit.log("Error resolving RoundObjective : " + e.getMessage());
+			logger.log(Level.SEVERE, "Error resolving RoundObjective : " + e.getMessage());
 			return new ArrayList<GameAction>();
 		}
 	}
@@ -263,7 +270,8 @@ public class RoundObjective implements Objective {
 			try {
 				obj.add(pos);
 			} catch (Exception e) {
-				Cockpit.log("Error checking if configuration (not oars) reached : " + e.getMessage());
+				//Cockpit.log("Error checking if configuration (not oars) reached : " + e.getMessage());
+				logger.log(Level.SEVERE, "Error checking if configuration (not oars) reached : " + e.getMessage());
 				return false;
 			}
 			if (obj.containsAll(wantedAbsConfig))
@@ -296,7 +304,8 @@ public class RoundObjective implements Objective {
 					}
 				}
 			} catch (Exception e) {
-				Cockpit.log("Error checking if oar configuration reached : " + e.getMessage());
+				//Cockpit.log("Error checking if oar configuration reached : " + e.getMessage());
+				logger.log(Level.SEVERE, "Error checking if oar configuration reached : " + e.getMessage());
 				return false;
 			}
 			if (obj.first >= wantedOarConfig.first && obj.second >= wantedOarConfig.second) {
@@ -343,14 +352,16 @@ public class RoundObjective implements Objective {
 					}
 				}
 			} catch (Exception e) {
-				Cockpit.log("Error determining who should row : " + e.getMessage());
+				//Cockpit.log("Error determining who should row : " + e.getMessage());
+				logger.log(Level.SEVERE, "Error determining who should row : " + e.getMessage());
 				return null;
 			}
 			if (obj.equals(wantedOarConfig)) {
 				return oaring;
 			}
 		}
-		Cockpit.log("Could not establish who should row");
+		logger.log(Level.SEVERE, "Could not establish who should row");
+		//Cockpit.log("Could not establish who should row");
 		return new ArrayList<>();
 	}
 

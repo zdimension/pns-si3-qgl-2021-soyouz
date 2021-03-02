@@ -17,7 +17,7 @@ import java.util.logging.*;
 public class Cockpit implements ICockpit {
   private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-  private static final Logger logger = Logger.getLogger("display");
+  private static final Logger logger = Logger.getLogger(Cockpit.class.getSimpleName());
 
   static {
     OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -50,9 +50,11 @@ public class Cockpit implements ICockpit {
   @Override
   public void initGame(String game) {
     try {
+      updateLogLevel();
       ip = OBJECT_MAPPER.readValue(game, InitGameParameters.class);
       objective = ip.getGoal().getObjective();
-      log("Init game input: " + ip);
+      logger.log(Level.FINEST, "Init game input: "+ ip);
+      //log("Init game input: " + ip);
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.getMessage());
     }
@@ -70,13 +72,15 @@ public class Cockpit implements ICockpit {
     i++;
     try {
       np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
-      log("Next round input: " + np);
+      logger.log(Level.FINEST, "Next round input: " + np);
+      //log("Next round input: " + np);
       objective.update(new GameState(ip, np));
       var actions = objective.resolve(new GameState(ip, np));
       return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));
 
     } catch (Exception e) {
-      log("Error writing nextRound : "+e.getMessage());
+      logger.log(Level.SEVERE, "Error writing nextRound : "+e.getMessage());
+      //log("Error writing nextRound : "+e.getMessage());
       return "[]";
     }
   }
@@ -109,6 +113,13 @@ public class Cockpit implements ICockpit {
     return np;
   }
 
+  private void updateLogLevel()
+  {
+    var logLevel = Level.CONFIG;
+    var root = LogManager.getLogManager().getLogger("");
+    root.setLevel(logLevel);
+    Arrays.stream(root.getHandlers()).forEach(h -> h.setLevel(logLevel));
+  }
 
 
 }

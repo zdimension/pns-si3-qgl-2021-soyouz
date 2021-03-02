@@ -4,15 +4,19 @@ import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.RoundObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint.CheckpointObjective;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Race type objective.
  */
 public class RegattaObjective extends RootObjective {
     private RegattaGoal goalData;
+    private static final Logger logger = Logger.getLogger(RoundObjective.class.getSimpleName());
 
     private int numCheckpoint = 0;
     private CheckpointObjective currentCheckpoint;
@@ -39,11 +43,13 @@ public class RegattaObjective extends RootObjective {
     {
         if(currentCheckpoint != null && currentCheckpoint.isValidated(state)) {
             if(goalData.getCheckpoints().length - 1 > numCheckpoint){
-                Cockpit.log("Checkpoint "+ numCheckpoint+" reached");
+                //Cockpit.log("Checkpoint "+ numCheckpoint+" reached");
+                logger.log(Level.INFO, "Checkpoint "+ numCheckpoint+" reached");
                 numCheckpoint++;
             }
             else{
-                Cockpit.log("Regatta ended");
+                //Cockpit.log("Regatta ended");
+                logger.log(Level.INFO, "Regatta ended");
                 numCheckpoint = 0;
             }
         }
