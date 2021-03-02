@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.TempRoundChoice;
@@ -59,11 +58,16 @@ public class RoundObjective implements Objective {
 			}
 
 			var actsMoves = new ArrayList<MoveAction>();
-
-			if (!isOarConfigurationReached(wanted.getOarConfig(), sailorsNotMoving, gameShip) || !isAbsConfigurationReached(wanted.getAbsConfigPos(), sailorsNotMoving, gameShip)) {
-				actsMoves = firstSailorConfig(wanted, reachableForSailors, allOars, allAbsEnt, actsMoves, gameShip);
+			var wantedNotPerfect = WantedSailorConfig.copy(wanted);
+			while (true) {
+				if (!isOarConfigurationReached(wantedNotPerfect.getOarConfig(), sailorsNotMoving, gameShip) || !isAbsConfigurationReached(wantedNotPerfect.getAbsConfigPos(), sailorsNotMoving, gameShip)) {
+					actsMoves = firstSailorConfig(wantedNotPerfect, reachableForSailors, allOars, allAbsEnt, actsMoves, gameShip);
+				}
+				if (actsMoves != null)
+					break;
+				if (!wantedNotPerfect.decrementOarUsage())
+					break;
 			}
-
 			//when no moves are found, all sailors will row
 			if (actsMoves == null) {
 				//Cockpit.log("Sailor configuration cannot be respected");
@@ -100,6 +104,11 @@ public class RoundObjective implements Objective {
 				return acts;
 				 */
 			} else {
+
+				if(!wanted.equals(wantedNotPerfect)){
+					//todo faire avancer les marins vacants vers les lieux inatteignables
+				}
+
 				for (MoveAction m : actsMoves) {
 					try {
 						tempChoice.moveSailor(m);
@@ -115,7 +124,7 @@ public class RoundObjective implements Objective {
 					return new ArrayList<>();
 				}
 
-				for(var oarAct : oaring){
+				for (var oarAct : oaring) {
 					tempChoice.hireSailor(oarAct.getSailor(), oarAct);
 				}
 

@@ -5,10 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WantedSailorConfig {
@@ -24,6 +21,10 @@ public class WantedSailorConfig {
 		presentEntity = new HashMap<>();
 		presentEntity.put(Rame.class, rame != null);
 		presentEntity.put(Gouvernail.class, !rotation.equals((double)0));
+	}
+
+	public static WantedSailorConfig copy(WantedSailorConfig wanted){
+		return new WantedSailorConfig(wanted.getOarConfig(), wanted.getGouvernail(), wanted.getRotation());
 	}
 
 	public boolean contains(Class<? extends OnboardEntity> ent){
@@ -51,5 +52,30 @@ public class WantedSailorConfig {
 
 	public Double getRotation() {
 		return rotation;
+	}
+
+	public boolean decrementOarUsage(){
+		if(rame.first > 0 && rame.second > 0){
+			rame = Pair.of(rame.first-1, rame.first-1);
+			return true;
+		}
+		return false;
+	}
+
+	public Gouvernail getGouvernail() {
+		return gouvernail;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		WantedSailorConfig that = (WantedSailorConfig) o;
+		return Objects.equals(rame, that.rame) && Objects.equals(gouvernail, that.gouvernail) && Objects.equals(rotation, that.rotation) && Objects.equals(presentEntity, that.presentEntity);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(rame, gouvernail, rotation, presentEntity);
 	}
 }
