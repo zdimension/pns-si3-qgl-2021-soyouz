@@ -14,6 +14,10 @@ public class PosOnShip {
 	private int x;
 	private int y;
 
+	public PosOnShip(){
+		this(0,0);
+	}
+
 	public PosOnShip(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -39,6 +43,14 @@ public class PosOnShip {
 
 	public Pair<Integer,Integer> getPosCoord(){
 		return Pair.of(getX(), getY());
+	}
+
+	public PosOnShip plus(PosOnShip pos){
+		return new PosOnShip(this.x+pos.getX(), this.y+ pos.getY());
+	}
+
+	public PosOnShip minus(PosOnShip pos){
+		return new PosOnShip(this.x-pos.getX(), this.y- pos.getY());
 	}
 
 	@Override

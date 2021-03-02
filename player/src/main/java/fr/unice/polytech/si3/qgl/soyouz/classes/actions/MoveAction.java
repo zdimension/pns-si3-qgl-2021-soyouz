@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
@@ -54,8 +55,12 @@ public class MoveAction extends GameAction{
      *
      * @return the new position of the sailor if moved according to this.
      */
-    public Pair<Integer,Integer> newPos(){
-        return Pair.of(getSailor().getPos().first+xdistance, getSailor().getPos().second+ydistance);
+    public Pair<Integer,Integer> newPosCoord(){
+        return Pair.of(getSailor().getPosCoord().first+xdistance, getSailor().getPosCoord().second+ydistance);
+    }
+
+    public PosOnShip newPos(){
+        return new PosOnShip(getSailor().getPosCoord().first+xdistance, getSailor().getPosCoord().second+ydistance);
     }
 
     /**

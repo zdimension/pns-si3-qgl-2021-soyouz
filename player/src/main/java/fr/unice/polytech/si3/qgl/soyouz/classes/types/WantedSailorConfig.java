@@ -49,6 +49,10 @@ public class WantedSailorConfig {
 		return pos;
 	}
 
+	public Gouvernail getGouvernail(){
+		return gouvernail;
+	}
+
 	public Double getRotation() {
 		return rotation;
 	}

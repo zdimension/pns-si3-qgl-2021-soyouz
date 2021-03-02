@@ -23,4 +23,12 @@ public class Rame extends OnboardEntity
         return isLeft;
     }
 
+    @Override
+    public String toString() {
+        return "Rame{" +
+                "x="+getX()+
+                " y="+getY()+
+                " isLeft=" + isLeft +
+                '}';
+    }
 }

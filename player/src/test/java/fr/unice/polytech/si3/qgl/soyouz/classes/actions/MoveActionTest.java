@@ -30,7 +30,7 @@ class MoveActionTest {
 
     @Test
     void newPosTest() {
-        assertEquals(Pair.of(3,2), moveAction.newPos());
+        assertEquals(Pair.of(3,2), moveAction.newPosCoord());
     }
 
     @Test

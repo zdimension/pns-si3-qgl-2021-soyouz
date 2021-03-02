@@ -17,8 +17,9 @@ import java.util.stream.Collectors;
  */
 public class ComputeMoveSailor {
 	private final Marin sailor;
-	private final Set<? extends OnboardEntity> entities;
-	private final HashMap<? extends  OnboardEntity, Integer> extraRoundToReachEntity;
+	private Set<? extends OnboardEntity> entities;
+	private HashMap<? extends  OnboardEntity, Integer> extraRoundToReachEntity;
+	private Pair<Integer, Integer> move;
 
 	public <T extends OnboardEntity> ComputeMoveSailor(Marin sailor, Collection<T> entities) {
 		this.sailor = sailor;
@@ -26,6 +27,7 @@ public class ComputeMoveSailor {
 		this.extraRoundToReachEntity = new HashMap<T, Integer>(entities.stream().map(e ->
 				 Map.entry(e, sailor.numberExtraRoundsToReachEntity(e.getPosCoord()))
 		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+		move = Pair.of(0,0);
 	}
 
 	public Marin getSailor() {
@@ -95,5 +97,21 @@ public class ComputeMoveSailor {
 				map(Map.Entry::getKey).
 				collect(Collectors.toSet());
 	}
+
+	public void Move(Pair<Integer, Integer> move){
+		if(move.equals(Pair.of(0,0))){
+			throw new IllegalArgumentException("Cannot move sailor by 0, 0");
+		}
+		if(!this.move.equals(Pair.of(0,0))){
+			throw new IllegalArgumentException("Cannot move sailor again");
+		}
+		this.move = move;
+		this.entities = entities.stream().filter(ent -> sailor.isAbsPosReachable(ent.getPos().minus(new PosOnShip(move)))).collect(Collectors.toSet());
+		this.extraRoundToReachEntity = new HashMap<>(entities.stream().map(e ->
+				Map.entry(e, sailor.numberExtraRoundsToReachEntity(e.getPos().minus(new PosOnShip(move))))
+		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+	}
+
+
 
 }

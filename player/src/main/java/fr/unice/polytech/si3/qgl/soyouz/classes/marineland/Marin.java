@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
@@ -68,8 +69,13 @@ public class Marin {
      * @return the position of the sailor.
      */
     @JsonIgnore
-    public Pair<Integer,Integer> getPos(){
+    public Pair<Integer,Integer> getPosCoord(){
         return Pair.of(getX(),getY());
+    }
+
+    @JsonIgnore
+    public PosOnShip getPos(){
+        return new PosOnShip(getX(), getY());
     }
 
     /**
@@ -195,12 +201,20 @@ public class Marin {
         return isAbsPosReachable(pos.getFirst(), pos.getSecond());
     }
 
+    public  boolean isAbsPosReachable(PosOnShip pos){
+        return isAbsPosReachable(pos.getX(), pos.getY());
+    }
+
     public int numberExtraRoundsToReachEntity(int xPos, int yPos){
         return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) / MAX_MOVE;
     }
 
     public int numberExtraRoundsToReachEntity(Pair<Integer,Integer> pos){
         return numberExtraRoundsToReachEntity(pos.getFirst(), pos.getSecond());
+    }
+
+    public int numberExtraRoundsToReachEntity(PosOnShip pos){
+        return numberExtraRoundsToReachEntity(pos.getX(), pos.getY());
     }
 
     @Override

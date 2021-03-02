@@ -134,7 +134,7 @@ public class TempRoundChoice {
 
 		if (vacantSailors.contains(sailor)) {
 
-			if (!sailor.getPos().equals(pos)) {
+			if (!sailor.getPosCoord().equals(pos)) {
 				var isActionMove = action != null && action.first instanceof MoveAction;
 
 				if (!isActionMove)
@@ -142,7 +142,7 @@ public class TempRoundChoice {
 
 				var actionMove = (MoveAction) action.first;
 
-				if (!actionMove.newPos().equals(pos))
+				if (!actionMove.newPosCoord().equals(pos))
 					throw new IllegalArgumentException("Incoherent sailor position (position not coherent with moveAction)");
 			}
 			vacantSailors.remove(sailor);
@@ -189,7 +189,7 @@ public class TempRoundChoice {
 			return;
 		}
 		if (vacantSailors.contains(sailor)) {
-			hireSailor(sailor, sailor.getPos(), Pair.of(act1, null));
+			hireSailor(sailor, sailor.getPosCoord(), Pair.of(act1, null));
 		} else if (movedSailors.containsKey(sailor)) {
 			var mov = movedSailors.get(sailor).first;
 			hireSailor(sailor, mov.getPosCoord(), Pair.of(act1, null));
@@ -198,11 +198,11 @@ public class TempRoundChoice {
 	}
 
 	public void moveSailor(MoveAction move) {
-		hireSailor(move.getSailor(), Pair.of(move.newPos().first, move.newPos().getSecond()), Pair.of(move, null));
+		hireSailor(move.getSailor(), Pair.of(move.newPosCoord().first, move.newPosCoord().getSecond()), Pair.of(move, null));
 	}
 
 	public Marin findFirstVacantSailorHere(Pair<Integer, Integer> pos) {
-		var unmoved = vacantSailors.stream().filter(s -> s.getPos().equals(pos)).findFirst();
+		var unmoved = vacantSailors.stream().filter(s -> s.getPosCoord().equals(pos)).findFirst();
 		if (unmoved.isPresent()) {
 			return unmoved.get();
 		}

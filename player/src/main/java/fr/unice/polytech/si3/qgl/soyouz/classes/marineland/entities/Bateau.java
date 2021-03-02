@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
@@ -108,6 +109,13 @@ public class Bateau extends AutreBateau
     public Optional<OnboardEntity> getEntityHere(int xPos, int yPos){
         for(OnboardEntity ent : entities)
             if(ent.getX() == xPos && ent.getY() == yPos)
+                return Optional.of(ent);
+        return Optional.empty();
+    }
+
+    public Optional<OnboardEntity> getEntityHere(PosOnShip pos){
+        for(OnboardEntity ent : entities)
+            if(ent.getX() == pos.getX() && ent.getY() == pos.getY())
                 return Optional.of(ent);
         return Optional.empty();
     }
