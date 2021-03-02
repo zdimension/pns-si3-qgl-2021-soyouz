@@ -137,20 +137,6 @@ public class Bateau extends AutreBateau
     }
 
     /**
-     * Determine if an oar is on the left side of the boat.
-     *
-     * @param rame to find position from.
-     * @return true if the oar is on the left side of this boat.
-     * @throws IllegalArgumentException if the oar is invalid.
-     */
-    public boolean isOarLeft(Rame rame) {
-        var entity = getEntityHere(rame.getPosCoord());
-        if (entity.isPresent() && !(entity.get() instanceof Rame))
-            throw new IllegalArgumentException("corrupted position of Oar");
-        return rame.getPosCoord().getSecond() == 0;
-    }
-
-    /**
      * Get all the oars on each side.
      *
      * @return a Pair of oars (left, right).
@@ -159,7 +145,7 @@ public class Bateau extends AutreBateau
         List<OnboardEntity> oars = Arrays.stream(this.getEntities()).filter(ent -> ent instanceof Rame).collect(Collectors.toList());
         int leftOar = 0, rightOar = 0;
         for (OnboardEntity oar : oars) {
-            if (isOarLeft((Rame) oar))
+            if (((Rame)oar).isLeft())
                 leftOar++;
             else rightOar++;
         }

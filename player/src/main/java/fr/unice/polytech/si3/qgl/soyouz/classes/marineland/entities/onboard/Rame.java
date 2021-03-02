@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Rame extends OnboardEntity
 {
+    private final boolean isLeft;
     /**
      * Constructor.
      *
@@ -15,5 +16,11 @@ public class Rame extends OnboardEntity
      */
     public Rame(@JsonProperty("x") int x,@JsonProperty("y") int y) {
         super(x, y);
+        isLeft = y == 0;
     }
+
+    public boolean isLeft() {
+        return isLeft;
+    }
+
 }

@@ -297,7 +297,7 @@ public class RoundObjective implements Objective {
 				}
 				if (entHere.get() instanceof Rame) {
 					oar = (Rame) entHere.get();
-					if (gameShip.isOarLeft(oar)) {
+					if (oar.isLeft()) {
 						obj = Pair.of(obj.first + 1, obj.second);
 					} else {
 						obj = Pair.of(obj.first, obj.second + 1);
@@ -335,7 +335,7 @@ public class RoundObjective implements Objective {
 				}
 				if (entHere.get() instanceof Rame) {
 					oar = (Rame) entHere.get();
-					if (gameShip.isOarLeft(oar)) {
+					if (oar.isLeft()) {
 						if (obj.first.equals(wantedOarConfig.first)) {
 							continue;
 						} else {
