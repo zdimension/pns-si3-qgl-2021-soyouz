@@ -57,7 +57,6 @@ public class Cockpit implements ICockpit {
 
 
       logger.log(Level.FINEST, "Init game input: "+ ip);
-      //log("Init game input: " + ip);
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.getMessage());
     }
@@ -83,7 +82,6 @@ public class Cockpit implements ICockpit {
 
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Error writing nextRound : "+e.getMessage());
-      //log("Error writing nextRound : "+e.getMessage());
       return "[]";
     }
   }

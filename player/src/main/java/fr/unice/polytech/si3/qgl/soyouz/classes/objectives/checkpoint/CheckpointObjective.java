@@ -8,6 +8,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.RoundObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.WantedSailorConfig;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -62,11 +63,7 @@ public class CheckpointObjective extends CompositeObjective {
         RudderObjective rudderObjective = new RudderObjective(angleToCp - wantedOarConfiguration.getAngleOfRotation());
         double wantedRudderRotation = rudderObjective.resolve();
 
-        WantedSailorConfig wanted;
-        //if (wantedRudderRotation != 0)
-            wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), state.getIp().getShip().findFirstEntity(Gouvernail.class), wantedRudderRotation);
-        //else
-        //    wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(),null, null);
+        WantedSailorConfig wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), state.getIp().getShip().findFirstEntity(Gouvernail.class), wantedRudderRotation);
 
         var roundObj = new RoundObjective(wanted);
         return roundObj.resolve(state);

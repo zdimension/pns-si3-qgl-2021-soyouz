@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +23,20 @@ public class RowersObjective {
      *
      * @param neededRotation The angle between the boat and the checkpoint.
      * @param distToCheckpoint The distance between the boat and the checkpoint.
-     * @param nbSailor The number of sailors able to oar.
+     * @param nbSailorReadyToOar The number of sailors able to oar.
      * @param nbOarOnLeft The number of oars on the left side of the boat.
      * @param nbOarOnRight The number of oars on the right side of the boat.
      */
-    public RowersObjective(double neededRotation, double distToCheckpoint, int nbSailor, int nbOarOnLeft, int nbOarOnRight) {
+    public RowersObjective(double neededRotation, double distToCheckpoint, int nbSailorReadyToOar, int nbOarOnLeft, int nbOarOnRight) {
         this.neededRotation = neededRotation;
         this.distToCheckpoint = distToCheckpoint;
         totalNbOfOar = nbOarOnLeft + nbOarOnRight;
         leftTurnPossibilities = new ArrayList<>();
         rightTurnPossibilities = new ArrayList<>();
         forwardPossibilities = new ArrayList<>();
-        setOaringPossibilities(nbSailor, nbOarOnLeft, nbOarOnRight);
+        setOaringPossibilities(nbSailorReadyToOar, nbOarOnLeft, nbOarOnRight);
     }
 
-    //TODO TROUVER UN MOYEN DE LE FAIRE QU'UNE FOIS PAR PARTIE
     /**
      * Determine if the boat should go straight or turn and call the respective method.
      *
