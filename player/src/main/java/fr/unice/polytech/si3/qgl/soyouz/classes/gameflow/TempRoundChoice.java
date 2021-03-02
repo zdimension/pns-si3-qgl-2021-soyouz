@@ -74,17 +74,16 @@ public class TempRoundChoice {
 	}
 
 	public Set<GameAction> getAllActions() {
-		return new HashSet<>() {{
-			addAll(sailorsJob.values().stream().
-					map(Pair::getSecond).
-					flatMap(p -> Stream.of(p.getFirst(), p.getSecond())).
-					filter(Objects::nonNull).
-					collect(Collectors.toSet()));
-			addAll(movedSailors.values().stream().
-					map(Pair::getSecond).
-					collect(Collectors.toSet())
-			);
-		}};
+		var temp = new HashSet<GameAction>();
+		temp.addAll(sailorsJob.values().stream().
+				map(Pair::getSecond).
+				flatMap(p -> Stream.of(p.getFirst(), p.getSecond())).
+				filter(Objects::nonNull).
+				collect(Collectors.toSet()));
+		temp.addAll(movedSailors.values().stream().
+				map(Pair::getSecond).
+				collect(Collectors.toSet()));
+		return temp;
 	}
 
 	public Set<MoveAction> getAllMoves() {
