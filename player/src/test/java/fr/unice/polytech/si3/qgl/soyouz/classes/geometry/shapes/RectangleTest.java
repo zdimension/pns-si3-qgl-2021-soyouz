@@ -43,16 +43,22 @@ class RectangleTest {
 
     @Test
     void getWidthTest() {
+        assertNotEquals(2.99, rectangle.getWidth());
         assertEquals(3, rectangle.getWidth());
+        assertNotEquals(3.01, rectangle.getWidth());
     }
 
     @Test
     void getHeightTest() {
+        assertNotEquals(5.99, rectangle.getHeight());
         assertEquals(6, rectangle.getHeight());
+        assertNotEquals(6.01, rectangle.getHeight());
     }
 
     @Test
     void getOrientationTest() {
+        assertNotEquals(0.01, rectangle.getOrientation());
         assertEquals(0, rectangle.getOrientation());
+        assertNotEquals(-0.01, rectangle.getOrientation());
     }
 }

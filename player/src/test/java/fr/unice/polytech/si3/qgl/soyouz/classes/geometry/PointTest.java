@@ -16,11 +16,15 @@ class PointTest {
 
     @Test
     void getX() {
+        assertNotEquals(0.01, point.getX());
         assertEquals(0, point.getX());
+        assertNotEquals(-0.01, point.getX());
     }
 
     @Test
     void getY() {
+        assertNotEquals(0.01, point.getY());
         assertEquals(0, point.getY());
+        assertNotEquals(-0.01, point.getY());
     }
 }

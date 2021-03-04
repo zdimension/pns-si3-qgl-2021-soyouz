@@ -36,6 +36,8 @@ class CircleTest {
 
     @Test
     void getRadius() {
+        assertNotEquals(49.99, circle.getRadius());
         assertEquals(50, circle.getRadius());
+        assertNotEquals(50.01, circle.getRadius());
     }
 }

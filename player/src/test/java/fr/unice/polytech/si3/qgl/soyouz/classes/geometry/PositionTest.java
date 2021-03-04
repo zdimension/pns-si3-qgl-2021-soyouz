@@ -4,6 +4,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PositionTest {
@@ -17,17 +19,23 @@ class PositionTest {
 
     @Test
     void getX() {
+        assertNotEquals(9.99, position.getX());
         assertEquals(10, position.getX());
+        assertNotEquals(10.01, position.getX());
     }
 
     @Test
     void getY() {
+        assertNotEquals(19.99, position.getY());
         assertEquals(20, position.getY());
+        assertNotEquals(20.01, position.getY());
     }
 
     @Test
     void getOrientation() {
+        assertNotEquals(29.99, position.getOrientation());
         assertEquals(30, position.getOrientation());
+        assertNotEquals(30.01, position.getOrientation());
     }
 
     @Test
@@ -38,7 +46,11 @@ class PositionTest {
     }
 
     @Test
-    void isPositionReachable() {
+    void getLength() {
+        Position pos2 = new Position(20, 30, 0);
+        double distance = position.getLength(pos2);
+        assertEquals(14.142135623730951, distance);
+        assertEquals(distance, sqrt(pow(position.getX() - pos2.getX(),2) + pow(position.getY() - pos2.getY(),2)));
     }
 
     @Test
