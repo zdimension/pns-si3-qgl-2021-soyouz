@@ -1,6 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,5 +37,12 @@ class GameActionTest {
         assertEquals(sailor, moveAction.getSailor());
         assertNotEquals(pirate, oarAction.getSailor());
         assertNotEquals(pirate, moveAction.getSailor());
+    }
+
+    @Test
+    void getEntityNeededTest() {
+        assertEquals(Rame.class, oarAction.getEntityNeeded());
+        assertNull(moveAction.getEntityNeeded());
+        assertNotEquals(Gouvernail.class, oarAction.getEntityNeeded());
     }
 }

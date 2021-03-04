@@ -4,43 +4,36 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OarActionTest {
+class LiftSailActionTest {
 
     Marin sailor;
-    OarAction oarAction;
+    LiftSailAction lsa;
 
     @BeforeEach
     void init() {
         sailor = new Marin(1, 0, 0, "Tom Pouce");
-        oarAction = new OarAction(sailor);
+        lsa = new LiftSailAction(sailor);
     }
 
     @Test
     void getSailorTest() {
-        assertEquals(sailor, oarAction.getSailor());
-        assertEquals(new Marin(1, 0, 0, "Tom Pouce"), oarAction.getSailor());
+        assertEquals(sailor, lsa.getSailor());
+        assertEquals(new Marin(1, 0, 0, "Tom Pouce"), lsa.getSailor());
     }
 
     @Test
     void getSailorIdTest() {
-        assertEquals(sailor.getId(), oarAction.getSailorId());
-        assertEquals(1, oarAction.getSailorId());
+        assertEquals(sailor.getId(), lsa.getSailorId());
+        assertEquals(1, lsa.getSailorId());
     }
 
     @Test
     void getEntityNeededTest() {
-        assertEquals(Rame.class, oarAction.getEntityNeeded());
-        assertNotEquals(Voile.class, oarAction.getEntityNeeded());
+        assertEquals(Voile.class, lsa.getEntityNeeded());
+        assertNotEquals(Rame.class, lsa.getEntityNeeded());
     }
-
-    @Test
-    void toStringTest() {
-        assertEquals("OarAction : sailor : Marin{id=1, name='Tom Pouce', x=0, y=0}", oarAction.toString());
-    }
-
 }

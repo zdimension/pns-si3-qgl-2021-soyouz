@@ -16,7 +16,7 @@ public class LowerSailAction extends GameAction{
      *
      * @param sailor A Sailor.
      */
-    protected LowerSailAction(Marin sailor) {
+    public LowerSailAction(Marin sailor) {
         super(sailor, Voile.class);
     }
 }

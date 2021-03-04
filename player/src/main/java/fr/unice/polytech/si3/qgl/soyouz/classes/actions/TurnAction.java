@@ -11,7 +11,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
  * </p>
  */
 public class TurnAction extends GameAction{
-    private double rotation;
+    private final double rotation;
     /**
      * Constructor.
      *
