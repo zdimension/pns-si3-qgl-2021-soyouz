@@ -188,7 +188,7 @@ public class Simulator extends JFrame
                         }
                         else
                         {
-                            System.err.println("ENTITY MISSING FOR ACTION " + act));
+                            System.err.println("ENTITY MISSING FOR ACTION " + act);
                         }
                     }
                     else
@@ -207,7 +207,7 @@ public class Simulator extends JFrame
                 var activeOarsLeft = activeOars.stream().filter(o -> o.getY() == 0).count();
                 var activeOarsRight = activeOars.size() - activeOarsLeft;
                 var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
-                var totalRot = oarRot + rudderRotate.get();
+                var totalRot = oarRot + rudderRotate;
                 rotIncrement = totalRot / COMP_STEPS;
                 spdIncrement = dirSpeed / COMP_STEPS;
                 currentStep = 0;
