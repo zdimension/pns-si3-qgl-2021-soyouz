@@ -6,18 +6,23 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 
 /**
  * <p>
- * Turning the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail} action. Needs the
+ * Turning the
+ * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail} action
+ * . Needs the
  * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin} to be located on a rudder.
  * </p>
  */
-public class TurnAction extends GameAction{
+public class TurnAction extends GameAction
+{
     private final double rotation;
+
     /**
      * Constructor.
      *
      * @param sailor A Sailor.
      */
-    public TurnAction(Marin sailor, @JsonProperty("rotation") Double rotation) {
+    public TurnAction(Marin sailor, @JsonProperty("rotation") Double rotation)
+    {
         super(sailor, Gouvernail.class);
         this.rotation = rotation;
     }
@@ -27,7 +32,8 @@ public class TurnAction extends GameAction{
      *
      * @return the rotation associated to this action.
      */
-    public double getRotation() {
+    public double getRotation()
+    {
         return rotation;
     }
 
@@ -37,7 +43,8 @@ public class TurnAction extends GameAction{
      * @return the string associated to the current object.
      */
     @Override
-    public String toString() {
-        return "TurnAction : rotation = "+rotation+" | sailor : "+getSailor().toString();
+    public String toString()
+    {
+        return "TurnAction : rotation = " + rotation + " | sailor : " + getSailor().toString();
     }
 }

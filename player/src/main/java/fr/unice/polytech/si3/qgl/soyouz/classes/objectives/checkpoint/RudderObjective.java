@@ -5,7 +5,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 /**
  * Class to determine the optimal Rudder configuration to be the closest possible to the objective.
  */
-public class RudderObjective {
+public class RudderObjective
+{
 
     private final double neededRotation;
 
@@ -14,7 +15,8 @@ public class RudderObjective {
      *
      * @param neededRotation The angle between the boat and the checkpoint.
      */
-    public RudderObjective(double neededRotation) {
+    public RudderObjective(double neededRotation)
+    {
         this.neededRotation = neededRotation;
     }
 
@@ -23,23 +25,33 @@ public class RudderObjective {
      *
      * @return true if the angle is in range, false otherwise.
      */
-    public boolean rudderRotationIsInRange (){
+    public boolean rudderRotationIsInRange()
+    {
         return neededRotation > Gouvernail.ALLOWED_ROTATION.first && neededRotation < Gouvernail.ALLOWED_ROTATION.second;
     }
 
     /**
-     * Determine the best rudder rotation possible to reduce the angle between the boat and the checkpoint.
+     * Determine the best rudder rotation possible to reduce the angle between the boat and the
+     * checkpoint.
      *
      * @return the angle of rotation that the rudder will perform.
      */
-    public double resolve () {
+    public double resolve()
+    {
         if (rudderRotationIsInRange())
+        {
             return neededRotation;
-        else {
-            if (neededRotation<0)
+        }
+        else
+        {
+            if (neededRotation < 0)
+            {
                 return Gouvernail.ALLOWED_ROTATION.first;
+            }
             else
+            {
                 return Gouvernail.ALLOWED_ROTATION.second;
+            }
         }
     }
 }

@@ -9,37 +9,43 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class OarActionTest {
+class OarActionTest
+{
 
     Marin sailor;
     OarAction oarAction;
 
     @BeforeEach
-    void init() {
+    void init()
+    {
         sailor = new Marin(1, 0, 0, "Tom Pouce");
         oarAction = new OarAction(sailor);
     }
 
     @Test
-    void getSailorTest() {
+    void getSailorTest()
+    {
         assertEquals(sailor, oarAction.getSailor());
         assertEquals(new Marin(1, 0, 0, "Tom Pouce"), oarAction.getSailor());
     }
 
     @Test
-    void getSailorIdTest() {
+    void getSailorIdTest()
+    {
         assertEquals(sailor.getId(), oarAction.getSailorId());
         assertEquals(1, oarAction.getSailorId());
     }
 
     @Test
-    void getEntityNeededTest() {
+    void getEntityNeededTest()
+    {
         assertEquals(Rame.class, oarAction.getEntityNeeded());
         assertNotEquals(Voile.class, oarAction.getEntityNeeded());
     }
 
     @Test
-    void toStringTest() {
+    void toStringTest()
+    {
         assertEquals("OarAction : sailor : Marin{id=1, name='Tom Pouce', x=0, y=0}", oarAction.toString());
     }
 

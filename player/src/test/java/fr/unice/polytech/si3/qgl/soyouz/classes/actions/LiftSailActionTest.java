@@ -9,31 +9,36 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class LiftSailActionTest {
+class LiftSailActionTest
+{
 
     Marin sailor;
     LiftSailAction lsa;
 
     @BeforeEach
-    void init() {
+    void init()
+    {
         sailor = new Marin(1, 0, 0, "Tom Pouce");
         lsa = new LiftSailAction(sailor);
     }
 
     @Test
-    void getSailorTest() {
+    void getSailorTest()
+    {
         assertEquals(sailor, lsa.getSailor());
         assertEquals(new Marin(1, 0, 0, "Tom Pouce"), lsa.getSailor());
     }
 
     @Test
-    void getSailorIdTest() {
+    void getSailorIdTest()
+    {
         assertEquals(sailor.getId(), lsa.getSailorId());
         assertEquals(1, lsa.getSailorId());
     }
 
     @Test
-    void getEntityNeededTest() {
+    void getEntityNeededTest()
+    {
         assertEquals(Voile.class, lsa.getEntityNeeded());
         assertNotEquals(Rame.class, lsa.getEntityNeeded());
     }

@@ -7,25 +7,27 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 /**
  * He Ho Freshwater sailor !
  */
-public class Marin {
+public class Marin
+{
     public static final int MAX_MOVE = 5;
     private final int id;
+    private final String name;
     private int x;
     private int y;
-    private final String name;
 
     /**
      * Constructor.
      *
-     * @param id Its Id.
-     * @param x Its base x position.
-     * @param y Its base y position.
+     * @param id   Its Id.
+     * @param x    Its base x position.
+     * @param y    Its base y position.
      * @param name Its name.
      */
     public Marin(@JsonProperty("id") int id,
                  @JsonProperty("x") int x,
                  @JsonProperty("y") int y,
-                 @JsonProperty("name") String name) {
+                 @JsonProperty("name") String name)
+    {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -37,16 +39,19 @@ public class Marin {
      *
      * @return the Id of this.
      */
-    public int getId() {
+    public int getId()
+    {
         return id;
     }
 
     /**
      * Getter.
      *
-     * @return the x position of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
+     * @return the x position of this on the
+     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
      */
-    public int getX() {
+    public int getX()
+    {
         return x;
     }
 
@@ -63,9 +68,11 @@ public class Marin {
     /**
      * Getter.
      *
-     * @return the y position of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
+     * @return the y position of this on the
+     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
      */
-    public int getY() {
+    public int getY()
+    {
         return y;
     }
 
@@ -85,17 +92,20 @@ public class Marin {
      * @return the position of the sailor.
      */
     @JsonIgnore
-    public Pair<Integer,Integer> getPos(){
-        return Pair.of(getX(),getY());
+    public Pair<Integer, Integer> getPos()
+    {
+        return Pair.of(getX(), getY());
     }
 
     /**
      * Getter.
      *
-     * @return the coordinates of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
+     * @return the coordinates of this on the
+     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
      */
     @JsonIgnore
-    public Pair<Integer, Integer> getGridPosition() {
+    public Pair<Integer, Integer> getGridPosition()
+    {
         return Pair.of(x, y);
     }
 
@@ -104,7 +114,8 @@ public class Marin {
      *
      * @return the Name of this.
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
@@ -116,9 +127,12 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveRelative(int xDist, int yDist) {
+    public Pair<Integer, Integer> moveRelative(int xDist, int yDist)
+    {
         if (!isRelPosReachable(xDist, yDist))
+        {
             throw new IllegalArgumentException("Sailor must move 5 cells or lower");
+        }
         this.x += xDist;
         this.y += yDist;
         return this.getGridPosition();
@@ -131,7 +145,8 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveRelative(Pair<Integer, Integer> dist) {
+    public Pair<Integer, Integer> moveRelative(Pair<Integer, Integer> dist)
+    {
         return moveRelative(dist.getFirst(), dist.getSecond());
     }
 
@@ -143,9 +158,12 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveAbsolute(int xPos, int yPos) {
-        if(!this.isAbsPosReachable(xPos, yPos))
+    public Pair<Integer, Integer> moveAbsolute(int xPos, int yPos)
+    {
+        if (!this.isAbsPosReachable(xPos, yPos))
+        {
             throw new IllegalArgumentException("Sailor must move 5 cells or lower");
+        }
         this.x = xPos;
         this.y = yPos;
         return this.getGridPosition();
@@ -158,7 +176,8 @@ public class Marin {
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveAbsolute(Pair<Integer, Integer> pos) {
+    public Pair<Integer, Integer> moveAbsolute(Pair<Integer, Integer> pos)
+    {
         return moveAbsolute(pos.getFirst(), pos.getSecond());
     }
 
@@ -169,7 +188,8 @@ public class Marin {
      * @param yDist distance on X axis
      * @return if this sailor can move the number of cells specified
      */
-    public boolean isRelPosReachable(int xDist, int yDist){
+    public boolean isRelPosReachable(int xDist, int yDist)
+    {
         return Math.abs(xDist) + Math.abs(yDist) <= MAX_MOVE;
     }
 
@@ -180,7 +200,8 @@ public class Marin {
      * @param yPos cell on Y axis
      * @return if the absolute position is reachable for this sailor
      */
-    public boolean isAbsPosReachable(int xPos, int yPos){
+    public boolean isAbsPosReachable(int xPos, int yPos)
+    {
         return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) <= MAX_MOVE;
     }
 
@@ -190,20 +211,24 @@ public class Marin {
      * @param pos a Pair of coords (X,Y).
      * @return if the absolute position is reachable for this sailor.
      */
-    public boolean isAbsPosReachable(Pair<Integer,Integer> pos){
+    public boolean isAbsPosReachable(Pair<Integer, Integer> pos)
+    {
         return isAbsPosReachable(pos.getFirst(), pos.getSecond());
     }
 
-    public int numberExtraRoundsToReachEntity(int xPos, int yPos){
+    public int numberExtraRoundsToReachEntity(int xPos, int yPos)
+    {
         return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) / MAX_MOVE;
     }
 
-    public int numberExtraRoundsToReachEntity(Pair<Integer,Integer> pos){
+    public int numberExtraRoundsToReachEntity(Pair<Integer, Integer> pos)
+    {
         return numberExtraRoundsToReachEntity(pos.getFirst(), pos.getSecond());
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (!(obj instanceof Marin))
         {
             return false;
@@ -213,7 +238,8 @@ public class Marin {
             return true;
         }
         var mar = (Marin) obj;
-        return this.id == mar.id; //&& this.x == mar.x && this.y == mar.y && this.name.equals(mar.name);
+        return this.id == mar.id; //&& this.x == mar.x && this.y == mar.y && this.name.equals(mar
+        // .name);
     }
 
     /**
@@ -222,7 +248,8 @@ public class Marin {
      * @return the hash code associated to the current object.
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return id;
     }
 
@@ -232,13 +259,14 @@ public class Marin {
      * @return the string associated to the current object.
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Marin{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", x=" + x +
-                ", y=" + y +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", x=" + x +
+            ", y=" + y +
 
-                '}';
+            '}';
     }
 }

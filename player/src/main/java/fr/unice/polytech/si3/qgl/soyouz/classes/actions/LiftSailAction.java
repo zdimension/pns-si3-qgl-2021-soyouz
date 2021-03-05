@@ -5,18 +5,21 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voil
 
 /**
  * <p>
- * Lifting up the sail action. Needs the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin} to be located on
+ * Lifting up the sail action. Needs the
+ * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin} to be located on
  * a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile}.
  * </p>
  */
-public class LiftSailAction extends GameAction{
+public class LiftSailAction extends GameAction
+{
 
     /**
      * Constructor.
      *
      * @param sailor A Sailor.
      */
-    public LiftSailAction(Marin sailor) {
+    public LiftSailAction(Marin sailor)
+    {
         super(sailor, Voile.class);
     }
 }

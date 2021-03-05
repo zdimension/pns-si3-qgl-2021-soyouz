@@ -29,9 +29,10 @@ public abstract class GameAction
      * Constructor.
      *
      * @param sailor A Sailor.
-     * @param ent The wanted entity to make the boat progress (Optional).
+     * @param ent    The wanted entity to make the boat progress (Optional).
      */
-    protected GameAction(Marin sailor,@Nullable Class<? extends OnboardEntity> ent) {
+    protected GameAction(Marin sailor, @Nullable Class<? extends OnboardEntity> ent)
+    {
         this.sailor = sailor;
         this.entityNeeded = ent;
     }
@@ -51,11 +52,13 @@ public abstract class GameAction
      *
      * @return the attached Sailor.
      */
-    public Marin getSailor() {
+    public Marin getSailor()
+    {
         return sailor;
     }
 
-    public Class<? extends OnboardEntity> getEntityNeeded() {
+    public Class<? extends OnboardEntity> getEntityNeeded()
+    {
         return entityNeeded;
     }
 }

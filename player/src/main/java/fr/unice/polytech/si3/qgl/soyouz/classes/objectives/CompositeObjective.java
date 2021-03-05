@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class CompositeObjective implements Objective {
+public abstract class CompositeObjective implements Objective
+{
     protected ArrayList<Objective> intermediateObjective = new ArrayList<>();
 
     /**

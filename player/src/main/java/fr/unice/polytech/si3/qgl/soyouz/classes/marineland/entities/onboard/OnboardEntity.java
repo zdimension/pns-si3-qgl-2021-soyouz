@@ -31,7 +31,8 @@ public abstract class OnboardEntity
      * @param y Ordinate of the entity.
      */
     protected OnboardEntity(@JsonProperty("x") int x,
-                         @JsonProperty("y")int y) {
+                            @JsonProperty("y") int y)
+    {
         this.x = x;
         this.y = y;
         this.isUsed = false;
@@ -62,15 +63,23 @@ public abstract class OnboardEntity
      *
      * @return the position of the entity.
      */
-    public Pair<Integer,Integer> getPosCoord(){return Pair.of(getX(),getY());}
+    public Pair<Integer, Integer> getPosCoord()
+    {
+        return Pair.of(getX(), getY());
+    }
 
-    public PosOnShip getPos(){ return new PosOnShip(getX(), getY());}
+    public PosOnShip getPos()
+    {
+        return new PosOnShip(getX(), getY());
+    }
+
     /**
      * Getter.
      *
      * @return the used state of the object.
      */
-    public boolean isUsed() {
+    public boolean isUsed()
+    {
         return isUsed;
     }
 
@@ -79,7 +88,8 @@ public abstract class OnboardEntity
      *
      * @param used the value to set the use state.
      */
-    public void setUsed(boolean used) {
+    public void setUsed(boolean used)
+    {
         isUsed = used;
     }
 
@@ -90,7 +100,8 @@ public abstract class OnboardEntity
      * @return true if they are equals, false otherwise.
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OnboardEntity that = (OnboardEntity) o;
@@ -103,7 +114,8 @@ public abstract class OnboardEntity
      * @return the hash code.
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(x, y);
     }
 }

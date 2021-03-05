@@ -5,7 +5,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 
 import java.util.List;
 
-public interface Objective {
+public interface Objective
+{
 
     /**
      * Determine if the goal is reached.

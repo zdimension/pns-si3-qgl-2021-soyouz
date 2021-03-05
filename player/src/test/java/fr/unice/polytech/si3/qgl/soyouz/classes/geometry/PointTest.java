@@ -6,24 +6,28 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class PointTest {
+class PointTest
+{
 
     Point point;
 
     @BeforeEach
-    void init() {
+    void init()
+    {
         point = new Point();
     }
 
     @Test
-    void getX() {
+    void getX()
+    {
         assertNotEquals(0.01, point.getX());
         assertEquals(0, point.getX());
         assertNotEquals(-0.01, point.getX());
     }
 
     @Test
-    void getY() {
+    void getY()
+    {
         assertNotEquals(0.01, point.getY());
         assertEquals(0, point.getY());
         assertNotEquals(-0.01, point.getY());

@@ -28,7 +28,8 @@ public class GameState
      *
      * @return the initial game parameters.
      */
-    public InitGameParameters getIp() {
+    public InitGameParameters getIp()
+    {
         return ip;
     }
 
@@ -37,7 +38,8 @@ public class GameState
      *
      * @return the next round parameters.
      */
-    public NextRoundParameters getNp() {
+    public NextRoundParameters getNp()
+    {
         return np;
     }
 }

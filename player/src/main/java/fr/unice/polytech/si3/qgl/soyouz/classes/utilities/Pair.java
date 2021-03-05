@@ -13,7 +13,7 @@ public class Pair<T1, T2>
     /**
      * Constructor.
      *
-     * @param first The first element of the pair.
+     * @param first  The first element of the pair.
      * @param second The second element of the pair.
      */
     private Pair(T1 first, T2 second)
@@ -87,7 +87,7 @@ public class Pair<T1, T2>
         }
         var pair = (Pair<?, ?>) obj;
         return equals(first, pair.first)
-                && equals(second, pair.second);
+            && equals(second, pair.second);
     }
 
     /**

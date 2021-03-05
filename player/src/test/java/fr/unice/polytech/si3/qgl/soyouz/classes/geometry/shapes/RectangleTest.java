@@ -9,32 +9,34 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-class RectangleTest {
+class RectangleTest
+{
 
     Rectangle rectangle;
 
     @BeforeEach
-    void init() {
+    void init()
+    {
         Cockpit cockpit = new Cockpit();
 
         cockpit.initGame("{\"goal\": {\n" +
-                "    \"mode\": \"REGATTA\",\n" +
-                "    \"checkpoints\": [\n" +
-                "      {\n" +
-                "        \"position\": {\n" +
-                "          \"x\": 1000,\n" +
-                "          \"y\": 0,\n" +
-                "          \"orientation\": 0\n" +
-                "        },\n" +
-                "   \"shape\": {\n" +
-                "       \"type\": \"rectangle\",\n" +
-                "       \"width\": 3,\n" +
-                "       \"height\": 6,\n" +
-                "       \"orientation\": 0\n" +
-                "        }\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  }}");
+            "    \"mode\": \"REGATTA\",\n" +
+            "    \"checkpoints\": [\n" +
+            "      {\n" +
+            "        \"position\": {\n" +
+            "          \"x\": 1000,\n" +
+            "          \"y\": 0,\n" +
+            "          \"orientation\": 0\n" +
+            "        },\n" +
+            "   \"shape\": {\n" +
+            "       \"type\": \"rectangle\",\n" +
+            "       \"width\": 3,\n" +
+            "       \"height\": 6,\n" +
+            "       \"orientation\": 0\n" +
+            "        }\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  }}");
 
         InitGameParameters ip = cockpit.getIp();
         RegattaGoal rg = (RegattaGoal) ip.getGoal();
@@ -42,21 +44,24 @@ class RectangleTest {
     }
 
     @Test
-    void getWidthTest() {
+    void getWidthTest()
+    {
         assertNotEquals(2.99, rectangle.getWidth());
         assertEquals(3, rectangle.getWidth());
         assertNotEquals(3.01, rectangle.getWidth());
     }
 
     @Test
-    void getHeightTest() {
+    void getHeightTest()
+    {
         assertNotEquals(5.99, rectangle.getHeight());
         assertEquals(6, rectangle.getHeight());
         assertNotEquals(6.01, rectangle.getHeight());
     }
 
     @Test
-    void getOrientationTest() {
+    void getOrientationTest()
+    {
         assertNotEquals(0.01, rectangle.getOrientation());
         assertEquals(0, rectangle.getOrientation());
         assertNotEquals(-0.01, rectangle.getOrientation());

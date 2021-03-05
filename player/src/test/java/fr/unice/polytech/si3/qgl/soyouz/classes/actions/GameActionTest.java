@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GameActionTest {
+class GameActionTest
+{
 
     Marin sailor;
     Marin pirate;
@@ -16,15 +17,17 @@ class GameActionTest {
     MoveAction moveAction;
 
     @BeforeEach
-    void init() {
+    void init()
+    {
         sailor = new Marin(1, 0, 0, "Tom Pouce");
-        pirate = new Marin(2, 1,1, "Jack Sparrow");
+        pirate = new Marin(2, 1, 1, "Jack Sparrow");
         oarAction = new OarAction(sailor);
         moveAction = new MoveAction(sailor, 0, 0);
     }
 
     @Test
-    void getSailorIdTest() {
+    void getSailorIdTest()
+    {
         assertEquals(sailor.getId(), oarAction.getSailorId());
         assertEquals(sailor.getId(), moveAction.getSailorId());
         assertNotEquals(pirate.getId(), oarAction.getSailorId());
@@ -32,7 +35,8 @@ class GameActionTest {
     }
 
     @Test
-    void getSailorTest() {
+    void getSailorTest()
+    {
         assertEquals(sailor, oarAction.getSailor());
         assertEquals(sailor, moveAction.getSailor());
         assertNotEquals(pirate, oarAction.getSailor());
@@ -40,7 +44,8 @@ class GameActionTest {
     }
 
     @Test
-    void getEntityNeededTest() {
+    void getEntityNeededTest()
+    {
         assertEquals(Rame.class, oarAction.getEntityNeeded());
         assertNull(moveAction.getEntityNeeded());
         assertNotEquals(Gouvernail.class, oarAction.getEntityNeeded());

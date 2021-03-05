@@ -1,156 +1,156 @@
 {
-  "goal": {
-    "mode": "REGATTA",
-    "checkpoints": [
-      {
+    "goal": {
+        "mode": "REGATTA",
+        "checkpoints": [
+            {
+                "position": {
+                    "x": 450.20463847203257,
+                    "y": 932.4324324324338
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "position": {
+                    "x": 1084.5839017735332,
+                    "y": -54.05405405405337
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "position": {
+                    "x": 738.7448840381987,
+                    "y": -382.4324324324324
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 50
+                }
+            },
+            {
+                "position": {
+                    "x": 477.4897680763976,
+                    "y": -54.054054054053665
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "position": {
+                    "x": 90.9276944065494,
+                    "y": -398.6486486486496
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 50
+                }
+            },
+            {
+                "position": {
+                    "x": -199.86357435197826,
+                    "y": 1.545430450278218e-13
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 60
+                }
+            }
+        ]
+    },
+    "ship": {
+        "type": "ship",
+        "life": 300,
         "position": {
-          "x": 450.20463847203257,
-          "y": 932.4324324324338
+            "x": -190.9959072305594,
+            "y": -3.730349362740526e-14,
+            "orientation": 0.9773843811168246
         },
-        "shape": {
-          "type": "circle",
-          "radius": 100
-        }
-      },
-      {
-        "position": {
-          "x": 1084.5839017735332,
-          "y": -54.05405405405337
+        "name": "Péquod",
+        "deck": {
+            "width": 3,
+            "length": 4
         },
+        "entities": [
+            {
+                "x": 0,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 0,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 1,
+                "type": "rudder"
+            }
+        ],
         "shape": {
-          "type": "circle",
-          "radius": 100
+            "type": "rectangle",
+            "width": 3,
+            "height": 4,
+            "orientation": 0.9773843811168246
         }
-      },
-      {
-        "position": {
-          "x": 738.7448840381987,
-          "y": -382.4324324324324
+    },
+    "sailors": [
+        {
+            "x": 0,
+            "y": 0,
+            "id": 0,
+            "name": "Edward Teach"
         },
-        "shape": {
-          "type": "circle",
-          "radius": 50
-        }
-      },
-      {
-        "position": {
-          "x": 477.4897680763976,
-          "y": -54.054054054053665
+        {
+            "x": 0,
+            "y": 1,
+            "id": 1,
+            "name": "Edward Pouce"
         },
-        "shape": {
-          "type": "circle",
-          "radius": 100
-        }
-      },
-      {
-        "position": {
-          "x": 90.9276944065494,
-          "y": -398.6486486486496
+        {
+            "x": 1,
+            "y": 0,
+            "id": 2,
+            "name": "Tom Pouce"
         },
-        "shape": {
-          "type": "circle",
-          "radius": 50
-        }
-      },
-      {
-        "position": {
-          "x": -199.86357435197826,
-          "y": 1.545430450278218e-13
+        {
+            "x": 1,
+            "y": 1,
+            "id": 3,
+            "name": "Jack Teachiii"
         },
-        "shape": {
-          "type": "circle",
-          "radius": 60
+        {
+            "x": 1,
+            "y": 2,
+            "id": 4,
+            "name": "Jack Pouce"
         }
-      }
     ]
-  },
-  "ship": {
-    "type": "ship",
-    "life": 300,
-    "position": {
-      "x": -190.9959072305594,
-      "y": -3.730349362740526e-14,
-      "orientation": 0.9773843811168246
-    },
-    "name": "Péquod",
-    "deck": {
-      "width": 3,
-      "length": 4
-    },
-    "entities": [
-      {
-        "x": 0,
-        "y": 0,
-        "type": "oar"
-      },
-      {
-        "x": 0,
-        "y": 2,
-        "type": "oar"
-      },
-      {
-        "x": 1,
-        "y": 0,
-        "type": "oar"
-      },
-      {
-        "x": 1,
-        "y": 2,
-        "type": "oar"
-      },
-      {
-        "x": 2,
-        "y": 0,
-        "type": "oar"
-      },
-      {
-        "x": 2,
-        "y": 2,
-        "type": "oar"
-      },
-      {
-        "x": 3,
-        "y": 1,
-        "type": "rudder"
-      }
-    ],
-    "shape": {
-      "type": "rectangle",
-      "width": 3,
-      "height": 4,
-      "orientation": 0.9773843811168246
-    }
-  },
-  "sailors": [
-    {
-      "x": 0,
-      "y": 0,
-      "id": 0,
-      "name": "Edward Teach"
-    },
-    {
-      "x": 0,
-      "y": 1,
-      "id": 1,
-      "name": "Edward Pouce"
-    },
-    {
-      "x": 1,
-      "y": 0,
-      "id": 2,
-      "name": "Tom Pouce"
-    },
-    {
-      "x": 1,
-      "y": 1,
-      "id": 3,
-      "name": "Jack Teachiii"
-    },
-    {
-      "x": 1,
-      "y": 2,
-      "id": 4,
-      "name": "Jack Pouce"
-    }
-  ]
 }

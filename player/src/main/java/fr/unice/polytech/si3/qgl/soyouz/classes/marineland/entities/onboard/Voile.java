@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Sail entity.
  */
-public class Voile extends OnboardEntity {
+public class Voile extends OnboardEntity
+{
 
     private boolean opened;
 
@@ -15,7 +16,9 @@ public class Voile extends OnboardEntity {
      * @param x Abscissa of the entity.
      * @param y Ordinate of the entity.
      */
-    public Voile(@JsonProperty("x") int x,@JsonProperty("y") int y,@JsonProperty("opened") Boolean opened) {
+    public Voile(@JsonProperty("x") int x, @JsonProperty("y") int y,
+                 @JsonProperty("opened") Boolean opened)
+    {
         super(x, y);
         this.opened = opened;
     }
@@ -25,7 +28,8 @@ public class Voile extends OnboardEntity {
      *
      * @return true if opened, false otherwise.
      */
-    public boolean isOpened() {
+    public boolean isOpened()
+    {
         return opened;
     }
 
@@ -34,7 +38,8 @@ public class Voile extends OnboardEntity {
      *
      * @param opened True if opened, false if closed.
      */
-    public void setOpened(boolean opened) {
+    public void setOpened(boolean opened)
+    {
         this.opened = opened;
     }
 
@@ -45,7 +50,8 @@ public class Voile extends OnboardEntity {
      * @return true if the two objects are equals, false otherwise.
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         return super.equals(o);
     }
 
@@ -55,7 +61,8 @@ public class Voile extends OnboardEntity {
      * @return the hash code associated to the current object.
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return super.hashCode();
     }
 }

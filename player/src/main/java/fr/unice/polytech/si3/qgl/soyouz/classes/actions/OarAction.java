@@ -5,7 +5,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 
 /**
  * <p>
- * Rowing action. Needs the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin} to be located on
+ * Rowing action. Needs the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin} to
+ * be located on
  * a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame}.
  * </p>
  */
@@ -16,7 +17,8 @@ public class OarAction extends GameAction
      *
      * @param sailor to perform the action.
      */
-    public OarAction(Marin sailor) {
+    public OarAction(Marin sailor)
+    {
         super(sailor, Rame.class);
     }
 
@@ -26,7 +28,8 @@ public class OarAction extends GameAction
      * @return the string associated to the current object.
      */
     @Override
-    public String toString() {
-        return "OarAction : sailor : "+getSailor().toString();
+    public String toString()
+    {
+        return "OarAction : sailor : " + getSailor().toString();
     }
 }

@@ -21,13 +21,14 @@ public class Position
     /**
      * Constructor.
      *
-     * @param x Abscissa of the point.
-     * @param y Ordinate of the point.
+     * @param x           Abscissa of the point.
+     * @param y           Ordinate of the point.
      * @param orientation Orientation of the point.
      */
     public Position(@JsonProperty("x") double x,
                     @JsonProperty("y") double y,
-                    @JsonProperty("orientation")double orientation) {
+                    @JsonProperty("orientation") double orientation)
+    {
         this.x = x;
         this.y = y;
         this.orientation = orientation;
@@ -69,7 +70,8 @@ public class Position
      * @param pos The second point.
      * @return a pair that represent the distance between those two points.
      */
-    public Pair<Double, Double> getDistance(Position pos){
+    public Pair<Double, Double> getDistance(Position pos)
+    {
         return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
     }
 
@@ -79,8 +81,9 @@ public class Position
      * @param pos The second position.
      * @return the distance between this and pos.
      */
-    public double getLength(Position pos){
-        return sqrt(pow(this.getX() - pos.getX(),2) + pow(this.getY() - pos.getY(),2));
+    public double getLength(Position pos)
+    {
+        return sqrt(pow(this.getX() - pos.getX(), 2) + pow(this.getY() - pos.getY(), 2));
     }
 
     /**
@@ -90,13 +93,14 @@ public class Position
      * @return true if they are, false otherwise.
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Position position = (Position) o;
         return Double.compare(position.x, x) == 0 &&
-                Double.compare(position.y, y) == 0 &&
-                Double.compare(position.orientation, orientation) == 0;
+            Double.compare(position.y, y) == 0 &&
+            Double.compare(position.orientation, orientation) == 0;
     }
 
     /**
@@ -105,7 +109,8 @@ public class Position
      * @return the hashcode of the position.
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(x, y, orientation);
     }
 
@@ -115,15 +120,16 @@ public class Position
      * @param pos The second point position.
      * @return true if they are facing, false otherwise.
      */
-    public boolean isFacingPosition(Position pos) {
+    public boolean isFacingPosition(Position pos)
+    {
         return abs(atan2(pos.getY() - this.getY(), pos.getX() - this.getX()) - this.getOrientation()) < 0.01;
     }
 
     /**
      * Get a new position after adding some parameters.
      *
-     * @param x A X translation.
-     * @param y A Y translation.
+     * @param x   A X translation.
+     * @param y   A Y translation.
      * @param rot A rotation.
      * @return the new position after adding the new parameters.
      */

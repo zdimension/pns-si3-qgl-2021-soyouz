@@ -17,8 +17,8 @@ public class NextRoundParameters
     /**
      * Constructor.
      *
-     * @param ship The current state of the ship.
-     * @param wind The current state of the wind.
+     * @param ship            The current state of the ship.
+     * @param wind            The current state of the wind.
      * @param visibleEntities The current state of onboard entities.
      */
     public NextRoundParameters(@JsonProperty("ship") Bateau ship,
@@ -55,7 +55,8 @@ public class NextRoundParameters
      *
      * @return the wind if there is a blow this turn.
      */
-    public Wind getWind() {
+    public Wind getWind()
+    {
         return wind;
     }
 }

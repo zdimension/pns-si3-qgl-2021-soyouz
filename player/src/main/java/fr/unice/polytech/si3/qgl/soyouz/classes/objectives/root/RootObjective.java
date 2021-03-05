@@ -6,7 +6,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
 /**
  * Basic class of objective.
  */
-public abstract class RootObjective extends CompositeObjective {
+public abstract class RootObjective extends CompositeObjective
+{
 
     /**
      * Determine if a goal is validate or not.

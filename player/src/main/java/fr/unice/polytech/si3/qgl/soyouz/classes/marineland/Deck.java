@@ -40,10 +40,11 @@ public class Deck
      * @return the string associated to the current object.
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Deck{" +
-                "width=" + width +
-                ", length=" + length +
-                '}';
+            "width=" + width +
+            ", length=" + length +
+            '}';
     }
 }

@@ -3,61 +3,76 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class TempRoundChoiceTest {
+class TempRoundChoiceTest
+{
 
     @BeforeEach
-    void setUp() {
+    void setUp()
+    {
     }
 
     @Test
-    void getSailorsJob() {
+    void getSailorsJob()
+    {
     }
 
     @Test
-    void getUsedOnBoardEntity() {
+    void getUsedOnBoardEntity()
+    {
     }
 
     @Test
-    void getUnmovedVacantSailors() {
+    void getUnmovedVacantSailors()
+    {
     }
 
     @Test
-    void getMovedVacantSailors() {
+    void getMovedVacantSailors()
+    {
     }
 
     @Test
-    void getBusySailors() {
+    void getBusySailors()
+    {
     }
 
     @Test
-    void getAllActions() {
+    void getAllActions()
+    {
     }
 
     @Test
-    void getAllMoves() {
+    void getAllMoves()
+    {
     }
 
     @Test
-    void hireSailor() {
+    void hireSailor()
+    {
     }
 
     @Test
-    void testHireSailor() {
+    void testHireSailor()
+    {
     }
 
     @Test
-    void testHireSailor1() {
+    void testHireSailor1()
+    {
     }
 
     @Test
-    void testHireSailor2() {
+    void testHireSailor2()
+    {
     }
 
     @Test
-    void moveSailor() {
+    void moveSailor()
+    {
     }
 
     @Test
-    void findFirstVacantSailorHere() {
+    void findFirstVacantSailorHere()
+    {
     }
 }

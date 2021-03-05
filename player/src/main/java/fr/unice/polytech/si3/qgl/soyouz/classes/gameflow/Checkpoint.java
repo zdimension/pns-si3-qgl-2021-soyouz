@@ -4,7 +4,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 
 /**
- * Checkpoints : defined by a shape, a size and a position. Need to be crossed by the ship in order to win.
+ * Checkpoints : defined by a shape, a size and a position. Need to be crossed by the ship in
+ * order to win.
  */
 public class Checkpoint
 {

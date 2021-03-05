@@ -38,10 +38,11 @@ public class Simulator extends JFrame
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final Timer timer;
-    private final int COMP_STEPS =10;
+    private final int COMP_STEPS = 10;
     private int currentStep = 0;
     private double rotIncrement;
     private double spdIncrement;
+
     public Simulator() throws IOException
     {
         System.setProperty("sun.awt.noerasebackground", "true");
@@ -49,15 +50,18 @@ public class Simulator extends JFrame
         setLayout(new BorderLayout());
         setSize(600, 600);
 
-        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week4.json")), InitGameParameters.class);
+        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week4.json")),
+            InitGameParameters.class);
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
 
-        OBJECT_MAPPER.registerModule(new SimpleModule() {{
+        OBJECT_MAPPER.registerModule(new SimpleModule()
+        {{
             addDeserializer(Marin.class, new JsonDeserializer<Marin>()
             {
                 @Override
-                public Marin deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                public Marin deserialize(JsonParser jsonParser,
+                                         DeserializationContext deserializationContext) throws IOException, JsonProcessingException
                 {
                     return model.getSailorById(jsonParser.getValueAsInt()).orElse(null);
                 }
@@ -65,31 +69,34 @@ public class Simulator extends JFrame
             addDeserializer(OarAction.class, new JsonDeserializer<OarAction>()
             {
                 @Override
-                public OarAction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                public OarAction deserialize(JsonParser jsonParser,
+                                             DeserializationContext deserializationContext) throws IOException, JsonProcessingException
                 {
-                    return new OarAction(model.getSailorById(((IntNode)OBJECT_MAPPER.readTree(jsonParser).get("sailorId")).asInt()).get());
+                    return new OarAction(model.getSailorById(((IntNode) OBJECT_MAPPER.readTree(jsonParser).get("sailorId")).asInt()).get());
                 }
             });
             addDeserializer(MoveAction.class, new JsonDeserializer<>()
             {
                 @Override
-                public MoveAction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                public MoveAction deserialize(JsonParser jsonParser,
+                                              DeserializationContext deserializationContext) throws IOException, JsonProcessingException
                 {
                     var tree = OBJECT_MAPPER.readTree(jsonParser);
-                    return new MoveAction(model.getSailorById(((IntNode)tree.get("sailorId")).asInt()).get(),
-                        ((IntNode)tree.get("xdistance")).asInt(),
-                        ((IntNode)tree.get("ydistance")).asInt()
+                    return new MoveAction(model.getSailorById(((IntNode) tree.get("sailorId")).asInt()).get(),
+                        ((IntNode) tree.get("xdistance")).asInt(),
+                        ((IntNode) tree.get("ydistance")).asInt()
                     );
                 }
             });
             addDeserializer(TurnAction.class, new JsonDeserializer<>()
             {
                 @Override
-                public TurnAction deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                public TurnAction deserialize(JsonParser jsonParser,
+                                              DeserializationContext deserializationContext) throws IOException, JsonProcessingException
                 {
                     var tree = OBJECT_MAPPER.readTree(jsonParser);
-                    return new TurnAction(model.getSailorById(((IntNode)tree.get("sailorId")).asInt()).get(),
-                            ((DoubleNode)tree.get("rotation")).asDouble()
+                    return new TurnAction(model.getSailorById(((IntNode) tree.get("sailorId")).asInt()).get(),
+                        ((DoubleNode) tree.get("rotation")).asDouble()
                     );
                 }
             });
@@ -123,7 +130,7 @@ public class Simulator extends JFrame
                     spdIncrement * Math.cos(cur.getOrientation()),
                     spdIncrement * Math.sin(cur.getOrientation()),
                     rotIncrement)));
-                System.out.println("Ship position : "+model.getShip().getPosition());
+                System.out.println("Ship position : " + model.getShip().getPosition());
                 if (++currentStep >= COMP_STEPS)
                 {
                     timer.stop();
@@ -136,21 +143,26 @@ public class Simulator extends JFrame
         btnNext.addActionListener(event ->
         {
             btnNext.setEnabled(false);
-            var np = new NextRoundParameters(model.getShip(), null, new Entity[0]); //TODO J'ai mis null a la place du vent
+            var np = new NextRoundParameters(model.getShip(), null, new Entity[0]); //TODO J'ai
+            // mis null a la place du vent
             try
             {
-                var res = OBJECT_MAPPER.readValue(cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np)), GameAction[].class);
+                var res =
+                    OBJECT_MAPPER.readValue(cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np)), GameAction[].class);
                 var activeOars = new ArrayList<Rame>();
                 AtomicReference<Double> rudderRotate = new AtomicReference<>((double) 0);
                 for (GameAction act : res)
                 {
                     var entType = act.entityNeeded;
-                    if(entType != null){
+                    if (entType != null)
+                    {
 
                         model.getShip().getEntityHere(act.getSailor().getGridPosition()).ifPresentOrElse(ent ->
                         {
                             if (!(entType.isInstance(ent)))
+                            {
                                 return;
+                            }
 
                             if (usedEntities.contains(ent))
                             {
@@ -158,15 +170,16 @@ public class Simulator extends JFrame
                                 return;
                             }
 
-                            //System.out.println("Entity " + ent + " used by sailor " + act.getSailorId());
+                            //System.out.println("Entity " + ent + " used by sailor " + act
+                            // .getSailorId());
 
                             usedEntities.add(ent);
 
                             if (act instanceof OarAction)
                             {
-                                activeOars.add((Rame)ent);
+                                activeOars.add((Rame) ent);
                             }
-                            if(act instanceof TurnAction)
+                            if (act instanceof TurnAction)
                             {
                                 rudderRotate.set(((TurnAction) act).getRotation());
                             }
@@ -179,7 +192,7 @@ public class Simulator extends JFrame
                     {
                         if (act instanceof MoveAction)
                         {
-                            var mv = (MoveAction)act;
+                            var mv = (MoveAction) act;
                             mv.getSailor().moveRelative(mv.getXDistance(), mv.getYDistance());
                         }
                     }

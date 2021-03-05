@@ -12,7 +12,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,8 +31,8 @@ public class Bateau extends AutreBateau
     /**
      * Constructor.
      *
-     * @param name The name of the boat.
-     * @param deck The deck of the boat.
+     * @param name     The name of the boat.
+     * @param deck     The deck of the boat.
      * @param entities The entities on board.
      */
     public Bateau(@JsonProperty("name") String name,
@@ -42,7 +41,8 @@ public class Bateau extends AutreBateau
     {
         this.name = name;
         this.deck = deck;
-        this.entities = Arrays.stream(entities).filter(Objects::nonNull).toArray(OnboardEntity[]::new);
+        this.entities =
+            Arrays.stream(entities).filter(Objects::nonNull).toArray(OnboardEntity[]::new);
     }
 
     /**
@@ -81,7 +81,8 @@ public class Bateau extends AutreBateau
      * @return the number of Oar onboard.
      */
     @JsonIgnore
-    public int getNumberOar(){
+    public int getNumberOar()
+    {
         return (int) Arrays.stream(getEntities()).filter(e -> e instanceof Rame).count();
     }
 
@@ -91,25 +92,32 @@ public class Bateau extends AutreBateau
      * @param posObs Position of obstacle.
      * @return true if the obstacle is on the left of the boat.
      */
-    public boolean isPositionOnLeft(Position posObs){
+    public boolean isPositionOnLeft(Position posObs)
+    {
         var angle =
-                Math.atan((posObs.getX() - (this.getPosition().getX()+Math.cos(this.getPosition().getOrientation())))
-                        /(1+(this.getPosition().getY() + Math.sin(this.getPosition().getOrientation()))*posObs.getY()));
-        return  angle >= 0 && angle <= Math.PI;
+            Math.atan((posObs.getX() - (this.getPosition().getX() + Math.cos(this.getPosition().getOrientation())))
+                / (1 + (this.getPosition().getY() + Math.sin(this.getPosition().getOrientation())) * posObs.getY()));
+        return angle >= 0 && angle <= Math.PI;
     }
 
     /**
-     * Determines which {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
+     * Determines which
+     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
      * set on a specific {@link fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point}.
      *
      * @param xPos The abscissa of the Point to analyse.
      * @param yPos The ordinate of the Point to analyse.
      * @return optional entity on the given cell.
      */
-    public Optional<OnboardEntity> getEntityHere(int xPos, int yPos){
-        for(OnboardEntity ent : entities)
-            if(ent.getX() == xPos && ent.getY() == yPos)
+    public Optional<OnboardEntity> getEntityHere(int xPos, int yPos)
+    {
+        for (OnboardEntity ent : entities)
+        {
+            if (ent.getX() == xPos && ent.getY() == yPos)
+            {
                 return Optional.of(ent);
+            }
+        }
         return Optional.empty();
     }
 
@@ -118,7 +126,7 @@ public class Bateau extends AutreBateau
      *
      * @param xPos The potential abscissa of the object.
      * @param yPos The potential ordinate of the object.
-     * @param cls The Class of object researched.
+     * @param cls  The Class of object researched.
      * @return true if there is the object, false otherwise.
      */
     public boolean hasAt(int xPos, int yPos, Class<?> cls)
@@ -127,13 +135,15 @@ public class Bateau extends AutreBateau
     }
 
     /**
-     * Determines which {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
+     * Determines which
+     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
      * set on a specific {@link fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point}.
      *
      * @param pos The coords we want to analyse.
      * @return optional entity on the given cell.
      */
-    public Optional<OnboardEntity> getEntityHere(Pair<Integer, Integer> pos){
+    public Optional<OnboardEntity> getEntityHere(Pair<Integer, Integer> pos)
+    {
         return getEntityHere(pos.getFirst(), pos.getSecond());
     }
 
@@ -142,13 +152,21 @@ public class Bateau extends AutreBateau
      *
      * @return a Pair of oars (left, right).
      */
-    public Pair<Integer, Integer> getNbOfOarOnEachSide() {
-        var oars = Util.filterType(Arrays.stream(this.getEntities()), Rame.class).collect(Collectors.toList());
+    public Pair<Integer, Integer> getNbOfOarOnEachSide()
+    {
+        var oars =
+            Util.filterType(Arrays.stream(this.getEntities()), Rame.class).collect(Collectors.toList());
         int leftOar = 0, rightOar = 0;
-        for (var oar : oars) {
+        for (var oar : oars)
+        {
             if (oar.isLeft())
+            {
                 leftOar++;
-            else rightOar++;
+            }
+            else
+            {
+                rightOar++;
+            }
         }
         return Pair.of(leftOar, rightOar);
     }
@@ -159,7 +177,8 @@ public class Bateau extends AutreBateau
      * @param ent to find the position of.
      * @return the fist position found of the given entity.
      */
-    public Pair<Integer,Integer> findFirstPosOfEntity(Class<? extends OnboardEntity> ent){
+    public Pair<Integer, Integer> findFirstPosOfEntity(Class<? extends OnboardEntity> ent)
+    {
         return Util.filterType(Arrays.stream(this.entities), ent).findFirst()
             .map(OnboardEntity::getPosCoord).orElse(null);
     }
@@ -171,7 +190,8 @@ public class Bateau extends AutreBateau
      * @param <T> the type of the entity.
      * @return the fist position found of the given entity.
      */
-    public <T extends OnboardEntity> T findFirstEntity(Class<T> ent){
+    public <T extends OnboardEntity> T findFirstEntity(Class<T> ent)
+    {
         return Util.filterType(Arrays.stream(this.entities), ent).findFirst().orElse(null);
     }
 
@@ -181,9 +201,10 @@ public class Bateau extends AutreBateau
      * @return the string associated to the current object.
      */
     @Override
-    public String toString() {
-        var len = 2*deck.getLength()+2;
-        var wid = 2* deck.getWidth() +1;
+    public String toString()
+    {
+        var len = 2 * deck.getLength() + 2;
+        var wid = 2 * deck.getWidth() + 1;
         var str = new char[len][wid];
         var nbEnt = entities.length;
 
@@ -192,23 +213,30 @@ public class Bateau extends AutreBateau
             Arrays.fill(line, ' ');
         }
         str[0][1] = '/';
-        str[0][wid-2] = '\\';
-        for(int y = 0; y < wid; y++){
-            for(int x = 1; x < len; x++){
-                str[x][y] = ((y%2 ==0) && (x%2==0) ? '|' : ((y%2 == 1) && (x%2== 1) ? '_' : ' '));
+        str[0][wid - 2] = '\\';
+        for (int y = 0; y < wid; y++)
+        {
+            for (int x = 1; x < len; x++)
+            {
+                str[x][y] = ((y % 2 == 0) && (x % 2 == 0) ? '|' : ((y % 2 == 1) && (x % 2 == 1) ?
+                    '_' : ' '));
             }
         }
 
-        for(int i = 0; i < nbEnt; i++){
+        for (int i = 0; i < nbEnt; i++)
+        {
             var ent = entities[i];
-            if(ent instanceof Rame){
-                str[ent.getX()*2 +2][ent.getY()*2+1] = 'R';
+            if (ent instanceof Rame)
+            {
+                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'R';
             }
-            else if(ent instanceof Gouvernail){
-                str[ent.getX()*2 +2][ent.getY()*2+1] = 'G';
+            else if (ent instanceof Gouvernail)
+            {
+                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'G';
             }
-            else{
-                str[ent.getX()*2 +2][ent.getY()*2+1] = 'E';
+            else
+            {
+                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'E';
             }
             //Rame
             //voiLe
@@ -218,8 +246,8 @@ public class Bateau extends AutreBateau
         }
 
         var strBateau = Arrays.stream(str).map(String::new).collect(Collectors.joining("\n"));
-        String info = name+" | life : "+getLife()+" Position : "+getPosition()+"\n";
+        String info = name + " | life : " + getLife() + " Position : " + getPosition() + "\n";
 
-        return info+strBateau;
+        return info + strBateau;
     }
 }

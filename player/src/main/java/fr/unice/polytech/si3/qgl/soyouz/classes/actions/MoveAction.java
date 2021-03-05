@@ -7,7 +7,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 /**
  * Action to move a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin}.
  */
-public class MoveAction extends GameAction{
+public class MoveAction extends GameAction
+{
     private int xdistance;
     private int ydistance;
 
@@ -15,15 +16,17 @@ public class MoveAction extends GameAction{
      * Constructor.
      *
      * @param sailor The sailor that we want to move.
-     * @param x Horizontal movement.
-     * @param y Vertical movement.
+     * @param x      Horizontal movement.
+     * @param y      Vertical movement.
      */
     public MoveAction(
         Marin sailor,
         @JsonProperty("xdistance") int x,
-        @JsonProperty("ydistance") int y) {
+        @JsonProperty("ydistance") int y)
+    {
         super(sailor, null);
-        if (x + y <= 5) {
+        if (x + y <= 5)
+        {
             xdistance = x;
             ydistance = y;
         }
@@ -54,8 +57,10 @@ public class MoveAction extends GameAction{
      *
      * @return the new position of the sailor if moved according to this.
      */
-    public Pair<Integer,Integer> newPos(){
-        return Pair.of(getSailor().getPos().first+xdistance, getSailor().getPos().second+ydistance);
+    public Pair<Integer, Integer> newPos()
+    {
+        return Pair.of(getSailor().getPos().first + xdistance,
+            getSailor().getPos().second + ydistance);
     }
 
     /**
@@ -65,7 +70,8 @@ public class MoveAction extends GameAction{
      * @return true if this and obj are equals, false otherwise.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (!(obj instanceof MoveAction))
         {
             return false;
@@ -75,7 +81,7 @@ public class MoveAction extends GameAction{
             return true;
         }
         var move = (MoveAction) obj;
-        return this.xdistance == move.getXDistance() && this.ydistance == move.getYDistance() ;
+        return this.xdistance == move.getXDistance() && this.ydistance == move.getYDistance();
     }
 
     /**
@@ -84,7 +90,8 @@ public class MoveAction extends GameAction{
      * @return the hashcode linked to the current object.
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return super.hashCode();
     }
 
@@ -94,7 +101,8 @@ public class MoveAction extends GameAction{
      * @return the string associated to the current object.
      */
     @Override
-    public String toString() {
-        return "MoveAction : x = "+xdistance+" y = "+ ydistance+" | sailor : "+getSailor().toString();
+    public String toString()
+    {
+        return "MoveAction : x = " + xdistance + " y = " + ydistance + " | sailor : " + getSailor().toString();
     }
 }

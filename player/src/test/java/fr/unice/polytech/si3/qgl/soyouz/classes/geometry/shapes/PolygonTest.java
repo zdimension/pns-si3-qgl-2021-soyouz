@@ -8,48 +8,50 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PolygonTest {
+class PolygonTest
+{
 
     Polygon polygon;
 
     @BeforeEach
-    void init() {
+    void init()
+    {
         Cockpit cockpit = new Cockpit();
 
         cockpit.initGame("{\"goal\": {\n" +
-                "    \"mode\": \"REGATTA\",\n" +
-                "    \"checkpoints\": [\n" +
-                "      {\n" +
-                "        \"position\": {\n" +
-                "          \"x\": 1000,\n" +
-                "          \"y\": 0,\n" +
-                "          \"orientation\": 0\n" +
-                "        },\n" +
-                "        \"shape\": {\n" +
-                "          \"type\": \"polygon\",\n" +
-                "          \"orientation\": 1,\n" +
-                "          \"vertices\" : [\n" +
-                "            {\n" +
-                "                \"x\" : 1005,\n" +
-                "                \"y\" : -5\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\" : 1005,\n" +
-                "                \"y\" : 5\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\" : 1010,\n" +
-                "                \"y\" : 5\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\" : 1010,\n" +
-                "                \"y\" : -5\n" +
-                "            }\n" +
-                "           ]\n" +
-                "        }\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  }}");
+            "    \"mode\": \"REGATTA\",\n" +
+            "    \"checkpoints\": [\n" +
+            "      {\n" +
+            "        \"position\": {\n" +
+            "          \"x\": 1000,\n" +
+            "          \"y\": 0,\n" +
+            "          \"orientation\": 0\n" +
+            "        },\n" +
+            "        \"shape\": {\n" +
+            "          \"type\": \"polygon\",\n" +
+            "          \"orientation\": 1,\n" +
+            "          \"vertices\" : [\n" +
+            "            {\n" +
+            "                \"x\" : 1005,\n" +
+            "                \"y\" : -5\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"x\" : 1005,\n" +
+            "                \"y\" : 5\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"x\" : 1010,\n" +
+            "                \"y\" : 5\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"x\" : 1010,\n" +
+            "                \"y\" : -5\n" +
+            "            }\n" +
+            "           ]\n" +
+            "        }\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  }}");
 
         InitGameParameters ip = cockpit.getIp();
         RegattaGoal rg = (RegattaGoal) ip.getGoal();
@@ -57,12 +59,14 @@ class PolygonTest {
     }
 
     @Test
-    void getOrientationTest() {
+    void getOrientationTest()
+    {
         assertEquals(1, polygon.getOrientation());
     }
 
     @Test
-    void getVerticesTest() {
+    void getVerticesTest()
+    {
         assertEquals(4, polygon.getVertices().length);
     }
 }

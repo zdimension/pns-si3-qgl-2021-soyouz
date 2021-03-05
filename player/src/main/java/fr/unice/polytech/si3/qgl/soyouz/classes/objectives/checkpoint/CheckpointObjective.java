@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * Checkpoint type of objective
  */
-public class CheckpointObjective extends CompositeObjective {
+public class CheckpointObjective extends CompositeObjective
+{
 
     private final Checkpoint cp;
 
@@ -26,7 +27,8 @@ public class CheckpointObjective extends CompositeObjective {
      *
      * @param checkpoint The checkpoint to reach.
      */
-    public CheckpointObjective(Checkpoint checkpoint) {
+    public CheckpointObjective(Checkpoint checkpoint)
+    {
         cp = checkpoint;
     }
 
@@ -37,9 +39,10 @@ public class CheckpointObjective extends CompositeObjective {
      * @return true if the boat is in, false otherwise.
      */
     @Override
-    public boolean isValidated(GameState state) {
+    public boolean isValidated(GameState state)
+    {
         return state.getNp().getShip().getPosition().getLength(cp.getPosition())
-                < ((Circle) cp.getShape()).getRadius();
+            < ((Circle) cp.getShape()).getRadius();
     }
 
     /**
@@ -49,7 +52,8 @@ public class CheckpointObjective extends CompositeObjective {
      * @return a list of action to be closer of the goal.
      */
     @Override
-    public List<GameAction> resolve(GameState state) {
+    public List<GameAction> resolve(GameState state)
+    {
 
         Bateau boat = state.getNp().getShip();
         double angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
@@ -57,13 +61,17 @@ public class CheckpointObjective extends CompositeObjective {
         int nbSailors = state.getIp().getSailors().length;
         Pair<Integer, Integer> nbOarOnEachSide = state.getIp().getShip().getNbOfOarOnEachSide();
 
-        RowersObjective rowersObjective = new RowersObjective(angleToCp, distanceToCp, nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
+        RowersObjective rowersObjective = new RowersObjective(angleToCp, distanceToCp,
+            nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
         OarConfiguration wantedOarConfiguration = rowersObjective.resolve();
 
-        RudderObjective rudderObjective = new RudderObjective(angleToCp - wantedOarConfiguration.getAngleOfRotation());
+        RudderObjective rudderObjective =
+            new RudderObjective(angleToCp - wantedOarConfiguration.getAngleOfRotation());
         double wantedRudderRotation = rudderObjective.resolve();
 
-        WantedSailorConfig wanted = new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), state.getIp().getShip().findFirstEntity(Gouvernail.class), wantedRudderRotation);
+        WantedSailorConfig wanted =
+            new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(),
+                state.getIp().getShip().findFirstEntity(Gouvernail.class), wantedRudderRotation);
 
         var roundObj = new RoundObjective(wanted);
         return roundObj.resolve(state);
@@ -75,15 +83,19 @@ public class CheckpointObjective extends CompositeObjective {
      * @param boat Our boat.
      * @return an angle in rad.
      */
-    private double calculateAngleBetweenBoatAndCheckpoint(Bateau boat) {
+    private double calculateAngleBetweenBoatAndCheckpoint(Bateau boat)
+    {
         double boatOrientation = boat.getPosition().getOrientation();
         var boatVector = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
-        var cpVector = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(), cp.getPosition().getY() - boat.getPosition().getY());
+        var cpVector = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(),
+            cp.getPosition().getY() - boat.getPosition().getY());
         var normDirection = Math.sqrt(Math.pow(cpVector.first, 2) + Math.pow(cpVector.second, 2));
         var scalar = boatVector.first * cpVector.first + boatVector.second * cpVector.second;
         var angle = Math.acos(scalar / normDirection);
         if (cpVector.second - boatVector.second < 0)
+        {
             angle = -angle;
+        }
         return angle;
     }
 }

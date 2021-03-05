@@ -5,17 +5,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CockpitTest {
+class CockpitTest
+{
 
     Cockpit cockpit;
 
     @BeforeEach
-    void setUp() {
+    void setUp()
+    {
         this.cockpit = new Cockpit();
     }
 
     @Test
-    void nextRoundTest() {
+    void nextRoundTest()
+    {
         assertEquals("[]", this.cockpit.nextRound("{}"));
     }
 }
