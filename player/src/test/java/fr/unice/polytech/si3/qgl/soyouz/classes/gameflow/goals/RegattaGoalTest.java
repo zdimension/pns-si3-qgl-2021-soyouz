@@ -1,12 +1,10 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals;
 
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RegattaGoalTest {
 

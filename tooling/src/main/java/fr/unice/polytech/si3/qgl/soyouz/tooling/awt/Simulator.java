@@ -38,7 +38,10 @@ public class Simulator extends JFrame
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final Timer timer;
-
+    private final int COMP_STEPS =10;
+    private int currentStep = 0;
+    private double rotIncrement;
+    private double spdIncrement;
     public Simulator() throws IOException
     {
         System.setProperty("sun.awt.noerasebackground", "true");
@@ -200,9 +203,4 @@ public class Simulator extends JFrame
             }
         });
     }
-
-    private final int COMP_STEPS =10;
-    private int currentStep = 0;
-    private double rotIncrement;
-    private double spdIncrement;
 }

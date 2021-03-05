@@ -1,78 +1,65 @@
 {
   "goal": {
     "mode": "REGATTA",
-    "checkpoints":
-    [
+    "checkpoints": [
       {
-        "position":
-        {
-          "x":450.20463847203257,
-          "y":932.4324324324338
+        "position": {
+          "x": 450.20463847203257,
+          "y": 932.4324324324338
         },
-        "shape":
-        {
-          "type":"circle",
-          "radius":100
+        "shape": {
+          "type": "circle",
+          "radius": 100
         }
       },
       {
-        "position":
-        {
-          "x":1084.5839017735332,
-          "y":-54.05405405405337
+        "position": {
+          "x": 1084.5839017735332,
+          "y": -54.05405405405337
         },
-        "shape":
-        {
-          "type":"circle",
-          "radius":100
+        "shape": {
+          "type": "circle",
+          "radius": 100
         }
       },
       {
-        "position":
-        {
-          "x":738.7448840381987,
-          "y":-382.4324324324324
+        "position": {
+          "x": 738.7448840381987,
+          "y": -382.4324324324324
         },
-        "shape":
-        {
-          "type":"circle",
-          "radius":50
+        "shape": {
+          "type": "circle",
+          "radius": 50
         }
       },
       {
-        "position":
-        {
-          "x":477.4897680763976,
-          "y":-54.054054054053665
+        "position": {
+          "x": 477.4897680763976,
+          "y": -54.054054054053665
         },
-        "shape":
-        {
-          "type":"circle",
-          "radius":100
+        "shape": {
+          "type": "circle",
+          "radius": 100
         }
       },
       {
-        "position":
-        {
-          "x":90.9276944065494,
-          "y":-398.6486486486496
+        "position": {
+          "x": 90.9276944065494,
+          "y": -398.6486486486496
         },
-        "shape":
-        {
-          "type":"circle",
-          "radius":50
+        "shape": {
+          "type": "circle",
+          "radius": 50
         }
       },
       {
-        "position":
-        {
-          "x":-199.86357435197826,
-          "y":1.545430450278218e-13
+        "position": {
+          "x": -199.86357435197826,
+          "y": 1.545430450278218e-13
         },
-        "shape":
-        {
-          "type":"circle",
-          "radius":60
+        "shape": {
+          "type": "circle",
+          "radius": 60
         }
       }
     ]

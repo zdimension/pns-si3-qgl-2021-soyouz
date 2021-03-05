@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
+
 import java.util.List;
 
 public interface Objective {

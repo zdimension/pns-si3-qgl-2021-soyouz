@@ -1,14 +1,12 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
+
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 public class NextRoundParametersTest {
     Cockpit cockpit;
     NextRoundParameters np;

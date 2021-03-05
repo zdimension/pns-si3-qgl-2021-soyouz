@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
@@ -15,9 +14,8 @@ import java.util.logging.Logger;
  * Race type objective.
  */
 public class RegattaObjective extends RootObjective {
-    private RegattaGoal goalData;
     private static final Logger logger = Logger.getLogger(RoundObjective.class.getSimpleName());
-
+    private RegattaGoal goalData;
     private int numCheckpoint = 0;
     private CheckpointObjective currentCheckpoint;
 

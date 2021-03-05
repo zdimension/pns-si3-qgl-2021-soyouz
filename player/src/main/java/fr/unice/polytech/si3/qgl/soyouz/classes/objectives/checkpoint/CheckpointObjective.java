@@ -12,7 +12,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.WantedSailorConfig;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Checkpoint type of objective

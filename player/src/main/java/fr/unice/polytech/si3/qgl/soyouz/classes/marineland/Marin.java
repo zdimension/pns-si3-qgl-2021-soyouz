@@ -8,12 +8,29 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
  * He Ho Freshwater sailor !
  */
 public class Marin {
+    public static final int MAX_MOVE = 5;
     private int id;
     private int x;
     private int y;
     private String name;
 
-    public static final int MAX_MOVE = 5;
+    /**
+     * Constructor.
+     *
+     * @param id Its Id.
+     * @param x Its base x position.
+     * @param y Its base y position.
+     * @param name Its name.
+     */
+    public Marin(@JsonProperty("id") int id,
+                 @JsonProperty("x") int x,
+                 @JsonProperty("y") int y,
+                 @JsonProperty("name") String name) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.name = name;
+    }
 
     /**
      * Getter.
@@ -34,15 +51,6 @@ public class Marin {
     }
 
     /**
-     * Getter.
-     *
-     * @return the y position of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
      * Setters.
      *
      * @param x The abscissa to set.
@@ -50,6 +58,15 @@ public class Marin {
     public void setX(int x)
     {
         this.x = x;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return the y position of this on the {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
+     */
+    public int getY() {
+        return y;
     }
 
     /**
@@ -89,24 +106,6 @@ public class Marin {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param id Its Id.
-     * @param x Its base x position.
-     * @param y Its base y position.
-     * @param name Its name.
-     */
-    public Marin(@JsonProperty("id") int id,
-                 @JsonProperty("x") int x,
-                 @JsonProperty("y") int y,
-                 @JsonProperty("name") String name) {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.name = name;
     }
 
     /**

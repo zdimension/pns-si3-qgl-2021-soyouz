@@ -25,18 +25,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SimulatorCanvas extends JPanel {
+	public static final int SHAPE_CROSS_SIZE = 10;
 	private static final Color BACKGROUND = new Color(202, 219, 255);
 	private static final Color BOAT = new Color(193, 169, 134);
 	private static final Color OBSTACLE = new Color(102, 186, 90);
-
 	private static final Map<Class<?>, Image> ENTITY_ICONS;
 	private static final int DECK_GRID_SIZE = 40;
 	private static final int DECK_MARGIN = 30;
 	private static final double SCALE_WHEEL_FACTOR = 0.1;
-	public static final int SHAPE_CROSS_SIZE = 10;
-	private double scale = 1;
-	private Point2d cameraPos = new Point2d(0, 0);
-	private Point2d moveOrigin = null;
 
 	static {
 		ENTITY_ICONS = Map.of(
@@ -54,20 +50,12 @@ public class SimulatorCanvas extends JPanel {
 	}
 
 	private final ArrayList<OnboardEntity> usedEntities;
-
 	private final InitGameParameters model;
 	private final Stroke DASHED = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
 	private final Stroke SHAPE_CROSS = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL);
-
-	private Point2d getViewCenter()
-    {
-        return new Point2d(getWidth(), getHeight()).mul(0.5);
-    }
-
-    private Point2d getPos(MouseEvent e)
-    {
-        return new Point2d(e.getX(), e.getY());
-    }
+	private double scale = 1;
+	private Point2d cameraPos = new Point2d(0, 0);
+	private Point2d moveOrigin = null;
 
 	public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities) {
 		this.model = model;
@@ -122,6 +110,16 @@ public class SimulatorCanvas extends JPanel {
             }
         });
 	}
+
+	private Point2d getViewCenter()
+    {
+        return new Point2d(getWidth(), getHeight()).mul(0.5);
+    }
+
+    private Point2d getPos(MouseEvent e)
+    {
+        return new Point2d(e.getX(), e.getY());
+    }
 
 	/**
 	 * Appelle la {@link #paintBuffer(Graphics2D) fonction principale de dessin} et met à jour l'image réelle à partir de la mémoire tampon

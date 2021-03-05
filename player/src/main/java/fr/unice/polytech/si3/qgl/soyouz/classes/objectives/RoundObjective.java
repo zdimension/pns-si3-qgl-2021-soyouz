@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
  */
 public class RoundObjective implements Objective {
 
-	private final WantedSailorConfig wanted;
 	private static final Logger logger = Logger.getLogger(RoundObjective.class.getSimpleName());
+	private final WantedSailorConfig wanted;
 
 	public RoundObjective(WantedSailorConfig wanted) {
 		this.wanted = wanted;

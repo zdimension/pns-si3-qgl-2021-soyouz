@@ -21,10 +21,20 @@ import org.jetbrains.annotations.Nullable;
 public abstract class GameAction
 {
     @JsonIgnore
+    public final Class<? extends OnboardEntity> entityNeeded;
+    @JsonIgnore
     private final Marin sailor;
 
-    @JsonIgnore
-    public final Class<? extends OnboardEntity> entityNeeded;
+    /**
+     * Constructor.
+     *
+     * @param sailor A Sailor.
+     * @param ent The wanted entity to make the boat progress (Optional).
+     */
+    protected GameAction(Marin sailor,@Nullable Class<? extends OnboardEntity> ent) {
+        this.sailor = sailor;
+        this.entityNeeded = ent;
+    }
 
     /**
      * Getter.
@@ -47,16 +57,5 @@ public abstract class GameAction
 
     public Class<? extends OnboardEntity> getEntityNeeded() {
         return entityNeeded;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param sailor A Sailor.
-     * @param ent The wanted entity to make the boat progress (Optional).
-     */
-    protected GameAction(Marin sailor,@Nullable Class<? extends OnboardEntity> ent) {
-        this.sailor = sailor;
-        this.entityNeeded = ent;
     }
 }

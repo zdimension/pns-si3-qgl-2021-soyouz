@@ -9,7 +9,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.*;
 
@@ -18,6 +21,7 @@ public class Cockpit implements ICockpit {
   private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final Logger logger = Logger.getLogger(Cockpit.class.getSimpleName());
+  static int i = 0;
 
   static {
     OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -45,8 +49,6 @@ public class Cockpit implements ICockpit {
       }
     });
   }
-
-  static int i = 0;
 
   private InitGameParameters ip;
   private NextRoundParameters np;
