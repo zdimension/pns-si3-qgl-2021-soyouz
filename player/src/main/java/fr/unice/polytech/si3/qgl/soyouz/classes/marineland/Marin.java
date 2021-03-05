@@ -9,10 +9,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
  */
 public class Marin {
     public static final int MAX_MOVE = 5;
-    private int id;
+    private final int id;
     private int x;
     private int y;
-    private String name;
+    private final String name;
 
     /**
      * Constructor.

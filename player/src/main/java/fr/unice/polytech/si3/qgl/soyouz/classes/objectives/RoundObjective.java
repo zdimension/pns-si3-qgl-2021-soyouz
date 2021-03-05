@@ -203,7 +203,7 @@ public class RoundObjective implements Objective {
 				for (var rame : pair.getValue()) {
 					if (!currentOars.contains(rame))
 						continue;
-					var sailorsMinusThis = new HashSet<>(possibleSailorConfig.stream().filter(s -> !s.getSailor().equals(marin)).collect(Collectors.toSet()));
+					var sailorsMinusThis = possibleSailorConfig.stream().filter(s -> !s.getSailor().equals(marin)).collect(Collectors.toCollection(HashSet::new));
 					var oarsMinusThis = new HashSet<Rame>(currentOars);
 					oarsMinusThis.remove(rame);
 					var actPlusThis = new ArrayList<>(act);

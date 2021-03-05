@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +25,9 @@ import java.util.stream.Collectors;
 })
 public class Bateau extends AutreBateau
 {
-    private String name;
-    private Deck deck;
-    private OnboardEntity[] entities;
+    private final String name;
+    private final Deck deck;
+    private final OnboardEntity[] entities;
 
     /**
      * Constructor.
@@ -142,10 +143,10 @@ public class Bateau extends AutreBateau
      * @return a Pair of oars (left, right).
      */
     public Pair<Integer, Integer> getNbOfOarOnEachSide() {
-        List<OnboardEntity> oars = Arrays.stream(this.getEntities()).filter(ent -> ent instanceof Rame).collect(Collectors.toList());
+        var oars = Util.filterType(Arrays.stream(this.getEntities()), Rame.class).collect(Collectors.toList());
         int leftOar = 0, rightOar = 0;
-        for (OnboardEntity oar : oars) {
-            if (((Rame)oar).isLeft())
+        for (var oar : oars) {
+            if (oar.isLeft())
                 leftOar++;
             else rightOar++;
         }
@@ -159,8 +160,8 @@ public class Bateau extends AutreBateau
      * @return the fist position found of the given entity.
      */
     public Pair<Integer,Integer> findFirstPosOfEntity(Class<? extends OnboardEntity> ent){
-        var first = Arrays.stream(this.entities).filter(ent::isInstance).findFirst();
-        return first.map(OnboardEntity::getPosCoord).orElse(null);
+        return Util.filterType(Arrays.stream(this.entities), ent).findFirst()
+            .map(OnboardEntity::getPosCoord).orElse(null);
     }
 
     /**
@@ -171,8 +172,7 @@ public class Bateau extends AutreBateau
      * @return the fist position found of the given entity.
      */
     public <T extends OnboardEntity> T findFirstEntity(Class<T> ent){
-        var first = Arrays.stream(this.entities).filter(ent::isInstance).findFirst();
-        return (T) first.orElse(null);
+        return Util.filterType(Arrays.stream(this.entities), ent).findFirst().orElse(null);
     }
 
     /**

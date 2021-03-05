@@ -20,8 +20,8 @@ import java.util.Objects;
 })
 public abstract class OnboardEntity
 {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private boolean isUsed;
 
     /**

@@ -21,5 +21,5 @@ public interface GameGoal
      * @return a new objective based on the current game mode.
      */
     @JsonIgnore
-    public abstract RootObjective getObjective();
+    RootObjective getObjective();
 }

@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class WantedSailorConfig {
 	private Pair<Integer,Integer> rame;
-	private Gouvernail gouvernail;
-	private Double rotation;
-	private HashMap<Class<? extends OnboardEntity>, Boolean> presentEntity;
+	private final Gouvernail gouvernail;
+	private final Double rotation;
+	private final HashMap<Class<? extends OnboardEntity>, Boolean> presentEntity;
 
 	public WantedSailorConfig(Pair<Integer, Integer> rame, Gouvernail gouvernail, Double rotation) {
 		this.rame = rame;

@@ -14,8 +14,8 @@ import java.util.logging.Logger;
  * Race type objective.
  */
 public class RegattaObjective extends RootObjective {
-    private static final Logger logger = Logger.getLogger(RoundObjective.class.getSimpleName());
-    private RegattaGoal goalData;
+    private static final Logger logger = Logger.getLogger(RegattaObjective.class.getSimpleName());
+    private final RegattaGoal goalData;
     private int numCheckpoint = 0;
     private CheckpointObjective currentCheckpoint;
 

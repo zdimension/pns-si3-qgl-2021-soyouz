@@ -182,7 +182,7 @@ public class Simulator extends JFrame
                             var mv = (MoveAction)act;
                             mv.getSailor().moveRelative(mv.getXDistance(), mv.getYDistance());
                         }
-                    };
+                    }
                 }
                 var noars = model.getShip().getNumberOar();
                 var oarFactor = 165.0 * activeOars.size() / noars;
