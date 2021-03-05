@@ -169,7 +169,7 @@ public class TempRoundChoice
 
             if (!sailor.getPos().equals(pos))
             {
-                var isActionMove = action != null && action.first instanceof MoveAction;
+                var isActionMove = action.first instanceof MoveAction;
 
                 if (!isActionMove)
                 {
@@ -244,7 +244,7 @@ public class TempRoundChoice
     {
         if (act1 instanceof MoveAction)
         {
-            hireSailor(sailor, (MoveAction) act1);
+            hireSailor(sailor, act1);
             return;
         }
         if (vacantSailors.contains(sailor))

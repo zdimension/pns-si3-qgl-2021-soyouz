@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public abstract class CompositeObjective implements Objective
 {
-    protected ArrayList<Objective> intermediateObjective = new ArrayList<>();
+    protected final ArrayList<Objective> intermediateObjective = new ArrayList<>();
 
     /**
      * Determine if the goal is reached.

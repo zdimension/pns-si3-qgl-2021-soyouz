@@ -9,10 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.*;
 
@@ -66,14 +63,7 @@ public class Cockpit implements ICockpit
     public static void log(String message)
     {
         logger.log(Level.ALL, message);
-        if (message == null)
-        {
-            logList.add("NULL MESSAGE");
-        }
-        else
-        {
-            logList.add(message);
-        }
+        logList.add(Objects.requireNonNullElse(message, "NULL MESSAGE"));
     }
 
     /**

@@ -223,9 +223,8 @@ public class Bateau extends AutreBateau
             }
         }
 
-        for (int i = 0; i < nbEnt; i++)
+        for (OnboardEntity ent : entities)
         {
-            var ent = entities[i];
             if (ent instanceof Rame)
             {
                 str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'R';

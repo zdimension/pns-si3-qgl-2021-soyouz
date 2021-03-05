@@ -168,7 +168,7 @@ public class RoundObjective implements Objective
                     if (ent instanceof Gouvernail)
                     {
                         //todo store it rather than get multiple times
-                        var pos = ((Gouvernail) ent).getPosCoord();
+                        var pos = ent.getPosCoord();
                         var gouvSailor = tempChoice.findFirstVacantSailorHere(pos);
                         if (gouvSailor == null)
                         {
@@ -176,15 +176,13 @@ public class RoundObjective implements Objective
                             logger.log(Level.SEVERE, "No sailor could move to Rudder");
                             continue;
                         }
-                        else
-                        {
-                            var turn = new TurnAction(gouvSailor, wanted.getRotation());
-                            tempChoice.hireSailor(gouvSailor, turn);
-                        }
+
+                        var turn = new TurnAction(gouvSailor, wanted.getRotation());
+                        tempChoice.hireSailor(gouvSailor, turn);
                     }
                 }
 
-                var actions = new ArrayList<GameAction>(tempChoice.getAllActions());
+                var actions = new ArrayList<>(tempChoice.getAllActions());
 
                 for (MoveAction m : tempChoice.getAllMoves())
                 {
@@ -215,7 +213,7 @@ public class RoundObjective implements Objective
             //e.printStackTrace();
             //Cockpit.log("Error resolving RoundObjective : " + e.getMessage());
             logger.log(Level.SEVERE, "Error resolving RoundObjective : " + e.getMessage());
-            return new ArrayList<GameAction>();
+            return new ArrayList<>();
         }
     }
 
@@ -238,7 +236,7 @@ public class RoundObjective implements Objective
             var possibleSailorConfigAbs =
                 new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getReachableSingleEntities)));
             var absMoves = firstSailorAbsConfig(wantedConfig.getAbsConfigPos(),
-                possibleSailorConfigAbs, currentEntities, act, gameShip, true);
+                possibleSailorConfigAbs, currentEntities, act, gameShip);
             if (absMoves != null)
             {
                 return absMoves;
@@ -264,7 +262,7 @@ public class RoundObjective implements Objective
                     }
                     var sailorsMinusThis =
                         possibleSailorConfig.stream().filter(s -> !s.getSailor().equals(marin)).collect(Collectors.toCollection(HashSet::new));
-                    var oarsMinusThis = new HashSet<Rame>(currentOars);
+                    var oarsMinusThis = new HashSet<>(currentOars);
                     oarsMinusThis.remove(rame);
                     var actPlusThis = new ArrayList<>(act);
                     actPlusThis.add(new MoveAction(marin, rame.getX() - marin.getX(),
@@ -286,7 +284,7 @@ public class RoundObjective implements Objective
                                     var absMoves =
                                         firstSailorAbsConfig(wantedConfig.getAbsConfigPos(),
                                             possibleSailorConfigAbs, currentEntities, actPlusThis
-                                            , gameShip, true);
+                                            , gameShip);
                                     if (absMoves != null)
                                     {
                                         var moves = new ArrayList<MoveAction>();
@@ -314,7 +312,7 @@ public class RoundObjective implements Objective
 
     private ArrayList<MoveAction> firstSailorAbsConfig(Set<PosOnShip> wantedAbsConfig,
                                                        HashMap<Marin,
-                                                           Set<? extends OnboardEntity>> possibleSailorAbsConfig, Set<PosOnShip> currentEntities, ArrayList<MoveAction> act, Bateau gameShip, boolean placeholder)
+                                                           Set<? extends OnboardEntity>> possibleSailorAbsConfig, Set<PosOnShip> currentEntities, ArrayList<MoveAction> act, Bateau gameShip)
     {
         var marins = possibleSailorAbsConfig.keySet();
         if (marins.isEmpty())
@@ -345,7 +343,7 @@ public class RoundObjective implements Objective
                 actPlusThis.add(new MoveAction(marin, ent.getX() - marin.getX(),
                     ent.getY() - marin.getY()));
                 var allMoves = firstSailorAbsConfig(wantedAbsConfig, sailorsMinusThis,
-                    entsMinusThis, actPlusThis, gameShip, true);
+                    entsMinusThis, actPlusThis, gameShip);
                 if (allMoves != null)
                 {
                     if (isAbsConfigurationReached(wantedAbsConfig, allMoves, gameShip))
@@ -355,7 +353,7 @@ public class RoundObjective implements Objective
                 }
             }
         }
-        return new ArrayList<>();
+        return null;
     }
 
 
@@ -449,7 +447,6 @@ public class RoundObjective implements Objective
         sailorAndDistance.addAll(unmovedSailors);
         for (var s : sailorAndDistance)
         {
-            var m = s;
             var pos = s.getPos();
             Rame oar;
             try
@@ -472,7 +469,7 @@ public class RoundObjective implements Objective
                         else
                         {
                             obj = Pair.of(obj.first + 1, obj.second);
-                            oaring.add(new OarAction(m));
+                            oaring.add(new OarAction(s));
                         }
                     }
                     else
@@ -484,7 +481,7 @@ public class RoundObjective implements Objective
                         else
                         {
                             obj = Pair.of(obj.first, obj.second + 1);
-                            oaring.add(new OarAction(m));
+                            oaring.add(new OarAction(s));
                         }
                     }
                 }

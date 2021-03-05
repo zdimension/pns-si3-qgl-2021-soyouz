@@ -57,20 +57,20 @@ public class Simulator extends JFrame
 
         OBJECT_MAPPER.registerModule(new SimpleModule()
         {{
-            addDeserializer(Marin.class, new JsonDeserializer<Marin>()
+            addDeserializer(Marin.class, new JsonDeserializer<>()
             {
                 @Override
                 public Marin deserialize(JsonParser jsonParser,
-                                         DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                                         DeserializationContext deserializationContext) throws IOException
                 {
                     return model.getSailorById(jsonParser.getValueAsInt()).orElse(null);
                 }
             });
-            addDeserializer(OarAction.class, new JsonDeserializer<OarAction>()
+            addDeserializer(OarAction.class, new JsonDeserializer<>()
             {
                 @Override
                 public OarAction deserialize(JsonParser jsonParser,
-                                             DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                                             DeserializationContext deserializationContext) throws IOException
                 {
                     return new OarAction(model.getSailorById(((IntNode) OBJECT_MAPPER.readTree(jsonParser).get("sailorId")).asInt()).get());
                 }
@@ -79,7 +79,7 @@ public class Simulator extends JFrame
             {
                 @Override
                 public MoveAction deserialize(JsonParser jsonParser,
-                                              DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                                              DeserializationContext deserializationContext) throws IOException
                 {
                     var tree = OBJECT_MAPPER.readTree(jsonParser);
                     return new MoveAction(model.getSailorById(((IntNode) tree.get("sailorId")).asInt()).get(),
@@ -92,7 +92,7 @@ public class Simulator extends JFrame
             {
                 @Override
                 public TurnAction deserialize(JsonParser jsonParser,
-                                              DeserializationContext deserializationContext) throws IOException, JsonProcessingException
+                                              DeserializationContext deserializationContext) throws IOException
                 {
                     var tree = OBJECT_MAPPER.readTree(jsonParser);
                     return new TurnAction(model.getSailorById(((IntNode) tree.get("sailorId")).asInt()).get(),
@@ -150,15 +150,17 @@ public class Simulator extends JFrame
                 var res =
                     OBJECT_MAPPER.readValue(cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np)), GameAction[].class);
                 var activeOars = new ArrayList<Rame>();
-                AtomicReference<Double> rudderRotate = new AtomicReference<>((double) 0);
+                var rudderRotate = 0d;
                 for (GameAction act : res)
                 {
                     var entType = act.entityNeeded;
                     if (entType != null)
                     {
-
-                        model.getShip().getEntityHere(act.getSailor().getGridPosition()).ifPresentOrElse(ent ->
+                        var entOpt = model.getShip().getEntityHere(act.getSailor().getGridPosition());
+                        if (entOpt.isPresent())
                         {
+                            var ent = entOpt.get();
+
                             if (!(entType.isInstance(ent)))
                             {
                                 return;
@@ -181,12 +183,13 @@ public class Simulator extends JFrame
                             }
                             if (act instanceof TurnAction)
                             {
-                                rudderRotate.set(((TurnAction) act).getRotation());
+                                rudderRotate = ((TurnAction) act).getRotation();
                             }
-                        }, () ->
+                        }
+                        else
                         {
-                            System.err.println("ENTITY MISSING FOR ACTION " + act);
-                        });
+                            System.err.println("ENTITY MISSING FOR ACTION " + act));
+                        }
                     }
                     else
                     {

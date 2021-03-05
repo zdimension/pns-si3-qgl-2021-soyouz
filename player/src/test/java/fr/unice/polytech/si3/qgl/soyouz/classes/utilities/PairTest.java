@@ -31,9 +31,9 @@ class PairTest
     @Test
     void testEquals()
     {
-        assertTrue(Pair.of(5, 10).equals(coords));
-        assertTrue(coords.equals(coords));
-        assertFalse(coords.equals("Hello"));
+        assertEquals(coords, Pair.of(5, 10));
+        assertEquals(coords, coords);
+        assertNotEquals(coords, "Hello");
     }
 
     @Test

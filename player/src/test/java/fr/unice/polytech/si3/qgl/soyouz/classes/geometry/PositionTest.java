@@ -64,12 +64,12 @@ class PositionTest
     @Test
     void testEquals()
     {
-        assertTrue(position.equals(position));
-        assertFalse(position.equals("Hello"));
-        assertTrue(position.equals(new Position(10, 20, 30)));
-        assertFalse(position.equals(new Position(10, 20, 31)));
-        assertFalse(position.equals(new Position(10, 21, 30)));
-        assertFalse(position.equals(new Position(11, 20, 30)));
+        assertEquals(position, position);
+        assertNotEquals(position, "Hello");
+        assertEquals(new Position(10, 20, 30), position);
+        assertNotEquals(new Position(10, 20, 31), position);
+        assertNotEquals(new Position(10, 21, 30), position);
+        assertNotEquals(new Position(11, 20, 30), position);
     }
 
     @Test

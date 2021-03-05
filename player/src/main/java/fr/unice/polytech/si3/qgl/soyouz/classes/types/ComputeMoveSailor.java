@@ -28,7 +28,7 @@ public class ComputeMoveSailor
         this.sailor = sailor;
         this.entities =
             entities.stream().filter(ent -> sailor.isAbsPosReachable(ent.getPosCoord())).collect(Collectors.toSet());
-        this.extraRoundToReachEntity = new HashMap<T, Integer>(entities.stream().map(e ->
+        this.extraRoundToReachEntity = new HashMap<>(entities.stream().map(e ->
             Map.entry(e, sailor.numberExtraRoundsToReachEntity(e.getPosCoord()))
         ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }

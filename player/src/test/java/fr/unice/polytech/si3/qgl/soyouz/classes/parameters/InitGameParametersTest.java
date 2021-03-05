@@ -93,7 +93,7 @@ public class InitGameParametersTest
         assertEquals(2, bateau.getEntities().length);
         //Boat position
         Position pos = new Position(0, 0, 0);
-        assertTrue(bateau.getPosition().equals(pos));
+        assertEquals(pos, bateau.getPosition());
         //Deck size
         assertEquals(2, bateau.getDeck().getWidth());
         assertEquals(1, bateau.getDeck().getLength());

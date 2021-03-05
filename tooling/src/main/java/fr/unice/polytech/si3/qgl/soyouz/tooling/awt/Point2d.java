@@ -2,8 +2,8 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 public class Point2d
 {
-    public double x;
-    public double y;
+    public final double x;
+    public final double y;
 
     public Point2d(double x, double y)
     {
