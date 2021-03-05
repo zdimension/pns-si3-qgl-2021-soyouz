@@ -21,6 +21,29 @@ public class Cockpit implements ICockpit {
 
   static {
     OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    System.setProperty("java.util.logging.SimpleFormatter.format",
+        "%1$tF %1$tT %4$s %3$s : %5$s%6$s%n");
+
+    var fmt = new SimpleFormatter();
+    logger.getParent().addHandler(new Handler()
+    {
+      @Override
+      public void publish(LogRecord record)
+      {
+        logList.add(fmt.format(record));
+      }
+
+      @Override
+      public void flush()
+      {
+      }
+
+      @Override
+      public void close() throws SecurityException
+      {
+      }
+    });
   }
 
   static int i = 0;
