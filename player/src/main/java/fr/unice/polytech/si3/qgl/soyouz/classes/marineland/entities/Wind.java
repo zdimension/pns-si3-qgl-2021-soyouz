@@ -1,6 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * The wind effect.
  */
@@ -8,6 +10,12 @@ public class Wind implements Entity
 {
     private double orientation;
     private double strength;
+
+    public Wind(@JsonProperty("orientation") double orientation, @JsonProperty("strength") double strength)
+    {
+        this.orientation = orientation;
+        this.strength = strength;
+    }
 
     /**
      * Determine how much speed will the wind add to the boat.
