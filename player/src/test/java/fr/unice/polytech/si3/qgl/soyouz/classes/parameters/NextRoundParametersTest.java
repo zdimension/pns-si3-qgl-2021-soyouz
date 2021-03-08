@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,11 +18,6 @@ public class NextRoundParametersTest
     void setUp()
     {
         this.cockpit = new Cockpit();
-    }
-
-    @Test
-    void shipTest()
-    {
         cockpit.nextRound("{\"ship\": {\n" +
             "    \"type\": \"ship\",\n" +
             "    \"life\": 100,\n" +
@@ -49,6 +45,11 @@ public class NextRoundParametersTest
             "    ]\n" +
             "  }}");
         np = cockpit.getNp();
+    }
+
+    @Test
+    void shipTest()
+    {
         Bateau bateau = np.getShip();
         assertEquals("Les copaings d'abord!", bateau.getName());
         assertEquals(100, bateau.getLife());
@@ -60,5 +61,11 @@ public class NextRoundParametersTest
         assertEquals(2, bateau.getDeck().getWidth());
         assertEquals(1, bateau.getDeck().getLength());
     }
-    //TODO visibleEntities and Wind for next release
+    //TODO visibleEntities for next release
+
+    @Disabled
+    void windTest()
+    {
+        //TODO AJOUTER UN JSON AVEC DU WIND;
+    }
 }

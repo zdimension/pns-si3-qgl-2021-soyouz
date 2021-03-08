@@ -69,9 +69,12 @@ class MoveActionTest
     @Test
     void equalsTest()
     {
-        assertNotEquals(sailor, moveAction);
-        assertEquals(moveAction, moveAction);
-        assertEquals(new MoveAction(sailor, 3, 2), moveAction);
+        boolean notSameType = moveAction.equals(sailor);
+        boolean equals = moveAction.equals(moveAction);
+        boolean alsoEquals = moveAction.equals(new MoveAction(sailor, 3, 2));
+        assertTrue(equals);
+        assertTrue(alsoEquals);
+        assertFalse(notSameType);
     }
 
     @Test
