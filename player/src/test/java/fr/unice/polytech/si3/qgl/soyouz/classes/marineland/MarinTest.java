@@ -30,6 +30,34 @@ class MarinTest
     }
 
     @Test
+    void setX()
+    {
+        sailor.setX(2);
+        assertEquals(2, sailor.getX());
+    }
+
+    @Test
+    void setY()
+    {
+        sailor.setY(2);
+        assertEquals(2, sailor.getY());
+    }
+
+    @Test
+    void isAbsPosReachableTest(){
+        assertTrue(sailor.isAbsPosReachable(Pair.of(3,3)));
+        assertFalse(sailor.isAbsPosReachable(Pair.of(10,10)));
+    }
+
+    @Test
+    void numberExtraRoundsToReachEntity(){
+        assertEquals(0,sailor.numberExtraRoundsToReachEntity(Pair.of(3,3)));
+        assertEquals(0,sailor.numberExtraRoundsToReachEntity(3,3));
+        assertEquals(1,sailor.numberExtraRoundsToReachEntity(Pair.of(8,3)));
+        assertEquals(1,sailor.numberExtraRoundsToReachEntity(8,3));
+    }
+
+    @Test
     void getY()
     {
         assertEquals(2, sailor.getY());
@@ -95,5 +123,14 @@ class MarinTest
     {
         assertTrue(sailor.isAbsPosReachable(5, 3));
         assertFalse(sailor.isAbsPosReachable(7, 6));
+    }
+
+
+
+
+    @Test
+    void hashCodeTest(){
+        sailor.hashCode();
+        assertTrue(true);
     }
 }

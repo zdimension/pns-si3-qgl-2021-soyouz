@@ -218,7 +218,7 @@ public class Marin
 
     public int numberExtraRoundsToReachEntity(int xPos, int yPos)
     {
-        return Math.abs(this.x - xPos) + Math.abs(this.y - yPos) / MAX_MOVE;
+        return (Math.abs(this.x - xPos) + Math.abs(this.y - yPos))/ MAX_MOVE;
     }
 
     public int numberExtraRoundsToReachEntity(Pair<Integer, Integer> pos)

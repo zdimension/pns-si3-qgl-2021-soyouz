@@ -45,4 +45,11 @@ class GouvernailTest
     void setUsed()
     {
     }
+
+    @Test
+    void rangeTest()
+    {
+        assertEquals(-0.78539816339,Gouvernail.ALLOWED_ROTATION.first);
+        assertEquals(0.78539816339,Gouvernail.ALLOWED_ROTATION.second);
+    }
 }
