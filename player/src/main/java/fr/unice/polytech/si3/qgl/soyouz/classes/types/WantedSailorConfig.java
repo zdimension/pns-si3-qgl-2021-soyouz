@@ -31,11 +31,13 @@ public class WantedSailorConfig
             wanted.getRotation());
     }
 
+    //TODO NEVER USED
     public boolean contains(Class<? extends OnboardEntity> ent)
     {
         return presentEntity.get(ent);
     }
 
+    //TODO NEVER USED
     public Set<Class<? extends OnboardEntity>> allEntities()
     {
         return presentEntity.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
@@ -46,11 +48,13 @@ public class WantedSailorConfig
         return rame;
     }
 
+    //TODO NOM TROMPEUR ET OVERKILL ?
     public Set<? extends OnboardEntity> getAbsConfig()
     {
         return Set.of(gouvernail);
     }
 
+    //TODO NOM TROMPEUR ET OVERKILL ?
     public Set<PosOnShip> getAbsConfigPos()
     {
         var pos = new HashSet<PosOnShip>();

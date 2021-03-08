@@ -38,6 +38,7 @@ public class ComputeMoveSailor
         return sailor;
     }
 
+    //TODO NEVER USED
     /**
      * @return all {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame} reachable within
      * a round
@@ -56,6 +57,7 @@ public class ComputeMoveSailor
         return Collections.unmodifiableSet(entities);
     }
 
+    //TODO NOM TROMPEUR
     /**
      * @return all {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} reachable within
      * a round that exist in only one occurrence on the
@@ -68,7 +70,7 @@ public class ComputeMoveSailor
 
     /**
      * @param ent to reach
-     * @param <T>
+     * @param <T> type of the ent
      * @return who many rounds it take to reach the entity
      */
     public <T extends OnboardEntity> int numberRoundsToReachEntity(T ent)
@@ -84,6 +86,7 @@ public class ComputeMoveSailor
         throw new IllegalArgumentException("Entity to reach not found");
     }
 
+    //TODO NEVER USED
     public int numberRoundsToReachEntity(Pair<Integer, Integer> pos)
     {
         var ent = this.extraRoundToReachEntity.keySet().stream().
@@ -96,6 +99,7 @@ public class ComputeMoveSailor
         throw new IllegalArgumentException("Entity to reach not found");
     }
 
+    //TODO NEVER USED
     /**
      * @param number of rounds in which the entities can be reached
      * @return entities that can be reached in specified number of rounds
