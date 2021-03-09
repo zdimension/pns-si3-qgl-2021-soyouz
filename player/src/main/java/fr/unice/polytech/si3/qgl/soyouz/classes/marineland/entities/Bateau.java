@@ -8,6 +8,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
@@ -233,12 +234,15 @@ public class Bateau extends AutreBateau
             {
                 str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'G';
             }
+            else if(ent instanceof Voile)
+            {
+                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'L';
+            }
             else
             {
                 str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'E';
             }
             //Rame
-            //voiLe
             //Gouvernail
             //Vigie
             //Canon
