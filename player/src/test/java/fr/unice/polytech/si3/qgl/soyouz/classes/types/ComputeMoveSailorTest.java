@@ -32,7 +32,7 @@ class ComputeMoveSailorTest
         oar3 = new Rame(3, 0);
         oar4 = new Rame(1, 3);
         oar5 = new Rame(2, 3);
-        oar6 = new Rame(7, 3);
+        oar6 = new Rame(7, 4);
         rudder = new Gouvernail(0, 0);
         sail1 = new Voile(2, 2, false);
         sail2 = new Voile(3, 3, false);
@@ -106,7 +106,7 @@ class ComputeMoveSailorTest
         assertEquals(0, cms.numberRoundsToReachEntity(oar2));
         assertEquals(0, cms.numberRoundsToReachEntity(oar3));
         assertEquals(0, cms.numberRoundsToReachEntity(oar4));
-        //assertEquals(0, cms.numberRoundsToReachEntity(oar5));
+        assertEquals(0, cms.numberRoundsToReachEntity(oar5));
         assertEquals(0, cms.numberRoundsToReachEntity(sail1));
         assertEquals(0, cms.numberRoundsToReachEntity(rudder));
         assertEquals(0, cms.numberRoundsToReachEntity(rudder.getPosCoord()));
