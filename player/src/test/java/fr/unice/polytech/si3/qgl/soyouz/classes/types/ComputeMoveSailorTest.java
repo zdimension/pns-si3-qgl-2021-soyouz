@@ -24,6 +24,7 @@ class ComputeMoveSailorTest
     Voile sail1, sail2;
     Marin sailor;
 
+    //TODO DEBUG UNE 6eme RAME NE RENTRE PAS DANS L'OBJET ET QUAND 5 DISTANCE IL COMPTE UN TOUR DE PLUS
     @BeforeEach
     void setUp()
     {
@@ -106,6 +107,7 @@ class ComputeMoveSailorTest
         assertEquals(0, cms.numberRoundsToReachEntity(oar2));
         assertEquals(0, cms.numberRoundsToReachEntity(oar3));
         assertEquals(0, cms.numberRoundsToReachEntity(oar4));
+        //TODO A DEBUG
         //assertEquals(0, cms.numberRoundsToReachEntity(oar5));
         assertEquals(0, cms.numberRoundsToReachEntity(sail1));
         assertEquals(0, cms.numberRoundsToReachEntity(rudder));

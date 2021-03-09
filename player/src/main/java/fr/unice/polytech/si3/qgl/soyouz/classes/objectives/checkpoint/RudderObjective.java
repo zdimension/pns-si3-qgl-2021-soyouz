@@ -15,7 +15,7 @@ public class RudderObjective
      *
      * @param neededRotation The angle between the boat and the checkpoint.
      */
-    public RudderObjective(double neededRotation)
+    RudderObjective(double neededRotation)
     {
         this.neededRotation = neededRotation;
     }
@@ -25,7 +25,7 @@ public class RudderObjective
      *
      * @return true if the angle is in range, false otherwise.
      */
-    public boolean rudderRotationIsInRange()
+    private boolean rudderRotationIsInRange()
     {
         return neededRotation > Gouvernail.ALLOWED_ROTATION.first && neededRotation < Gouvernail.ALLOWED_ROTATION.second;
     }
@@ -36,7 +36,7 @@ public class RudderObjective
      *
      * @return the angle of rotation that the rudder will perform.
      */
-    public double resolve()
+    double resolve()
     {
         if (rudderRotationIsInRange())
         {

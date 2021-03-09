@@ -41,6 +41,7 @@ public class TempRoundChoice
         }
     }
 
+    //TODO NEVER USED
     /**
      * Getters;
      *
@@ -51,6 +52,7 @@ public class TempRoundChoice
         return Collections.unmodifiableMap(sailorsJob);
     }
 
+    //TODO NEVER USED
     /**
      * Getters.
      *
@@ -71,11 +73,13 @@ public class TempRoundChoice
         return Collections.unmodifiableCollection(vacantSailors);
     }
 
+    //TODO NEVER USED
     public Collection<Marin> getMovedVacantSailors()
     {
         return Collections.unmodifiableCollection(movedSailors.keySet());
     }
 
+    //TODO NEVER USED
     public Collection<Marin> getBusySailors()
     {
         return Collections.unmodifiableCollection(sailorsJob.keySet());
@@ -220,6 +224,7 @@ public class TempRoundChoice
         }
     }
 
+    //TODO NEVER USED
     /**
      * Making a sailor perform an action and updating onBoardEntity usage
      *
@@ -235,6 +240,7 @@ public class TempRoundChoice
         hireSailor(sailor, pos, Pair.of(act1, act2));
     }
 
+    //TODO NEVER USED
     public void hireSailor(Marin sailor, PosOnShip pos, GameAction act1, @Nullable GameAction act2)
     {
         hireSailor(sailor, pos.getPosCoord(), Pair.of(act1, act2));

@@ -79,7 +79,6 @@ public class Cockpit implements ICockpit
             updateLogLevel();
             ip = OBJECT_MAPPER.readValue(game, InitGameParameters.class);
             objective = ip.getGoal().getObjective();
-            //todo appeler une fonction qui instancier une valeur left/right à toutes les rames
 
 
             logger.log(Level.FINEST, "Init game input: " + ip);

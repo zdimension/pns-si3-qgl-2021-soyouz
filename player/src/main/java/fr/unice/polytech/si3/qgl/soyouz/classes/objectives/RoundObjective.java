@@ -301,8 +301,6 @@ public class RoundObjective implements Objective
 
                         }
                     }
-
-
                 }
             }
         }
