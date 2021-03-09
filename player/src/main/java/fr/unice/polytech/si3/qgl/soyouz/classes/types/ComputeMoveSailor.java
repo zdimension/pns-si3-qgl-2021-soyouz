@@ -77,7 +77,6 @@ public class ComputeMoveSailor
         return numberRoundsToReachEntity(ent.getPosCoord());
     }
 
-    //TODO NEVER USED
     public int numberRoundsToReachEntity(Pair<Integer, Integer> pos)
     {
         return (Math.abs(pos.first - sailor.getX()) + Math.abs(pos.second - sailor.getY()) - 1) / 5;

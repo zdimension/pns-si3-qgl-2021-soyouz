@@ -23,7 +23,7 @@ class ComputeMoveSailorTest
     Gouvernail rudder;
     Voile sail1, sail2;
     Marin sailor;
-    
+
     @BeforeEach
     void setUp()
     {
