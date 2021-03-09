@@ -23,7 +23,7 @@ public class ComputeMoveSailor
     private final Set<? extends OnboardEntity> entities;
     private final HashMap<? extends OnboardEntity, Integer> extraRoundToReachEntity;
 
-    public <T extends OnboardEntity> ComputeMoveSailor(Marin sailor, Collection<T> entities)
+    public ComputeMoveSailor(Marin sailor, Collection<? extends OnboardEntity> entities)
     {
         this.sailor = sailor;
         this.entities =
@@ -70,33 +70,17 @@ public class ComputeMoveSailor
 
     /**
      * @param ent to reach
-     * @param <T> type of the ent
      * @return who many rounds it take to reach the entity
      */
-    public <T extends OnboardEntity> int numberRoundsToReachEntity(T ent)
+    public int numberRoundsToReachEntity(OnboardEntity ent)
     {
-        var number = this.extraRoundToReachEntity.entrySet().stream().
-            filter(k -> k.getKey().equals(ent)).
-            map(Map.Entry::getValue).
-            findFirst();
-        if (number.isPresent())
-        {
-            return number.get();
-        }
-        throw new IllegalArgumentException("Entity to reach not found");
+        return numberRoundsToReachEntity(ent.getPosCoord());
     }
 
     //TODO NEVER USED
     public int numberRoundsToReachEntity(Pair<Integer, Integer> pos)
     {
-        var ent = this.extraRoundToReachEntity.keySet().stream().
-            filter(integer -> integer.getPosCoord().equals(pos)).
-            findFirst();
-        if (ent.isPresent())
-        {
-            return numberRoundsToReachEntity(ent.get());
-        }
-        throw new IllegalArgumentException("Entity to reach not found");
+        return (Math.abs(pos.first - sailor.getX()) + Math.abs(pos.second - sailor.getY()) - 1) / 5;
     }
 
     //TODO NEVER USED
