@@ -157,7 +157,8 @@ public class Bateau extends AutreBateau
     {
         var oars =
             Util.filterType(Arrays.stream(this.getEntities()), Rame.class).collect(Collectors.toList());
-        int leftOar = 0, rightOar = 0;
+        int leftOar = 0;
+        int rightOar = 0;
         for (var oar : oars)
         {
             if (oar.isLeft())
@@ -207,7 +208,6 @@ public class Bateau extends AutreBateau
         var len = 2 * deck.getLength() + 2;
         var wid = 2 * deck.getWidth() + 1;
         var str = new char[len][wid];
-        var nbEnt = entities.length;
 
         for (char[] line : str)
         {

@@ -45,7 +45,7 @@ public class Cockpit implements ICockpit
             }
 
             @Override
-            public void close() throws SecurityException
+            public void close()
             {
             }
         });

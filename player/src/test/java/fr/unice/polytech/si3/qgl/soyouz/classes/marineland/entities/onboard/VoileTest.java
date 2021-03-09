@@ -2,10 +2,12 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-public class VoileTest
+
+class VoileTest
 {
     Voile voile;
     Voile voile2;
+
     @BeforeEach
     void init()
     {
@@ -27,15 +29,18 @@ public class VoileTest
 
     @Test
     void equals(){
-        assertFalse(voile.equals(voile2));
-        assertFalse(voile.equals(null));
-        assertTrue(voile.equals(voile));
+        boolean equals = voile.equals(voile);
+        boolean notEquals = voile.equals(null);
+        boolean notEquals2 = voile.equals(voile2);
+
+        assertFalse(notEquals);
+        assertFalse(notEquals2);
+        assertTrue(equals);
     }
 
     @Test
     void hashCodeTest(){
-        voile.hashCode();
-        assertTrue(true);
+        assertNotEquals(voile.hashCode(), voile2.hashCode());
     }
 
 }
