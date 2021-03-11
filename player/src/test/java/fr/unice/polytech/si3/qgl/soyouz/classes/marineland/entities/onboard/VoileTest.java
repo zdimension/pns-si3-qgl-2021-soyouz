@@ -11,20 +11,21 @@ class VoileTest
     @BeforeEach
     void init()
     {
-        voile = new Voile(1,1,false);
-        voile2 = new Voile(2,2,true);
+        voile = new Voile(1,1);
+        voile2 = new Voile(2,2);
     }
 
     @Test
     void isOpenedTest(){
-        assertFalse(voile.isOpened());
-        assertTrue(voile2.isOpened());
+        assertFalse(voile.isOpenned());
+        voile2.setOpenned(true);
+        assertTrue(voile2.isOpenned());
     }
 
     @Test
     void setOpened(){
-        voile.setOpened(true);
-        assertTrue(voile.isOpened());
+        voile.setOpenned(true);
+        assertTrue(voile.isOpenned());
     }
 
     @Test
