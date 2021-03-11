@@ -54,20 +54,19 @@ public class CheckpointObjective extends CompositeObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
-
         Bateau boat = state.getNp().getShip();
         double angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
         double distanceToCp = boat.getPosition().getLength(cp.getPosition());
         int nbSailors = state.getIp().getSailors().length;
         Pair<Integer, Integer> nbOarOnEachSide = state.getIp().getShip().getNbOfOarOnEachSide();
 
-        RowersObjective rowersObjective = new RowersObjective(angleToCp, distanceToCp,
+        RowersHelper rowersHelper = new RowersHelper(angleToCp, distanceToCp,
             nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
-        OarConfiguration wantedOarConfiguration = rowersObjective.resolve();
+        OarConfiguration wantedOarConfiguration = rowersHelper.resolve();
 
-        RudderObjective rudderObjective =
-            new RudderObjective(angleToCp - wantedOarConfiguration.getAngleOfRotation());
-        double wantedRudderRotation = rudderObjective.resolve();
+        RudderHelper rudderHelper =
+            new RudderHelper(angleToCp - wantedOarConfiguration.getAngleOfRotation());
+        double wantedRudderRotation = rudderHelper.resolve();
 
         WantedSailorConfig wanted =
             new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(),
