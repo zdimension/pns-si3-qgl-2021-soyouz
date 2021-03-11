@@ -17,14 +17,14 @@ class VoileTest
 
     @Test
     void isOpenedTest(){
-        assertFalse(voile.isOpened());
-        assertTrue(voile2.isOpened());
+        assertFalse(voile.isOpenned());
+        assertTrue(voile2.isOpenned());
     }
 
     @Test
     void setOpened(){
-        voile.setOpened(true);
-        assertTrue(voile.isOpened());
+        voile.setOpenned(true);
+        assertTrue(voile.isOpenned());
     }
 
     @Test
