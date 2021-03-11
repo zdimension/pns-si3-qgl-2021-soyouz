@@ -65,7 +65,7 @@ class PositionTest
     void testEquals()
     {
         assertEquals(position, position);
-        assertNotEquals(position, "Hello");
+        assertNotEquals("Hello", position);
         assertEquals(new Position(10, 20, 30), position);
         assertNotEquals(new Position(10, 20, 31), position);
         assertNotEquals(new Position(10, 21, 30), position);

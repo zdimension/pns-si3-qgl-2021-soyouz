@@ -43,13 +43,11 @@ public class RegattaObjective extends RootObjective
         {
             if (goalData.getCheckpoints().length - 1 > numCheckpoint)
             {
-                //Cockpit.log("Checkpoint "+ numCheckpoint+" reached");
                 logger.log(Level.INFO, "Checkpoint " + numCheckpoint + " reached");
                 numCheckpoint++;
             }
             else
             {
-                //Cockpit.log("Regatta ended");
                 logger.log(Level.INFO, "Regatta ended");
                 numCheckpoint = 0;
             }

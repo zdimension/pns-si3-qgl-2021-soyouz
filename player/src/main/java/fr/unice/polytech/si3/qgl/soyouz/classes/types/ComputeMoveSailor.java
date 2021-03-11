@@ -52,7 +52,7 @@ public class ComputeMoveSailor
      * @return all {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} reachable within
      * a round
      */
-    public Set<? extends OnboardEntity> getReachableEntities()
+    public Set<OnboardEntity> getReachableEntities()
     {
         return Collections.unmodifiableSet(entities);
     }
@@ -63,7 +63,7 @@ public class ComputeMoveSailor
      * a round that exist in only one occurrence on the
      * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
      */
-    public Set<? extends OnboardEntity> getReachableSingleEntities()
+    public Set<OnboardEntity> getReachableSingleEntities()
     {
         return Util.filterType(entities.stream(), Gouvernail.class).collect(Collectors.toSet());
     }
@@ -87,7 +87,7 @@ public class ComputeMoveSailor
      * @param number of rounds in which the entities can be reached
      * @return entities that can be reached in specified number of rounds
      */
-    public Set<? extends OnboardEntity> entitiesReachableInExactXRounds(int number)
+    public Set<OnboardEntity> entitiesReachableInExactXRounds(int number)
     {
         return this.extraRoundToReachEntity.entrySet().stream().
             filter(k -> k.getValue().equals(number)).

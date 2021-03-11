@@ -21,7 +21,6 @@ public class Cockpit implements ICockpit
     private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger logger = Logger.getLogger(Cockpit.class.getSimpleName());
-    static int i = 0;
 
     static
     {
@@ -56,17 +55,6 @@ public class Cockpit implements ICockpit
     private RootObjective objective;
 
     /**
-     * Print the logs on the console and put them to the log file.
-     *
-     * @param message The logs
-     */
-    public static void log(String message)
-    {
-        logger.log(Level.ALL, message);
-        logList.add(Objects.requireNonNullElse(message, "NULL MESSAGE"));
-    }
-
-    /**
      * Parse all the initial Game Parameters into a InitGameParameters object.
      *
      * @param game The Json to init the game.
@@ -99,12 +87,10 @@ public class Cockpit implements ICockpit
     @Override
     public String nextRound(String round)
     {
-        i++;
         try
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             logger.log(Level.FINEST, "Next round input: " + np);
-            //log("Next round input: " + np);
             objective.update(new GameState(ip, np));
             var actions = objective.resolve(new GameState(ip, np));
             return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));

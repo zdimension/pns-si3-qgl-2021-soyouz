@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = AutreBateau.class, name = "ship"),
     @JsonSubTypes.Type(value = Wind.class, name = "wind")
+    //TODO AJOUTER RECIF
 })
 public interface Entity
 {

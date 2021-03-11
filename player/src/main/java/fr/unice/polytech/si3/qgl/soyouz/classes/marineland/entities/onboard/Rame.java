@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 /**
  * Oar entity.
  */
@@ -26,4 +28,15 @@ public class Rame extends OnboardEntity
         return isLeft;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
+    }
 }

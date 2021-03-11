@@ -49,7 +49,7 @@ public class WantedSailorConfig
     }
 
     //TODO NOM TROMPEUR ET OVERKILL ?
-    public Set<? extends OnboardEntity> getAbsConfig()
+    public Set<OnboardEntity> getAbsConfig()
     {
         return Set.of(gouvernail);
     }
