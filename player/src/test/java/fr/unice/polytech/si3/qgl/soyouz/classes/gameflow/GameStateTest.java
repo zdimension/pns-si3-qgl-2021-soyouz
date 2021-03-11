@@ -18,7 +18,7 @@ class GameStateTest
     @BeforeEach
     void init()
     {
-        ip = new InitGameParameters();
+        ip = new InitGameParameters(null,null,null);
         np = new NextRoundParameters(null, null, null);
         gs = new GameState(ip, np);
     }
@@ -27,7 +27,7 @@ class GameStateTest
     void getIpTest()
     {
         assertEquals(ip, gs.getIp());
-        assertNotEquals(new InitGameParameters(), gs.getIp());
+        assertNotEquals(new InitGameParameters(null,null,null), gs.getIp());
     }
 
     @Test

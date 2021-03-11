@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point;
 
 /**
@@ -9,6 +10,12 @@ public class Polygon implements Shape
 {
     private double orientation;
     private Point[] vertices;
+
+    public Polygon(@JsonProperty("orientation")double orientation,@JsonProperty("vertices") Point[] vertices)
+    {
+        this.orientation = orientation;
+        this.vertices = vertices;
+    }
 
     /**
      * Getter.

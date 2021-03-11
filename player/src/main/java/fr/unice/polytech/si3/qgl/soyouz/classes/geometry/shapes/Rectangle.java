@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Rectangle Shape.
  */
@@ -8,6 +10,15 @@ public class Rectangle implements Shape
     private double width;
     private double height;
     private double orientation;
+
+    public Rectangle(@JsonProperty("width")double width,
+                     @JsonProperty("height") double height,
+                     @JsonProperty("orientation") double orientation)
+    {
+        this.width = width;
+        this.height = height;
+        this.orientation = orientation;
+    }
 
     /**
      * Getter.
