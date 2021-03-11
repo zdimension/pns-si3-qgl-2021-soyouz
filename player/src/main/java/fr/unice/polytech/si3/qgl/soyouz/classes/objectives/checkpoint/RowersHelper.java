@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Class to determine the optimal OarConfiguration to be the closest possible to the objective.
  */
-class RowersObjective
+class RowersHelper
 {
 
     private final double neededRotation;
@@ -28,7 +28,7 @@ class RowersObjective
      * @param nbOarOnLeft        The number of oars on the left side of the boat.
      * @param nbOarOnRight       The number of oars on the right side of the boat.
      */
-    RowersObjective(double neededRotation, double distToCheckpoint, int nbSailorReadyToOar
+    RowersHelper(double neededRotation, double distToCheckpoint, int nbSailorReadyToOar
         , int nbOarOnLeft, int nbOarOnRight)
     {
         this.neededRotation = neededRotation;

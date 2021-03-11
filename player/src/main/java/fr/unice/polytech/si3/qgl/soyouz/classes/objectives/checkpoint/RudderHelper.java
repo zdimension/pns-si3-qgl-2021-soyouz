@@ -5,7 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 /**
  * Class to determine the optimal Rudder configuration to be the closest possible to the objective.
  */
-public class RudderObjective
+public class RudderHelper
 {
 
     private final double neededRotation;
@@ -15,7 +15,7 @@ public class RudderObjective
      *
      * @param neededRotation The angle between the boat and the checkpoint.
      */
-    RudderObjective(double neededRotation)
+    RudderHelper(double neededRotation)
     {
         this.neededRotation = neededRotation;
     }

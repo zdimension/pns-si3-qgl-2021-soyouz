@@ -153,9 +153,7 @@ class BateauTest
     //No Point in testing a toString only for coverage purposes
     @Test
     void toStringTest(){
-        ship.toString();
-        assertTrue(true);
+        String shipString = ship.toString();
+        assertEquals(97, shipString.length());
     }
-
-
 }
