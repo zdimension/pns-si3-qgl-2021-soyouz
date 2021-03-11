@@ -17,7 +17,6 @@ public class InitGameParameters
     private Bateau ship;
     private Marin[] sailors;
     private int shipCount;
-    private Wind wind;
 
     /**
      * Getter.

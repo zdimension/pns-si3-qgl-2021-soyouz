@@ -121,7 +121,7 @@
             {
                 "x": 4,
                 "y": 0,
-                "type": "rudder"
+                "type": "oar"
             },
 			{
                 "x": 3,
@@ -202,9 +202,5 @@
             "id": 9,
             "name": "Jack Pouce"
         }
-    ],
-	"wind":{
-		"orientation": 0,
-		"strength": 50
-	}
+    ]
 }
