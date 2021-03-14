@@ -129,16 +129,24 @@ public class Simulator extends JFrame
             @Override
             public void actionPerformed(ActionEvent event)
             {
-                var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()), Voile.class);
-                var counts = new Object(){int open; int total;};
-                sails.forEach(voile ->
+                var linSpeed = spdIncrement;
+                if (np.getWind() != null)
                 {
-                    if (voile.isOpenned())
-                        counts.open++;
-                    counts.total++;
-                });
-                var windFac = np.getWind().windAdditionnalSpeed(counts.total, counts.open, np.getShip()) / COMP_STEPS;
-                var linSpeed = spdIncrement + windFac;
+                    var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()), Voile.class);
+                    var counts = new Object()
+                    {
+                        int open;
+                        int total;
+                    };
+                    sails.forEach(voile ->
+                    {
+                        if (voile.isOpenned())
+                            counts.open++;
+                        counts.total++;
+                    });
+                    linSpeed += np.getWind().windAdditionnalSpeed(counts.total, counts.open, np.getShip()) / COMP_STEPS;
+                }
+
                 var cur = model.getShip().getPosition();
                 model.getShip().setPosition(cur.add(new Position(
                     linSpeed * Math.cos(cur.getOrientation()),
