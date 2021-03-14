@@ -15,13 +15,6 @@ public class WantedSailorConfig
     private final HashSet<PosOnShip> absolutePosition;
     private Pair<Integer, Integer> rame;
 
-    public WantedSailorConfig(Pair<Integer, Integer> rame, Double rotation)
-    {
-        this.rame = rame;
-        this.rotation = rotation;
-        absolutePosition = new HashSet<>();
-    }
-
     public WantedSailorConfig(Pair<Integer, Integer> rame)
     {
         this.rame = rame;
@@ -29,9 +22,19 @@ public class WantedSailorConfig
         absolutePosition = new HashSet<>();
     }
 
+    public WantedSailorConfig(Pair<Integer, Integer> rame, Set<PosOnShip> absPos)
+    {
+        this.rame = rame;
+        this.rotation = (double) 0;
+        absolutePosition = new HashSet<>();
+        absolutePosition.addAll(absPos);
+    }
+
     public WantedSailorConfig(Pair<Integer, Integer> rame, Double rotation, Set<PosOnShip> absPos)
     {
-        this(rame, rotation);
+        this.rame = rame;
+        this.rotation = rotation;
+        absolutePosition = new HashSet<>();
         absolutePosition.addAll(absPos);
     }
 
