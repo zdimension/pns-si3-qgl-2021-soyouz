@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 
 import javax.imageio.ImageIO;
@@ -19,8 +20,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,7 +34,7 @@ public class SimulatorCanvas extends JPanel
     private static final Color BACKGROUND = new Color(202, 219, 255);
     private static final Color BOAT = new Color(193, 169, 134);
     private static final Color OBSTACLE = new Color(102, 186, 90);
-    private static final Map<Class<?>, Image> ENTITY_ICONS;
+    private static final Map<Class<?>, Image[]> ENTITY_ICONS;
     private static final int DECK_GRID_SIZE = 40;
     private static final int DECK_MARGIN = 30;
     private static final double SCALE_WHEEL_FACTOR = 0.1;
@@ -38,15 +42,20 @@ public class SimulatorCanvas extends JPanel
     static
     {
         ENTITY_ICONS = Map.of(
-            Rame.class, "paddle.png",
-            Marin.class, "sailor.png",
-            Gouvernail.class, "rudder.png"
+            Rame.class, new String[] { "paddle.png" },
+            Marin.class, new String[] { "sailor.png" },
+            Gouvernail.class, new String[] { "rudder.png" },
+            Voile.class, new String[] { "lifted_sail.png", "lowered_sail.png" }
         ).entrySet().stream().map(e ->
         {
             try
             {
-                return Map.entry(e.getKey(),
-                    ImageIO.read(SimulatorCanvas.class.getResource(e.getValue())));
+                var list = new Image[e.getValue().length];
+                for (int i = 0; i < list.length; i++)
+                {
+                    list[i] = ImageIO.read(SimulatorCanvas.class.getResource(e.getValue()[i]));
+                }
+                return Map.entry(e.getKey(), list);
             }
             catch (IOException ioException)
             {
@@ -221,12 +230,15 @@ public class SimulatorCanvas extends JPanel
 
         for (OnboardEntity entity : b.getEntities())
         {
-            var img = ENTITY_ICONS.get(entity.getClass());
+            var index = 0;
+            if (entity instanceof Voile && ((Voile)entity).isOpenned())
+                index = 1;
+            var img = ENTITY_ICONS.get(entity.getClass())[index];
             g.drawImage(img, entity.getY() * DECK_GRID_SIZE, entity.getX() * DECK_GRID_SIZE,
                 DECK_GRID_SIZE, DECK_GRID_SIZE,
                 usedEntities.contains(entity) ? Color.RED : new Color(0, true), null);
         }
-        var simg = ENTITY_ICONS.get(Marin.class);
+        var simg = ENTITY_ICONS.get(Marin.class)[0];
         for (Marin sailor : sailors)
         {
             g.drawImage(simg, sailor.getY() * DECK_GRID_SIZE + DECK_GRID_SIZE / 2,
