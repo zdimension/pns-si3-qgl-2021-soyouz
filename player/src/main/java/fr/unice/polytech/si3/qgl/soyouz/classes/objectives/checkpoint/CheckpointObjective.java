@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.WantedSailorConfig;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Checkpoint type of objective
@@ -69,8 +70,8 @@ public class CheckpointObjective extends CompositeObjective
         double wantedRudderRotation = rudderHelper.resolve();
 
         WantedSailorConfig wanted =
-            new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(),
-                state.getIp().getShip().findFirstEntity(Gouvernail.class), wantedRudderRotation);
+            new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), wantedRudderRotation,
+                Set.of(state.getIp().getShip().findFirstEntity(Gouvernail.class).getPos()));
 
         var roundObj = new RoundObjective(wanted);
         return roundObj.resolve(state);

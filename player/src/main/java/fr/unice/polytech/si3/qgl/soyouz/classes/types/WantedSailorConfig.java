@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.*;
@@ -10,37 +11,34 @@ import java.util.stream.Collectors;
 
 public class WantedSailorConfig
 {
-    private final Gouvernail gouvernail;
     private final Double rotation;
-    private final HashMap<Class<? extends OnboardEntity>, Boolean> presentEntity;
+    private final HashSet<PosOnShip> absolutePosition;
     private Pair<Integer, Integer> rame;
 
-    public WantedSailorConfig(Pair<Integer, Integer> rame, Gouvernail gouvernail, Double rotation)
+    public WantedSailorConfig(Pair<Integer, Integer> rame, Double rotation)
     {
         this.rame = rame;
-        this.gouvernail = gouvernail;
         this.rotation = rotation;
-        presentEntity = new HashMap<>();
-        presentEntity.put(Rame.class, rame != null);
-        presentEntity.put(Gouvernail.class, !rotation.equals((double) 0));
+        absolutePosition = new HashSet<>();
+    }
+
+    public WantedSailorConfig(Pair<Integer, Integer> rame)
+    {
+        this.rame = rame;
+        this.rotation = (double) 0;
+        absolutePosition = new HashSet<>();
+    }
+
+    public WantedSailorConfig(Pair<Integer, Integer> rame, Double rotation, Set<PosOnShip> absPos)
+    {
+        this(rame, rotation);
+        absolutePosition.addAll(absPos);
     }
 
     public static WantedSailorConfig copy(WantedSailorConfig wanted)
     {
-        return new WantedSailorConfig(wanted.getOarConfig(), wanted.getGouvernail(),
-            wanted.getRotation());
-    }
-
-    //TODO NEVER USED
-    public boolean contains(Class<? extends OnboardEntity> ent)
-    {
-        return presentEntity.get(ent);
-    }
-
-    //TODO NEVER USED
-    public Set<Class<? extends OnboardEntity>> allEntities()
-    {
-        return presentEntity.entrySet().stream().filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
+        return new WantedSailorConfig(wanted.getOarConfig(),
+            wanted.getRotation(), wanted.absolutePosition);
     }
 
     public Pair<Integer, Integer> getOarConfig()
@@ -49,20 +47,9 @@ public class WantedSailorConfig
     }
 
     //TODO NOM TROMPEUR ET OVERKILL ?
-    public Set<OnboardEntity> getAbsConfig()
+    public Set<PosOnShip> getAbsConfig()
     {
-        return Set.of(gouvernail);
-    }
-
-    //TODO NOM TROMPEUR ET OVERKILL ?
-    public Set<PosOnShip> getAbsConfigPos()
-    {
-        var pos = new HashSet<PosOnShip>();
-        if (gouvernail != null)
-        {
-            pos.add(new PosOnShip(gouvernail.getPosCoord()));
-        }
-        return pos;
+        return Collections.unmodifiableSet(absolutePosition);
     }
 
     public Double getRotation()
@@ -80,23 +67,18 @@ public class WantedSailorConfig
         return false;
     }
 
-    public Gouvernail getGouvernail()
-    {
-        return gouvernail;
-    }
-
     @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WantedSailorConfig that = (WantedSailorConfig) o;
-        return Objects.equals(rame, that.rame) && Objects.equals(gouvernail, that.gouvernail) && Objects.equals(rotation, that.rotation) && Objects.equals(presentEntity, that.presentEntity);
+        return Objects.equals(rame, that.rame) && Objects.equals(rotation, that.rotation) && Objects.equals(absolutePosition, that.absolutePosition) ;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(rame, gouvernail, rotation, presentEntity);
+        return Objects.hash(rame, rotation, absolutePosition);
     }
 }
