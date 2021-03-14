@@ -101,7 +101,7 @@ class WantedSailorConfigTest
     void testHashCode()
     {
         assertEquals(wsc.hashCode(), wsc.hashCode());
-        assertEquals(wsc.hashCode(), new WantedSailorConfig(Pair.of(2,2), Gouvernail.ALLOWED_ROTATION.first, Set.of(new PosOnShip(1,1))));
-        assertNotEquals(wsc.hashCode(), new WantedSailorConfig(Pair.of(2,2), Gouvernail.ALLOWED_ROTATION.first, Set.of(new PosOnShip(1,2))));
+        assertEquals(wsc.hashCode(), new WantedSailorConfig(Pair.of(2,2), Gouvernail.ALLOWED_ROTATION.first, Set.of(new PosOnShip(1,1))).hashCode());
+        assertNotEquals(wsc.hashCode(), new WantedSailorConfig(Pair.of(2,2), Gouvernail.ALLOWED_ROTATION.first, Set.of(new PosOnShip(1,2))).hashCode());
     }
 }
