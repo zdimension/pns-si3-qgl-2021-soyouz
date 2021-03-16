@@ -9,13 +9,14 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SailorMovementObjective implements Objective
+public class SailorXMovementObjective implements Objective
 {
     Marin sailor;
     int xOnDeck;
     int nbTurnToComplete;
 
-    public SailorMovementObjective(Marin sailor, int xOnDeck)
+    //TODO FAIRE UN OBJECTIF DE DEPLACEMENT SUR UNE CASE EN X ET Y
+    public SailorXMovementObjective(Marin sailor, int xOnDeck)
     {
         this.sailor = sailor;
         this.xOnDeck = xOnDeck;

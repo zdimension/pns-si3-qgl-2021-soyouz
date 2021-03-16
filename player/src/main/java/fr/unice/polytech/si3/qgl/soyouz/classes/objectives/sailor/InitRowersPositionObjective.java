@@ -11,16 +11,27 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InitSailorPositionObjective implements Objective
+public class InitRowersPositionObjective implements Objective
 {
-    List<SailorMovementObjective> sailorsToMove;
+    List<SailorXMovementObjective> sailorsToMove;
 
-    public InitSailorPositionObjective(GameState gameState)
+    public InitRowersPositionObjective(Bateau ship, Marin[] rowers)
     {
-        List<Integer> linesOnBoat = determineLinesOnBoat(gameState.getIp().getShip());
-        List<Marin> sailorsSortedByX = getAllSailorsSortedByXPos(gameState.getIp().getSailors());
-        for (int i = 0; i < sailorsSortedByX.size(); i++)
-            sailorsToMove.add(new SailorMovementObjective(sailorsSortedByX.get(i), linesOnBoat.get(i)));
+        //TODO CREER UN OBJET LINEONBOAT AVEC LES ENTITEES
+        List<Integer> linesOnBoat = determineLinesOnBoat(ship);
+        List<Marin> sailorsSortedByX = getAllSailorsSortedByXPos(rowers);
+        int nbSailorPlaced = 0;
+
+        for (int i = 0; i < sailorsSortedByX.size() && i < linesOnBoat.size(); i++)
+        {
+            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(i), linesOnBoat.get(i)));
+            nbSailorPlaced++;
+        }
+        //TODO A REVISER POUR UN PLACEMENT PLUS OPTI DES MARINS RESTANTS
+        for (int i = 0; i < sailorsSortedByX.size() - nbSailorPlaced; i++){
+            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(sailorsSortedByX.size() - i + 1),
+                linesOnBoat.get(linesOnBoat.size() - i - 1)));
+        }
     }
 
     private List<Integer> determineLinesOnBoat(Bateau ship)
