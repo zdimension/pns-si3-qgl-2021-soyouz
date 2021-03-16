@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 
@@ -11,6 +12,12 @@ public class Checkpoint
 {
     private Position position;
     private Shape shape;
+
+    public Checkpoint(@JsonProperty("position")Position position, @JsonProperty("shape")Shape shape)
+    {
+        this.position = position;
+        this.shape = shape;
+    }
 
     /**
      * Getter.

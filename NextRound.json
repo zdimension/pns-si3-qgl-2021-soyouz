@@ -1,29 +1,74 @@
 {
     "ship": {
         "type": "ship",
-        "life": 100,
+        "life": 1200,
         "position": {
-            "x": 10.654,
-            "y": 3,
-            "orientation": 2.05
+            "x": 2852.173913043478,
+            "y": 1978.827361563518,
+            "orientation": 0
         },
-        "name": "Les copaings d'abord!",
+        "name": "Péquod",
         "deck": {
-            "width": 2,
-            "length": 1
+            "width": 4,
+            "length": 6
         },
         "entities": [
             {
-                "x": 0,
-                "y": 0,
+                "x": 1,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 3,
                 "type": "oar"
             },
             {
                 "x": 1,
                 "y": 0,
                 "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 2,
+                "type": "rudder"
+            },
+            {
+                "x": 3,
+                "y": 1,
+                "type": "sail"
             }
-        ]
+        ],
+        "shape": {
+            "type": "rectangle",
+            "width": 3,
+            "height": 4,
+            "orientation": 0.9773843811168246
+        }
     },
-    "visibleEntities": []
+    "visibleEntities": [],
+    "wind": {
+        "orientation": 0,
+        "strength": 110
+    }
 }

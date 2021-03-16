@@ -17,6 +17,7 @@ public class InitRowersPositionObjective implements Objective
 
     public InitRowersPositionObjective(Bateau ship, Marin[] rowers)
     {
+        sailorsToMove = new ArrayList<>();
         //TODO CREER UN OBJET LINEONBOAT AVEC LES ENTITEES
         List<Integer> linesOnBoat = determineLinesOnBoat(ship);
         List<Marin> sailorsSortedByX = getAllSailorsSortedByXPos(rowers);
@@ -29,7 +30,7 @@ public class InitRowersPositionObjective implements Objective
         }
         //TODO A REVISER POUR UN PLACEMENT PLUS OPTI DES MARINS RESTANTS
         for (int i = 0; i < sailorsSortedByX.size() - nbSailorPlaced; i++){
-            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(sailorsSortedByX.size() - i + 1),
+            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(sailorsSortedByX.size() - (i + 1)),
                 linesOnBoat.get(linesOnBoat.size() - i - 1)));
         }
     }
