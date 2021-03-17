@@ -9,7 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RegattaObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

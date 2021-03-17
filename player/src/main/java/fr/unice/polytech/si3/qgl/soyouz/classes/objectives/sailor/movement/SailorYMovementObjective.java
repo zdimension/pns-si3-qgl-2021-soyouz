@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
@@ -27,7 +27,7 @@ public class SailorYMovementObjective implements Objective
     {
         this.sailor = sailor;
         this.yOnDeck = yOnDeck;
-        nbTurnToComplete = Math.abs(yOnDeck - sailor.getX()) / 5;
+        nbTurnToComplete = Math.abs(yOnDeck - sailor.getX()) / 5 + 1;
     }
 
     /**
@@ -39,7 +39,7 @@ public class SailorYMovementObjective implements Objective
     @Override
     public boolean isValidated(GameState state)
     {
-        return sailor.getY() == yOnDeck;
+        return sailor.getY() == yOnDeck || nbTurnToComplete == 0;
     }
 
     /**
@@ -59,6 +59,16 @@ public class SailorYMovementObjective implements Objective
             moveAction.add(new MoveAction(sailor, 0, -5));
         else
             moveAction.add(new MoveAction(sailor, 0, distStillToParkour));
+        nbTurnToComplete--;
         return moveAction;
+    }
+
+    /**
+     * Getter.
+     * @return the number of turn needed to complete the objective.
+     */
+    public int getNbTurnToComplete()
+    {
+        return nbTurnToComplete;
     }
 }

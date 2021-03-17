@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.checkpoint;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
@@ -61,13 +61,13 @@ public class CheckpointObjective extends CompositeObjective
         int nbSailors = state.getIp().getSailors().length;
         Pair<Integer, Integer> nbOarOnEachSide = state.getIp().getShip().getNbOfOarOnEachSide();
 
-        RowersHelper rowersHelper = new RowersHelper(angleToCp, distanceToCp,
+        RowersConfigHelper rowersConfigHelper = new RowersConfigHelper(angleToCp, distanceToCp,
             nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
-        OarConfiguration wantedOarConfiguration = rowersHelper.resolve();
+        OarConfiguration wantedOarConfiguration = rowersConfigHelper.resolve();
 
-        RudderHelper rudderHelper =
-            new RudderHelper(angleToCp - wantedOarConfiguration.getAngleOfRotation());
-        double wantedRudderRotation = rudderHelper.resolve();
+        RudderConfigHelper rudderConfigHelper =
+            new RudderConfigHelper(angleToCp - wantedOarConfiguration.getAngleOfRotation());
+        double wantedRudderRotation = rudderConfigHelper.resolve();
 
         WantedSailorConfig wanted =
             new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), wantedRudderRotation,

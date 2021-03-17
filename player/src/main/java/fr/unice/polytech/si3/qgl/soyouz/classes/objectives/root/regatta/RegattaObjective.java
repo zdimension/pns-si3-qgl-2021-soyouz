@@ -1,9 +1,10 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint.CheckpointObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.checkpoint.CheckpointObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 
 import java.util.List;
 import java.util.logging.Level;

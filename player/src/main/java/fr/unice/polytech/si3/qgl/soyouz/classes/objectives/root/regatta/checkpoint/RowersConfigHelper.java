@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.checkpoint;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Class to determine the optimal OarConfiguration to be the closest possible to the objective.
  */
-class RowersHelper
+class RowersConfigHelper
 {
 
     private final double neededRotation;
@@ -28,7 +28,7 @@ class RowersHelper
      * @param nbOarOnLeft        The number of oars on the left side of the boat.
      * @param nbOarOnRight       The number of oars on the right side of the boat.
      */
-    RowersHelper(double neededRotation, double distToCheckpoint, int nbSailorReadyToOar
+    RowersConfigHelper(double neededRotation, double distToCheckpoint, int nbSailorReadyToOar
         , int nbOarOnLeft, int nbOarOnRight)
     {
         this.neededRotation = neededRotation;

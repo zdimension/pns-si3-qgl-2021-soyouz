@@ -2,7 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RegattaObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 
 /**

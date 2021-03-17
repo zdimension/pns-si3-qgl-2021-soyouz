@@ -1,11 +1,11 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.checkpoint;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.checkpoint;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 
 /**
  * Class to determine the optimal Rudder configuration to be the closest possible to the objective.
  */
-public class RudderHelper
+public class RudderConfigHelper
 {
 
     private final double neededRotation;
@@ -15,7 +15,7 @@ public class RudderHelper
      *
      * @param neededRotation The angle between the boat and the checkpoint.
      */
-    RudderHelper(double neededRotation)
+    RudderConfigHelper(double neededRotation)
     {
         this.neededRotation = neededRotation;
     }
