@@ -10,24 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to move a sailor only based on X position.
+ * Class to move a sailor only based on a Y position.
  */
-public class SailorXMovementObjective implements Objective
+public class SailorYMovementObjective implements Objective
 {
     Marin sailor;
-    int xOnDeck;
+    int yOnDeck;
     int nbTurnToComplete;
 
     /**
      * Constructor.
      * @param sailor The sailor that will move.
-     * @param xOnDeck The X position wanted.
+     * @param yOnDeck The Y position wanted.
      */
-    public SailorXMovementObjective(Marin sailor, int xOnDeck)
+    public SailorYMovementObjective(Marin sailor, int yOnDeck)
     {
         this.sailor = sailor;
-        this.xOnDeck = xOnDeck;
-        nbTurnToComplete = Math.abs(xOnDeck - sailor.getX()) / 5;
+        this.yOnDeck = yOnDeck;
+        nbTurnToComplete = Math.abs(yOnDeck - sailor.getX()) / 5;
     }
 
     /**
@@ -39,7 +39,7 @@ public class SailorXMovementObjective implements Objective
     @Override
     public boolean isValidated(GameState state)
     {
-        return sailor.getX() == xOnDeck;
+        return sailor.getY() == yOnDeck;
     }
 
     /**
@@ -52,13 +52,13 @@ public class SailorXMovementObjective implements Objective
     public List<GameAction> resolve(GameState state)
     {
         List<GameAction> moveAction = new ArrayList<>();
-        int distStillToParkour = xOnDeck - sailor.getX();
+        int distStillToParkour = yOnDeck - sailor.getY();
         if (distStillToParkour > 5)
-            moveAction.add(new MoveAction(sailor, 5, 0));
+            moveAction.add(new MoveAction(sailor, 0, 5));
         else if (distStillToParkour < -5)
-            moveAction.add(new MoveAction(sailor, -5, 0));
+            moveAction.add(new MoveAction(sailor, 0, -5));
         else
-            moveAction.add(new MoveAction(sailor, distStillToParkour, 0));
+            moveAction.add(new MoveAction(sailor, 0, distStillToParkour));
         return moveAction;
     }
 }
