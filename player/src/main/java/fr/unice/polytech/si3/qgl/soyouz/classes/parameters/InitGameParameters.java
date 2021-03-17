@@ -1,8 +1,10 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.GameGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -16,6 +18,16 @@ public class InitGameParameters
     private Bateau ship;
     private Marin[] sailors;
     private int shipCount;
+
+    public InitGameParameters(@JsonProperty("goal")GameGoal goal,
+                              @JsonProperty("ship") Bateau ship,
+                              @JsonProperty("sailors") Marin[] sailors)
+    {
+        this.goal = goal;
+        this.ship = ship;
+        this.sailors = sailors;
+        this.shipCount = 1;
+    }
 
     /**
      * Getter.

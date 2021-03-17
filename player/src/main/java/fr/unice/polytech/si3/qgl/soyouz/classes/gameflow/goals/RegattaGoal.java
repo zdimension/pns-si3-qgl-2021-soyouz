@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
@@ -10,6 +11,11 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 public class RegattaGoal implements GameGoal
 {
     private Checkpoint[] checkpoints;
+
+    public RegattaGoal(@JsonProperty("checkpoints") Checkpoint[] checkpoints)
+    {
+        this.checkpoints = checkpoints;
+    }
 
     /**
      * Getters.

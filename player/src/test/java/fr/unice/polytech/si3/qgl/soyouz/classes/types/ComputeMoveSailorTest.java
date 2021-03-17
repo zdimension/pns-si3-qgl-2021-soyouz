@@ -34,8 +34,8 @@ class ComputeMoveSailorTest
         oar5 = new Rame(2, 3);
         oar6 = new Rame(7, 4);
         rudder = new Gouvernail(0, 0);
-        sail1 = new Voile(2, 2, false);
-        sail2 = new Voile(3, 3, false);
+        sail1 = new Voile(2, 2);
+        sail2 = new Voile(3, 3);
         sailor = new Marin(1, 0, 0, "Tom Pouce");
         List<OnboardEntity> entities = new ArrayList<>();
         entities.add(oar1);

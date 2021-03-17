@@ -73,8 +73,8 @@ public class RoundObjective implements Objective
             while (true)
             {
                 if (!isOarConfigurationReached(wantedNotPerfect.getOarConfig(), sailorsNotMoving,
-                    gameShip) || !isAbsConfigurationReached(wantedNotPerfect.getAbsConfigPos(),
-                    sailorsNotMoving, gameShip))
+                    gameShip) || !isAbsConfigurationReached(wantedNotPerfect.getAbsConfig(),
+                    sailorsNotMoving))
                 {
                     actsMoves = firstSailorConfig(wantedNotPerfect, reachableForSailors, allOars,
                         allAbsEnt, actsMoves, gameShip);
@@ -91,41 +91,8 @@ public class RoundObjective implements Objective
             //when no moves are found, all sailors will row
             if (actsMoves == null)
             {
-                //Cockpit.log("Sailor configuration cannot be respected");
                 logger.log(Level.INFO, "Sailor configuration cannot be respected");
                 return acts;
-				/*
-				var unmovedSailors = new ArrayList<Marin>(sailors);
-				Cockpit.log("No sailor MoveAction matches the wanted sailor configuration");
-				Cockpit.log("wanted oar config" + wantedOarConfig);
-				Cockpit.log("wanted absolute configuration" + wantedAbsConfig.toString());
-				for (Marin m : sailors) {
-					if (!gameShip.hasAt(m.getX(), m.getY(), Rame.class)) {
-						//TODO A REFACTO CA OPTIONAL CAN BE NULLABLE
-						var rame =
-								Arrays.stream(gameShip.getEntities())
-										.filter(e ->
-														e instanceof Rame
-																&& !(sailors.stream()
-																.anyMatch(n -> n.getX() == e.getX
-																() && n.getY() == e.getY())))
-										.findFirst()
-										.get();
-						acts.add(new MoveAction(m, rame.getX() - m.getX(), rame.getY() - m.getY
-						()));
-						acts.add(new OarAction(m));
-						unmovedSailors.remove(m);
-						m.setX(rame.getX());
-						m.setY(rame.getY());
-					}
-				}
-				for (Marin m : unmovedSailors) {
-					var e = gameShip.getEntityHere(m.getPos());
-					if (e.isPresent() && e.get() instanceof Rame)
-						acts.add(new OarAction(m));
-				}
-				return acts;
-				 */
             }
             else
             {
@@ -143,7 +110,6 @@ public class RoundObjective implements Objective
                     }
                     catch (Exception e)
                     {
-                        //Cockpit.log("Error moving sailors : " + e.getMessage());
                         logger.log(Level.SEVERE, "Error moving sailors : " + e.getMessage());
                         throw e;
                     }
@@ -161,18 +127,18 @@ public class RoundObjective implements Objective
                     tempChoice.hireSailor(oarAct.getSailor(), oarAct);
                 }
 
-                var wantedConfiguration = wanted.getAbsConfig();
+                var wantedAbsConfiguration = wanted.getAbsConfig();
 
-                for (var ent : wantedConfiguration)
+                for (var posConf : wantedAbsConfiguration)
                 {
-                    if (ent instanceof Gouvernail)
+                    var ent = state.getIp().getShip().getEntityHere(posConf.getPosCoord());
+                    if(ent.isPresent())
+                    if (ent.get() instanceof Gouvernail)
                     {
                         //todo store it rather than get multiple times
-                        var pos = ent.getPosCoord();
-                        var gouvSailor = tempChoice.findFirstVacantSailorHere(pos);
+                        var gouvSailor = tempChoice.findFirstVacantSailorHere(posConf.getPosCoord());
                         if (gouvSailor == null)
                         {
-                            //Cockpit.log("No sailor could move to Rudder");
                             logger.log(Level.SEVERE, "No sailor could move to Rudder");
                             continue;
                         }
@@ -210,8 +176,6 @@ public class RoundObjective implements Objective
         }
         catch (Exception e)
         {
-            //e.printStackTrace();
-            //Cockpit.log("Error resolving RoundObjective : " + e.getMessage());
             logger.log(Level.SEVERE, "Error resolving RoundObjective : " + e.getMessage());
             return new ArrayList<>();
         }
@@ -229,13 +193,13 @@ public class RoundObjective implements Objective
 
         if (isOarConfigurationReached(wantedConfig.getOarConfig(), act, gameShip))
         {
-            if (isAbsConfigurationReached(wantedConfig.getAbsConfigPos(), act, gameShip))
+            if (isAbsConfigurationReached(wantedConfig.getAbsConfig(), act))
             {
                 return act;
             }
             var possibleSailorConfigAbs =
                 new HashMap<Marin, Set<? extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getReachableSingleEntities)));
-            var absMoves = firstSailorAbsConfig(wantedConfig.getAbsConfigPos(),
+            var absMoves = firstSailorAbsConfig(wantedConfig.getAbsConfig(),
                 possibleSailorConfigAbs, currentEntities, act, gameShip);
             if (absMoves != null)
             {
@@ -274,15 +238,15 @@ public class RoundObjective implements Objective
                         if (isOarConfigurationReached(wantedConfig.getOarConfig(), allMoves,
                             gameShip))
                         {
-                            if (!isAbsConfigurationReached(wantedConfig.getAbsConfigPos(),
-                                allMoves, gameShip))
+                            if (!isAbsConfigurationReached(wantedConfig.getAbsConfig(),
+                                allMoves))
                             {
                                 if (!sailorsMinusThis.isEmpty())
                                 {
                                     var possibleSailorConfigAbs = new HashMap<Marin, Set<?
                                         extends OnboardEntity>>(possibleSailorConfig.stream().collect(Collectors.toMap(ComputeMoveSailor::getSailor, ComputeMoveSailor::getReachableSingleEntities)));
                                     var absMoves =
-                                        firstSailorAbsConfig(wantedConfig.getAbsConfigPos(),
+                                        firstSailorAbsConfig(wantedConfig.getAbsConfig(),
                                             possibleSailorConfigAbs, currentEntities, actPlusThis
                                             , gameShip);
                                     if (absMoves != null)
@@ -304,7 +268,7 @@ public class RoundObjective implements Objective
                 }
             }
         }
-        return null;
+        return new ArrayList<>();
 
     }
 
@@ -344,19 +308,19 @@ public class RoundObjective implements Objective
                     entsMinusThis, actPlusThis, gameShip);
                 if (allMoves != null)
                 {
-                    if (isAbsConfigurationReached(wantedAbsConfig, allMoves, gameShip))
+                    if (isAbsConfigurationReached(wantedAbsConfig, allMoves))
                     {
                         return allMoves;
                     }
                 }
             }
         }
-        return null;
+        return new ArrayList<>();
     }
 
 
     private boolean isAbsConfigurationReached(Set<PosOnShip> wantedAbsConfig,
-                                              ArrayList<MoveAction> act, Bateau gameShip)
+                                              ArrayList<MoveAction> act)
     {
         if (wantedAbsConfig == null || wantedAbsConfig.isEmpty())
         {
@@ -374,7 +338,6 @@ public class RoundObjective implements Objective
             }
             catch (Exception e)
             {
-                //Cockpit.log("Error checking if configuration (not oars) reached : " + e.getMessage());
                 logger.log(Level.SEVERE, "Error checking if configuration (not oars) reached : " + e.getMessage());
                 return false;
             }
@@ -421,7 +384,6 @@ public class RoundObjective implements Objective
             }
             catch (Exception e)
             {
-                //Cockpit.log("Error checking if oar configuration reached : " + e.getMessage());
                 logger.log(Level.SEVERE, "Error checking if oar configuration reached : " + e.getMessage());
                 return false;
             }
@@ -486,9 +448,8 @@ public class RoundObjective implements Objective
             }
             catch (Exception e)
             {
-                //Cockpit.log("Error determining who should row : " + e.getMessage());
                 logger.log(Level.SEVERE, "Error determining who should row : " + e.getMessage());
-                return null;
+                return new ArrayList<>();
             }
             if (obj.equals(wantedOarConfig))
             {
@@ -496,7 +457,6 @@ public class RoundObjective implements Objective
             }
         }
         logger.log(Level.SEVERE, "Could not establish who should row");
-        //Cockpit.log("Could not establish who should row");
         return new ArrayList<>();
     }
 

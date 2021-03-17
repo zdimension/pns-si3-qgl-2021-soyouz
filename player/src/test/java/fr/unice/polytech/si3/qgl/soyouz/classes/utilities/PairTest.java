@@ -33,7 +33,7 @@ class PairTest
     {
         assertEquals(coords, Pair.of(5, 10));
         assertEquals(coords, coords);
-        assertNotEquals(coords, "Hello");
+        assertNotEquals("Hello", coords);
     }
 
     @Test

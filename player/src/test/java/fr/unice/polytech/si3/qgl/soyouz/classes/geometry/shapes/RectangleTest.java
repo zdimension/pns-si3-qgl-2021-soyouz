@@ -32,7 +32,7 @@ class RectangleTest
             "       \"type\": \"rectangle\",\n" +
             "       \"width\": 3,\n" +
             "       \"height\": 6,\n" +
-            "       \"orientation\": 0\n" +
+            "       \"orientation\": 1\n" +
             "        }\n" +
             "      }\n" +
             "    ]\n" +
@@ -62,8 +62,8 @@ class RectangleTest
     @Test
     void getOrientationTest()
     {
-        assertNotEquals(0.01, rectangle.getOrientation());
-        assertEquals(0, rectangle.getOrientation());
-        assertNotEquals(-0.01, rectangle.getOrientation());
+        assertNotEquals(1.01, rectangle.getOrientation());
+        assertEquals(1, rectangle.getOrientation());
+        assertNotEquals(-1.01, rectangle.getOrientation());
     }
 }

@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * The Deck of a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau}.
  */
@@ -13,6 +15,12 @@ public class Deck
      * X axis
      */
     private int length;
+
+    public Deck(@JsonProperty("width")int width,@JsonProperty("length") int length)
+    {
+        this.width = width;
+        this.length = length;
+    }
 
     /**
      * Getter.

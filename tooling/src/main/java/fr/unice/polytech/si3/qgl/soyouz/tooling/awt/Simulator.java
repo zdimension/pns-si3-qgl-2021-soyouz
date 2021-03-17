@@ -18,8 +18,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Simulator extends JFrame
@@ -42,6 +45,7 @@ public class Simulator extends JFrame
     private int currentStep = 0;
     private double rotIncrement;
     private double spdIncrement;
+    private NextRoundParameters np;
 
     public Simulator() throws IOException
     {
@@ -50,7 +54,7 @@ public class Simulator extends JFrame
         setLayout(new BorderLayout());
         setSize(600, 600);
 
-        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week4.json")),
+        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week5.json")),
             InitGameParameters.class);
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
@@ -125,10 +129,28 @@ public class Simulator extends JFrame
             @Override
             public void actionPerformed(ActionEvent event)
             {
+                var linSpeed = spdIncrement;
+                if (np.getWind() != null)
+                {
+                    var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()), Voile.class);
+                    var counts = new Object()
+                    {
+                        int open;
+                        int total;
+                    };
+                    sails.forEach(voile ->
+                    {
+                        if (voile.isOpenned())
+                            counts.open++;
+                        counts.total++;
+                    });
+                    linSpeed += np.getWind().windAdditionnalSpeed(counts.total, counts.open, np.getShip()) / COMP_STEPS;
+                }
+
                 var cur = model.getShip().getPosition();
                 model.getShip().setPosition(cur.add(new Position(
-                    spdIncrement * Math.cos(cur.getOrientation()),
-                    spdIncrement * Math.sin(cur.getOrientation()),
+                    linSpeed * Math.cos(cur.getOrientation()),
+                    linSpeed * Math.sin(cur.getOrientation()),
                     rotIncrement)));
                 System.out.println("Ship position : " + model.getShip().getPosition());
                 if (++currentStep >= COMP_STEPS)
@@ -143,7 +165,8 @@ public class Simulator extends JFrame
         btnNext.addActionListener(event ->
         {
             btnNext.setEnabled(false);
-            var np = new NextRoundParameters(model.getShip(), null, new Entity[0]); //TODO J'ai
+            //TODO J'ai
+            np = new NextRoundParameters(model.getShip(), null, new Entity[0]);
             // mis null a la place du vent
             try
             {

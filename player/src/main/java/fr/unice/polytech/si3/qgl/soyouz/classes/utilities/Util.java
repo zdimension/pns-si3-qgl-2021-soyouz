@@ -4,6 +4,8 @@ import java.util.stream.Stream;
 
 public final class Util
 {
+    private Util(){}
+
     public static <T> Stream<T> filterType(Stream<?> str, Class<T> clazz)
     {
         return str
