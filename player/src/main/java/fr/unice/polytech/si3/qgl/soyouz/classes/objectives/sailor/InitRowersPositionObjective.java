@@ -13,43 +13,75 @@ import java.util.stream.Collectors;
 
 public class InitRowersPositionObjective implements Objective
 {
-    List<SailorXMovementObjective> sailorsToMove;
+    private final List<SailorXMovementObjective> sailorsToMove;
+    private final List<Integer> linesOnBoat;
+    private final List<Integer> linesWithTwoOarsOnBoat;
+    private final List<Marin> sailorsSortedByX;
 
-    public InitRowersPositionObjective(Bateau ship, Marin[] rowers)
+    /**
+     * Constructor.
+     *
+     * @param ship The ship.
+     * @param rowers All sailors disposed to oar.
+     */
+    public InitRowersPositionObjective(Bateau ship, List<Marin> rowers)
     {
         sailorsToMove = new ArrayList<>();
-        //TODO CREER UN OBJET LINEONBOAT AVEC LES ENTITEES
-        List<Integer> linesOnBoat = determineLinesOnBoat(ship);
-        List<Marin> sailorsSortedByX = getAllSailorsSortedByXPos(rowers);
-        int nbSailorPlaced = 0;
+        linesOnBoat = new ArrayList<>();
+        linesWithTwoOarsOnBoat = new ArrayList<>();
+        sailorsSortedByX = getAllSailorsSortedByXPos(rowers);
+        determineLinesOnBoat(ship);
 
-        for (int i = 0; i < sailorsSortedByX.size() && i < linesOnBoat.size(); i++)
+        int sailorExceeding = sailorsSortedByX.size() - linesOnBoat.size();
+        sailorExceeding = Math.max(sailorExceeding, 0);
+
+        generateSubObjectives(sailorExceeding);
+    }
+
+    /**
+     * Generate all sub objectives AKA x-placement objectives.
+     * @param nbSailorExceeding The number of sailor in addition to the number of lines.
+     */
+    private void generateSubObjectives(int nbSailorExceeding) {
+        int nbSailorPlaced = 0;
+        for (Integer line : linesOnBoat)
         {
-            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(i), linesOnBoat.get(i)));
+            if (nbSailorPlaced >= sailorsSortedByX.size()) break;
+            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(nbSailorPlaced), line));
             nbSailorPlaced++;
-        }
-        //TODO A REVISER POUR UN PLACEMENT PLUS OPTI DES MARINS RESTANTS
-        for (int i = 0; i < sailorsSortedByX.size() - nbSailorPlaced; i++){
-            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(sailorsSortedByX.size() - (i + 1)),
-                linesOnBoat.get(linesOnBoat.size() - i - 1)));
+            if (nbSailorExceeding > 0 && linesWithTwoOarsOnBoat.contains(line))
+            {
+                sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(nbSailorPlaced), line));
+                nbSailorExceeding--;
+                nbSailorPlaced++;
+            }
         }
     }
 
-    private List<Integer> determineLinesOnBoat(Bateau ship)
+    /**
+     * Determine every lines (X) where there is an oar or two.
+     * @param ship The ship.
+     */
+    private void determineLinesOnBoat(Bateau ship)
     {
-        List<Integer> lines = new ArrayList<>();
         List<OnboardEntity> oars = Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Rame).collect(Collectors.toList());
         oars.forEach(oar -> {
-            if (!lines.contains(oar.getX()))
-                lines.add(oar.getX());
+            if (!linesOnBoat.contains(oar.getX()))
+                linesOnBoat.add(oar.getX());
+            else linesWithTwoOarsOnBoat.add(oar.getX());
         });
-        Collections.sort(lines);
-        return lines;
+        Collections.sort(linesOnBoat);
+        Collections.sort(linesWithTwoOarsOnBoat);
     }
 
-    private List<Marin> getAllSailorsSortedByXPos(Marin[] sailors)
+    /**
+     * Sort all sailor by their x position Asc.
+     * @param sailors all sailors ready to oar.
+     * @return a sorted list of sailors.
+     */
+    private List<Marin> getAllSailorsSortedByXPos(List<Marin> sailors)
     {
-        return Arrays.stream(sailors)
+        return sailors.stream()
             .sorted(Comparator.comparing(Marin::getX))
             .collect(Collectors.toList());
     }

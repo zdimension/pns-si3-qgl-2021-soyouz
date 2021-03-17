@@ -16,6 +16,12 @@ public class SailorXMovementObjective implements Objective
     int nbTurnToComplete;
 
     //TODO FAIRE UN OBJECTIF DE DEPLACEMENT SUR UNE CASE EN X ET Y
+
+    /**
+     * Constructor.
+     * @param sailor The sailor that will move.
+     * @param xOnDeck The X position wanted.
+     */
     public SailorXMovementObjective(Marin sailor, int xOnDeck)
     {
         this.sailor = sailor;
@@ -23,12 +29,24 @@ public class SailorXMovementObjective implements Objective
         nbTurnToComplete = Math.abs(xOnDeck - sailor.getX()) / 5;
     }
 
+    /**
+     * Determine if the goal is reached.
+     *
+     * @param state of the game
+     * @return true if this objective is validated
+     */
     @Override
     public boolean isValidated(GameState state)
     {
         return sailor.getX() == xOnDeck;
     }
 
+    /**
+     * Defines actions to perform. The state of the game is being updated too
+     *
+     * @param state of the game
+     * @return a list of all actions to send to JSON
+     */
     @Override
     public List<GameAction> resolve(GameState state)
     {
