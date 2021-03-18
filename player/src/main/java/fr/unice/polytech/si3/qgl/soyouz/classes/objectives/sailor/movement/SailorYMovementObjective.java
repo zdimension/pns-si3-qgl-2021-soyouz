@@ -68,4 +68,14 @@ public class SailorYMovementObjective implements MovingObjective
     {
         return nbTurnToComplete;
     }
+
+    /**
+     * Getter.
+     *
+     * @return the sailor.
+     */
+    public Marin getSailor()
+    {
+        return sailor;
+    }
 }

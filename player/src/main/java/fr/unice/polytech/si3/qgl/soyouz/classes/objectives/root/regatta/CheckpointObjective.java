@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.checkpoint;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
@@ -8,6 +8,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.RoundObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.RowersConfigHelper;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.RudderConfigHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.WantedSailorConfig;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
@@ -52,6 +54,7 @@ public class CheckpointObjective extends CompositeObjective
      * @param state The current game state.
      * @return a list of action to be closer of the goal.
      */
+    //TODO VOIR SI SAILOR OBJECTIF NE DEVRAIT PAS GERER LE COTE HELPER
     @Override
     public List<GameAction> resolve(GameState state)
     {
@@ -63,11 +66,11 @@ public class CheckpointObjective extends CompositeObjective
 
         RowersConfigHelper rowersConfigHelper = new RowersConfigHelper(angleToCp, distanceToCp,
             nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
-        OarConfiguration wantedOarConfiguration = rowersConfigHelper.resolve();
+        OarConfiguration wantedOarConfiguration = rowersConfigHelper.findOptRowersConfiguration();
 
         RudderConfigHelper rudderConfigHelper =
             new RudderConfigHelper(angleToCp - wantedOarConfiguration.getAngleOfRotation());
-        double wantedRudderRotation = rudderConfigHelper.resolve();
+        double wantedRudderRotation = rudderConfigHelper.findOptRudderRotation();
 
         WantedSailorConfig wanted =
             new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), wantedRudderRotation,

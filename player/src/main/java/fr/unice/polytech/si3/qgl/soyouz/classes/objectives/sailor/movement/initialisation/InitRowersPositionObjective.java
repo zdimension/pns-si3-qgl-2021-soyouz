@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.init
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -70,19 +71,32 @@ public class InitRowersPositionObjective implements MovingObjective
             }
             else
             {
-                sailorMoveObjectives.add(new SailorXMovementObjective(
-                    sailors.get(nbSailorPlaced), line.getX()));
-                nbSailorPlaced++;
                 if (nbSailorsExceeding > 0)
+                {
+                    generateSubObjectiveForTwoSailorsOnTheSameLine(line, sailors.get(nbSailorPlaced),
+                        sailors.get(nbSailorPlaced + 1));
+                    nbSailorPlaced += 2;
+                    nbSailorsExceeding--;
+                }
+                else
                 {
                     sailorMoveObjectives.add(new SailorXMovementObjective(
                         sailors.get(nbSailorPlaced), line.getX()));
                     nbSailorPlaced++;
-                    nbSailorsExceeding--;
                 }
             }
-
         }
+    }
+
+    private void generateSubObjectiveForTwoSailorsOnTheSameLine(LineOnBoat line, Marin sailor1, Marin sailor2)
+    {
+        Marin sailorLeft = (sailor1.getY() < sailor2.getY()) ? sailor1 : sailor2;
+        Marin sailorRight = sailorLeft.equals(sailor1) ? sailor2 : sailor1;
+        List<Rame> oars = line.getOars();
+        Rame oarLeft = oars.get(0).getY() == 0 ? oars.get(0) : oars.get(1);
+        Rame oarRight = oarLeft.equals(oars.get(0)) ? oars.get(1) : oars.get(0);
+        sailorMoveObjectives.add(new SailorMovementObjective(sailorLeft, oarLeft.getPos()));
+        sailorMoveObjectives.add(new SailorMovementObjective(sailorRight, oarRight.getPos()));
     }
 
     /**
@@ -93,8 +107,7 @@ public class InitRowersPositionObjective implements MovingObjective
     @Override
     public boolean isValidated()
     {
-        long notDone = sailorMoveObjectives.stream().filter(obj -> !obj.isValidated()).count();
-        return notDone == 0;
+        return sailorMoveObjectives.stream().anyMatch(obj -> !obj.isValidated());
     }
 
     /**

@@ -135,8 +135,7 @@ public class InitSailorPositionObjective implements MovingObjective
     @Override
     public boolean isValidated()
     {
-        long notDone = movingSailorsObjectives.stream().filter(obj -> !obj.isValidated()).count();
-        return notDone == 0;
+        return movingSailorsObjectives.stream().anyMatch(obj -> !obj.isValidated());
     }
 
     /**

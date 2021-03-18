@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.checkpoint;
+package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 
@@ -15,7 +15,7 @@ public class RudderConfigHelper
      *
      * @param neededRotation The angle between the boat and the checkpoint.
      */
-    RudderConfigHelper(double neededRotation)
+    public RudderConfigHelper(double neededRotation)
     {
         this.neededRotation = neededRotation;
     }
@@ -36,7 +36,7 @@ public class RudderConfigHelper
      *
      * @return the angle of rotation that the rudder will perform.
      */
-    double resolve()
+    public double findOptRudderRotation()
     {
         if (rudderRotationIsInRange())
         {

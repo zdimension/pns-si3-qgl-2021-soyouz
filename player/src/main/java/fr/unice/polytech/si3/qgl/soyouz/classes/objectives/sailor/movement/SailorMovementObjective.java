@@ -22,6 +22,7 @@ public class SailorMovementObjective implements MovingObjective
 
     /**
      * Constructor.
+     *
      * @param sailor The sailor that will move.
      * @param xOnDeck The X position wanted.
      */
@@ -32,11 +33,6 @@ public class SailorMovementObjective implements MovingObjective
         this.yOnDeck = yOnDeck;
         nbTurnToComplete = Math.abs((xOnDeck - sailor.getX()) + (yOnDeck
          - sailor.getY())) / 5 + 1;
-    }
-
-    public SailorMovementObjective(Marin sailor, Pair<Integer, Integer> posOnDeck)
-    {
-        this(sailor, posOnDeck.first, posOnDeck.second);
     }
 
     public SailorMovementObjective(Marin sailor, PosOnShip pos)
@@ -73,6 +69,7 @@ public class SailorMovementObjective implements MovingObjective
 
     /**
      * Find the optimal XMove to resolve the objective.
+     *
      * @return the X translation.
      */
     private int resolveXMove()
@@ -87,6 +84,7 @@ public class SailorMovementObjective implements MovingObjective
 
     /**
      * Find the optimal YMove to resolve the objective taking in count the XMove.
+     *
      * @param xMove The previously determined X translation.
      * @return the Y translation.
      */
@@ -101,10 +99,21 @@ public class SailorMovementObjective implements MovingObjective
 
     /**
      * Getter.
+     *
      * @return the number of turn needed to complete the objective.
      */
     public int getNbTurnToComplete()
     {
         return nbTurnToComplete;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return the sailor.
+     */
+    public Marin getSailor()
+    {
+        return sailor;
     }
 }
