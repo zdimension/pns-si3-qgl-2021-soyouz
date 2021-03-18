@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
@@ -95,6 +96,16 @@ public class Marin
     public Pair<Integer, Integer> getPos()
     {
         return Pair.of(getX(), getY());
+    }
+
+    /**
+     * Getter.
+     *
+     * @return the position of the sailor.
+     */
+    public PosOnShip getPosOnShip()
+    {
+        return new PosOnShip(getX(), getY());
     }
 
     /**

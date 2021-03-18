@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.init
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorXMovementObjective;
@@ -12,8 +13,8 @@ import java.util.stream.Collectors;
 
 public class InitRowersPositionObjective implements MovingObjective
 {
-    private final List<MovingObjective> sailorMoveObjectives;
-    private final List<Marin> sailorsSortedByX;
+    private final List<OnBoardObjective> sailorMoveObjectives;
+    private final List<Marin> sailors;
     private final List<LineOnBoat> linesOnBoatWithOars;
     private final List<LineOnBoat> linesOnBoatWithOneOars;
 
@@ -30,12 +31,12 @@ public class InitRowersPositionObjective implements MovingObjective
         linesOnBoatWithOneOars = new ArrayList<>();
         setLinesOnBoatWithOars(linesOnBoat);
 
-        sailorsSortedByX = getAllSailorsSortedByXPos(rowers);
+        sailors = rowers;
 
-        int sailorExceeding = sailorsSortedByX.size() - linesOnBoatWithOars.size();
-        sailorExceeding = Math.max(sailorExceeding, 0);
+        int sailorsExceeding = sailors.size() - linesOnBoatWithOars.size();
+        sailorsExceeding = Math.max(sailorsExceeding, 0);
 
-        generateSubObjectives(sailorExceeding);
+        generateSubObjectives(sailorsExceeding);
 
     }
 
@@ -54,47 +55,34 @@ public class InitRowersPositionObjective implements MovingObjective
 
     /**
      * Generate all sub objectives AKA x-placement objectives.
-     * @param nbSailorExceeding The number of sailor in addition to the number of lines.
+     * @param nbSailorsExceeding The number of sailor in addition to the number of lines.
      */
-    private void generateSubObjectives(int nbSailorExceeding) {
+    private void generateSubObjectives(int nbSailorsExceeding) {
         int nbSailorPlaced = 0;
         for (LineOnBoat line : linesOnBoatWithOars)
         {
-            if (nbSailorPlaced >= sailorsSortedByX.size()) return;
+            if (nbSailorPlaced >= sailors.size()) return;
             if (linesOnBoatWithOneOars.contains(line))
             {
                 sailorMoveObjectives.add(new SailorMovementObjective(
-                    sailorsSortedByX.get(nbSailorPlaced), line.getOars().get(0).getPos()));
+                    sailors.get(nbSailorPlaced), line.getOars().get(0).getPos()));
                 nbSailorPlaced++;
             }
             else
             {
                 sailorMoveObjectives.add(new SailorXMovementObjective(
-                    sailorsSortedByX.get(nbSailorPlaced), line.getX()));
+                    sailors.get(nbSailorPlaced), line.getX()));
                 nbSailorPlaced++;
-                if (nbSailorExceeding > 0)
+                if (nbSailorsExceeding > 0)
                 {
                     sailorMoveObjectives.add(new SailorXMovementObjective(
-                        sailorsSortedByX.get(nbSailorPlaced), line.getX()));
+                        sailors.get(nbSailorPlaced), line.getX()));
                     nbSailorPlaced++;
-                    nbSailorExceeding--;
+                    nbSailorsExceeding--;
                 }
             }
 
         }
-    }
-
-    /**
-     * Sort all sailor by their x position Asc.
-     *
-     * @param sailors all sailors ready to oar.
-     * @return a sorted list of sailors.
-     */
-    private List<Marin> getAllSailorsSortedByXPos(List<Marin> sailors)
-    {
-        return sailors.stream()
-            .sorted(Comparator.comparing(Marin::getX))
-            .collect(Collectors.toList());
     }
 
     /**

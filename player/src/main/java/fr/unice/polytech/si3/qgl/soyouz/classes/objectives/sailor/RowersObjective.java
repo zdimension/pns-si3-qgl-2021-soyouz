@@ -11,7 +11,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RowersObjective implements Objective
+public class RowersObjective implements OnBoardObjective
 {
     //TODO LES MARINS POUVANT BOUGER SONT SEULEMENT LES MARINS AYANT 2 RAMES SUR LEUR LIGNES
     private final List<Marin> rowers;
@@ -37,11 +37,10 @@ public class RowersObjective implements Objective
     /**
      * Determine if the goal is reached.
      *
-     * @param state of the game
      * @return true if this objective is validated
      */
     @Override
-    public boolean isValidated(GameState state)
+    public boolean isValidated()
     {
         long notDone = movingRowers.stream().filter(mov -> !mov.isValidated()).count();
         return notDone == 0;
@@ -50,15 +49,14 @@ public class RowersObjective implements Objective
     /**
      * Defines actions to perform. The state of the game is being updated too
      *
-     * @param state of the game
      * @return a list of all actions to send to JSON
      */
     @Override
-    public List<GameAction> resolve(GameState state)
+    public List<GameAction> resolve()
     {
         List<GameAction> actions = new ArrayList<>();
         movingRowers.forEach(obj -> actions.addAll(obj.resolve()));
-        if (!isValidated(state))
+        if (!isValidated())
             return actions;
         rowers.forEach(rower -> actions.add(new OarAction(rower)));
         immutableRowers.forEach(rowers -> actions.add(new OarAction(rowers)));

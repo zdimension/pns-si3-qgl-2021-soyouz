@@ -29,7 +29,7 @@ public class RegattaObjective extends RootObjective
     public RegattaObjective(RegattaGoal goalData)
     {
         this.goalData = goalData;
-        currentCheckpoint = null;
+        currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint]);
     }
 
     /**
@@ -64,7 +64,6 @@ public class RegattaObjective extends RootObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
-        currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint]);
         return currentCheckpoint.resolve(state);
     }
 }

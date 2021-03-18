@@ -48,6 +48,11 @@ public class PosOnShip
         return Pair.of(getX(), getY());
     }
 
+    public int dist(PosOnShip pos2)
+    {
+        return Math.abs(x - pos2.getX()) + Math.abs(y - pos2.getY());
+    }
+
     @Override
     public String toString()
     {
