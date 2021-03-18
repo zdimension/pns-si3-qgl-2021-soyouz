@@ -45,34 +45,7 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.6</version>
             </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.4.11</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.pitest</groupId>
-                        <artifactId>pitest-junit5-plugin</artifactId>
-                        <version>0.12</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>mutationCoverage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <targetClasses>
-                        <param>fr.unice.polytech.si3.qgl.${artifactId}*</param>
-                    </targetClasses>
-                    <targetTests>
-                        <param>fr.unice.polytech.si3.qgl.${artifactId}*</param>
-                    </targetTests>
-                </configuration>
-            </plugin>
+            
         </plugins>
     </build>
 
@@ -144,7 +117,43 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>pitest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>1.4.11</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>0.12</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>mutationCoverage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <targetClasses>
+                                <param>fr.unice.polytech.si3.qgl.${artifactId}*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>fr.unice.polytech.si3.qgl.${artifactId}*</param>
+                            </targetTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
+
 
     <repositories>
         <repository>
