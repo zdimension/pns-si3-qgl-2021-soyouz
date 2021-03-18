@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class InitRowersPositionObjectiveTest
 {
+    /*
     Bateau boat;
     InitRowersPositionObjective obj;
     Marin[] marins;
@@ -50,6 +51,6 @@ public class InitRowersPositionObjectiveTest
     void isValidated(){
         assertFalse(obj.isValidated(state));
     }
-
+    */
 
 }

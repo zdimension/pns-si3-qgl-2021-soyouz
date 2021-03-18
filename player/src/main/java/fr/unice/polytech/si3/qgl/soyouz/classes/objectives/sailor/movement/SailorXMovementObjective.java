@@ -2,9 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +10,7 @@ import java.util.List;
 /**
  * Class to move a sailor only based on X position.
  */
-public class SailorXMovementObjective implements Objective
+public class SailorXMovementObjective implements MovingObjective
 {
     Marin sailor;
     int xOnDeck;
@@ -33,11 +31,10 @@ public class SailorXMovementObjective implements Objective
     /**
      * Determine if the goal is reached.
      *
-     * @param state of the game
      * @return true if this objective is validated
      */
     @Override
-    public boolean isValidated(GameState state)
+    public boolean isValidated()
     {
         return sailor.getX() == xOnDeck || nbTurnToComplete == 0;
     }
@@ -45,11 +42,10 @@ public class SailorXMovementObjective implements Objective
     /**
      * Defines actions to perform. The state of the game is being updated too
      *
-     * @param state of the game
      * @return a list of all actions to send to JSON
      */
     @Override
-    public List<GameAction> resolve(GameState state)
+    public List<GameAction> resolve()
     {
         List<GameAction> moveAction = new ArrayList<>();
         int distStillToParkour = xOnDeck - sailor.getX();

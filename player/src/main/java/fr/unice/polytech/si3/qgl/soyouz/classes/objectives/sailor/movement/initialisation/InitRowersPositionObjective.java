@@ -1,42 +1,55 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.initialisation;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorXMovementObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InitRowersPositionObjective implements Objective
+public class InitRowersPositionObjective implements MovingObjective
 {
-    private final List<SailorXMovementObjective> sailorsToMove;
-    private final List<Integer> linesOnBoat;
-    private final List<Integer> linesWithTwoOarsOnBoat;
+    private final List<MovingObjective> sailorMoveObjectives;
     private final List<Marin> sailorsSortedByX;
+    private final List<LineOnBoat> linesOnBoatWithOars;
+    private final List<LineOnBoat> linesOnBoatWithOneOars;
 
     /**
      * Constructor.
      *
-     * @param ship The ship.
      * @param rowers All sailors disposed to oar.
      */
-    public InitRowersPositionObjective(Bateau ship, List<Marin> rowers)
+    public InitRowersPositionObjective(List<Marin> rowers, List<LineOnBoat> linesOnBoat)
     {
-        sailorsToMove = new ArrayList<>();
-        linesOnBoat = new ArrayList<>();
-        linesWithTwoOarsOnBoat = new ArrayList<>();
-        sailorsSortedByX = getAllSailorsSortedByXPos(rowers);
-        determineLinesOnBoat(ship);
+        sailorMoveObjectives = new ArrayList<>();
 
-        int sailorExceeding = sailorsSortedByX.size() - linesOnBoat.size();
+        linesOnBoatWithOars = new ArrayList<>();
+        linesOnBoatWithOneOars = new ArrayList<>();
+        setLinesOnBoatWithOars(linesOnBoat);
+
+        sailorsSortedByX = getAllSailorsSortedByXPos(rowers);
+
+        int sailorExceeding = sailorsSortedByX.size() - linesOnBoatWithOars.size();
         sailorExceeding = Math.max(sailorExceeding, 0);
 
         generateSubObjectives(sailorExceeding);
+
+    }
+
+    /**
+     * Determine all lines with one or two oars.
+     *
+     * @param linesOnBoat All the lines that compose the Deck.
+     */
+    private void setLinesOnBoatWithOars(List<LineOnBoat> linesOnBoat)
+    {
+        linesOnBoatWithOars.addAll(linesOnBoat.stream().filter(line -> line.getOars().size() > 0).collect(Collectors.toList()));
+        linesOnBoatWithOneOars.addAll(linesOnBoat.stream().filter(line -> line.getOars().size() == 1).collect(Collectors.toList()));
+        Collections.sort(linesOnBoatWithOars);
+        Collections.sort(linesOnBoatWithOneOars);
     }
 
     /**
@@ -45,38 +58,35 @@ public class InitRowersPositionObjective implements Objective
      */
     private void generateSubObjectives(int nbSailorExceeding) {
         int nbSailorPlaced = 0;
-        for (Integer line : linesOnBoat)
+        for (LineOnBoat line : linesOnBoatWithOars)
         {
-            if (nbSailorPlaced >= sailorsSortedByX.size()) break;
-            sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(nbSailorPlaced), line));
-            nbSailorPlaced++;
-            if (nbSailorExceeding > 0 && linesWithTwoOarsOnBoat.contains(line))
+            if (nbSailorPlaced >= sailorsSortedByX.size()) return;
+            if (linesOnBoatWithOneOars.contains(line))
             {
-                sailorsToMove.add(new SailorXMovementObjective(sailorsSortedByX.get(nbSailorPlaced), line));
-                nbSailorExceeding--;
+                sailorMoveObjectives.add(new SailorMovementObjective(
+                    sailorsSortedByX.get(nbSailorPlaced), line.getOars().get(0).getPos()));
                 nbSailorPlaced++;
             }
+            else
+            {
+                sailorMoveObjectives.add(new SailorXMovementObjective(
+                    sailorsSortedByX.get(nbSailorPlaced), line.getX()));
+                nbSailorPlaced++;
+                if (nbSailorExceeding > 0)
+                {
+                    sailorMoveObjectives.add(new SailorXMovementObjective(
+                        sailorsSortedByX.get(nbSailorPlaced), line.getX()));
+                    nbSailorPlaced++;
+                    nbSailorExceeding--;
+                }
+            }
+
         }
     }
 
     /**
-     * Determine every lines (X) where there is an oar or two.
-     * @param ship The ship.
-     */
-    private void determineLinesOnBoat(Bateau ship)
-    {
-        List<OnboardEntity> oars = Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Rame).collect(Collectors.toList());
-        oars.forEach(oar -> {
-            if (!linesOnBoat.contains(oar.getX()))
-                linesOnBoat.add(oar.getX());
-            else linesWithTwoOarsOnBoat.add(oar.getX());
-        });
-        Collections.sort(linesOnBoat);
-        Collections.sort(linesWithTwoOarsOnBoat);
-    }
-
-    /**
      * Sort all sailor by their x position Asc.
+     *
      * @param sailors all sailors ready to oar.
      * @return a sorted list of sailors.
      */
@@ -90,29 +100,27 @@ public class InitRowersPositionObjective implements Objective
     /**
      * Determine if the goal is reached.
      *
-     * @param state of the game
      * @return true if this objective is validated
      */
     @Override
-    public boolean isValidated(GameState state)
+    public boolean isValidated()
     {
-        long notDone = sailorsToMove.stream().filter(obj -> !obj.isValidated(state)).count();
+        long notDone = sailorMoveObjectives.stream().filter(obj -> !obj.isValidated()).count();
         return notDone == 0;
     }
 
     /**
      * Defines actions to perform. The state of the game is being updated too
      *
-     * @param state of the game
      * @return a list of all actions to send to JSON
      */
     @Override
-    public List<GameAction> resolve(GameState state)
+    public List<GameAction> resolve()
     {
         List<GameAction> moveActions = new ArrayList<>();
-        sailorsToMove.forEach(obj -> {
-            if (!obj.isValidated(state))
-                moveActions.addAll(obj.resolve(state));
+        sailorMoveObjectives.forEach(obj -> {
+            if (!obj.isValidated())
+                moveActions.addAll(obj.resolve());
         });
         return moveActions;
     }
