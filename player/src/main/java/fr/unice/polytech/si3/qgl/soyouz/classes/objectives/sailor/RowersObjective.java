@@ -2,10 +2,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorYMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -133,7 +131,7 @@ public class RowersObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return movingRowers.stream().anyMatch(obj -> !obj.isValidated());
+        return movingRowers.stream().allMatch(SailorYMovementObjective::isValidated);
     }
 
     /**

@@ -107,7 +107,7 @@ public class InitRowersPositionObjective implements MovingObjective
     @Override
     public boolean isValidated()
     {
-        return sailorMoveObjectives.stream().anyMatch(obj -> !obj.isValidated());
+        return sailorMoveObjectives.stream().allMatch(OnBoardObjective::isValidated);
     }
 
     /**

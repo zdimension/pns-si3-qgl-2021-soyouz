@@ -74,7 +74,7 @@ public class RowersConfigHelper
             forwardPossibilities.add(new OarConfiguration(i, i, totalNbOfOar));
         }
     }
-    
+
     private int determineMaxSailorNumberOnEachSide()
     {
         int mutableSailors = this.mutableSailors;

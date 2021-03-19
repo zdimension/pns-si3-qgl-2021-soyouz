@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.init
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
@@ -135,7 +136,7 @@ public class InitSailorPositionObjective implements MovingObjective
     @Override
     public boolean isValidated()
     {
-        return movingSailorsObjectives.stream().anyMatch(obj -> !obj.isValidated());
+        return movingSailorsObjectives.stream().allMatch(OnBoardObjective::isValidated);
     }
 
     /**
