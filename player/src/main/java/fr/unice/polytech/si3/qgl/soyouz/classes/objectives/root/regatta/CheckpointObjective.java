@@ -64,20 +64,21 @@ public class CheckpointObjective extends CompositeObjective
         int nbSailors = state.getIp().getSailors().length;
         Pair<Integer, Integer> nbOarOnEachSide = state.getIp().getShip().getNbOfOarOnEachSide();
 
-        RowersConfigHelper rowersConfigHelper = new RowersConfigHelper(angleToCp, distanceToCp,
-            nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
-        OarConfiguration wantedOarConfiguration = rowersConfigHelper.findOptRowersConfiguration();
+        //RowersConfigHelper rowersConfigHelper = new RowersConfigHelper(angleToCp, distanceToCp,
+        //    nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
+        //OarConfiguration wantedOarConfiguration = rowersConfigHelper.findOptRowersConfiguration();
 
-        RudderConfigHelper rudderConfigHelper =
-            new RudderConfigHelper(angleToCp - wantedOarConfiguration.getAngleOfRotation());
-        double wantedRudderRotation = rudderConfigHelper.findOptRudderRotation();
+        //RudderConfigHelper rudderConfigHelper =
+        //    new RudderConfigHelper(angleToCp - wantedOarConfiguration.getAngleOfRotation());
+        //double wantedRudderRotation = rudderConfigHelper.findOptRudderRotation();
 
-        WantedSailorConfig wanted =
-            new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), wantedRudderRotation,
-                Set.of(state.getIp().getShip().findFirstEntity(Gouvernail.class).getPos()));
+        //WantedSailorConfig wanted =
+        //    new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), wantedRudderRotation,
+        //        Set.of(state.getIp().getShip().findFirstEntity(Gouvernail.class).getPos()));
 
-        var roundObj = new RoundObjective(wanted);
-        return roundObj.resolve(state);
+        //var roundObj = new RoundObjective(wanted);
+        //return roundObj.resolve(state);
+        return null;
     }
 
     /**

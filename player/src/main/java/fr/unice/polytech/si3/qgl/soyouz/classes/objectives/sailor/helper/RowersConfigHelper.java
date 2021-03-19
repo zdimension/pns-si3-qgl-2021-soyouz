@@ -15,96 +15,112 @@ public class RowersConfigHelper
     private final double neededRotation;
     private final double distToCheckpoint;
     private final int totalNbOfOar;
+    private final int immutableLeftSailor;
+    private final int immutableRightSailor;
+    private final int mutableSailors;
+
     private final List<OarConfiguration> leftTurnPossibilities;
     private final List<OarConfiguration> rightTurnPossibilities;
     private final List<OarConfiguration> forwardPossibilities;
 
-    /**
-     * Constructor.
-     *
-     * @param neededRotation     The angle between the boat and the checkpoint.
-     * @param distToCheckpoint   The distance between the boat and the checkpoint.
-     * @param nbSailorReadyToOar The number of sailors able to oar.
-     * @param nbOarOnLeft        The number of oars on the left side of the boat.
-     * @param nbOarOnRight       The number of oars on the right side of the boat.
-     */
-    //TODO REFACTO POUR PRENDRE EN COMPTE LES MARINS IMMUABLES
-    //TODO MAYBE NBMAXSAILORRIGHT NBMAXSAILORLEFT ?
-    public RowersConfigHelper(double neededRotation, double distToCheckpoint, int nbSailorReadyToOar
-        , int nbOarOnLeft, int nbOarOnRight)
+    public RowersConfigHelper(double neededRotation, double distToCheckpoint, int mutableSailors
+        , int immutableRightSailor, int immutableLeftSailor, int totalNbOfOar)
     {
         this.neededRotation = neededRotation;
         this.distToCheckpoint = distToCheckpoint;
-        totalNbOfOar = nbOarOnLeft + nbOarOnRight;
+        this.totalNbOfOar = totalNbOfOar;
+        this.immutableLeftSailor = immutableLeftSailor;
+        this.immutableRightSailor = immutableRightSailor;
+        this.mutableSailors = mutableSailors;
         leftTurnPossibilities = new ArrayList<>();
         rightTurnPossibilities = new ArrayList<>();
         forwardPossibilities = new ArrayList<>();
-        setOaringPossibilities(nbSailorReadyToOar, nbOarOnLeft, nbOarOnRight);
+        setOaringPossibilities();
     }
 
     /**
      * Determine if the boat should go straight or turn and call the respective method.
-     *
-     * @param nbSailor     The number of sailors ready to oar.
-     * @param nbOarOnLeft  The number of oars on the left side of the boat.
-     * @param nbOarOnRight The number of oars on the right side of the boat.
      */
-    private void setOaringPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight)
+    private void setOaringPossibilities()
     {
         if (Gouvernail.ALLOWED_ROTATION.first < neededRotation && neededRotation < Gouvernail.ALLOWED_ROTATION.second)
         {
-            setForwardPossibilities(nbSailor);
+            setForwardPossibilities();
         }
         else
         {
-            setTurnPossibilities(nbSailor, nbOarOnLeft, nbOarOnRight);
+            setTurnPossibilities();
         }
     }
 
+    //TODO DONE
     /**
      * Initialise all the possibles oar configuration to go straight forward.
-     *
-     * @param nbSailor The number of sailors ready to oar.
      */
-    private void setForwardPossibilities(int nbSailor)
+    private void setForwardPossibilities()
     {
-        for (int i = 2; i <= nbSailor; i += 2)
+        int maxSailorOnEachSide = determineMaxSailorNumberOnEachSide();
+        for (int i = 1; i <= maxSailorOnEachSide; i++)
         {
-            forwardPossibilities.add(new OarConfiguration(i / 2, i / 2, totalNbOfOar));
+            forwardPossibilities.add(new OarConfiguration(i, i, totalNbOfOar));
         }
+    }
+
+    //TODO PEUT PEUT ETRE TROUVER MIEUX
+    private int determineMaxSailorNumberOnEachSide()
+    {
+        int mutableSailors = this.mutableSailors;
+        int sailorLeft = immutableLeftSailor;
+        int sailorRight = immutableRightSailor;
+        while (Math.abs(sailorLeft - sailorRight) > 0 && mutableSailors > 0)
+        {
+            if (sailorLeft < sailorRight)
+            {
+                sailorLeft++;
+                mutableSailors--;
+            }
+
+            if (sailorLeft > sailorRight)
+            {
+                sailorRight++;
+                mutableSailors--;
+            }
+        }
+        while (mutableSailors % 2 == 0)
+        {
+            sailorLeft++;
+            sailorRight++;
+            mutableSailors -= 2;
+        }
+        return Math.min(sailorLeft, sailorRight);
     }
 
     /**
      * Determine on which side the boat should turn and call the respective method.
-     *
-     * @param nbSailor     The number of sailors ready to oar.
-     * @param nbOarOnLeft  The number of oars on the left side of the boat.
-     * @param nbOarOnRight The number of oars on the right side of the boat.
      */
-    private void setTurnPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight)
+    private void setTurnPossibilities()
     {
+        int maxLeftNb = immutableLeftSailor + mutableSailors;
+        int maxRightNb = immutableRightSailor + mutableSailors;
         if (neededRotation > 0)
         {
-            setLeftTurnPossibilities(nbSailor, nbOarOnLeft, nbOarOnRight);
+            setLeftTurnPossibilities(maxLeftNb, maxRightNb);
         }
         else
         {
-            setRightTurnPossibilities(nbSailor, nbOarOnLeft, nbOarOnRight);
+            setRightTurnPossibilities(maxLeftNb, maxRightNb);
         }
     }
 
     /**
      * Set all the oar configuration to turn left.
-     *
-     * @param nbSailor     The number of sailors ready to oar.
-     * @param nbOarOnLeft  The number of oars on the left side of the boat.
-     * @param nbOarOnRight The number of oars on the right side of the boat.
      */
-    private void setLeftTurnPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight)
+    private void setLeftTurnPossibilities(int maxLeftNb, int maxRightNb)
     {
-        for (int rightNb = 0; (rightNb <= nbOarOnRight) && (rightNb <= nbSailor); rightNb++)
+        for (int rightNb = 0; rightNb < maxRightNb; rightNb++)
         {
-            for (int leftNb = 0; (leftNb < rightNb) && (leftNb <= nbOarOnLeft) && (leftNb + rightNb <= nbSailor); leftNb++)
+            for (int leftNb = 0; (leftNb < rightNb) && leftNb < (maxLeftNb - (rightNb
+            - immutableRightSailor)); leftNb++)
             {
                 leftTurnPossibilities.add(new OarConfiguration(leftNb, rightNb, totalNbOfOar));
             }
@@ -113,18 +129,15 @@ public class RowersConfigHelper
 
     /**
      * Set all the oar configuration to turn right.
-     *
-     * @param nbSailor     The number of sailors ready to oar.
-     * @param nbOarOnLeft  The number of oars on the left side of the boat.
-     * @param nbOarOnRight The number of oars on the right side of the boat.
      */
-    private void setRightTurnPossibilities(int nbSailor, int nbOarOnLeft, int nbOarOnRight)
+    private void setRightTurnPossibilities(int maxLeftNb, int maxRightNb)
     {
-        for (int leftNb = 0; (leftNb <= nbOarOnLeft) && (leftNb <= nbSailor); leftNb++)
+        for (int leftNb = 0; leftNb < maxLeftNb; leftNb++)
         {
-            for (int rightNb = 0; (rightNb < leftNb) && (rightNb <= nbOarOnRight) && (leftNb + rightNb <= nbSailor); rightNb++)
+            for (int rightNb = 0; (rightNb < leftNb) && rightNb < (maxRightNb - (leftNb
+                - immutableLeftSailor)); rightNb++)
             {
-                rightTurnPossibilities.add(new OarConfiguration(leftNb, rightNb, totalNbOfOar));
+                leftTurnPossibilities.add(new OarConfiguration(leftNb, rightNb, totalNbOfOar));
             }
         }
     }
