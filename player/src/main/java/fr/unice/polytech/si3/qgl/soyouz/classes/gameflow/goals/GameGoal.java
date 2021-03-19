@@ -15,11 +15,4 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 })
 public interface GameGoal
 {
-    /**
-     * Getters.
-     *
-     * @return a new objective based on the current game mode.
-     */
-    @JsonIgnore
-    RootObjective getObjective();
 }

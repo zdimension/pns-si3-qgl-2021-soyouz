@@ -4,6 +4,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 
 import java.util.List;
 
+/**
+ * This interface is meant to represents objectives that must be done in a turn or two but don't
+ * last all game long.
+ */
 public interface OnBoardObjective
 {
     /**

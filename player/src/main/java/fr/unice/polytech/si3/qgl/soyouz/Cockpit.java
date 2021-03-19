@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
@@ -66,9 +68,8 @@ public class Cockpit implements ICockpit
         {
             updateLogLevel();
             ip = OBJECT_MAPPER.readValue(game, InitGameParameters.class);
-            objective = ip.getGoal().getObjective();
-
-
+            if (ip.getGoal() instanceof RegattaGoal)
+                objective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
             logger.log(Level.FINEST, "Init game input: " + ip);
         }
         catch (Exception e)

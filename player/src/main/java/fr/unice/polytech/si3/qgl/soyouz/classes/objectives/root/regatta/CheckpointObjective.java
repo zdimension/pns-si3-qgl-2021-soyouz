@@ -5,17 +5,12 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.RoundObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.RowersConfigHelper;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.RudderConfigHelper;
-import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
-import fr.unice.polytech.si3.qgl.soyouz.classes.types.WantedSailorConfig;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.SailorObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Checkpoint type of objective
@@ -24,15 +19,19 @@ public class CheckpointObjective extends CompositeObjective
 {
 
     private final Checkpoint cp;
+    OnBoardDataHelper onBoardDataHelper;
+    SailorObjective roundObjective;
 
     /**
      * Constructor.
      *
      * @param checkpoint The checkpoint to reach.
      */
-    public CheckpointObjective(Checkpoint checkpoint)
+    public CheckpointObjective(Checkpoint checkpoint, OnBoardDataHelper onBoardDataHelper)
     {
         cp = checkpoint;
+        this.onBoardDataHelper = onBoardDataHelper;
+        roundObjective = null;
     }
 
     /**
@@ -61,24 +60,11 @@ public class CheckpointObjective extends CompositeObjective
         Bateau boat = state.getNp().getShip();
         double angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
         double distanceToCp = boat.getPosition().getLength(cp.getPosition());
-        int nbSailors = state.getIp().getSailors().length;
-        Pair<Integer, Integer> nbOarOnEachSide = state.getIp().getShip().getNbOfOarOnEachSide();
 
-        //RowersConfigHelper rowersConfigHelper = new RowersConfigHelper(angleToCp, distanceToCp,
-        //    nbSailors - 1, nbOarOnEachSide.first, nbOarOnEachSide.second);
-        //OarConfiguration wantedOarConfiguration = rowersConfigHelper.findOptRowersConfiguration();
+        if (roundObjective == null || roundObjective.isValidated())
+            roundObjective = new SailorObjective(onBoardDataHelper, distanceToCp, angleToCp);
 
-        //RudderConfigHelper rudderConfigHelper =
-        //    new RudderConfigHelper(angleToCp - wantedOarConfiguration.getAngleOfRotation());
-        //double wantedRudderRotation = rudderConfigHelper.findOptRudderRotation();
-
-        //WantedSailorConfig wanted =
-        //    new WantedSailorConfig(wantedOarConfiguration.getSailorConfiguration(), wantedRudderRotation,
-        //        Set.of(state.getIp().getShip().findFirstEntity(Gouvernail.class).getPos()));
-
-        //var roundObj = new RoundObjective(wanted);
-        //return roundObj.resolve(state);
-        return null;
+        return roundObjective.resolve();
     }
 
     /**
@@ -90,12 +76,12 @@ public class CheckpointObjective extends CompositeObjective
     private double calculateAngleBetweenBoatAndCheckpoint(Bateau boat)
     {
         double boatOrientation = boat.getPosition().getOrientation();
-        var boatVector = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
-        var cpVector = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(),
+        Pair<Double, Double> boatVector = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
+        Pair<Double, Double> cpVector = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(),
             cp.getPosition().getY() - boat.getPosition().getY());
-        var normDirection = Math.sqrt(Math.pow(cpVector.first, 2) + Math.pow(cpVector.second, 2));
+        double normDirection = Math.sqrt(Math.pow(cpVector.first, 2) + Math.pow(cpVector.second, 2));
         var scalar = boatVector.first * cpVector.first + boatVector.second * cpVector.second;
-        var angle = Math.acos(scalar / normDirection);
+        double angle = Math.acos(scalar / normDirection);
         if (cpVector.second - boatVector.second < 0)
         {
             angle = -angle;

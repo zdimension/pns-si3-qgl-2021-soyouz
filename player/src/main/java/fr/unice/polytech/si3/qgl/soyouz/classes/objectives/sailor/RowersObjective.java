@@ -19,15 +19,15 @@ public class RowersObjective implements OnBoardObjective
     private final List<SailorYMovementObjective> movingRowers;
     private final List<Marin> rowingSailors;
 
-    public RowersObjective(Bateau ship, List<Marin> rowers, List<Marin> immutableRowers, Pair<Integer, Integer> rowerConfigurationWanted)
+    public RowersObjective(Bateau ship, List<Marin> mutableRowers, List<Marin> immutableRowers, Pair<Integer, Integer> rowerConfigurationWanted)
     {
         nbOarLeftWanted = rowerConfigurationWanted.first;
         nbOarRightWanted = rowerConfigurationWanted.second;
-        setupNbOarWantedOnEachSide(rowerConfigurationWanted, rowers, immutableRowers);
+        setupNbOarWantedOnEachSide(rowerConfigurationWanted, mutableRowers, immutableRowers);
         movingRowers = new ArrayList<>();
         rowingSailors = new ArrayList<>();
         setupImmutableRowers(ship, immutableRowers);
-        setupRowers(ship, rowers);
+        setupRowers(ship, mutableRowers);
     }
 
     private void setupNbOarWantedOnEachSide(Pair<Integer, Integer> rowerConfigurationWanted, List<Marin> rowers, List<Marin> immutableRowers)

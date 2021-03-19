@@ -26,15 +26,4 @@ public class RegattaGoal implements GameGoal
     {
         return checkpoints.clone();
     }
-
-    /**
-     * Getters.
-     *
-     * @return the current goal.
-     */
-    @Override
-    public RootObjective getObjective()
-    {
-        return new RegattaObjective(this);
-    }
 }

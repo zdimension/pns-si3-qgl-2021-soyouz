@@ -4,7 +4,11 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.initialisation.InitSailorPositionObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +22,8 @@ public class RegattaObjective extends RootObjective
     private final RegattaGoal goalData;
     private int numCheckpoint = 0;
     private CheckpointObjective currentCheckpoint;
+    private final InitSailorPositionObjective initialisationObjective;
+    private OnBoardDataHelper onBoardDataHelper;
 
 
     /**
@@ -25,10 +31,12 @@ public class RegattaObjective extends RootObjective
      *
      * @param goalData The data of the race.
      */
-    public RegattaObjective(RegattaGoal goalData)
+    public RegattaObjective(RegattaGoal goalData, InitGameParameters ip)
     {
         this.goalData = goalData;
-        currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint]);
+        currentCheckpoint = null;
+        onBoardDataHelper = null;
+        initialisationObjective = new InitSailorPositionObjective(ip.getShip(), Arrays.asList(ip.getSailors()));
     }
 
     /**
@@ -39,17 +47,25 @@ public class RegattaObjective extends RootObjective
     @Override
     public void update(GameState state)
     {
-        if (currentCheckpoint != null && currentCheckpoint.isValidated(state))
+        if (initialisationObjective.isValidated())
         {
-            if (goalData.getCheckpoints().length - 1 > numCheckpoint)
+            if (onBoardDataHelper == null)
+                onBoardDataHelper = new OnBoardDataHelper(state.getNp().getShip(), Arrays.asList(state.getIp().getSailors()));
+            if (currentCheckpoint == null)
+                currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper);
+            else if (currentCheckpoint != null && currentCheckpoint.isValidated(state))
             {
-                logger.log(Level.INFO, "Checkpoint " + numCheckpoint + " reached");
-                numCheckpoint++;
-            }
-            else
-            {
-                logger.log(Level.INFO, "Regatta ended");
-                numCheckpoint = 0;
+                if (goalData.getCheckpoints().length - 1 > numCheckpoint)
+                {
+                    logger.log(Level.INFO, "Checkpoint " + numCheckpoint + " reached");
+                    numCheckpoint++;
+                }
+                else
+                {
+                    logger.log(Level.INFO, "Regatta ended");
+                    numCheckpoint = 0;
+                }
+                currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper);
             }
         }
     }
@@ -63,6 +79,7 @@ public class RegattaObjective extends RootObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
-        return currentCheckpoint.resolve(state);
+        return initialisationObjective.isValidated() ? currentCheckpoint.resolve(state)
+            : initialisationObjective.resolve();
     }
 }

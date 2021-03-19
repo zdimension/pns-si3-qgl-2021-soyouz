@@ -211,7 +211,7 @@ class RegattaObjectiveTest
             "}\n");
 
         gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal());
+        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
     }
 
     void setupObjectiveOnLeft()
@@ -272,7 +272,7 @@ class RegattaObjectiveTest
             "}\n");
 
         gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal());
+        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
     }
 
     void setupObjectiveOnRight()
@@ -333,7 +333,7 @@ class RegattaObjectiveTest
             "}\n");
 
         gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal());
+        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
     }
 
     void setupObjectiveOnBoat()
@@ -394,7 +394,7 @@ class RegattaObjectiveTest
             "}\n");
 
         gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal());
+        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
     }
 
     void setupSecondObjectiveOnBoat()
@@ -455,7 +455,7 @@ class RegattaObjectiveTest
             "}\n");
 
         gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal());
+        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
     }
 
     @Test
