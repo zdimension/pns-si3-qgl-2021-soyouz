@@ -55,7 +55,7 @@ public class Simulator extends JFrame
         setLayout(new BorderLayout());
         setSize(600, 600);
 
-        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week5.json")),
+        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week6.json")),
             InitGameParameters.class);
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
@@ -167,9 +167,8 @@ public class Simulator extends JFrame
         btnNext.addActionListener(event ->
         {
             btnNext.setEnabled(false);
-            //TODO J'ai
-            np = new NextRoundParameters(model.getShip(), null, new Entity[0]);
-            // mis null a la place du vent
+            Wind wind = new Wind(0, 50);
+            np = new NextRoundParameters(model.getShip(), wind, new Entity[0]);
             try
             {
                 var res =

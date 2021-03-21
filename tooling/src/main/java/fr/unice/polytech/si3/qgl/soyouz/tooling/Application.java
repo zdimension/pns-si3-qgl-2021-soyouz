@@ -13,7 +13,7 @@ public class Application
     public static void main(String[] args) throws IOException
     {
         Cockpit cockpit = new Cockpit();
-        cockpit.initGame(Files.readString(Path.of("Week5.json")));
+        cockpit.initGame(Files.readString(Path.of("Week6.json")));
         System.out.println("An instance of my team player: " + cockpit);
         //System.out.println("When called, it returns some JSON: " + cockpit.nextRound(Files
         // .readString(Path.of("NextRound.json"))));

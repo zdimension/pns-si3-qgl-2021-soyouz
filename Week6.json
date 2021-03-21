@@ -1,0 +1,228 @@
+{
+    "goal": {
+        "mode": "REGATTA",
+        "checkpoints": [
+            {
+                "position": {
+                    "x": 4036.4115963579497,
+                    "y": 264.956362612613
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "position": {
+                    "x": 6866.105430167673,
+                    "y": 277.9420045045067
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "position": {
+                    "x": 1634.7826086956427,
+                    "y": 3884.3648208469035
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 50
+                }
+            },
+            {
+                "position": {
+                    "x": 8019.417976524843,
+                    "y": 1210.6559684684694
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "position": {
+                    "x": 8100.5085279370105,
+                    "y": 2245.8826013513526
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "position": {
+                    "x": 4652.274679791037,
+                    "y": 2802.9983108108113
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            }
+        ]
+    },
+    "ship": {
+        "type": "ship",
+        "life": 1200,
+        "position": {
+            "x": 2852.173913043478,
+            "y": 1978.827361563518,
+            "orientation": -1.0297442586766543
+        },
+        "name": "Péquod",
+        "deck": {
+            "width": 3,
+            "length": 7
+        },
+        "entities": [
+            {
+                "x": 6,
+                "y": 1,
+                "type": "rudder"
+            },
+            {
+                "x": 3,
+                "y": 1,
+                "type": "sail"
+            },
+            {
+                "x": 1,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 5,
+                "y": 2,
+                "type": "oar"
+            },
+			{
+                "x": 4,
+                "y": 2,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 0,
+                "type": "oar"
+            },
+			{
+                "x": 5,
+                "y": 0,
+                "type": "oar"
+            }
+        ],
+        "shape": {
+            "type": "rectangle",
+            "width": 3,
+            "height": 4,
+            "orientation": -1.0297442586766543
+        }
+    },
+    "sailors": [
+        {
+            "x": 0,
+            "y": 0,
+            "id": 0,
+            "name": "Edward Teach"
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "id": 1,
+            "name": "Edward Pouce"
+        },
+        {
+            "x": 0,
+            "y": 2,
+            "id": 2,
+            "name": "Tom Pouce"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "id": 3,
+            "name": "Jack Teachiii"
+        },
+        {
+            "x": 1,
+            "y": 1,
+            "id": 4,
+            "name": "Jack Pouce"
+        },
+		{
+            "x": 1,
+            "y": 2,
+            "id": 5,
+            "name": "Jack Pouce"
+        },
+		{
+            "x": 2,
+            "y": 0,
+            "id": 6,
+            "name": "Jack Pouce"
+        },
+		{
+            "x": 2,
+            "y": 1,
+            "id": 7,
+            "name": "Jack Pouce"
+        },
+		{
+            "x": 2,
+            "y": 2,
+            "id": 8,
+            "name": "Jack Pouce"
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "id": 9,
+            "name": "Edward Pouce"
+        },
+        {
+            "x": 3,
+            "y": 1,
+            "id": 10,
+            "name": "Edward Pouce"
+        },
+		{
+            "x": 3,
+            "y": 2,
+            "id": 11,
+            "name": "Jack Pouce"
+        }
+    ]
+}
