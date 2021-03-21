@@ -53,15 +53,15 @@ class PosOnShipTest
     @Test
     void getPosCoord()
     {
-        assertNotEquals(Pair.of(0,2), posByCoords.getPosCoord());
-        assertEquals(Pair.of(1,2), posByCoords.getPosCoord());
-        assertNotEquals(Pair.of(1,3), posByCoords.getPosCoord());
-        assertNotEquals(Pair.of(1,3), posByPairOfCoords.getPosCoord());
-        assertEquals(Pair.of(2,3), posByPairOfCoords.getPosCoord());
-        assertNotEquals(Pair.of(2,4), posByPairOfCoords.getPosCoord());
-        assertNotEquals(Pair.of(2,4), posByEntityCoords.getPosCoord());
-        assertEquals(Pair.of(3,4), posByEntityCoords.getPosCoord());
-        assertNotEquals(Pair.of(3,5), posByEntityCoords.getPosCoord());
+        assertNotEquals(Pair.of(0,2), posByCoords.getPosCoords());
+        assertEquals(Pair.of(1,2), posByCoords.getPosCoords());
+        assertNotEquals(Pair.of(1,3), posByCoords.getPosCoords());
+        assertNotEquals(Pair.of(1,3), posByPairOfCoords.getPosCoords());
+        assertEquals(Pair.of(2,3), posByPairOfCoords.getPosCoords());
+        assertNotEquals(Pair.of(2,4), posByPairOfCoords.getPosCoords());
+        assertNotEquals(Pair.of(2,4), posByEntityCoords.getPosCoords());
+        assertEquals(Pair.of(3,4), posByEntityCoords.getPosCoords());
+        assertNotEquals(Pair.of(3,5), posByEntityCoords.getPosCoords());
     }
 
     @Test
