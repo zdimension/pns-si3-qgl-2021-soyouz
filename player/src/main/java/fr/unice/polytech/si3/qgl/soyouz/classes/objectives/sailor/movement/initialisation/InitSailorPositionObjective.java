@@ -6,6 +6,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorXMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 
 import java.util.ArrayList;
@@ -34,8 +35,20 @@ public class InitSailorPositionObjective implements MovingObjective
         generateSubObjectives(ship);
     }
 
+    private void handleUselessSailors(Bateau ship)
+    {
+        while (ship.getEntities().length < sailors.size())
+        {
+            LineOnBoat lineWithNothing = linesOnBoat.stream()
+                .filter(line -> line.getOars().size() == 0).collect(Collectors.toList()).get(0);
+            movingSailorsObjectives.add(new SailorXMovementObjective(sailors.get(0), lineWithNothing.getX()));
+            sailors.remove(0);
+        }
+    }
+
     private void generateSubObjectives(Bateau ship)
     {
+        handleUselessSailors(ship);
         generateMovingToRudderObjective();
         generateMovingToSailsObjective(determineHowManySailorsToSail(ship));
         movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));

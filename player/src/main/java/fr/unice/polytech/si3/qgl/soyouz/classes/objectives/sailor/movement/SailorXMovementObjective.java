@@ -50,12 +50,15 @@ public class SailorXMovementObjective implements MovingObjective
     {
         List<GameAction> moveAction = new ArrayList<>();
         int distStillToParkour = xOnDeck - sailor.getX();
+        int xMove = 0;
         if (distStillToParkour > 5)
-            moveAction.add(new MoveAction(sailor, 5, 0));
+            xMove = 5;
         else if (distStillToParkour < -5)
-            moveAction.add(new MoveAction(sailor, -5, 0));
+            xMove = -5;
         else
-            moveAction.add(new MoveAction(sailor, distStillToParkour, 0));
+            xMove = distStillToParkour;
+        sailor.moveRelative(xMove, 0);
+        moveAction.add(new MoveAction(sailor, xMove, 0));
         nbTurnToComplete--;
         return moveAction;
     }

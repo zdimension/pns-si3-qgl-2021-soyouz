@@ -16,13 +16,13 @@ public class RudderObjective implements OnBoardObjective
 {
     private final double rotation;
     private final Marin sailor;
-    MovingObjective movement;
+    List<MovingObjective> movement;
 
     public RudderObjective(Bateau ship, double rotation, Marin sailor)
     {
         this.rotation = rotation;
         this.sailor = sailor;
-        movement = null;
+        movement = new ArrayList<>();
         setMovement(ship);
     }
 
@@ -31,7 +31,7 @@ public class RudderObjective implements OnBoardObjective
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         if (!ship.hasAt(sailor.getX(), sailor.getY(), Gouvernail.class))
         {
-            movement = new SailorMovementObjective(sailor, rudder.getPos());
+            movement.add(new SailorMovementObjective(sailor, rudder.getPos()));
         }
     }
 
@@ -43,7 +43,7 @@ public class RudderObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return movement == null || movement.isValidated();
+        return movement.size() == 0 || movement.get(0).isValidated();
     }
 
     /**
@@ -55,9 +55,9 @@ public class RudderObjective implements OnBoardObjective
     public List<GameAction> resolve()
     {
         List<GameAction> actions = new ArrayList<>();
-        if (movement != null)
-            actions.addAll(movement.resolve());
-        if (movement.isValidated())
+        if (movement.size() == 1)
+            actions.addAll(movement.get(0).resolve());
+        if (movement.size() == 0 || movement.get(0).isValidated())
             actions.add(new TurnAction(sailor, rotation));
         return actions;
     }

@@ -55,6 +55,7 @@ public class Cockpit implements ICockpit
     private InitGameParameters ip;
     private NextRoundParameters np;
     private RootObjective objective;
+    static int i = 0;
 
     /**
      * Parse all the initial Game Parameters into a InitGameParameters object.
@@ -88,6 +89,7 @@ public class Cockpit implements ICockpit
     @Override
     public String nextRound(String round)
     {
+        i++;
         try
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);

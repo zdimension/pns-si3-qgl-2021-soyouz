@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 public class OnBoardDataHelper
 {
-    List<Marin> mutableRowers;
-    List<Marin> immutableRowers;
-    List<Marin> sailSailors;
-    Marin rudderSailor;
-    Bateau ship;
+    private List<Marin> mutableRowers;
+    private final List<Marin> immutableRowers;
+    private final List<Marin> sailSailors;
+    private Marin rudderSailor;
+    private final Bateau ship;
 
     //TODO VERIFIER QUE SAILOR EST BIEN VIDÉ AU FUR ET A MESURE DE L'INITIALISATION
     public OnBoardDataHelper(Bateau ship, List<Marin> sailors)
@@ -29,13 +29,25 @@ public class OnBoardDataHelper
         sailSailors = new ArrayList<>();
         rudderSailor = null;
         this.ship = ship;
-        setupRudderSailor(ship, sailors);
-        setupSailSailor(ship, sailors);
-        setupImmutableRowers(ship, sailors);
+        setupRudderSailor(sailors);
+        setupSailSailor(sailors);
+        setupImmutableRowers(sailors);
+        setupUselessSailors(sailors);
         mutableRowers = sailors;
     }
 
-    private void setupImmutableRowers(Bateau ship, List<Marin> sailors)
+    private void setupUselessSailors(List<Marin> sailors)
+    {
+        List<Marin> uselessSailors = new ArrayList<>();
+        sailors.forEach(sailor -> {
+            LineOnBoat line = new LineOnBoat(ship, sailor.getX());
+            if (line.getOars().size() == 0)
+                uselessSailors.add(sailor);
+        });
+        sailors.removeAll(uselessSailors);
+    }
+
+    private void setupImmutableRowers(List<Marin> sailors)
     {
         List<Marin> sailorOnOar = sailors.stream()
             .filter(sailor -> ship.hasAt(sailor.getX(), sailor.getY(), Rame.class))
@@ -53,7 +65,7 @@ public class OnBoardDataHelper
         sailors.removeAll(immutableRowers);
     }
 
-    private void setupRudderSailor(Bateau ship, List<Marin> sailors)
+    private void setupRudderSailor(List<Marin> sailors)
     {
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         rudderSailor = sailors.stream()
@@ -62,7 +74,7 @@ public class OnBoardDataHelper
         sailors.remove(rudderSailor);
     }
 
-    private void setupSailSailor(Bateau ship, List<Marin> sailors)
+    private void setupSailSailor(List<Marin> sailors)
     {
         List<OnboardEntity> sails = Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).collect(Collectors.toList());
         sails.forEach(ent -> {

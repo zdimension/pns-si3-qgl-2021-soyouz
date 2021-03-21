@@ -3,11 +3,13 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.initialisation.InitSailorPositionObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,7 +38,7 @@ public class RegattaObjective extends RootObjective
         this.goalData = goalData;
         currentCheckpoint = null;
         onBoardDataHelper = null;
-        initialisationObjective = new InitSailorPositionObjective(ip.getShip(), Arrays.asList(ip.getSailors()));
+        initialisationObjective = new InitSailorPositionObjective(ip.getShip(), new ArrayList<>(Arrays.asList(ip.getSailors())));
     }
 
     /**
@@ -50,7 +52,7 @@ public class RegattaObjective extends RootObjective
         if (initialisationObjective.isValidated())
         {
             if (onBoardDataHelper == null)
-                onBoardDataHelper = new OnBoardDataHelper(state.getNp().getShip(), Arrays.asList(state.getIp().getSailors()));
+                onBoardDataHelper = new OnBoardDataHelper(state.getNp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
             if (currentCheckpoint == null)
                 currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper);
             else if (currentCheckpoint != null && currentCheckpoint.isValidated(state))

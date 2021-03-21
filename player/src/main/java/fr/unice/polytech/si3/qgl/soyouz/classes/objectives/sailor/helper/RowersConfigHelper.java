@@ -94,7 +94,7 @@ public class RowersConfigHelper
                 mutableSailors--;
             }
         }
-        while (mutableSailors % 2 == 0)
+        while (mutableSailors % 2 == 0 && mutableSailors > 0)
         {
             sailorLeft++;
             sailorRight++;
