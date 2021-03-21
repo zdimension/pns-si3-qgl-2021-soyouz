@@ -12,6 +12,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Initialise the position of every rowers on their dedicated line or oar.
+ */
 public class InitRowersPositionObjective implements MovingObjective
 {
     private final List<OnBoardObjective> sailorMoveObjectives;
@@ -48,7 +51,7 @@ public class InitRowersPositionObjective implements MovingObjective
      */
     private void setLinesOnBoatWithOars(List<LineOnBoat> linesOnBoat)
     {
-        linesOnBoatWithOars.addAll(linesOnBoat.stream().filter(line -> line.getOars().size() > 0).collect(Collectors.toList()));
+        linesOnBoatWithOars.addAll(linesOnBoat.stream().filter(line -> !line.getOars().isEmpty()).collect(Collectors.toList()));
         linesOnBoatWithOneOars.addAll(linesOnBoat.stream().filter(line -> line.getOars().size() == 1).collect(Collectors.toList()));
         Collections.sort(linesOnBoatWithOars);
         Collections.sort(linesOnBoatWithOneOars);
@@ -88,6 +91,13 @@ public class InitRowersPositionObjective implements MovingObjective
         }
     }
 
+    /**
+     * Move each rowers on the same line on their dedicater oar based on their Y position.
+     *
+     * @param line The current line.
+     * @param sailor1 The first sailor of the line.
+     * @param sailor2 The second sailor of the line.
+     */
     private void generateSubObjectiveForTwoSailorsOnTheSameLine(LineOnBoat line, Marin sailor1, Marin sailor2)
     {
         Marin sailorLeft = (sailor1.getY() < sailor2.getY()) ? sailor1 : sailor2;

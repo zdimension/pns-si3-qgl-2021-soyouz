@@ -7,15 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Deck
 {
-    /**
-     * Y axis
-     */
-    private int width;
-    /**
-     * X axis
-     */
-    private int length;
+    private final int width;
+    private final int length;
 
+    /**
+     * Constructor.
+     *
+     * @param width Y axis.
+     * @param length X axis.
+     */
     public Deck(@JsonProperty("width")int width,@JsonProperty("length") int length)
     {
         this.width = width;

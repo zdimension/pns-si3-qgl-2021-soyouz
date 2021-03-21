@@ -7,8 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Circle implements Shape
 {
-    private double radius;
+    private final double radius;
 
+    /**
+     * Constructor.
+     *
+     * @param radius The radius of the circle.
+     */
     public Circle(@JsonProperty("radius")double radius)
     {
         this.radius = radius;

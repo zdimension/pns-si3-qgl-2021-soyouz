@@ -7,9 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Point
 {
-    private double x;
-    private double y;
+    private final double x;
+    private final double y;
 
+    /**
+     * Constructor.
+     *
+     * @param x The abscissa of the point.
+     * @param y The ordinate of the point.
+     */
     public Point(@JsonProperty("x")double x, @JsonProperty("y")double y)
     {
         this.x = x;

@@ -13,6 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A Helper that contains all data necessary, related to all onboars entities and sailors.
+ */
 public class OnBoardDataHelper
 {
     private List<Marin> mutableRowers;
@@ -21,7 +24,12 @@ public class OnBoardDataHelper
     private Marin rudderSailor;
     private final Bateau ship;
 
-    //TODO VERIFIER QUE SAILOR EST BIEN VIDÉ AU FUR ET A MESURE DE L'INITIALISATION
+    /**
+     * Constructor.
+     *
+     * @param ship The ship.
+     * @param sailors All sailors on the ship.
+     */
     public OnBoardDataHelper(Bateau ship, List<Marin> sailors)
     {
         mutableRowers = new ArrayList<>();
@@ -36,17 +44,29 @@ public class OnBoardDataHelper
         mutableRowers = sailors;
     }
 
+
+    /**
+     * Determine which sailors are in exceed on an empty line.
+     *
+     * @param sailors The list of remaining sailors.
+     */
     private void setupUselessSailors(List<Marin> sailors)
     {
         List<Marin> uselessSailors = new ArrayList<>();
         sailors.forEach(sailor -> {
             LineOnBoat line = new LineOnBoat(ship, sailor.getX());
-            if (line.getOars().size() == 0)
+            if (line.getOars().isEmpty())
                 uselessSailors.add(sailor);
         });
         sailors.removeAll(uselessSailors);
     }
 
+    /**
+     * Determine which rowers won't be able to move, aka, two rowers on the same line or
+     * alone on a single oar line.
+     *
+     * @param sailors The remaining sailors.
+     */
     private void setupImmutableRowers(List<Marin> sailors)
     {
         List<Marin> sailorOnOar = sailors.stream()
@@ -65,6 +85,11 @@ public class OnBoardDataHelper
         sailors.removeAll(immutableRowers);
     }
 
+    /**
+     * Determine which sailor is attached to the rudder.
+     *
+     * @param sailors The remaining sailors.
+     */
     private void setupRudderSailor(List<Marin> sailors)
     {
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
@@ -74,37 +99,67 @@ public class OnBoardDataHelper
         sailors.remove(rudderSailor);
     }
 
+    /**
+     * Determine which sailors are attached to sails.
+     *
+     * @param sailors The remaining sailors.
+     */
     private void setupSailSailor(List<Marin> sailors)
     {
         List<OnboardEntity> sails = Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).collect(Collectors.toList());
-        sails.forEach(ent -> {
+        sails.forEach(ent ->
             sailSailors.add(sailors.stream()
                 .filter(sailor -> sailor.getPos().equals(ent.getPosCoord()))
-                .collect(Collectors.toList()).get(0));
-        });
+                .collect(Collectors.toList()).get(0))
+        );
         sailors.removeAll(sailSailors);
     }
 
+    /**
+     * Getter.
+     *
+     * @return all mutable rowers.
+     */
     public List<Marin> getMutableRowers()
     {
         return mutableRowers;
     }
 
+    /**
+     * Getter.
+     *
+     * @return all immutable rowers.
+     */
     public List<Marin> getImmutableRowers()
     {
         return immutableRowers;
     }
 
+    /**
+     * Getter.
+     *
+     * @return all sailors on sail.
+     */
     public List<Marin> getSailSailors()
     {
         return sailSailors;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the sailor on the rudder.
+     */
     public Marin getRudderSailor()
     {
         return rudderSailor;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the ship.
+     */
     public Bateau getShip()
     {
         return ship;

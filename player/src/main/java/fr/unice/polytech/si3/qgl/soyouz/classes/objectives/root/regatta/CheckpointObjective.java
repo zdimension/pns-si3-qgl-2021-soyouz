@@ -48,12 +48,11 @@ public class CheckpointObjective extends CompositeObjective
     }
 
     /**
-     * Resolve the current objective by finding the bests configuration for oars and rudder.
+     * Resolve the current objective.
      *
      * @param state The current game state.
-     * @return a list of action to be closer of the goal.
+     * @return a list of action to get closer to the goal.
      */
-    //TODO VOIR SI SAILOR OBJECTIF NE DEVRAIT PAS GERER LE COTE HELPER
     @Override
     public List<GameAction> resolve(GameState state)
     {

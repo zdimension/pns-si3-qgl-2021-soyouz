@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Basic implementation for essential methods of top level objectives.
+ */
 public abstract class CompositeObjective implements Objective
 {
     protected final ArrayList<Objective> intermediateObjective = new ArrayList<>();

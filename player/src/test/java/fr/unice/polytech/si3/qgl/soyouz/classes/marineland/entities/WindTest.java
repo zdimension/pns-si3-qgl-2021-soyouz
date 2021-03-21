@@ -17,6 +17,6 @@ class WindTest
     @Test
     void windAdditionnalSpeed()
     {
-        assertEquals(0,wind.windAdditionnalSpeed(0,0,null));
+        assertEquals(0,wind.windAdditionalSpeed(0,0,null));
     }
 }

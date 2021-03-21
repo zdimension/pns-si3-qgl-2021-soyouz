@@ -7,10 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Rectangle implements Shape
 {
-    private double width;
-    private double height;
-    private double orientation;
+    private final double width;
+    private final double height;
+    private final double orientation;
 
+    /**
+     * Constructor.
+     *
+     * @param width The width of the rectangle.
+     * @param height The height of the rectangle.
+     * @param orientation The orientation of the rectangle.
+     */
     public Rectangle(@JsonProperty("width")double width,
                      @JsonProperty("height") double height,
                      @JsonProperty("orientation") double orientation)

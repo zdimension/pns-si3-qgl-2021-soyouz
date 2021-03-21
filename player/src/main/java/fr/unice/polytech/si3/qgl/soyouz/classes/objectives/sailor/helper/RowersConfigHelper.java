@@ -75,9 +75,15 @@ public class RowersConfigHelper
         }
     }
 
+    /**
+     * Detemine how much sailors will be able to be on each side of the boat in order
+     * to go straight forward.
+     *
+     * @return the number of pair of rowers.
+     */
     private int determineMaxSailorNumberOnEachSide()
     {
-        int mutableSailors = this.mutableSailors;
+        int mSailors = this.mutableSailors;
         int sailorLeft = immutableLeftSailor;
         int sailorRight = immutableRightSailor;
         while (Math.abs(sailorLeft - sailorRight) > 0 && mutableSailors > 0)
@@ -85,20 +91,20 @@ public class RowersConfigHelper
             if (sailorLeft < sailorRight)
             {
                 sailorLeft++;
-                mutableSailors--;
+                mSailors--;
             }
 
             if (sailorLeft > sailorRight)
             {
                 sailorRight++;
-                mutableSailors--;
+                mSailors--;
             }
         }
-        while (mutableSailors % 2 == 0 && mutableSailors > 0)
+        while (mSailors % 2 == 0 && mSailors > 0)
         {
             sailorLeft++;
             sailorRight++;
-            mutableSailors -= 2;
+            mSailors -= 2;
         }
         return Math.min(sailorLeft, sailorRight);
     }

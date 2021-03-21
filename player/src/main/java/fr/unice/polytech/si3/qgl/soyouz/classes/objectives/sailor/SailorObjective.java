@@ -9,6 +9,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Top level objective for all sailors. Generate all sub objective to make the ship turn and move.
+ */
 public class SailorObjective implements OnBoardObjective
 {
     private final OnBoardDataHelper dataHelper;
@@ -18,6 +21,13 @@ public class SailorObjective implements OnBoardObjective
     //private SailObjective sailObjective;
     private RowersObjective rowersObjective;
 
+    /**
+     * Constructor.
+     *
+     * @param onBoardDataHelper The data helper.
+     * @param distance The distance between the ship and the checkpoint.
+     * @param rotation The angle between the ship and the checkpoint.
+     */
     public SailorObjective(OnBoardDataHelper onBoardDataHelper, double distance, double rotation)
     {
         dataHelper = onBoardDataHelper;
@@ -26,12 +36,18 @@ public class SailorObjective implements OnBoardObjective
         setupSubObjectives();
     }
 
+    /**
+     * Setup rower and rudder objectives.
+     */
     private void setupSubObjectives()
     {
         setupRowerObjective();
         setupRudderObjective();
     }
 
+    /**
+     * Generate the rowers objective in order to make them oar.
+     */
     private void setupRowerObjective()
     {
         int leftImmutable = (int) dataHelper.getImmutableRowers().stream()
@@ -48,6 +64,9 @@ public class SailorObjective implements OnBoardObjective
         rotation -= oarConfigWanted.getAngleOfRotation();
     }
 
+    /**
+     * Setup the rudder objective to turn.
+     */
     private void setupRudderObjective()
     {
         RudderConfigHelper rudderConfigHelper = new RudderConfigHelper(rotation);

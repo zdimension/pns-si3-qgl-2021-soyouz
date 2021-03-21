@@ -34,7 +34,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Simulator extends JFrame
 {
@@ -144,7 +143,7 @@ public class Simulator extends JFrame
                             counts.open++;
                         counts.total++;
                     });
-                    linSpeed += np.getWind().windAdditionnalSpeed(counts.total, counts.open, np.getShip()) / COMP_STEPS;
+                    linSpeed += np.getWind().windAdditionalSpeed(counts.total, counts.open, np.getShip()) / COMP_STEPS;
                 }
 
                 var cur = model.getShip().getPosition();

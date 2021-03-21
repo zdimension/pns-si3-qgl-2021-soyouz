@@ -5,6 +5,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 
 import java.util.List;
 
+/**
+ * Basic interface for top level objectives.
+ */
 public interface Objective
 {
 

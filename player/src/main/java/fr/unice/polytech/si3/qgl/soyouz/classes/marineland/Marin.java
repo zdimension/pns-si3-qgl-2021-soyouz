@@ -227,16 +227,35 @@ public class Marin
         return isAbsPosReachable(pos.getFirst(), pos.getSecond());
     }
 
+    /**
+     * Determine the number of rounds to reach an entity.
+     *
+     * @param xPos The X of the entity.
+     * @param yPos The Y of the entity.
+     * @return a number of turn.
+     */
     public int numberExtraRoundsToReachEntity(int xPos, int yPos)
     {
         return (Math.abs(this.x - xPos) + Math.abs(this.y - yPos))/ MAX_MOVE;
     }
 
+    /**
+     * Determine the number of rounds to reach an entity.
+     *
+     * @param pos The position of the entity.
+     * @return a number of turn.
+     */
     public int numberExtraRoundsToReachEntity(Pair<Integer, Integer> pos)
     {
         return numberExtraRoundsToReachEntity(pos.getFirst(), pos.getSecond());
     }
 
+    /**
+     * Generic equals override.
+     *
+     * @param obj The second object.
+     * @return if the two instance are equals or not.
+     */
     @Override
     public boolean equals(Object obj)
     {

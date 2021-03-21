@@ -2,16 +2,19 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 
 /**
  * RegattaGoal : Cross all the checkpoints to win.
  */
 public class RegattaGoal implements GameGoal
 {
-    private Checkpoint[] checkpoints;
+    private final Checkpoint[] checkpoints;
 
+    /**
+     * Constructor.
+     *
+     * @param checkpoints The list of the checkpoints to be cross.
+     */
     public RegattaGoal(@JsonProperty("checkpoints") Checkpoint[] checkpoints)
     {
         this.checkpoints = checkpoints;

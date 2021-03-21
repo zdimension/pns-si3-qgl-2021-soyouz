@@ -8,9 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Wind implements Entity
 {
-    private double orientation;
-    private double strength;
+    private final double orientation;
+    private final double strength;
 
+    /**
+     * Constructor.
+     *
+     * @param orientation The orientation of the blow.
+     * @param strength The strength of the blow.
+     */
     public Wind(@JsonProperty("orientation") double orientation, @JsonProperty("strength") double strength)
     {
         this.orientation = orientation;
@@ -25,7 +31,7 @@ public class Wind implements Entity
      * @param boat        Out boat.
      * @return the speed added by the wind.
      */
-    public double windAdditionnalSpeed(int nbOfSails, int openedSails, Bateau boat)
+    public double windAdditionalSpeed(int nbOfSails, int openedSails, Bateau boat)
     {
         if (nbOfSails > 0)
         {

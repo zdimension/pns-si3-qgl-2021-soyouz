@@ -11,14 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Class to handle every rower movement and row actions.
+ */
 public class RowersObjective implements OnBoardObjective
 {
-    //TODO LES MARINS POUVANT BOUGER SONT SEULEMENT LES MARINS AYANT 2 RAMES SUR LEUR LIGNES
     private int nbOarLeftWanted;
     private int nbOarRightWanted;
     private final List<SailorYMovementObjective> movingRowers;
     private final List<Marin> rowingSailors;
 
+    /**
+     * Constructor.
+     *
+     * @param ship The ship.
+     * @param mutableRowers All rowers able to move from a side to another.
+     * @param immutableRowers All sailors fixed to a specific oar.
+     * @param rowerConfigurationWanted The wanted configuration of rowers.
+     */
     public RowersObjective(Bateau ship, List<Marin> mutableRowers, List<Marin> immutableRowers, Pair<Integer, Integer> rowerConfigurationWanted)
     {
         nbOarLeftWanted = rowerConfigurationWanted.first;
@@ -30,6 +40,13 @@ public class RowersObjective implements OnBoardObjective
         setupRowers(ship, mutableRowers);
     }
 
+    /**
+     * Determine how many oars will be used on each side based on the configuration wanted.
+     *
+     * @param rowerConfigurationWanted The configuration wanted.
+     * @param rowers All rowers that can move.
+     * @param immutableRowers All rowers that can't move.
+     */
     private void setupNbOarWantedOnEachSide(Pair<Integer, Integer> rowerConfigurationWanted, List<Marin> rowers, List<Marin> immutableRowers)
     {
         nbOarLeftWanted = rowerConfigurationWanted.first;
@@ -43,6 +60,12 @@ public class RowersObjective implements OnBoardObjective
         }
     }
 
+    /**
+     * Setup every movable rowers to the wanted side.
+     *
+     * @param ship The ship.
+     * @param rowers All mutable rowers.
+     */
     private void setupRowers(Bateau ship, List<Marin> rowers)
     {
         List<Marin> leftRowers = rowers.stream()
@@ -59,20 +82,32 @@ public class RowersObjective implements OnBoardObjective
             moveRowersToOars(ship, middleRower);
     }
 
+    /**
+     * Generate the movement objective to place the rower on its oar.
+     *
+     * @param ship The ship.
+     * @param middleRowers Rowers at the middle of two oars.
+     */
     private void moveRowersToOars(Bateau ship, List<Marin> middleRowers)
     {
-        while (nbOarRightWanted > 0 && middleRowers.size() > 0)
+        while (nbOarRightWanted > 0 && !middleRowers.isEmpty())
         {
             movingRowers.add(new SailorYMovementObjective(middleRowers.get(0), ship.getDeck().getWidth() - 1));
             middleRowers.remove(0);
         }
-        while (nbOarLeftWanted > 0 && middleRowers.size() > 0)
+        while (nbOarLeftWanted > 0 && !middleRowers.isEmpty())
         {
             movingRowers.add(new SailorYMovementObjective(middleRowers.get(0), 0));
             middleRowers.remove(0);
         }
     }
 
+    /**
+     * Setup all immutable rowers and make them oar.
+     *
+     * @param ship The ship.
+     * @param immutableRowers Rowers that can't move.
+     */
     private void setupImmutableRowers(Bateau ship, List<Marin> immutableRowers)
     {
         List<Marin> leftRowers = immutableRowers.stream()
@@ -84,6 +119,11 @@ public class RowersObjective implements OnBoardObjective
         makeRightRowersRow(rightRowers);
     }
 
+    /**
+     * Make all left side rowers row.
+     *
+     * @param leftRowers Rowers on the left side of the ship.
+     */
     private void makeLeftRowersRow(List<Marin> leftRowers)
     {
         if (nbOarLeftWanted >= leftRowers.size())
@@ -103,7 +143,11 @@ public class RowersObjective implements OnBoardObjective
         }
     }
 
-    //TODO VOIR SI SONARQUBE DETECTE DUPLICATION OU NON
+    /**
+     * Make all right side rowers row.
+     *
+     * @param rightRowers Rowers on the right side of the ship.
+     */
     private void makeRightRowersRow(List<Marin> rightRowers)
     {
         if (nbOarRightWanted >= rightRowers.size())
@@ -150,9 +194,7 @@ public class RowersObjective implements OnBoardObjective
         });
         if (!isValidated())
             return actions;
-        rowingSailors.forEach(rower -> {
-            actions.add(new OarAction(rower));
-        });
+        rowingSailors.forEach(rower -> actions.add(new OarAction(rower)));
         return actions;
     }
     //TODO : ICI SI LA CONFIG N'EST PAS ATTEIGNABLE IMMEDIATEMENT ALORS DEPLACE SEULEMENT LES MARINS

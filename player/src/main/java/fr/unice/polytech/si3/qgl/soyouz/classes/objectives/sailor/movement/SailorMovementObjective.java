@@ -23,6 +23,7 @@ public class SailorMovementObjective implements MovingObjective
      *
      * @param sailor The sailor that will move.
      * @param xOnDeck The X position wanted.
+     * @param yOnDeck The Y position wanted.
      */
     public SailorMovementObjective(Marin sailor, int xOnDeck, int yOnDeck)
     {
@@ -33,6 +34,12 @@ public class SailorMovementObjective implements MovingObjective
          - sailor.getY())) / 5 + 1;
     }
 
+    /**
+     * Alternative Constructor.
+     *
+     * @param sailor The sailor that will move.
+     * @param pos The PosOnShip wanted.
+     */
     public SailorMovementObjective(Marin sailor, PosOnShip pos)
     {
         this(sailor, pos.getX(), pos.getY());

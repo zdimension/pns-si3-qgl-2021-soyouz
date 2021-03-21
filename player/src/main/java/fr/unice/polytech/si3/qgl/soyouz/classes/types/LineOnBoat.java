@@ -1,19 +1,19 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Specific type to stock all entities for a specific X line on the ship.
+ */
 public class LineOnBoat implements Comparable<LineOnBoat>
 {
     private final List<Rame> oars;
@@ -21,6 +21,12 @@ public class LineOnBoat implements Comparable<LineOnBoat>
     private Voile sail;
     private final int x;
 
+    /**
+     * Constructor.
+     *
+     * @param ship The ship.
+     * @param x The abscissa of the line.
+     */
     public LineOnBoat(Bateau ship, int x)
     {
         this.x = x;
@@ -41,26 +47,69 @@ public class LineOnBoat implements Comparable<LineOnBoat>
         });
     }
 
+    /**
+     * Getter.
+     *
+     * @return the list of oars on the line.
+     */
     public List<Rame> getOars()
     {
         return oars;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the rudder if there is one.
+     */
     public Gouvernail getRudder()
     {
         return rudder;
     }
 
+
+    /**
+     * Getter.
+     *
+     * @return the sail if there is one.
+     */
     public Voile getSail()
     {
         return sail;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the abscissa of the line.
+     */
     public int getX()
     {
         return x;
     }
 
+    /**
+     * Generic equals override.
+     *
+     * @param o The second object.
+     * @return if two lines are equal or not.
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof LineOnBoat))
+            return false;
+        if (o == this)
+            return true;
+        return ((LineOnBoat) o).x == this.x;
+    }
+
+    /**
+     * Compare two lines based on their abscissa.
+     *
+     * @param line The second Line.
+     * @return the result of the comparison.
+     */
     @Override
     public int compareTo(LineOnBoat line)
     {

@@ -43,11 +43,13 @@ public class Cockpit implements ICockpit
             @Override
             public void flush()
             {
+                //Not necessary to implement but you know.. override..
             }
 
             @Override
             public void close()
             {
+                //Not necessary to implement but you know.. override..
             }
         });
     }
@@ -55,7 +57,6 @@ public class Cockpit implements ICockpit
     private InitGameParameters ip;
     private NextRoundParameters np;
     private RootObjective objective;
-    static int i = 0;
 
     /**
      * Parse all the initial Game Parameters into a InitGameParameters object.
@@ -89,7 +90,6 @@ public class Cockpit implements ICockpit
     @Override
     public String nextRound(String round)
     {
-        i++;
         try
         {
             np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
@@ -137,6 +137,9 @@ public class Cockpit implements ICockpit
         return np;
     }
 
+    /**
+     * Update the log level.
+     */
     private void updateLogLevel()
     {
         var logLevel = Level.CONFIG;

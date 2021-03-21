@@ -57,6 +57,11 @@ public abstract class GameAction
         return sailor;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the entity needed to perform the action.
+     */
     public Class<? extends OnboardEntity> getEntityNeeded()
     {
         return entityNeeded;

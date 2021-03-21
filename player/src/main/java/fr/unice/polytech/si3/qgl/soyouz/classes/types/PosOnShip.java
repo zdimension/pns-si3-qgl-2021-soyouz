@@ -15,44 +15,86 @@ public class PosOnShip
     private final int x;
     private final int y;
 
+    /**
+     * Constructor.
+     *
+     * @param x The abscissa.
+     * @param y The ordinate.
+     */
     public PosOnShip(int x, int y)
     {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param pos A pair of Abscissa and Ordinate.
+     */
     public PosOnShip(Pair<Integer, Integer> pos)
     {
         this.x = pos.first;
         this.y = pos.second;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param ent An entity.
+     */
     public PosOnShip(OnboardEntity ent)
     {
         this.x = ent.getX();
         this.y = ent.getY();
     }
 
+    /**
+     * Getter.
+     *
+     * @return the Abscissa.
+     */
     public int getX()
     {
         return x;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the Ordinate.
+     */
     public int getY()
     {
         return y;
     }
 
-    public Pair<Integer, Integer> getPosCoord()
+    /**
+     * Getter.
+     *
+     * @return the Pair of coords..
+     */
+    public Pair<Integer, Integer> getPosCoords()
     {
         return Pair.of(getX(), getY());
     }
 
+    /**
+     * Determine the distance between two positions.
+     *
+     * @param pos2 The second position.
+     * @return a distance.
+     */
     public int dist(PosOnShip pos2)
     {
         return Math.abs(x - pos2.getX()) + Math.abs(y - pos2.getY());
     }
 
+    /**
+     * Generic toString override.
+     *
+     * @return a string describing the object.
+     */
     @Override
     public String toString()
     {
@@ -62,6 +104,12 @@ public class PosOnShip
             '}';
     }
 
+    /**
+     * Generic equals override.
+     *
+     * @param obj The second object.
+     * @return if they are equals or not.
+     */
     @Override
     public boolean equals(Object obj)
     {
@@ -77,6 +125,11 @@ public class PosOnShip
         return this.x == pos.x && this.y == pos.y;
     }
 
+    /**
+     * Generic hash override.
+     *
+     * @return the code related to the current object.
+     */
     @Override
     public int hashCode()
     {

@@ -12,12 +12,22 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.Sailo
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The rudder rotation related objective.
+ */
 public class RudderObjective implements OnBoardObjective
 {
     private final double rotation;
     private final Marin sailor;
     List<MovingObjective> movement;
 
+    /**
+     * Constructor.
+     *
+     * @param ship The ship.
+     * @param rotation The wanted rotation.
+     * @param sailor The sailor attached to the rudder.
+     */
     public RudderObjective(Bateau ship, double rotation, Marin sailor)
     {
         this.rotation = rotation;
@@ -26,6 +36,11 @@ public class RudderObjective implements OnBoardObjective
         setMovement(ship);
     }
 
+    /**
+     * Move the rudder sailor to the rudder if needed.
+     *
+     * @param ship The ship.
+     */
     private void setMovement(Bateau ship)
     {
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
@@ -43,7 +58,7 @@ public class RudderObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return movement.size() == 0 || movement.get(0).isValidated();
+        return movement.isEmpty() || movement.get(0).isValidated();
     }
 
     /**
@@ -57,7 +72,7 @@ public class RudderObjective implements OnBoardObjective
         List<GameAction> actions = new ArrayList<>();
         if (movement.size() == 1)
             actions.addAll(movement.get(0).resolve());
-        if (movement.size() == 0 || movement.get(0).isValidated())
+        if (movement.isEmpty() || movement.get(0).isValidated())
             actions.add(new TurnAction(sailor, rotation));
         return actions;
     }

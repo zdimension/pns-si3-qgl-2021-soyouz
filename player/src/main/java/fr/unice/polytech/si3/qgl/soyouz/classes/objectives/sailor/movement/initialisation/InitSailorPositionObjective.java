@@ -15,6 +15,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Initialise all sailors position on their dedicated entity based on their X position on the boat.
+ */
 public class InitSailorPositionObjective implements MovingObjective
 {
     private final List<Marin> sailors;
@@ -23,6 +26,12 @@ public class InitSailorPositionObjective implements MovingObjective
     private final List<LineOnBoat> linesWithSails;
     private final List<MovingObjective> movingSailorsObjectives;
 
+    /**
+     * Constructor.
+     *
+     * @param ship The ship.
+     * @param sailors All sailors on the ship.
+     */
     public InitSailorPositionObjective(Bateau ship, List<Marin> sailors)
     {
         movingSailorsObjectives = new ArrayList<>();
@@ -35,17 +44,26 @@ public class InitSailorPositionObjective implements MovingObjective
         generateSubObjectives(ship);
     }
 
+    /**
+     * Determine how many sailors wii be exceeding the number of entities and move them around.
+     * @param ship The ship.
+     */
     private void handleUselessSailors(Bateau ship)
     {
         while (ship.getEntities().length < sailors.size())
         {
             LineOnBoat lineWithNothing = linesOnBoat.stream()
-                .filter(line -> line.getOars().size() == 0).collect(Collectors.toList()).get(0);
+                .filter(line -> line.getOars().isEmpty()).collect(Collectors.toList()).get(0);
             movingSailorsObjectives.add(new SailorXMovementObjective(sailors.get(0), lineWithNothing.getX()));
             sailors.remove(0);
         }
     }
 
+    /**
+     * Determine all sub movement objectives for each sailors.
+     *
+     * @param ship The ship.
+     */
     private void generateSubObjectives(Bateau ship)
     {
         handleUselessSailors(ship);
@@ -54,6 +72,9 @@ public class InitSailorPositionObjective implements MovingObjective
         movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));
     }
 
+    /**
+     * Move a sailor to the rudder.
+     */
     private void generateMovingToRudderObjective()
     {
         Marin sailorCloseToRudder = sailors.get(0);
@@ -71,6 +92,12 @@ public class InitSailorPositionObjective implements MovingObjective
         sailors.remove(sailorCloseToRudder);
     }
 
+    /**
+     * Determine how many sailor we're able to send to the sail.
+     *
+     * @param ship The ship
+     * @return the number wanted.
+     */
     private int determineHowManySailorsToSail(Bateau ship)
     {
         int nbOars = ship.getNumberOar();
@@ -93,6 +120,11 @@ public class InitSailorPositionObjective implements MovingObjective
         }
     }
 
+    /**
+     * Move all sail dedicated sailor to their sail.
+     *
+     * @param nbSailorToSail The ship.
+     */
     private void generateMovingToSailsObjective(int nbSailorToSail)
     {
         for (int i = 0; i < nbSailorToSail; i++)

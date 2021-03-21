@@ -10,9 +10,15 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
  */
 public class Checkpoint
 {
-    private Position position;
-    private Shape shape;
+    private final Position position;
+    private final Shape shape;
 
+    /**
+     * Constructor.
+     *
+     * @param position The position of the checkpoint.
+     * @param shape The shape of the checkpoint.
+     */
     public Checkpoint(@JsonProperty("position")Position position, @JsonProperty("shape")Shape shape)
     {
         this.position = position;

@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Voile extends OnboardEntity
 {
 
-    private boolean openned = false;
+    private boolean openned;
 
 
     /**

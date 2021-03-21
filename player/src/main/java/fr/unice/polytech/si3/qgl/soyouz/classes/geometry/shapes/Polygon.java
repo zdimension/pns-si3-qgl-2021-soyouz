@@ -8,9 +8,15 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point;
  */
 public class Polygon implements Shape
 {
-    private double orientation;
-    private Point[] vertices;
+    private final double orientation;
+    private final Point[] vertices;
 
+    /**
+     * Constructor.
+     *
+     * @param orientation The orientation of the polygon.
+     * @param vertices All points that compose the shape.
+     */
     public Polygon(@JsonProperty("orientation")double orientation,@JsonProperty("vertices") Point[] vertices)
     {
         this.orientation = orientation;
