@@ -88,6 +88,17 @@ public class Bateau extends AutreBateau
     }
 
     /**
+     * Getter.
+     *
+     * @return the number of Sails onboard.
+     */
+    @JsonIgnore
+    public int getNumberSail()
+    {
+        return (int) Arrays.stream(getEntities()).filter(e -> e instanceof Voile).count();
+    }
+
+    /**
      * Method to determine if a position is on the left of this.
      *
      * @param posObs Position of obstacle.

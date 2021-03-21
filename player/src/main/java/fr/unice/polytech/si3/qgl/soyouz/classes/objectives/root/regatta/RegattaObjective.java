@@ -39,6 +39,7 @@ public class RegattaObjective extends RootObjective
         this.goalData = goalData;
         currentCheckpoint = null;
         onBoardDataHelper = null;
+        seaDataHelper = null;
         initialisationObjective = new InitSailorPositionObjective(ip.getShip(), new ArrayList<>(Arrays.asList(ip.getSailors())));
     }
 
@@ -52,26 +53,48 @@ public class RegattaObjective extends RootObjective
     {
         if (initialisationObjective.isValidated())
         {
-            if (onBoardDataHelper == null)
-                onBoardDataHelper = new OnBoardDataHelper(state.getNp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
-            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getVisibleEntities(), state.getNp().getWind());
+            updateHelpers(state);
+            updateCheckpoint(state);
+        }
+    }
 
-            if (currentCheckpoint == null)
-                currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper);
-            if (currentCheckpoint.isValidated(state))
+    /**
+     * Update all helpers.
+     *
+     * @param state The curent game state.
+     */
+    private void updateHelpers(GameState state)
+    {
+        if (onBoardDataHelper == null)
+            onBoardDataHelper = new OnBoardDataHelper(state.getNp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
+        if (seaDataHelper == null)
+            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind());
+        else
+            seaDataHelper.update(state);
+    }
+
+    /**
+     * Update the current checkpoint.
+     *
+     * @param state The game state.
+     */
+    private void updateCheckpoint(GameState state)
+    {
+        if (currentCheckpoint == null)
+            currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper, seaDataHelper);
+        if (currentCheckpoint.isValidated(state))
+        {
+            if (goalData.getCheckpoints().length - 1 > numCheckpoint)
             {
-                if (goalData.getCheckpoints().length - 1 > numCheckpoint)
-                {
-                    logger.log(Level.INFO, "Checkpoint " + numCheckpoint + " reached");
-                    numCheckpoint++;
-                }
-                else
-                {
-                    logger.log(Level.INFO, "Regatta ended");
-                    numCheckpoint = 0;
-                }
-                currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper);
+                logger.log(Level.INFO, "Checkpoint " + numCheckpoint + " reached");
+                numCheckpoint++;
             }
+            else
+            {
+                logger.log(Level.INFO, "Regatta ended");
+                numCheckpoint = 0;
+            }
+            currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper, seaDataHelper);
         }
     }
 

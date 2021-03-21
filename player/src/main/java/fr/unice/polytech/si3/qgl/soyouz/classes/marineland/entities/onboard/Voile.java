@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Voile extends OnboardEntity
 {
-
     private boolean openned = false;
-
 
     /**
      * Constructor.
@@ -22,7 +20,6 @@ public class Voile extends OnboardEntity
         super(x, y);
         this.openned = openned;
     }
-
 
     /**
      * Getters.

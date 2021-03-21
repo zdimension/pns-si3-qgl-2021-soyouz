@@ -16,9 +16,11 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SailConfigHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
@@ -143,7 +145,8 @@ public class Simulator extends JFrame
                             counts.open++;
                         counts.total++;
                     });
-                    linSpeed += np.getWind().windAdditionalSpeed(counts.total, counts.open, np.getShip()) / COMP_STEPS;
+                    Wind wind = np.getWind();
+                    linSpeed += ((double) counts.open / counts.total) * wind.getStrength() * Math.cos(wind.getOrientation() - np.getShip().getPosition().getOrientation()) / COMP_STEPS;
                 }
 
                 var cur = model.getShip().getPosition();

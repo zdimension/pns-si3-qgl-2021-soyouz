@@ -8,6 +8,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.SailorObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SeaDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.List;
@@ -19,18 +20,20 @@ public class CheckpointObjective extends CompositeObjective
 {
 
     private final Checkpoint cp;
-    OnBoardDataHelper onBoardDataHelper;
-    SailorObjective roundObjective;
+    private final OnBoardDataHelper onBoardDataHelper;
+    private final SeaDataHelper seaDataHelper;
+    private SailorObjective roundObjective;
 
     /**
      * Constructor.
      *
      * @param checkpoint The checkpoint to reach.
      */
-    public CheckpointObjective(Checkpoint checkpoint, OnBoardDataHelper onBoardDataHelper)
+    public CheckpointObjective(Checkpoint checkpoint, OnBoardDataHelper onBoardDataHelper, SeaDataHelper seaDataHelper)
     {
         cp = checkpoint;
         this.onBoardDataHelper = onBoardDataHelper;
+        this.seaDataHelper = seaDataHelper;
         roundObjective = null;
     }
 
@@ -61,7 +64,7 @@ public class CheckpointObjective extends CompositeObjective
         double distanceToCp = boat.getPosition().getLength(cp.getPosition());
 
         if (roundObjective == null || roundObjective.isValidated())
-            roundObjective = new SailorObjective(onBoardDataHelper, distanceToCp, angleToCp);
+            roundObjective = new SailorObjective(onBoardDataHelper, seaDataHelper, distanceToCp, angleToCp);
 
         return roundObjective.resolve();
     }

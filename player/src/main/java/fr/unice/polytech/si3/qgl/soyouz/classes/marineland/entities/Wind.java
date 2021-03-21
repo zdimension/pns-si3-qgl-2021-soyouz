@@ -24,19 +24,22 @@ public class Wind implements Entity
     }
 
     /**
-     * Determine how much speed will the wind add to the boat.
+     * Getter.
      *
-     * @param nbOfSails   The number of sails.
-     * @param openedSails The number of opened sails.
-     * @param boat        Out boat.
-     * @return the speed added by the wind.
+     * @return the orientation of the wind.
      */
-    public double windAdditionalSpeed(int nbOfSails, int openedSails, Bateau boat) //TODO : rework this shit
+    public double getOrientation()
     {
-        if (nbOfSails > 0)
-        {
-            return ((double) openedSails / nbOfSails) * strength * Math.cos(orientation - boat.getPosition().getOrientation());
-        }
-        return 0;
+        return orientation;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return the strength of the wind.
+     */
+    public double getStrength()
+    {
+        return strength;
     }
 }

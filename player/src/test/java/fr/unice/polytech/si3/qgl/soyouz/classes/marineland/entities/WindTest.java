@@ -26,6 +26,7 @@ class WindTest
         boat.setPosition(new Position(0,0,0));
     }
 
+    /*
     @Test
     void windAdditionalSpeedWithWindAt0()
     {
@@ -53,4 +54,5 @@ class WindTest
         assertTrue(1 - Math.abs(wind3.windAdditionalSpeed(1,1,boat)) <= epsilon); // return around -1, using epsilon to compare doubles
 
     }
+    */
 }
