@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -16,6 +17,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
@@ -55,6 +57,7 @@ public class Simulator extends JFrame
         setLayout(new BorderLayout());
         setSize(600, 600);
 
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week6.json")),
             InitGameParameters.class);
         var cockpit = new Cockpit();
@@ -167,8 +170,19 @@ public class Simulator extends JFrame
         btnNext.addActionListener(event ->
         {
             btnNext.setEnabled(false);
-            Wind wind = new Wind(0, 50);
-            np = new NextRoundParameters(model.getShip(), wind, new Entity[0]);
+            //TODO J'ai
+            //np = new NextRoundParameters(model.getShip(), null, new Entity[0]);
+            try
+            {
+                np = OBJECT_MAPPER.readValue(Files.readString(Path.of("NextRound.json")),
+                    NextRoundParameters.class);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            canvas.setNp(np);
+            // mis null a la place du vent
             try
             {
                 var res =
@@ -226,8 +240,11 @@ public class Simulator extends JFrame
                 }
                 var noars = model.getShip().getNumberOar();
                 var oarFactor = 165.0 * activeOars.size() / noars;
-                var windSpeed = 0;
-                var dirSpeed = oarFactor + windSpeed;
+                var dirSpeed = oarFactor/* +
+                    Util.filterType(Arrays.stream(np.getVisibleEntities()), Stream.class)
+                    .filter(str -> str.contains(model.getShip().getPosition()))
+                    .findFirst()
+                    .map(str -> str.).orElse(0)*/;
                 var activeOarsLeft = activeOars.stream().filter(o -> o.getY() == 0).count();
                 var activeOarsRight = activeOars.size() - activeOarsLeft;
                 var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;

@@ -66,7 +66,88 @@
             "orientation": 0.9773843811168246
         }
     },
-    "visibleEntities": [],
+    "visibleEntities": [
+        {
+            "position": {
+                "x": 8153.389030097254,
+                "y": 351.1753941441404,
+                "orientation": 0.4537856055185257
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "400",
+                "height": "1350"
+            }
+        },
+        {
+            "position": {
+                "x": 6186.903137789905,
+                "y": 2006.7567567567567,
+                "orientation": -0.17453292519943295
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": 500,
+                "height": "1750"
+            }
+        },
+        {
+            "position": {
+                "x": 6630.286493860851,
+                "y": 3209.4594594594596,
+                "orientation": -0.24434609527920614
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": 500,
+                "height": "1750"
+            }
+        },
+        {
+            "position": {
+                "x": 7174.22818123444,
+                "y": 1102.9701576576585,
+                "orientation": 0.6981317007977318
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "250",
+                "height": "1200"
+            }
+        },
+        {
+            "position": {
+                "x": 7409.664698840839,
+                "y": 701.646959459459,
+                "orientation": 0.7330382858376184
+            },
+            "type": "stream",
+            "shape": {
+                "type": "rectangle",
+                "width": "400",
+                "height": "1000"
+            },
+            "strength": 10
+        },
+        {
+            "position": {
+                "x": 6384.720327421553,
+                "y": 2581.0810810810804,
+                "orientation": 3.0019663134302466
+            },
+            "type": "stream",
+            "shape": {
+                "type": "rectangle",
+                "width": 200,
+                "height": 1000
+            },
+            "strength": 10
+        }
+    ],
     "wind": {
         "orientation": 0,
         "strength": 110

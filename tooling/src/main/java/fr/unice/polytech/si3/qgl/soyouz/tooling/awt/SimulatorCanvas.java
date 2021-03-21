@@ -7,12 +7,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,12 +30,17 @@ public class SimulatorCanvas extends JPanel
 {
     public static final int SHAPE_CROSS_SIZE = 10;
     private static final Color BACKGROUND = new Color(202, 219, 255);
-    private static final Color BOAT = new Color(193, 169, 134);
-    private static final Color OBSTACLE = new Color(102, 186, 90);
     private static final Map<Class<?>, Image[]> ENTITY_ICONS;
     private static final int DECK_GRID_SIZE = 40;
     private static final int DECK_MARGIN = 30;
     private static final double SCALE_WHEEL_FACTOR = 0.1;
+
+    private static final Map<Class<? extends ShapedEntity>, Color> ENTITY_COLORS = Map.of(
+        Bateau.class, new Color(193, 169, 134),
+        AutreBateau.class, new Color(84, 72, 28),
+        Stream.class, new Color(36, 36, 203),
+        Reef.class, new Color(12, 191, 12)
+    );
 
     static
     {
@@ -66,9 +69,18 @@ public class SimulatorCanvas extends JPanel
 
     private final ArrayList<OnboardEntity> usedEntities;
     private final InitGameParameters model;
+
+    public void setNp(NextRoundParameters np)
+    {
+        this.np = np;
+    }
+
+    private NextRoundParameters np;
     private final Stroke DASHED = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL
         , 0, new float[] { 9 }, 0);
     private final Stroke SHAPE_CROSS = new BasicStroke(3, BasicStroke.CAP_BUTT,
+        BasicStroke.JOIN_BEVEL);
+    private final Stroke HISTORY = new BasicStroke(1, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
     private double scale = 1;
     private Point2d cameraPos = new Point2d(0, 0);
@@ -186,6 +198,8 @@ public class SimulatorCanvas extends JPanel
         drawGame(g2d);
     }
 
+    private final List<Position> shipHistory = new ArrayList<>();
+
     /**
      * Dessine le jeu
      *
@@ -197,17 +211,58 @@ public class SimulatorCanvas extends JPanel
         if (goal instanceof RegattaGoal)
         {
             var rg = (RegattaGoal) goal;
-            for (Checkpoint checkpoint : rg.getCheckpoints())
+            Checkpoint[] checkpoints = rg.getCheckpoints();
+            for (int i = 0; i < checkpoints.length; i++)
             {
-                drawCheckpoint(g, checkpoint);
+                drawCheckpoint(g, checkpoints[i], i);
             }
         }
 
-        drawShip(g, model.getShip());
+        if (np != null)
+        {
+            for (Entity visibleEntity : np.getVisibleEntities())
+            {
+                drawEntity(g, visibleEntity);
+            }
+        }
+
+        drawEntity(g, model.getShip());
 
         drawShipDeck(g, model.getShip(), model.getSailors());
 
         drawShipVision(g, model.getShip());
+
+        drawShipHistory(g);
+
+        if (shipHistory.isEmpty() || !model.getShip().getPosition().equals(shipHistory.get(shipHistory.size() - 1)))
+        {
+            shipHistory.add(model.getShip().getPosition());
+        }
+    }
+
+    private void drawEntity(Graphics2D g, Entity entity)
+    {
+        if (entity instanceof ShapedEntity)
+        {
+            var se = (ShapedEntity)entity;
+            g.setColor(ENTITY_COLORS.get(se.getClass()));
+            drawShape(g, se.getShape(), se.getPosition());
+        }
+    }
+
+    private void drawShipHistory(Graphics2D g)
+    {
+        var x = new int[shipHistory.size()];
+        var y = new int[shipHistory.size()];
+        for (int i = 0; i < shipHistory.size(); i++)
+        {
+            var conv = mapToScreen(shipHistory.get(i));
+            x[i] = conv.x;
+            y[i] = conv.y;
+        }
+        g.setStroke(HISTORY);
+        g.setColor(Color.BLACK);
+        g.drawPolyline(x, y, x.length);
     }
 
     private void drawShipVision(Graphics2D g, Bateau b)
@@ -269,16 +324,15 @@ public class SimulatorCanvas extends JPanel
         }
     }
 
-    private void drawShip(Graphics2D g, Bateau b)
+    private void drawCheckpoint(Graphics2D g, Checkpoint c, int i)
     {
-        g.setColor(BOAT);
-        drawShape(g, b.getShape(), b.getPosition());
-    }
-
-    private void drawCheckpoint(Graphics2D g, Checkpoint c)
-    {
+        g = (Graphics2D)g.create();
         g.setColor(Color.RED);
         drawShape(g, c.getShape(), c.getPosition());
+        g.setColor(Color.BLACK);
+        var p = mapToScreen(c.getPosition());
+        g.translate(p.x, p.y);
+        g.drawString(i + "", 0, 0);
     }
 
     private Point mapToScreen(Position p)
@@ -317,14 +371,13 @@ public class SimulatorCanvas extends JPanel
             var w = mapToScreen(r.getHeight());
             if (!noRot)
             {
-                gtr.rotate(-(p.getOrientation() + r.getOrientation()), 0, 0);
+                gtr.rotate(2 * Math.PI - (p.getOrientation() + r.getOrientation()), 0, 0);
+                //gtr.rotate(-(p.getOrientation() + r.getOrientation()), 0, 0);
             }
             gtr.fillRect(-w / 2, -h / 2, w, h);
+            gtr.setStroke(SHAPE_CROSS);
+            gtr.setColor(Color.BLACK);
+            gtr.drawPolygon(new Polygon(new int[] {-10, -10, 20}, new int[] { -10, 10, 0}, 3));
         }
-
-        gt.setStroke(SHAPE_CROSS);
-        gt.setColor(Color.BLACK);
-        gt.drawLine(-SHAPE_CROSS_SIZE, -SHAPE_CROSS_SIZE, +SHAPE_CROSS_SIZE, +SHAPE_CROSS_SIZE);
-        gt.drawLine(-SHAPE_CROSS_SIZE, +SHAPE_CROSS_SIZE, +SHAPE_CROSS_SIZE, -SHAPE_CROSS_SIZE);
     }
 }
