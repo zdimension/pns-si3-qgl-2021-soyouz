@@ -30,7 +30,7 @@ class LineOnBoatTest
             new Rame(0, 4),
             new Gouvernail(0, 2),
             new Rame(1,0),
-            new Voile(1, 2),
+            new Voile(1, 2,false),
             new Rame(2, 0),
             new Rame(2, 4),
             new Rame(3, 0)
@@ -64,7 +64,7 @@ class LineOnBoatTest
     void getSail()
     {
         assertNull(lineWithTwoOarsAndARudder.getSail());
-        assertEquals(new Voile(1, 2), lineWithOneOarAndASail.getSail());
+        assertEquals(new Voile(1, 2,false), lineWithOneOarAndASail.getSail());
         assertNull(lineWithTwoOars.getSail());
         assertNull(lineWithOneOar.getSail());
     }

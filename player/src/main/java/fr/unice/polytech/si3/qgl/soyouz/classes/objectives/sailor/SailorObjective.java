@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.RowersConfigHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.RudderConfigHelper;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SeaDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 
 import java.util.ArrayList;
@@ -15,10 +16,11 @@ import java.util.List;
 public class SailorObjective implements OnBoardObjective
 {
     private final OnBoardDataHelper dataHelper;
+    private SeaDataHelper seaDataHelper;
     private final double distance;
     private double rotation;
     private RudderObjective rudderObjective;
-    //private SailObjective sailObjective;
+    private SailObjective sailObjective;
     private RowersObjective rowersObjective;
 
     /**
@@ -43,6 +45,7 @@ public class SailorObjective implements OnBoardObjective
     {
         setupRowerObjective();
         setupRudderObjective();
+        setupSailObjective();
     }
 
     /**
@@ -72,6 +75,12 @@ public class SailorObjective implements OnBoardObjective
         RudderConfigHelper rudderConfigHelper = new RudderConfigHelper(rotation);
         rudderObjective = new RudderObjective(dataHelper.getShip(),
             rudderConfigHelper.findOptRudderRotation(), dataHelper.getRudderSailor());
+    }
+
+    private void setupSailObjective(){
+        if (!dataHelper.getSailSailors().isEmpty()){
+            //TODO : traitement à faire en fct de la distance
+        }
     }
 
     /**

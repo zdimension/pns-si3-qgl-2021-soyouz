@@ -31,7 +31,7 @@ public class Wind implements Entity
      * @param boat        Out boat.
      * @return the speed added by the wind.
      */
-    public double windAdditionalSpeed(int nbOfSails, int openedSails, Bateau boat)
+    public double windAdditionalSpeed(int nbOfSails, int openedSails, Bateau boat) //TODO : rework this shit
     {
         if (nbOfSails > 0)
         {
