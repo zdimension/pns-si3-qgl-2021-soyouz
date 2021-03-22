@@ -181,6 +181,7 @@ public class Simulator extends JFrame
             {
                 e.printStackTrace();
             }
+            np = new NextRoundParameters(model.getShip(), new Wind(0, 50), np.getVisibleEntities());
             canvas.setNp(np);
             // mis null a la place du vent
             try
