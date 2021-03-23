@@ -3,7 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.ShapedEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 
 /**
  * Checkpoints : defined by a shape, a size and a position. Need to be crossed by the ship in

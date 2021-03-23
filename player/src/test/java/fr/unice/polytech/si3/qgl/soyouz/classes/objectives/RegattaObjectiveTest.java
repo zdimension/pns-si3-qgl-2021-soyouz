@@ -2,14 +2,26 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.LiftSailAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -23,454 +35,98 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegattaObjectiveTest
 {
 
-    Cockpit cockpit;
     GameState gameState;
+    InitGameParameters ip;
     RegattaObjective regattaObjective;
 
     @BeforeEach
     void init()
     {
-        cockpit = new Cockpit();
-        cockpit.initGame(
-            "{\n" +
-                "    \"goal\": {\n" +
-                "        \"mode\": \"REGATTA\",\n" +
-                "        \"checkpoints\": [\n" +
-                "            {\n" +
-                "                \"position\": {\n" +
-                "                    \"x\": 1000,\n" +
-                "                    \"y\": 0,\n" +
-                "                    \"orientation\": 0\n" +
-                "                },\n" +
-                "                \"shape\": {\n" +
-                "                    \"type\": \"circle\",\n" +
-                "                    \"radius\": 50\n" +
-                "                }\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"position\": {\n" +
-                "                    \"x\": 2000,\n" +
-                "                    \"y\": 0,\n" +
-                "                    \"orientation\": 0\n" +
-                "                },\n" +
-                "                \"shape\": {\n" +
-                "                    \"type\": \"circle\",\n" +
-                "                    \"radius\": 50\n" +
-                "                }\n" +
-                "            }\n" +
-                "        ]\n" +
-                "    },\n" +
-                "    \"shipCount\": 1,\n" +
-                "    \"ship\": {\n" +
-                "        \"type\": \"ship\",\n" +
-                "        \"life\": 100,\n" +
-                "        \"position\": {\n" +
-                "            \"x\": 0,\n" +
-                "            \"y\": 0,\n" +
-                "            \"orientation\": 0\n" +
-                "        },\n" +
-                "        \"name\": \"Les copaings d'abord!\",\n" +
-                "        \"deck\": {\n" +
-                "            \"width\": 3,\n" +
-                "            \"length\": 4\n" +
-                "        },\n" +
-                "        \"entities\": [\n" +
-                "            {\n" +
-                "                \"x\": 0,\n" +
-                "                \"y\": 0,\n" +
-                "                \"type\": \"oar\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\": 0,\n" +
-                "                \"y\": 2,\n" +
-                "                \"type\": \"oar\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\": 1,\n" +
-                "                \"y\": 0,\n" +
-                "                \"type\": \"oar\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\": 1,\n" +
-                "                \"y\": 2,\n" +
-                "                \"type\": \"oar\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\": 2,\n" +
-                "                \"y\": 0,\n" +
-                "                \"type\": \"oar\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"x\": 2,\n" +
-                "                \"y\": 2,\n" +
-                "                \"type\": \"oar\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "               \"x\": 3,\n" +
-                "               \"y\": 1,\n" +
-                "               \"type\": \"rudder\"\n" +
-                "            }\n" +
-                "        ],\n" +
-                "        \"shape\": {\n" +
-                "            \"type\": \"rectangle\",\n" +
-                "            \"width\": 3,\n" +
-                "            \"height\": 4,\n" +
-                "            \"orientation\": 0\n" +
-                "        }\n" +
-                "    },\n" +
-                "    \"sailors\": [\n" +
-                "        {\n" +
-                "            \"x\": 0,\n" +
-                "            \"y\": 0,\n" +
-                "            \"id\": 0,\n" +
-                "            \"name\": \"Edward Teach\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"x\": 0,\n" +
-                "            \"y\": 1,\n" +
-                "            \"id\": 1,\n" +
-                "            \"name\": \"Edward Pouce\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"x\": 1,\n" +
-                "            \"y\": 0,\n" +
-                "            \"id\": 2,\n" +
-                "            \"name\": \"Tom Pouce\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"x\": 1,\n" +
-                "            \"y\": 1,\n" +
-                "            \"id\": 3,\n" +
-                "            \"name\": \"Tom Teach\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"x\": 2,\n" +
-                "            \"y\": 2,\n" +
-                "            \"id\": 4,\n" +
-                "            \"name\": \"Jack Pouce\"\n" +
-                "        }\n" +
-                "    ]\n" +
-                "}\n"
-        );
+        Checkpoint[] cp = {
+            new Checkpoint(new Position(1000, 0, 0), new Circle(50)),
+            new Checkpoint(new Position(2000, 0, 0), new Circle(50))
+        };
+        RegattaGoal rg = new RegattaGoal(cp);
+        OnboardEntity[] ent = {
+            new Rame(0, 0),
+            new Rame(0, 2),
+            new Rame(1, 0),
+            new Rame(1, 2),
+            new Voile(0, 1, false),
+            new Gouvernail(1, 1)
+        };
+        Bateau ship = new Bateau("Peqoq", new Deck(3, 4), ent);
+        ship.setPosition(new Position(0, 0, 0));
+        Marin[] sailors = {
+            new Marin(0, 0, 0, "a"),
+            new Marin(1, 0, 2, "b"),
+            new Marin(2, 1, 0, "c"),
+            new Marin(3, 1, 2, "d"),
+            new Marin(4, 0, 1, "e"),
+            new Marin(5, 1, 1, "f"),
+        };
+        ip = new InitGameParameters(rg, ship, sailors);
     }
 
     void setupObjectiveInLine()
     {
-        cockpit.nextRound("{\n" +
-            "    \"ship\": {\n" +
-            "        \"type\": \"ship\",\n" +
-            "        \"life\": 100,\n" +
-            "        \"position\": {\n" +
-            "            \"x\": 0,\n" +
-            "            \"y\": 0,\n" +
-            "            \"orientation\": 0\n" +
-            "        },\n" +
-            "        \"name\": \"Les copaings d'abord!\",\n" +
-            "        \"deck\": {\n" +
-            "            \"width\": 3,\n" +
-            "            \"length\": 4\n" +
-            "        },\n" +
-            "        \"entities\": [\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "               \"x\": 3,\n" +
-            "               \"y\": 1,\n" +
-            "               \"type\": \"rudder\"\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"visibleEntities\": []\n" +
-            "}\n");
-
-        gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
+        Entity[] ent = {};
+        NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
+        gameState = new GameState(ip, np);
+        regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
     }
 
     void setupObjectiveOnLeft()
     {
-        cockpit.nextRound("{\n" +
-            "    \"ship\": {\n" +
-            "        \"type\": \"ship\",\n" +
-            "        \"life\": 100,\n" +
-            "        \"position\": {\n" +
-            "            \"x\": 1000,\n" +
-            "            \"y\": -1000,\n" +
-            "            \"orientation\": -2\n" +
-            "        },\n" +
-            "        \"name\": \"Les copaings d'abord!\",\n" +
-            "        \"deck\": {\n" +
-            "            \"width\": 3,\n" +
-            "            \"length\": 4\n" +
-            "        },\n" +
-            "        \"entities\": [\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "               \"x\": 3,\n" +
-            "               \"y\": 1,\n" +
-            "               \"type\": \"rudder\"\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"visibleEntities\": []\n" +
-            "}\n");
-
-        gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
+        Entity[] ent = {};
+        ip.getShip().setPosition(new Position(1000, -1000, -2));
+        NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
+        gameState = new GameState(ip, np);
+        regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
     }
 
     void setupObjectiveOnRight()
     {
-        cockpit.nextRound("{\n" +
-            "    \"ship\": {\n" +
-            "        \"type\": \"ship\",\n" +
-            "        \"life\": 100,\n" +
-            "        \"position\": {\n" +
-            "            \"x\": 1000,\n" +
-            "            \"y\": 1000,\n" +
-            "            \"orientation\": 2\n" +
-            "        },\n" +
-            "        \"name\": \"Les copaings d'abord!\",\n" +
-            "        \"deck\": {\n" +
-            "            \"width\": 3,\n" +
-            "            \"length\": 4\n" +
-            "        },\n" +
-            "        \"entities\": [\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "               \"x\": 3,\n" +
-            "               \"y\": 1,\n" +
-            "               \"type\": \"rudder\"\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"visibleEntities\": []\n" +
-            "}\n");
-
-        gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
+        Entity[] ent = {};
+        ip.getShip().setPosition(new Position(1000, 1000, 2));
+        NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
+        gameState = new GameState(ip, np);
+        regattaObjective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
     }
 
     void setupObjectiveOnBoat()
     {
-        cockpit.nextRound("{\n" +
-            "    \"ship\": {\n" +
-            "        \"type\": \"ship\",\n" +
-            "        \"life\": 100,\n" +
-            "        \"position\": {\n" +
-            "            \"x\": 1000,\n" +
-            "            \"y\": 0,\n" +
-            "            \"orientation\": 0\n" +
-            "        },\n" +
-            "        \"name\": \"Les copaings d'abord!\",\n" +
-            "        \"deck\": {\n" +
-            "            \"width\": 3,\n" +
-            "            \"length\": 4\n" +
-            "        },\n" +
-            "        \"entities\": [\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "               \"x\": 3,\n" +
-            "               \"y\": 1,\n" +
-            "               \"type\": \"rudder\"\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"visibleEntities\": []\n" +
-            "}\n");
-
-        gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
+        Entity[] ent = {};
+        ip.getShip().setPosition(new Position(1000, 0, 0));
+        NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
+        gameState = new GameState(ip, np);
+        regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
     }
 
     void setupSecondObjectiveOnBoat()
     {
-        cockpit.nextRound("{\n" +
-            "    \"ship\": {\n" +
-            "        \"type\": \"ship\",\n" +
-            "        \"life\": 100,\n" +
-            "        \"position\": {\n" +
-            "            \"x\": 2000,\n" +
-            "            \"y\": 0,\n" +
-            "            \"orientation\": 0\n" +
-            "        },\n" +
-            "        \"name\": \"Les copaings d'abord!\",\n" +
-            "        \"deck\": {\n" +
-            "            \"width\": 3,\n" +
-            "            \"length\": 4\n" +
-            "        },\n" +
-            "        \"entities\": [\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 0,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 1,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 0,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\": 2,\n" +
-            "                \"y\": 2,\n" +
-            "                \"type\": \"oar\"\n" +
-            "            },\n" +
-            "            {\n" +
-            "               \"x\": 3,\n" +
-            "               \"y\": 1,\n" +
-            "               \"type\": \"rudder\"\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"visibleEntities\": []\n" +
-            "}\n");
-
-        gameState = new GameState(cockpit.getIp(), cockpit.getNp());
-        regattaObjective = new RegattaObjective((RegattaGoal)cockpit.getIp().getGoal(), cockpit.getIp());
+        Entity[] ent = {};
+        ip.getShip().setPosition(new Position(2000, 0, 0));
+        NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
+        gameState = new GameState(ip, np);
+        regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
     }
 
     @Disabled
     void resolveWhenCpInLine()
     {
         setupObjectiveInLine();
-        Bateau ship = cockpit.getIp().getShip();
+        Bateau ship = gameState.getIp().getShip();
+        regattaObjective.update(gameState);
         ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
-        assertEquals(5, gameActions.size());
+        assertEquals(6, gameActions.size());
         List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction).collect(Collectors.toList());
         List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction).collect(Collectors.toList());
+        List<GameAction> sailAction = gameActions.stream().filter(a -> a instanceof LiftSailAction).collect(Collectors.toList());
         assertEquals(4, oarAction.size());
         assertEquals(1, rudderAction.size());
-        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size());
+        assertEquals(1, sailAction.size());
+        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size() - sailAction.size());
         List<Marin> sailorsOaring = oarAction.stream().map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
@@ -483,18 +139,21 @@ class RegattaObjectiveTest
         assertEquals(2, oarUsedOnRight);
     }
 
-    @Disabled
+    @Test
     void resolveWhenCpOnLeft()
     {
         setupObjectiveOnLeft();
-        Bateau ship = cockpit.getIp().getShip();
+        Bateau ship = gameState.getIp().getShip();
+        regattaObjective.update(gameState);
         ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
-        assertEquals(4, gameActions.size());
+        assertEquals(3, gameActions.size());
         List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction).collect(Collectors.toList());
         List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction).collect(Collectors.toList());
-        assertEquals(3, oarAction.size());
+        List<GameAction> sailAction = gameActions.stream().filter(a -> a instanceof LiftSailAction).collect(Collectors.toList());
+        assertEquals(2, oarAction.size());
         assertEquals(1, rudderAction.size());
-        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size());
+        assertEquals(0, sailAction.size());
+        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size() - sailAction.size());
         List<Marin> sailorsOaring = oarAction.stream().map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
@@ -504,21 +163,24 @@ class RegattaObjectiveTest
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1) oarUsedOnRight++;
         }
         assertEquals(0, oarUsedOnLeft);
-        assertEquals(3, oarUsedOnRight);
+        assertEquals(2, oarUsedOnRight);
     }
 
-    @Disabled
+    @Test
     void resolveWhenCpOnRight()
     {
         setupObjectiveOnRight();
-        Bateau ship = cockpit.getIp().getShip();
+        Bateau ship = gameState.getIp().getShip();
+        regattaObjective.update(gameState);
         ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
-        assertEquals(4, gameActions.size());
+        assertEquals(3, gameActions.size());
         List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction).collect(Collectors.toList());
         List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction).collect(Collectors.toList());
-        assertEquals(3, oarAction.size());
+        List<GameAction> sailAction = gameActions.stream().filter(a -> a instanceof LiftSailAction).collect(Collectors.toList());
+        assertEquals(2, oarAction.size());
         assertEquals(1, rudderAction.size());
-        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size());
+        assertEquals(0, sailAction.size());
+        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size() - sailAction.size());
         List<Marin> sailorsOaring = oarAction.stream().map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
@@ -527,7 +189,7 @@ class RegattaObjectiveTest
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1) oarUsedOnRight++;
         }
-        assertEquals(3, oarUsedOnLeft);
+        assertEquals(2, oarUsedOnLeft);
         assertEquals(0, oarUsedOnRight);
     }
 
@@ -538,10 +200,11 @@ class RegattaObjectiveTest
         assertFalse(regattaObjective.isValidated(gameState));
     }
 
-    @Disabled
+    @Test
     void updateWhenNotOnCp() throws NoSuchFieldException, IllegalAccessException
     {
         setupObjectiveInLine();
+        regattaObjective.update(gameState);
         Field checkpointNumber = RegattaObjective.class.getDeclaredField("numCheckpoint");
         checkpointNumber.setAccessible(true);
         int numCheckpoint = checkpointNumber.getInt(regattaObjective);
@@ -552,7 +215,7 @@ class RegattaObjectiveTest
         assertEquals(0, numCheckpoint);
     }
 
-    @Disabled
+    @Test
     void updateWhenOnCp() throws NoSuchFieldException, IllegalAccessException
     {
         setupObjectiveOnBoat();
@@ -560,12 +223,10 @@ class RegattaObjectiveTest
         checkpointNumber.setAccessible(true);
         int numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(0, numCheckpoint);
-        regattaObjective.resolve(gameState);
         regattaObjective.update(gameState);
         numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(1, numCheckpoint);
         setupSecondObjectiveOnBoat();
-        regattaObjective.resolve(gameState);
         regattaObjective.update(gameState);
         numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(0, numCheckpoint);

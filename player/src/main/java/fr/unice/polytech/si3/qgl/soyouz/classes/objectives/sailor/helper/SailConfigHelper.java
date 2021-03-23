@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 public class SailConfigHelper
 {
     private final double distToCheckpoint;
+    private final double orientation;
     private final int nbOfSails;
     private final Bateau ship;
     private final Wind wind;
@@ -21,9 +22,10 @@ public class SailConfigHelper
      * @param ship The ship.
      * @param wind The wind.
      */
-    public SailConfigHelper(double distToCheckpoint, int nbOfSails, Bateau ship, Wind wind)
+    public SailConfigHelper(double distToCheckpoint, double orientation, int nbOfSails, Bateau ship, Wind wind)
     {
         this.distToCheckpoint = distToCheckpoint;
+        this.orientation = orientation;
         this.nbOfSails = nbOfSails;
         this.ship = ship;
         this.wind = wind;
@@ -38,7 +40,7 @@ public class SailConfigHelper
     {
         int optimalConfig = 0;
         double diff = distToCheckpoint;
-        for (int i = 1; i < nbOfSails; i++)
+        for (int i = 1; i <= nbOfSails; i++)
         {
             double additionalSpeed = windAdditionalSpeed(nbOfSails, i, ship, wind);
             if (distToCheckpoint - additionalSpeed < diff && additionalSpeed > 0)

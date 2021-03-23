@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  */
 public class SailObjective implements OnBoardObjective
 {
+    //TODO REFAIRE GESTION (SI VOILE FERMEE OU OUVERTE ALORS NE PAS OUVRIR FERMER
     private final List<Marin> sailors;
     private final List<MovingObjective> movement;
     private int nbSailToOpen;
@@ -110,12 +111,12 @@ public class SailObjective implements OnBoardObjective
         sailors.forEach(sailor -> {
             if (nbSailToOpen > 0)
             {
-                actions.add(new LiftSailAction(sailor));
+                actions.add(new LowerSailAction(sailor));
                 nbSailToOpen--;
             }
             else if (nbSailToClose > 0)
             {
-                actions.add(new LowerSailAction(sailor));
+                actions.add(new LiftSailAction(sailor));
                 nbSailToClose--;
             }
         });

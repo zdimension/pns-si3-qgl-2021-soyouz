@@ -17,7 +17,7 @@ public class SailorObjective implements OnBoardObjective
     private double distance;
     private double rotation;
     private RudderObjective rudderObjective;
-    private SailObjective sailObjective;
+//    private SailObjective sailObjective;
     private RowersObjective rowersObjective;
 
     /**
@@ -43,7 +43,7 @@ public class SailorObjective implements OnBoardObjective
     {
         setupRowerObjective();
         setupRudderObjective();
-        setupSailObjective();
+ //       setupSailObjective();
     }
 
     /**
@@ -74,18 +74,19 @@ public class SailorObjective implements OnBoardObjective
         RudderConfigHelper rudderConfigHelper = new RudderConfigHelper(rotation);
         rudderObjective = new RudderObjective(onBoardDataHelper.getShip(),
             rudderConfigHelper.findOptRudderRotation(), onBoardDataHelper.getRudderSailor());
+        rotation -= rudderConfigHelper.findOptRudderRotation();
     }
 
     /**
      * Setup the sail objective.
      */
-    private void setupSailObjective(){
-        SailConfigHelper sailConfigHelper = new SailConfigHelper(distance,
+ /*   private void setupSailObjective(){
+        SailConfigHelper sailConfigHelper = new SailConfigHelper(distance, rotation,
             onBoardDataHelper.getShip().getNumberSail(), onBoardDataHelper.getShip(),
             seaDataHelper.getWind());
         sailObjective = new SailObjective(onBoardDataHelper.getShip(),
             sailConfigHelper.findOptSailConfiguration(), onBoardDataHelper.getSailSailors());
-    }
+    }*/
 
     /**
      * Determine if the goal is reached.
@@ -109,7 +110,7 @@ public class SailorObjective implements OnBoardObjective
         List<GameAction> actions = new ArrayList<>();
         actions.addAll(rowersObjective.resolve());
         actions.addAll(rudderObjective.resolve());
-        actions.addAll(sailObjective.resolve());
+        //actions.addAll(sailObjective.resolve());
         return actions;
     }
 }

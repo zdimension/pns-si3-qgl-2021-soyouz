@@ -131,7 +131,7 @@ public class RowersConfigHelper
      */
     private void setLeftTurnPossibilities(int maxLeftNb, int maxRightNb)
     {
-        for (int rightNb = 0; rightNb < maxRightNb; rightNb++)
+        for (int rightNb = 0; rightNb <= maxRightNb; rightNb++)
         {
             for (int leftNb = 0; (leftNb < rightNb) && leftNb < (maxLeftNb - (rightNb
             - immutableRightSailor)); leftNb++)
@@ -146,7 +146,7 @@ public class RowersConfigHelper
      */
     private void setRightTurnPossibilities(int maxLeftNb, int maxRightNb)
     {
-        for (int leftNb = 0; leftNb < maxLeftNb; leftNb++)
+        for (int leftNb = 0; leftNb <= maxLeftNb; leftNb++)
         {
             for (int rightNb = 0; (rightNb < leftNb) && rightNb < (maxRightNb - (leftNb
                 - immutableLeftSailor)); rightNb++)
