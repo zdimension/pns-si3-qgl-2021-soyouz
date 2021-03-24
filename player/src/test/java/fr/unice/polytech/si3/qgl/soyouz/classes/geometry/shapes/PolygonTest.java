@@ -1,8 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,46 +14,13 @@ class PolygonTest
     @BeforeEach
     void init()
     {
-        Cockpit cockpit = new Cockpit();
-
-        cockpit.initGame("{\"goal\": {\n" +
-            "    \"mode\": \"REGATTA\",\n" +
-            "    \"checkpoints\": [\n" +
-            "      {\n" +
-            "        \"position\": {\n" +
-            "          \"x\": 1000,\n" +
-            "          \"y\": 0,\n" +
-            "          \"orientation\": 0\n" +
-            "        },\n" +
-            "        \"shape\": {\n" +
-            "          \"type\": \"polygon\",\n" +
-            "          \"orientation\": 1,\n" +
-            "          \"vertices\" : [\n" +
-            "            {\n" +
-            "                \"x\" : 1005,\n" +
-            "                \"y\" : -5\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\" : 1005,\n" +
-            "                \"y\" : 5\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\" : 1010,\n" +
-            "                \"y\" : 5\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"x\" : 1010,\n" +
-            "                \"y\" : -5\n" +
-            "            }\n" +
-            "           ]\n" +
-            "        }\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }}");
-
-        InitGameParameters ip = cockpit.getIp();
-        RegattaGoal rg = (RegattaGoal) ip.getGoal();
-        polygon = (Polygon) rg.getCheckpoints()[0].getShape();
+        Point[] vertices = {
+            new Point(1, 1),
+            new Point(2, 1),
+            new Point(3, 1),
+            new Point(4, 1),
+        };
+        polygon = new Polygon(1, vertices);
     }
 
     @Test

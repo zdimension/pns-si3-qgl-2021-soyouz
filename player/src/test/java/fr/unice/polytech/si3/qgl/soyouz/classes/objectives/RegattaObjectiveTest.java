@@ -112,7 +112,7 @@ class RegattaObjectiveTest
         regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
     }
 
-    @Disabled
+    @Test
     void resolveWhenCpInLine()
     {
         setupObjectiveInLine();

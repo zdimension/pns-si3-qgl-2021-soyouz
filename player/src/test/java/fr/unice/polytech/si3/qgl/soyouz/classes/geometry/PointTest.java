@@ -14,22 +14,22 @@ class PointTest
     @BeforeEach
     void init()
     {
-        point = new Point(0,0);
+        point = new Point(1,2);
     }
 
     @Test
     void getX()
     {
-        assertNotEquals(0.01, point.getX());
-        assertEquals(0, point.getX());
-        assertNotEquals(-0.01, point.getX());
+        assertNotEquals(0, point.getX());
+        assertEquals(1, point.getX());
+        assertNotEquals(2, point.getX());
     }
 
     @Test
     void getY()
     {
-        assertNotEquals(0.01, point.getY());
-        assertEquals(0, point.getY());
-        assertNotEquals(-0.01, point.getY());
+        assertNotEquals(1, point.getY());
+        assertEquals(2, point.getY());
+        assertNotEquals(3, point.getY());
     }
 }
