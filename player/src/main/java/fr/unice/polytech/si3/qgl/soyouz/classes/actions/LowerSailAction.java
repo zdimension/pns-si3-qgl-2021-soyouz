@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 
@@ -18,7 +19,7 @@ public class LowerSailAction extends GameAction
      *
      * @param sailor A Sailor.
      */
-    public LowerSailAction(Marin sailor)
+    public LowerSailAction(@JsonProperty("sailorId") Marin sailor)
     {
         super(sailor, Voile.class);
     }

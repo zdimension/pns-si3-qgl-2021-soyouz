@@ -2,10 +2,11 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
+import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
+import com.fasterxml.jackson.databind.deser.impl.ReadableObjectId;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.DoubleNode;
 import com.fasterxml.jackson.databind.node.IntNode;
@@ -38,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class Simulator extends JFrame
 {
@@ -58,14 +60,22 @@ public class Simulator extends JFrame
         setSize(600, 600);
 
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        var model = OBJECT_MAPPER.readValue(Files.readString(Path.of("Week6.json")),
-            InitGameParameters.class);
+        var ipt = Files.readString(Path.of("Week6.json"));
+        var model = OBJECT_MAPPER.readValue(ipt, InitGameParameters.class);
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
 
         OBJECT_MAPPER.registerModule(new SimpleModule()
         {{
-            addDeserializer(Marin.class, new JsonDeserializer<>()
+            setDeserializerModifier(new BeanDeserializerModifier() {
+                @Override
+                public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
+                    if (beanDesc.getBeanClass() == Marin.class)
+                        return new MarinDeserializer(deserializer, model);
+                    return deserializer;
+                }
+            });
+            /*addDeserializer(Marin.class, new JsonDeserializer<>()
             {
                 @Override
                 public Marin deserialize(JsonParser jsonParser,
@@ -107,7 +117,7 @@ public class Simulator extends JFrame
                         ((DoubleNode) tree.get("rotation")).asDouble()
                     );
                 }
-            });
+            });*/
         }});
 
         var btnNext = new JButton("Next");
@@ -167,6 +177,10 @@ public class Simulator extends JFrame
                 canvas.repaint();
             }
         });
+        /*var ctxt = OBJECT_MAPPER.getDeserializationContext();
+        var _objectIdReader = ctxt.obj
+        Object id = _objectIdReader.readObjectReference(p, ctxt);
+        ReadableObjectId roid = ctxt.findObjectId(id, ctxt.objectIdGeneratorInstance(), _objectIdReader.resolver);*/
         btnNext.addActionListener(event ->
         {
             btnNext.setEnabled(false);
@@ -174,8 +188,7 @@ public class Simulator extends JFrame
             //np = new NextRoundParameters(model.getShip(), null, new Entity[0]);
             try
             {
-                np = OBJECT_MAPPER.readValue(Files.readString(Path.of("NextRound.json")),
-                    NextRoundParameters.class);
+                np = OBJECT_MAPPER.readValue(Files.readString(Path.of("NextRound.json")), NextRoundParameters.class);
             }
             catch (IOException e)
             {
@@ -186,8 +199,15 @@ public class Simulator extends JFrame
             // mis null a la place du vent
             try
             {
+                var nrt = cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np));
+                String sb = "{\"sailors\":" +
+                    OBJECT_MAPPER.writeValueAsString(model.getSailors()) +
+                    ",\"actions\":" +
+                    nrt +
+                    "}";
                 var res =
-                    OBJECT_MAPPER.readValue(cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np)), GameAction[].class);
+                    OBJECT_MAPPER.readValue(sb, NextRoundWrapper.class).getActions();
+                Function<GameAction, Marin> getSailor = ent -> model.getSailorById(ent.getSailor().getId()).orElse(null);
                 var activeOars = new ArrayList<Rame>();
                 var rudderRotate = 0d;
                 for (GameAction act : res)
@@ -235,7 +255,7 @@ public class Simulator extends JFrame
                         if (act instanceof MoveAction)
                         {
                             var mv = (MoveAction) act;
-                            mv.getSailor().moveRelative(mv.getXDistance(), mv.getYDistance());
+                            getSailor.apply(mv).moveRelative(mv.getXDistance(), mv.getYDistance());
                         }
                     }
                 }
