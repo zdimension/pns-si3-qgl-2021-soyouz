@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
+//TODO VERIFIER QU'ON NE DEPASSE PAS LE CP
 /**
  * Class to determine the optimal Sails configuration to be the closest possible to the objective.
  */

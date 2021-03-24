@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class InitRowersPositionObjective implements MovingObjective
 {
-    private final List<OnBoardObjective> sailorMoveObjectives;
+    private final List<MovingObjective> sailorMoveObjectives;
     private final List<Marin> sailors;
     private final List<LineOnBoat> linesOnBoatWithOars;
     private final List<LineOnBoat> linesOnBoatWithOneOars;
