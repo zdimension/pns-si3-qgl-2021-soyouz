@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class Simulator extends JFrame
 {
@@ -206,6 +207,7 @@ public class Simulator extends JFrame
                     "}";
                 var res =
                     OBJECT_MAPPER.readValue(sb, NextRoundWrapper.class).getActions();
+                Function<GameAction, Marin> getSailor = ent -> model.getSailorById(ent.getSailor().getId()).orElse(null);
                 var activeOars = new ArrayList<Rame>();
                 var rudderRotate = 0d;
                 for (GameAction act : res)
@@ -253,7 +255,7 @@ public class Simulator extends JFrame
                         if (act instanceof MoveAction)
                         {
                             var mv = (MoveAction) act;
-                            mv.getSailor().moveRelative(mv.getXDistance(), mv.getYDistance());
+                            getSailor.apply(mv).moveRelative(mv.getXDistance(), mv.getYDistance());
                         }
                     }
                 }
