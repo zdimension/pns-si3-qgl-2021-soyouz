@@ -6,11 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class GameStateTest
 {
-
     InitGameParameters ip;
     NextRoundParameters np;
     GameState gs;
@@ -27,13 +25,11 @@ class GameStateTest
     void getIpTest()
     {
         assertEquals(ip, gs.getIp());
-        assertNotEquals(new InitGameParameters(null,null,null), gs.getIp());
     }
 
     @Test
     void getNpTest()
     {
         assertEquals(np, gs.getNp());
-        assertNotEquals(new NextRoundParameters(null, null, null), gs.getNp());
     }
 }
