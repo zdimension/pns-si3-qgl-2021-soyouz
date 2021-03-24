@@ -65,61 +65,6 @@ public class Simulator extends JFrame
         var cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
 
-        OBJECT_MAPPER.registerModule(new SimpleModule()
-        {{
-            setDeserializerModifier(new BeanDeserializerModifier() {
-                @Override
-                public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
-                    if (beanDesc.getBeanClass() == Marin.class)
-                        return new MarinDeserializer(deserializer, model);
-                    return deserializer;
-                }
-            });
-            /*addDeserializer(Marin.class, new JsonDeserializer<>()
-            {
-                @Override
-                public Marin deserialize(JsonParser jsonParser,
-                                         DeserializationContext deserializationContext) throws IOException
-                {
-                    return model.getSailorById(jsonParser.getValueAsInt()).orElse(null);
-                }
-            });
-            addDeserializer(OarAction.class, new JsonDeserializer<>()
-            {
-                @Override
-                public OarAction deserialize(JsonParser jsonParser,
-                                             DeserializationContext deserializationContext) throws IOException
-                {
-                    return new OarAction(model.getSailorById(((IntNode) OBJECT_MAPPER.readTree(jsonParser).get("sailorId")).asInt()).get());
-                }
-            });
-            addDeserializer(MoveAction.class, new JsonDeserializer<>()
-            {
-                @Override
-                public MoveAction deserialize(JsonParser jsonParser,
-                                              DeserializationContext deserializationContext) throws IOException
-                {
-                    var tree = OBJECT_MAPPER.readTree(jsonParser);
-                    return new MoveAction(model.getSailorById(((IntNode) tree.get("sailorId")).asInt()).get(),
-                        ((IntNode) tree.get("xdistance")).asInt(),
-                        ((IntNode) tree.get("ydistance")).asInt()
-                    );
-                }
-            });
-            addDeserializer(TurnAction.class, new JsonDeserializer<>()
-            {
-                @Override
-                public TurnAction deserialize(JsonParser jsonParser,
-                                              DeserializationContext deserializationContext) throws IOException
-                {
-                    var tree = OBJECT_MAPPER.readTree(jsonParser);
-                    return new TurnAction(model.getSailorById(((IntNode) tree.get("sailorId")).asInt()).get(),
-                        ((DoubleNode) tree.get("rotation")).asDouble()
-                    );
-                }
-            });*/
-        }});
-
         var btnNext = new JButton("Next");
         add(btnNext, BorderLayout.NORTH);
 

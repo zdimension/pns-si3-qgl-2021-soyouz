@@ -369,7 +369,7 @@ public class SimulatorCanvas extends JPanel
             var w = mapToScreen(r.getHeight());
             if (!noRot)
             {
-                gtr.rotate(2 * Math.PI - (p.getOrientation() + r.getOrientation()), 0, 0);
+                gtr.rotate(2 * Math.PI - (p.getOrientation()), 0, 0);
                 //gtr.rotate(-(p.getOrientation() + r.getOrientation()), 0, 0);
             }
             gtr.fillRect(-w / 2, -h / 2, w, h);
