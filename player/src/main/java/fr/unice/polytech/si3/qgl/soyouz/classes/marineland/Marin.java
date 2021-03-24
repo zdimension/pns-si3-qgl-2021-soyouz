@@ -1,20 +1,26 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
  * He Ho Freshwater sailor !
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id")
 public class Marin
 {
     public static final int MAX_MOVE = 5;
-    private final int id;
-    private final String name;
+    private int id;
+    private String name;
     private int x;
     private int y;
+
+    @JsonCreator
+    private Marin()
+    {
+    }
 
     /**
      * Constructor.
@@ -24,10 +30,10 @@ public class Marin
      * @param y    Its base y position.
      * @param name Its name.
      */
-    public Marin(@JsonProperty("id") int id,
-                 @JsonProperty("x") int x,
-                 @JsonProperty("y") int y,
-                 @JsonProperty("name") String name)
+    public Marin( int id,
+                  int x,
+                  int y,
+                  String name)
     {
         this.id = id;
         this.x = x;

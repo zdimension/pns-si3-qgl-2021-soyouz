@@ -20,7 +20,7 @@ public class MoveAction extends GameAction
      * @param y      Vertical movement.
      */
     public MoveAction(
-        Marin sailor,
+        @JsonProperty("sailorId") Marin sailor,
         @JsonProperty("xdistance") int x,
         @JsonProperty("ydistance") int y)
     {
