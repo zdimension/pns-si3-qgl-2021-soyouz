@@ -359,10 +359,18 @@ public class SimulatorCanvas extends JPanel
             this.getHeight() / 2 - mapToScreen(p.getY() - cameraPos.y));
     }
 
+    private Position mapToWorld(Point p)
+    {
+        return new Position(mapToWorld(p.x - getWidth() / 2) + cameraPos.x,
+            -mapToWorld(p.y - getHeight() / 2) + cameraPos.y, 0);
+    }
+
     private int mapToScreen(double dist)
     {
         return (int) (dist * scale);
     }
+
+    private double mapToWorld(int dist) { return dist / scale; }
 
     private void drawShape(Graphics2D g, Shape s, Position p)
     {
