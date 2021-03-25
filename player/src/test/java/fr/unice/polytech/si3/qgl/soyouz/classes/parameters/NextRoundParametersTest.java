@@ -2,7 +2,12 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -11,61 +16,50 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NextRoundParametersTest
 {
-    Cockpit cockpit;
     NextRoundParameters np;
 
     @BeforeEach
     void setUp()
     {
-        this.cockpit = new Cockpit();
-        cockpit.nextRound("{\"ship\": {\n" +
-            "    \"type\": \"ship\",\n" +
-            "    \"life\": 100,\n" +
-            "    \"position\": {\n" +
-            "      \"x\": 10.654,\n" +
-            "      \"y\": 3,\n" +
-            "      \"orientation\": 2.05\n" +
-            "    },\n" +
-            "    \"name\": \"Les copaings d'abord!\",\n" +
-            "    \"deck\": {\n" +
-            "      \"width\": 2,\n" +
-            "      \"length\": 1\n" +
-            "    },\n" +
-            "    \"entities\": [\n" +
-            "      {\n" +
-            "        \"x\": 0,\n" +
-            "        \"y\": 0,\n" +
-            "        \"type\": \"oar\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"x\": 1,\n" +
-            "        \"y\": 0,\n" +
-            "        \"type\": \"oar\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }}");
-        np = cockpit.getNp();
+        Entity[] ent = {
+            new Reef(),
+            new Stream(),
+        };
+        OnboardEntity[] onboardEntities = {
+            new Rame(0, 0),
+            new Rame(0, 2),
+            new Rame(1, 0),
+            new Rame(1, 2),
+            new Voile(0, 1, false),
+            new Gouvernail(1, 1)
+        };
+        Bateau ship = new Bateau("Peqoq", new Deck(3, 4), onboardEntities);
+        ship.setPosition(new Position(10, 20, 30));
+        np = new NextRoundParameters(ship, new Wind(2, 50), ent);
     }
 
     @Test
     void shipTest()
     {
         Bateau bateau = np.getShip();
-        assertEquals("Les copaings d'abord!", bateau.getName());
-        assertEquals(100, bateau.getLife());
-        assertEquals(2, bateau.getEntities().length);
-        //Boat position
-        Position pos = new Position(10.654, 3, 2.05);
+        assertEquals("Peqoq", bateau.getName());
+        assertEquals(6, bateau.getEntities().length);
+        Position pos = new Position(10, 20, 30);
         assertEquals(pos, bateau.getPosition());
-        //Deck size
-        assertEquals(2, bateau.getDeck().getWidth());
-        assertEquals(1, bateau.getDeck().getLength());
+        assertEquals(3, bateau.getDeck().getWidth());
+        assertEquals(4, bateau.getDeck().getLength());
     }
-    //TODO visibleEntities for next release
 
-    @Disabled
+    @Test
     void windTest()
     {
-        //TODO AJOUTER UN JSON AVEC DU WIND;
+        assertEquals(2, np.getWind().getOrientation());
+        assertEquals(50, np.getWind().getStrength());
+    }
+
+    @Test
+    void visibleEntitiesTest()
+    {
+        assertEquals(2, np.getVisibleEntities().length);
     }
 }

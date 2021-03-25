@@ -70,6 +70,15 @@ class LineOnBoatTest
     }
 
     @Test
+    void equalsTest()
+    {
+        assertEquals(lineWithOneOarAndASail, lineWithOneOarAndASail);
+        assertNotEquals(lineWithOneOar, lineWithTwoOars);
+        boolean notEquals = lineWithOneOar.equals("Hello");
+        assertFalse(notEquals);
+    }
+
+    @Test
     void compareTo()
     {
         List<LineOnBoat> lines = new ArrayList<>();
@@ -82,5 +91,12 @@ class LineOnBoatTest
         assertEquals(lineWithOneOarAndASail, lines.get(1));
         assertEquals(lineWithTwoOars, lines.get(2));
         assertEquals(lineWithOneOar, lines.get(3));
+        assertEquals(0, lines.get(0).compareTo(lines.get(0)));
+    }
+
+    @Test
+    void hashCodeTest()
+    {
+        assertNotEquals(lineWithOneOar.hashCode(), lineWithTwoOars.hashCode());
     }
 }

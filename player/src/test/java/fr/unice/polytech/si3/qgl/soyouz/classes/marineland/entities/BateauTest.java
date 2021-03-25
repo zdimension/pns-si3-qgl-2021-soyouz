@@ -1,13 +1,16 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,80 +22,59 @@ class BateauTest
     @BeforeEach
     void init()
     {
-        Cockpit cockpit = new Cockpit();
-
-        cockpit.nextRound("{\"ship\": {\n" +
-            "    \"type\": \"ship\",\n" +
-            "    \"life\": 100,\n" +
-            "    \"position\": {\n" +
-            "      \"x\": 10.654,\n" +
-            "      \"y\": 3,\n" +
-            "      \"orientation\": 2.05\n" +
-            "    },\n" +
-            "    \"name\": \"Les copaings d'abord!\",\n" +
-            "    \"deck\": {\n" +
-            "      \"width\": 2,\n" +
-            "      \"length\": 1\n" +
-            "    },\n" +
-            "    \"entities\": [\n" +
-            "      {\n" +
-            "        \"x\": 0,\n" +
-            "        \"y\": 0,\n" +
-            "        \"type\": \"oar\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"x\": 0,\n" +
-            "        \"y\": 1,\n" +
-            "        \"type\": \"oar\"\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }}");
-
-        ship = cockpit.getNp().getShip();
+        OnboardEntity[] ent = {
+            new Rame(0, 2),
+            new Rame(0, 0),
+            new Rame(1, 0),
+            new Rame(1, 2),
+            new Gouvernail(3, 2),
+            new Voile(2, 2, false)
+        };
+        ship = new Bateau("Pecoq", new Deck(3, 4), ent);
+        ship.setPosition(new Position(10.654, 3, 2));
     }
 
     @Test
     void getLife()
     {
-        assertEquals(100, ship.getLife());
+        assertEquals(0, ship.getLife());
     }
 
     @Test
     void getPosition()
     {
-        assertEquals(10.654, ship.getPosition().getX());
-        assertEquals(3, ship.getPosition().getY());
+        assertEquals(new Position(10.654, 3, 2), ship.getPosition());
     }
 
     @Test
     void getName()
     {
-        assertEquals("Les copaings d'abord!", ship.getName());
+        assertEquals("Pecoq", ship.getName());
     }
 
     @Test
     void getDeck()
     {
-        assertEquals(2, ship.getDeck().getWidth());
-        assertEquals(1, ship.getDeck().getLength());
+        assertEquals(3, ship.getDeck().getWidth());
+        assertEquals(4, ship.getDeck().getLength());
     }
 
     @Test
     void getEntities()
     {
-        assertEquals(2, ship.getEntities().length);
-        assertTrue(ship.getEntities()[0] instanceof Rame);
-        assertEquals(0, ship.getEntities()[0].getX());
-        assertEquals(0, ship.getEntities()[0].getY());
-        assertTrue(ship.getEntities()[1] instanceof Rame);
-        assertEquals(0, ship.getEntities()[1].getX());
-        assertEquals(1, ship.getEntities()[1].getY());
+        assertEquals(6, ship.getEntities().length);
+        int oarCount = (int)Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Rame).count();
+        int sailCount = (int)Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).count();
+        int rudderCount = (int)Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Gouvernail).count();
+        assertEquals(4, oarCount);
+        assertEquals(1, sailCount);
+        assertEquals(1, rudderCount);
     }
 
     @Test
     void getNumberOar()
     {
-        assertEquals(2, ship.getNumberOar());
+        assertEquals(4, ship.getNumberOar());
     }
 
     @Test
@@ -105,7 +87,7 @@ class BateauTest
     void getEntityHere()
     {
         assertTrue(ship.getEntityHere(0, 0).isPresent());
-        assertTrue(ship.getEntityHere(0, 1).isPresent());
+        assertTrue(ship.getEntityHere(0, 2).isPresent());
         assertTrue(ship.getEntityHere(1, 1).isEmpty());
     }
 
@@ -113,27 +95,25 @@ class BateauTest
     void testGetEntityHere()
     {
         assertTrue(ship.getEntityHere(Pair.of(0, 0)).isPresent());
-        assertTrue(ship.getEntityHere(Pair.of(0, 1)).isPresent());
+        assertTrue(ship.getEntityHere(Pair.of(0, 2)).isPresent());
         assertTrue(ship.getEntityHere(Pair.of(1, 1)).isEmpty());
     }
 
     @Test
     void getNbOfOarOnEachSideTest(){
         Pair<Integer, Integer> combi = ship.getNbOfOarOnEachSide();
-        assertEquals(1,combi.first);
-        assertEquals(1,combi.second);
+        assertEquals(2,combi.first);
+        assertEquals(2,combi.second);
     }
 
     @Test
     void findFirstPosOfEntityTest(){
-        Pair<Integer, Integer> combi = ship.findFirstPosOfEntity(Rame.class);
-        assertNotNull(combi);
+        assertEquals(Pair.of(0,2), ship.findFirstPosOfEntity(Rame.class));
     }
 
     @Test
     void findFirstEntityTest(){
-        Rame oar = ship.findFirstEntity(Rame.class);
-        assertNotNull(oar);
+        assertEquals(new Rame(0, 2), ship.findFirstEntity(Rame.class));
     }
 
     @Test
@@ -154,6 +134,6 @@ class BateauTest
     @Test
     void toStringTest(){
         String shipString = ship.toString();
-        assertEquals(97, shipString.length());
+        assertEquals(134, shipString.length());
     }
 }
