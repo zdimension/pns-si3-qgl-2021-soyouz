@@ -48,7 +48,7 @@ public class CheckpointObjective extends CompositeObjective
     public boolean isValidated(GameState state)
     {
         return state.getNp().getShip().getPosition().getLength(cp.getPosition())
-            < ((Circle) cp.getShape()).getRadius();
+            <= ((Circle) cp.getShape()).getRadius();
     }
 
     /**
@@ -63,6 +63,7 @@ public class CheckpointObjective extends CompositeObjective
         Bateau boat = state.getNp().getShip();
         double angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
         double distanceToCp = boat.getPosition().getLength(cp.getPosition());
+        distanceToCp += ((Circle) cp.getShape()).getRadius();
 
         if (roundObjective == null || roundObjective.isValidated())
         {
