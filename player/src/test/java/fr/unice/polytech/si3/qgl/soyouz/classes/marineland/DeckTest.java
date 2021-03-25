@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
