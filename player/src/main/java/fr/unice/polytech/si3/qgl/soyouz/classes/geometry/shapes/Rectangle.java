@@ -1,6 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 
 /**
  * Rectangle Shape.
@@ -55,5 +57,11 @@ public class Rectangle implements Shape
     public double getOrientation()
     {
         return orientation;
+    }
+
+    @Override
+    public boolean contains(Point2d pos)
+    {
+        return Math.abs(pos.getX()) <= height / 2 && Math.abs(pos.getY()) <= width / 2;
     }
 }

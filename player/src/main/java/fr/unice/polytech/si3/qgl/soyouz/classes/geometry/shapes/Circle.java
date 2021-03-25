@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
 /**
  * Circle shape.
@@ -27,5 +28,11 @@ public class Circle implements Shape
     public double getRadius()
     {
         return radius;
+    }
+
+    @Override
+    public boolean contains(Point2d pos)
+    {
+        return pos.normSquared() <= Math.pow(radius, 2);
     }
 }
