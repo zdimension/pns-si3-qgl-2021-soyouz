@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = Wind.class, name = "wind"),
     @JsonSubTypes.Type(value = Stream.class, name = "stream"),
     @JsonSubTypes.Type(value = Reef.class, name = "reef")
-    //TODO AJOUTER RECIF
 })
 public interface Entity
 {

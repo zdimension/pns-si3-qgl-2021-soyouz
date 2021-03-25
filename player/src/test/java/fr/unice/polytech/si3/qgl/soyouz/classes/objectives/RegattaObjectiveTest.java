@@ -1,10 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives;
 
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.LiftSailAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.OarAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
@@ -20,10 +17,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -68,6 +65,31 @@ class RegattaObjectiveTest
         ip = new InitGameParameters(rg, ship, sailors);
     }
 
+    InitGameParameters setupInitObjective()
+    {
+        Checkpoint[] cp = {
+            new Checkpoint(new Position(1000, 0, 0), new Circle(50)),
+            new Checkpoint(new Position(2000, 0, 0), new Circle(50))
+        };
+        RegattaGoal rg = new RegattaGoal(cp);
+        OnboardEntity[] ent = {
+            new Rame(0, 0),
+            new Rame(0, 2),
+            new Rame(1, 0),
+            new Rame(1, 2),
+            new Voile(0, 1, false),
+            new Gouvernail(1, 1)
+        };
+        Bateau ship = new Bateau("Peqoq", new Deck(3, 4), ent);
+        ship.setPosition(new Position(0, 0, 0));
+        Marin[] sailors = {
+            new Marin(0, 0, 1, "a"),
+            new Marin(1, 3, 1, "b"),
+            new Marin(2, 2, 0, "c"),
+        };
+        return new InitGameParameters(rg, ship, sailors);
+    }
+
     void setupObjectiveInLine()
     {
         Entity[] ent = {};
@@ -110,6 +132,21 @@ class RegattaObjectiveTest
         NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
         gameState = new GameState(ip, np);
         regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
+    }
+
+    @Test
+    void resolveInitialisation()
+    {
+        InitGameParameters ip = setupInitObjective();
+        GameState gs = new GameState(ip, new NextRoundParameters(
+            ip.getShip(), new Wind(1, 1), null));
+        RegattaObjective rO = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
+        rO.update(gs);
+        ArrayList<GameAction> gameActions = new ArrayList<>(rO.resolve(gs));
+        assertEquals(3, gameActions.size());
+        gameActions.forEach(act -> {
+            assertTrue(act instanceof MoveAction);
+        });
     }
 
     @Test

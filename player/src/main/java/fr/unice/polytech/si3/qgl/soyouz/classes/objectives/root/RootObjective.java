@@ -1,30 +1,37 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
+
+import java.util.List;
 
 /**
- * Basic class of objective.
+ * Basic interface for top level objectives.
  */
-public abstract class RootObjective extends CompositeObjective
+public interface RootObjective extends Objective
 {
 
     /**
-     * Determine if a goal is validate or not.
+     * Determine if the goal is reached.
      *
-     * @param state State of the goal.
-     * @return true if it is, false otherwise.
+     * @param state of the game
+     * @return true if this objective is validated
      */
-    @Override
-    public boolean isValidated(GameState state)
-    {
-        return false;
-    }
+    boolean isValidated(GameState state);
 
     /**
-     * Updates this objective according to the state of the game.
+     * Defines actions to perform. The state of the game is being updated too
      *
-     * @param state of the game.
+     * @param state of the game
+     * @return a list of all actions to send to JSON
      */
-    public abstract void update(GameState state);
+    List<GameAction> resolve(GameState state);
+
+    /**
+     * Update the current checkpoint to reach.
+     *
+     * @param state of the game
+     */
+    void update(GameState state);
 }

@@ -55,7 +55,6 @@ public class Cockpit implements ICockpit
     }
 
     private InitGameParameters ip;
-    private NextRoundParameters np;
     private RootObjective objective;
 
     /**
@@ -80,8 +79,6 @@ public class Cockpit implements ICockpit
         }
     }
 
-    public static int i = 0;
-
     /**
      * Parse all the current Game Parameters into a NextRoundParameters object. Determine which
      * actions to do in order to win and create a matching Json.
@@ -92,10 +89,9 @@ public class Cockpit implements ICockpit
     @Override
     public String nextRound(String round)
     {
-        Cockpit.i++;
         try
         {
-            np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
+            NextRoundParameters np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
             logger.log(Level.FINEST, "Next round input: " + np);
             objective.update(new GameState(ip, np));
             var actions = objective.resolve(new GameState(ip, np));
@@ -118,26 +114,6 @@ public class Cockpit implements ICockpit
     public List<String> getLogs()
     {
         return new ArrayList<>(logList);
-    }
-
-    /**
-     * Getters.
-     *
-     * @return the Init Game Parameters.
-     */
-    public InitGameParameters getIp()
-    {
-        return ip;
-    }
-
-    /**
-     * Getters.
-     *
-     * @return the Next Round Parameters.
-     */
-    public NextRoundParameters getNp()
-    {
-        return np;
     }
 
     /**

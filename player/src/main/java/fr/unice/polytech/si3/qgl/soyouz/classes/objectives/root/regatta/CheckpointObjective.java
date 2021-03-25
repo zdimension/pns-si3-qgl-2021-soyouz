@@ -5,7 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.CompositeObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.SailorObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SeaDataHelper;
@@ -16,13 +16,15 @@ import java.util.List;
 /**
  * Checkpoint type of objective
  */
-public class CheckpointObjective extends CompositeObjective
+public class CheckpointObjective implements RootObjective
 {
 
     private final Checkpoint cp;
     private final OnBoardDataHelper onBoardDataHelper;
     private final SeaDataHelper seaDataHelper;
     private SailorObjective roundObjective;
+    private double angleToCp;
+    private double distanceToCp;
 
     /**
      * Constructor.
@@ -35,6 +37,8 @@ public class CheckpointObjective extends CompositeObjective
         cp = checkpoint;
         this.onBoardDataHelper = onBoardDataHelper;
         this.seaDataHelper = seaDataHelper;
+        angleToCp = 0;
+        distanceToCp = 0;
         roundObjective = null;
     }
 
@@ -48,7 +52,7 @@ public class CheckpointObjective extends CompositeObjective
     public boolean isValidated(GameState state)
     {
         return state.getNp().getShip().getPosition().getLength(cp.getPosition())
-            < ((Circle) cp.getShape()).getRadius();
+            <= ((Circle) cp.getShape()).getRadius();
     }
 
     /**
@@ -60,9 +64,7 @@ public class CheckpointObjective extends CompositeObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
-        Bateau boat = state.getNp().getShip();
-        double angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
-        double distanceToCp = boat.getPosition().getLength(cp.getPosition());
+        update(state);
 
         if (roundObjective == null || roundObjective.isValidated())
         {
@@ -71,6 +73,20 @@ public class CheckpointObjective extends CompositeObjective
         }
 
         return roundObjective.resolve();
+    }
+
+    /**
+     * Update the current checkpoint to reach.
+     *
+     * @param state of the game
+     */
+    @Override
+    public void update(GameState state)
+    {
+        Bateau boat = state.getNp().getShip();
+        angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
+        distanceToCp = boat.getPosition().getLength(cp.getPosition());
+        distanceToCp += ((Circle) cp.getShape()).getRadius();
     }
 
     /**

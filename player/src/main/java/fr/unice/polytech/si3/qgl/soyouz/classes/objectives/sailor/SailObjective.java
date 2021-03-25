@@ -53,7 +53,7 @@ public class SailObjective implements OnBoardObjective
         List<Voile> sails = Util.filterType(Arrays.stream(ship.getEntities())
             .filter(ent -> ent instanceof Voile), Voile.class).collect(Collectors.toList());
         List<Voile> openedSails = sails.stream().filter(Voile::isOpenned).collect(Collectors.toList());
-        List<Voile> closedSails = sails.stream().filter(sail -> !openedSails.contains(sail)).collect(Collectors.toList());
+        List<Voile> closedSails = sails.stream().filter(sail -> !sail.isOpenned()).collect(Collectors.toList());
         int diff = nbSailOpenedOpt - openedSails.size();
         while (diff != 0)
         {
