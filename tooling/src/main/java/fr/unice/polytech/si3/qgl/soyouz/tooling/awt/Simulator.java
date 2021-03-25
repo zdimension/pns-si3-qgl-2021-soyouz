@@ -108,10 +108,21 @@ public class Simulator extends JFrame
                 }
 
                 var cur = model.getShip().getPosition();
-                model.getShip().setPosition(cur.add(new Position(
-                    linSpeed * Math.cos(cur.getOrientation()),
-                    linSpeed * Math.sin(cur.getOrientation()),
-                    rotIncrement)));
+                var linear = new Position(linSpeed, cur.getOrientation());
+
+                for (Entity visibleEntity : np.getVisibleEntities())
+                {
+                    if (visibleEntity instanceof Stream)
+                    {
+                        var str = (Stream)visibleEntity;
+                        if (str.contains(model.getShip().getPosition()))
+                        {
+                            linear = linear.add(str.getProjectedStrength().mul(1d / COMP_STEPS));
+                        }
+                    }
+                }
+
+                model.getShip().setPosition(cur.add(linear).add(0, 0, rotIncrement));
                 System.out.println("Ship position : " + model.getShip().getPosition());
                 if (++currentStep >= COMP_STEPS)
                 {
