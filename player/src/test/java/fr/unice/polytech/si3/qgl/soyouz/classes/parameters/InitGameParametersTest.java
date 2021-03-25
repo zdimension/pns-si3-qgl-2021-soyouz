@@ -1,11 +1,18 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,117 +22,70 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class InitGameParametersTest
 {
-    Cockpit cockpit;
     InitGameParameters ip;
 
 
     @BeforeEach
-    void setUp()
+    void init()
     {
-        this.cockpit = new Cockpit();
+        Checkpoint[] cp = {
+            new Checkpoint(new Position(1000, 0, 0), new Circle(50)),
+            new Checkpoint(new Position(2000, 0, 0), new Circle(50))
+        };
+        RegattaGoal rg = new RegattaGoal(cp);
+        OnboardEntity[] ent = {
+            new Rame(0, 0),
+            new Rame(0, 2),
+            new Rame(1, 0),
+            new Rame(1, 2),
+            new Voile(0, 1, false),
+            new Gouvernail(1, 1)
+        };
+        Bateau ship = new Bateau("Peqoq", new Deck(3, 4), ent);
+        ship.setPosition(new Position(10, 20, 30));
+        Marin[] sailors = {
+            new Marin(0, 0, 0, "a"),
+            new Marin(1, 0, 2, "b"),
+            new Marin(2, 1, 0, "c"),
+            new Marin(3, 1, 2, "d"),
+            new Marin(4, 0, 1, "e"),
+            new Marin(5, 1, 1, "f"),
+        };
+        ip = new InitGameParameters(rg, ship, sailors);
     }
 
     @Test
     void goalTest()
     {
-        cockpit.initGame("{\"goal\": {\n" +
-            "    \"mode\": \"REGATTA\",\n" +
-            "    \"checkpoints\": [\n" +
-            "      {\n" +
-            "        \"position\": {\n" +
-            "          \"x\": 1000,\n" +
-            "          \"y\": 0,\n" +
-            "          \"orientation\": 0\n" +
-            "        },\n" +
-            "        \"shape\": {\n" +
-            "          \"type\": \"circle\",\n" +
-            "          \"radius\": 50\n" +
-            "        }\n" +
-            "      }\n" +
-            "    ]\n" +
-            "  }}");
-        ip = cockpit.getIp();
-        RegattaGoal goal = (RegattaGoal) ip.getGoal();
-        assertEquals(1, goal.getCheckpoints().length);
+        assertTrue(ip.getGoal() instanceof RegattaGoal);
+        RegattaGoal rg = (RegattaGoal) ip.getGoal();
+        assertEquals(2, rg.getCheckpoints().length);
     }
 
     @Test
     void shipTest()
     {
-        cockpit.initGame("{\"shipCount\": 1," +
-            "\"ship\": {\n" +
-            "    \"type\": \"ship\",\n" +
-            "    \"life\": 100,\n" +
-            "    \"position\": {\n" +
-            "      \"x\": 0,\n" +
-            "      \"y\": 0,\n" +
-            "      \"orientation\": 0\n" +
-            "    },\n" +
-            "    \"name\": \"Les copaings d'abord!\",\n" +
-            "    \"deck\": {\n" +
-            "      \"width\": 2,\n" +
-            "      \"length\": 1\n" +
-            "    },\n" +
-            "    \"entities\": [\n" +
-            "      {\n" +
-            "        \"x\": 0,\n" +
-            "        \"y\": 0,\n" +
-            "        \"type\": \"oar\"\n" +
-            "      },\n" +
-            "      {\n" +
-            "        \"x\": 0,\n" +
-            "        \"y\": 1,\n" +
-            "        \"type\": \"oar\"\n" +
-            "      }\n" +
-            "    ],\n" +
-            "    \"shape\": {\n" +
-            "      \"type\": \"rectangle\",\n" +
-            "      \"width\": 2,\n" +
-            "      \"height\": 3,\n" +
-            "      \"orientation\": 0\n" +
-            "    }\n" +
-            "  }}");
-        ip = cockpit.getIp();
         assertEquals(1, ip.getShipCount());
         Bateau bateau = ip.getShip();
-        assertEquals("Les copaings d'abord!", bateau.getName());
-        assertEquals(100, bateau.getLife());
-        assertEquals(2, bateau.getEntities().length);
-        //Boat position
-        Position pos = new Position(0, 0, 0);
+        assertEquals("Peqoq", bateau.getName());
+        assertEquals(6, bateau.getEntities().length);
+        Position pos = new Position(10, 20, 30);
         assertEquals(pos, bateau.getPosition());
-        //Deck size
-        assertEquals(2, bateau.getDeck().getWidth());
-        assertEquals(1, bateau.getDeck().getLength());
-        //Boat Shape
-        assertTrue(bateau.getShape() instanceof Rectangle);
+        assertEquals(3, bateau.getDeck().getWidth());
+        assertEquals(4, bateau.getDeck().getLength());
     }
 
     @Test
     void sailorsTest()
     {
-        cockpit.initGame("{\"sailors\": [\n" +
-            "    {\n" +
-            "      \"x\": 0,\n" +
-            "      \"y\": 0,\n" +
-            "      \"id\": 0,\n" +
-            "      \"name\": \"Edward Teach\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"x\": 1,\n" +
-            "      \"y\": 0,\n" +
-            "      \"id\": 1,\n" +
-            "      \"name\": \"Tom Pouce\"\n" +
-            "    }\n" +
-            "  ]}");
-        ip = cockpit.getIp();
         Marin[] marins = ip.getSailors();
-        assertEquals(2, marins.length);
-        assertEquals("Edward Teach", marins[0].getName());
+        assertEquals(6, marins.length);
         assertEquals(Pair.of(0, 0), marins[0].getGridPosition());
-        assertEquals("Tom Pouce", marins[1].getName());
-        assertEquals(Pair.of(1, 0), marins[1].getGridPosition());
-        assertEquals("Tom Pouce", ip.getSailorById(1).get().getName());
+        assertEquals(Pair.of(0, 2), marins[1].getGridPosition());
+        assertEquals(Pair.of(1, 0), marins[2].getGridPosition());
+        assertEquals(Pair.of(1, 2), marins[3].getGridPosition());
+        assertEquals(Pair.of(0, 1), marins[4].getGridPosition());
+        assertEquals(Pair.of(1, 1), marins[5].getGridPosition());
+        assertEquals(ip.getSailorById(0).get(), marins[0]);
     }
-
 }

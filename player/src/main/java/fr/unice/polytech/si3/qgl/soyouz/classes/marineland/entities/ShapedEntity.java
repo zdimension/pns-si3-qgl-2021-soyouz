@@ -54,6 +54,4 @@ public abstract class ShapedEntity
     {
         return shape;
     }
-
-    public boolean contains(Position pos) { return false; }
 }
