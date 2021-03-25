@@ -29,7 +29,8 @@ public class CheckpointObjective extends CompositeObjective
      *
      * @param checkpoint The checkpoint to reach.
      */
-    public CheckpointObjective(Checkpoint checkpoint, OnBoardDataHelper onBoardDataHelper, SeaDataHelper seaDataHelper)
+    public CheckpointObjective(Checkpoint checkpoint, OnBoardDataHelper onBoardDataHelper,
+                               SeaDataHelper seaDataHelper)
     {
         cp = checkpoint;
         this.onBoardDataHelper = onBoardDataHelper;
@@ -64,7 +65,10 @@ public class CheckpointObjective extends CompositeObjective
         double distanceToCp = boat.getPosition().getLength(cp.getPosition());
 
         if (roundObjective == null || roundObjective.isValidated())
-            roundObjective = new SailorObjective(onBoardDataHelper, seaDataHelper, distanceToCp, angleToCp);
+        {
+            roundObjective = new SailorObjective(onBoardDataHelper, seaDataHelper, distanceToCp,
+                angleToCp);
+        }
 
         return roundObjective.resolve();
     }
@@ -78,16 +82,26 @@ public class CheckpointObjective extends CompositeObjective
     private double calculateAngleBetweenBoatAndCheckpoint(Bateau boat)
     {
         double boatOrientation = boat.getPosition().getOrientation();
-        Pair<Double, Double> boatVector = Pair.of(Math.cos(boatOrientation), Math.sin(boatOrientation));
+        Pair<Double, Double> boatVector = Pair.of(Math.cos(boatOrientation),
+            Math.sin(boatOrientation));
         Pair<Double, Double> cpVector = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(),
             cp.getPosition().getY() - boat.getPosition().getY());
-        double normDirection = Math.sqrt(Math.pow(cpVector.first, 2) + Math.pow(cpVector.second, 2));
+        double normDirection = Math.sqrt(Math.pow(cpVector.first, 2) + Math.pow(cpVector.second,
+            2));
         var scalar = boatVector.first * cpVector.first + boatVector.second * cpVector.second;
-        double angle = Math.acos(scalar / normDirection);
+        double beforeAcos = scalar / normDirection;
+        if (beforeAcos >= 1 && beforeAcos < 1.0000000001)
+        {
+            beforeAcos = 1.0;
+        }
+
+        double angle = Math.acos(beforeAcos);
+
         if (cpVector.second - boatVector.second < 0)
         {
             angle = -angle;
         }
+
         return angle;
     }
 }
