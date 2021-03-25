@@ -1,15 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
-import com.fasterxml.jackson.databind.deser.impl.ObjectIdReader;
-import com.fasterxml.jackson.databind.deser.impl.ReadableObjectId;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.DoubleNode;
-import com.fasterxml.jackson.databind.node.IntNode;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
@@ -20,7 +13,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SailConfigHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
@@ -62,11 +54,13 @@ public class Simulator extends JFrame
         btnPlay.setText("Play");
         var ipt = Files.readString(Path.of("Week6.json"));
         model = OBJECT_MAPPER.readValue(ipt, InitGameParameters.class);
+        np = null;
         canvas.setModel(model);
         cockpit = new Cockpit();
         cockpit.initGame(OBJECT_MAPPER.writeValueAsString(model));
         usedEntities.clear();
         canvas.reset();
+        loadNextRound();
     }
 
     public Simulator() throws IOException
@@ -218,18 +212,26 @@ public class Simulator extends JFrame
         timer.start();
     }
 
+    private void loadNextRound()
+    {
+        if (np == null)
+        {
+            try
+            {
+                np = OBJECT_MAPPER.readValue(Files.readString(Path.of("NextRound.json")), NextRoundParameters.class);
+                np = new NextRoundParameters(model.getShip(), np.getWind(), np.getVisibleEntities());
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            canvas.setNp(np);
+        }
+    }
+
     private void computeRound()
     {
-        try
-        {
-            np = OBJECT_MAPPER.readValue(Files.readString(Path.of("NextRound.json")), NextRoundParameters.class);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        np = new NextRoundParameters(model.getShip(), new Wind(0, 50), np.getVisibleEntities());
-        canvas.setNp(np);
+        loadNextRound();
         // mis null a la place du vent
         try
         {

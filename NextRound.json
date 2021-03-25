@@ -150,6 +150,6 @@
     ],
     "wind": {
         "orientation": 0,
-        "strength": 110
+        "strength": 50
     }
 }
