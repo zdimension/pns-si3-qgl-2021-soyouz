@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * Race type objective.
  */
-public class RegattaObjective extends RootObjective
+public class RegattaObjective implements RootObjective
 {
     private static final Logger logger = Logger.getLogger(RegattaObjective.class.getSimpleName());
     private final RegattaGoal goalData;
@@ -96,6 +96,18 @@ public class RegattaObjective extends RootObjective
             }
             currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper, seaDataHelper);
         }
+    }
+
+    /**
+     * Determine if the goal is reached.
+     *
+     * @param state of the game
+     * @return true if this objective is validated
+     */
+    @Override
+    public boolean isValidated(GameState state)
+    {
+        return numCheckpoint == ((RegattaGoal)state.getIp().getGoal()).getCheckpoints().length - 1;
     }
 
     /**

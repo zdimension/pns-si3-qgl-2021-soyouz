@@ -122,14 +122,6 @@ class BateauTest
         assertFalse(ship.hasAt(0,0, Gouvernail.class));
     }
 
-    @Test
-    void isPositionOnLeft(){
-        Position position = new Position(150,50,0);
-        assertTrue(ship.isPositionOnLeft(position));
-        Position position2 = new Position(-40,20,0);
-        assertFalse(ship.isPositionOnLeft(position2));
-    }
-
     //No Point in testing a toString only for coverage purposes
     @Test
     void toStringTest(){

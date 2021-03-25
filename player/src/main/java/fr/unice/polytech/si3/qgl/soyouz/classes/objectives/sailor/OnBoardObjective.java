@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * This interface is meant to represents objectives that must be done in a turn or two but don't
  * last all game long.
  */
-public interface OnBoardObjective
+public interface OnBoardObjective extends Objective
 {
     /**
      * Determine if the goal is reached.

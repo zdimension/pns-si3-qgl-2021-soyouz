@@ -99,20 +99,6 @@ public class Bateau extends AutreBateau
     }
 
     /**
-     * Method to determine if a position is on the left of this.
-     *
-     * @param posObs Position of obstacle.
-     * @return true if the obstacle is on the left of the boat.
-     */
-    public boolean isPositionOnLeft(Position posObs)
-    {
-        var angle =
-            Math.atan((posObs.getX() - (this.getPosition().getX() + Math.cos(this.getPosition().getOrientation())))
-                / (1 + (this.getPosition().getY() + Math.sin(this.getPosition().getOrientation())) * posObs.getY()));
-        return angle >= 0 && angle <= Math.PI;
-    }
-
-    /**
      * Determines which
      * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
      * set on a specific {@link fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point}.

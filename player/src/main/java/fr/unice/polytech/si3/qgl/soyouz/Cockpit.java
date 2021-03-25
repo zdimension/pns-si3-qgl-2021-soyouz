@@ -79,8 +79,6 @@ public class Cockpit implements ICockpit
         }
     }
 
-    public static int i = 0;
-
     /**
      * Parse all the current Game Parameters into a NextRoundParameters object. Determine which
      * actions to do in order to win and create a matching Json.
@@ -91,7 +89,6 @@ public class Cockpit implements ICockpit
     @Override
     public String nextRound(String round)
     {
-        Cockpit.i++;
         try
         {
             NextRoundParameters np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
