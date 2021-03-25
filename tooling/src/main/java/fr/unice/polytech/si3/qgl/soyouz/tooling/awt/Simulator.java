@@ -95,12 +95,19 @@ public class Simulator extends JFrame
             }
         });
 
-        add(topcont, BorderLayout.NORTH);
-
         usedEntities = new ArrayList<>();
 
         canvas = new SimulatorCanvas(null, usedEntities);
         add(canvas, BorderLayout.CENTER);
+
+        var btnClear = new JButton("Clear path");
+        topcont.add(btnClear);
+        btnClear.addActionListener(e ->
+        {
+            canvas.clearHistory();
+        });
+
+        add(topcont, BorderLayout.NORTH);
 
         addWindowListener(new WindowAdapter()
         {

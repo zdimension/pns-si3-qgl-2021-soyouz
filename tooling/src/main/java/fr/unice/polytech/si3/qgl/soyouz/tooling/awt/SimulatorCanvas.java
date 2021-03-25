@@ -123,7 +123,7 @@ public class SimulatorCanvas extends JPanel
         scale = 1;
         np = null;
         centered = false;
-        shipHistory.clear();
+        clearHistory();
         repaint();
     }
 
@@ -448,5 +448,10 @@ public class SimulatorCanvas extends JPanel
             gtr.setColor(Color.BLACK);
             gtr.drawPolygon(new Polygon(new int[] {-10, -10, 20}, new int[] { -10, 10, 0}, 3));
         }
+    }
+
+    public void clearHistory()
+    {
+        shipHistory.clear();
     }
 }
