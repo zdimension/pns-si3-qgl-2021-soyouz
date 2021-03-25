@@ -1,6 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,11 +14,11 @@ class PolygonTest
     @BeforeEach
     void init()
     {
-        Point[] vertices = {
-            new Point(1, 1),
-            new Point(2, 1),
-            new Point(3, 1),
-            new Point(4, 1),
+        Point2d[] vertices = {
+            new Point2d(1, 1),
+            new Point2d(2, 1),
+            new Point2d(3, 1),
+            new Point2d(4, 1),
         };
         polygon = new Polygon(1, vertices);
     }

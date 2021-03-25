@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class PointTest
 {
 
-    Point point;
+    Point2d point;
 
     @BeforeEach
     void init()
     {
-        point = new Point(1,2);
+        point = new Point2d(1,2);
     }
 
     @Test

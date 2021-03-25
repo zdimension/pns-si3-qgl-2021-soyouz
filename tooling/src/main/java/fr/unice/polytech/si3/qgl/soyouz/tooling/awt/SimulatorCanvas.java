@@ -138,6 +138,14 @@ public class SimulatorCanvas extends JPanel
                     repaint();
                 }
             }
+
+            @Override
+            public void mouseMoved(MouseEvent e)
+            {
+                repaint();
+
+                super.mouseMoved(e);
+            }
         });
     }
 
@@ -236,6 +244,18 @@ public class SimulatorCanvas extends JPanel
         {
             shipHistory.add(model.getShip().getPosition());
         }
+
+        drawLegendText(g);
+    }
+
+    private void drawLegendText(Graphics2D g)
+    {
+        var mouse = this.getMousePosition();
+        if (mouse == null)
+            return;
+        var p = mapToWorld(mouse);
+        g.drawString(String.format("X = %6.2f", p.getX()), 20, getHeight() - 40);
+        g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
     }
 
     private void drawEntity(Graphics2D g, Entity entity)
