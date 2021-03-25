@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
@@ -66,11 +67,39 @@ public class SimulatorCanvas extends JPanel
     }
 
     private final ArrayList<OnboardEntity> usedEntities;
-    private final InitGameParameters model;
+
+    public void setModel(InitGameParameters model)
+    {
+        this.model = model;
+    }
+
+    private InitGameParameters model;
+
+    private boolean centered = false;
 
     public void setNp(NextRoundParameters np)
     {
         this.np = np;
+        centerView();
+    }
+
+    private java.util.stream.Stream<Point2d> getEntitiesPositions()
+    {
+        return java.util.stream.Stream.concat(np.getVisibleShapes(), java.util.stream.Stream.of(model.getShip()))
+            .map(ShapedEntity::getPosition);
+    }
+
+    private void centerView()
+    {
+        if (centered) return;
+
+        var min = getEntitiesPositions().reduce(Point2d::min).get();
+        var max = getEntitiesPositions().reduce(Point2d::max).get();
+        cameraPos = max.sub(min).mul(0.5).add(min);
+
+        scale = 0.1;
+
+        centered = true;
     }
 
     private NextRoundParameters np;
@@ -83,6 +112,17 @@ public class SimulatorCanvas extends JPanel
     private double scale = 1;
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
+
+    void reset()
+    {
+        cameraPos = new Point2d(0, 0);
+        moveOrigin = null;
+        scale = 1;
+        np = null;
+        centered = false;
+        shipHistory.clear();
+        repaint();
+    }
 
     public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
     {
