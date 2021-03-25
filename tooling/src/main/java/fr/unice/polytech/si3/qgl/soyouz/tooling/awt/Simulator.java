@@ -205,6 +205,17 @@ public class Simulator extends JFrame
                 playRound();
             }
         });
+
+        addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                playMode = false;
+
+                super.windowClosing(e);
+            }
+        });
     }
 
     private boolean playMode = false;
