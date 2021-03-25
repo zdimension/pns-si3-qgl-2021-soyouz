@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * The wind effect.
  */
-public class Wind implements Entity
+public class Wind
 {
     private final double orientation;
     private final double strength;
