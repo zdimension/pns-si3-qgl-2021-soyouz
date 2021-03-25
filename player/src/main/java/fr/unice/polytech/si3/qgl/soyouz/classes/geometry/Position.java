@@ -10,12 +10,10 @@ import static java.lang.Math.*;
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
  */
-public class Position
+public class Position extends Point2d
 {
     public static final Position ZERO = new Position(0, 0, 0);
 
-    private final double x;
-    private final double y;
     private final double orientation;
 
     /**
@@ -29,9 +27,13 @@ public class Position
                     @JsonProperty("y") double y,
                     @JsonProperty("orientation") double orientation)
     {
-        this.x = x;
-        this.y = y;
+        super(x, y);
         this.orientation = orientation;
+    }
+
+    public Position(double r, double theta)
+    {
+        this(r * Math.cos(theta), r * Math.sin(theta), 0);
     }
 
     /**
@@ -150,10 +152,16 @@ public class Position
     }
 
     /**
-     * Transform a position into a String.
+     * Applies a scalar factor to the position.
      *
-     * @return the corresponding string.
+     * @param d factor
+     * @return the scaled position
      */
+    public Position mul(double d)
+    {
+        return new Position(this.x * d, this.y * d, this.orientation * d);
+    }
+
     @Override
     public String toString()
     {
