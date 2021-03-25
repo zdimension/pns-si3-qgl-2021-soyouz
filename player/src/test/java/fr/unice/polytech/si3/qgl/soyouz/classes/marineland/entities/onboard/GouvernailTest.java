@@ -50,16 +50,6 @@ class GouvernailTest
     }
 
     @Test
-    void isUsed()
-    {
-        assertFalse(rudder.isUsed());
-        rudder.setUsed(true);
-        assertTrue(rudder.isUsed());
-        rudder.setUsed(false);
-        assertFalse(rudder.isUsed());
-    }
-
-    @Test
     void rangeTest()
     {
         assertEquals(-0.78539816339,Gouvernail.ALLOWED_ROTATION.first);

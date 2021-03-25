@@ -22,7 +22,6 @@ public abstract class OnboardEntity
 {
     private final int x;
     private final int y;
-    private boolean isUsed;
 
     /**
      * Constructor.
@@ -35,7 +34,6 @@ public abstract class OnboardEntity
     {
         this.x = x;
         this.y = y;
-        this.isUsed = false;
     }
 
     /**
@@ -71,26 +69,6 @@ public abstract class OnboardEntity
     public PosOnShip getPos()
     {
         return new PosOnShip(getX(), getY());
-    }
-
-    /**
-     * Getter.
-     *
-     * @return the used state of the object.
-     */
-    public boolean isUsed()
-    {
-        return isUsed;
-    }
-
-    /**
-     * Setter.
-     *
-     * @param used the value to set the use state.
-     */
-    public void setUsed(boolean used)
-    {
-        isUsed = used;
     }
 
     /**

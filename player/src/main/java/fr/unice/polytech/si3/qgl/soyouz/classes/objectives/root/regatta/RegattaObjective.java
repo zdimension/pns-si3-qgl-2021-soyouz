@@ -66,7 +66,7 @@ public class RegattaObjective extends RootObjective
     private void updateHelpers(GameState state)
     {
         if (onBoardDataHelper == null)
-            onBoardDataHelper = new OnBoardDataHelper(state.getNp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
+            onBoardDataHelper = new OnBoardDataHelper(state.getIp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
         if (seaDataHelper == null)
             seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind());
         else
