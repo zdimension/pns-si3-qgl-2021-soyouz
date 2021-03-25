@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
  */
 public class SailObjective implements OnBoardObjective
 {
-    //TODO REFAIRE GESTION (SI VOILE FERMEE OU OUVERTE ALORS NE PAS OUVRIR FERMER
     private final List<Marin> sailors;
     private final List<MovingObjective> movement;
     private final List<Voile> sailsToOpen;
@@ -129,11 +128,13 @@ public class SailObjective implements OnBoardObjective
             //noinspection OptionalGetWithoutIsPresent
             Marin sailor = sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst().get();
             actions.add(new LiftSailAction(sailor));
+            sail.setOpenned(true);
         });
         sailsToClose.forEach(sail -> {
             //noinspection OptionalGetWithoutIsPresent
             Marin sailor = sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst().get();
             actions.add(new LowerSailAction(sailor));
+            sail.setOpenned(false);
         });
         return actions;
     }

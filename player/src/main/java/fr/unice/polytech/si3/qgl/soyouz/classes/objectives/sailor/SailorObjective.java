@@ -41,9 +41,10 @@ public class SailorObjective implements OnBoardObjective
      */
     private void setupSubObjectives()
     {
+        double rot = rotation;
         setupRowerObjective();
         setupRudderObjective();
-        setupSailObjective();
+        setupSailObjective(rot);
     }
 
     /**
@@ -80,9 +81,9 @@ public class SailorObjective implements OnBoardObjective
     /**
      * Setup the sail objective.
      */
-    private void setupSailObjective(){
-        SailConfigHelper sailConfigHelper = new SailConfigHelper(distance, rotation,
-            onBoardDataHelper.getShip().getNumberSail(), onBoardDataHelper.getShip(),
+    private void setupSailObjective(double rot){
+        SailConfigHelper sailConfigHelper = new SailConfigHelper(distance, rot,
+            seaDataHelper.getShip().getNumberSail(), seaDataHelper.getShip(),
             seaDataHelper.getWind());
         sailObjective = new SailObjective(onBoardDataHelper.getShip(),
             sailConfigHelper.findOptSailConfiguration(), onBoardDataHelper.getSailSailors());
@@ -96,7 +97,7 @@ public class SailorObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return rowersObjective.isValidated() && rudderObjective.isValidated();
+        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated();
     }
 
     /**
