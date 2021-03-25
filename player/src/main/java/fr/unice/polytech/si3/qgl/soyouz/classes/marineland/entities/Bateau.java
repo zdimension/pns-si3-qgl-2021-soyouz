@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
@@ -84,7 +85,7 @@ public class Bateau extends AutreBateau
     @JsonIgnore
     public int getNumberOar()
     {
-        return (int) Arrays.stream(getEntities()).filter(e -> e instanceof Rame).count();
+        return (int) Util.filterType(Arrays.stream(getEntities()), Rame.class).count();
     }
 
     /**
@@ -95,7 +96,7 @@ public class Bateau extends AutreBateau
     @JsonIgnore
     public int getNumberSail()
     {
-        return (int) Arrays.stream(getEntities()).filter(e -> e instanceof Voile).count();
+        return (int) Util.filterType(Arrays.stream(getEntities()), Voile.class).count();
     }
 
     /**
@@ -115,7 +116,7 @@ public class Bateau extends AutreBateau
     /**
      * Determines which
      * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
-     * set on a specific {@link fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point}.
+     * set on a specific {@link Point2d}.
      *
      * @param xPos The abscissa of the Point to analyse.
      * @param yPos The ordinate of the Point to analyse.
@@ -149,7 +150,7 @@ public class Bateau extends AutreBateau
     /**
      * Determines which
      * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
-     * set on a specific {@link fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point}.
+     * set on a specific {@link Point2d}.
      *
      * @param pos The coords we want to analyse.
      * @return optional entity on the given cell.
