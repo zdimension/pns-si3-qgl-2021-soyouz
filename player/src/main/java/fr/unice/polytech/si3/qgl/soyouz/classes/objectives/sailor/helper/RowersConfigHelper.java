@@ -100,7 +100,7 @@ public class RowersConfigHelper
                 mSailors--;
             }
         }
-        while (mSailors % 2 == 0 && mSailors > 0)
+        while (mSailors >= 2)
         {
             sailorLeft++;
             sailorRight++;
