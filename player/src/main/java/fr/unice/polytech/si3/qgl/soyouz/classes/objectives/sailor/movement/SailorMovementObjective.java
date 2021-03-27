@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class SailorMovementObjective implements MovingObjective
 {
-    Marin sailor;
-    int xOnDeck;
-    int yOnDeck;
-    int nbTurnToComplete;
+    private final Marin sailor;
+    private final int xOnDeck;
+    private final int yOnDeck;
+    private int nbTurnToComplete;
 
     /**
      * Constructor.
@@ -81,9 +81,9 @@ public class SailorMovementObjective implements MovingObjective
     private int resolveXMove()
     {
         int xDistStillToParkour = xOnDeck - sailor.getX();
-        if (xDistStillToParkour > 5)
+        if (xDistStillToParkour >= 5)
             return 5;
-        else if (xDistStillToParkour < -5)
+        else if (xDistStillToParkour <= -5)
             return -5;
         return xDistStillToParkour;
     }

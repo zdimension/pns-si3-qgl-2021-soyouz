@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class SailorYMovementObjective implements MovingObjective
 {
-    Marin sailor;
-    int yOnDeck;
-    int nbTurnToComplete;
+    private final Marin sailor;
+    private final int yOnDeck;
+    private int nbTurnToComplete;
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ public class SailorYMovementObjective implements MovingObjective
     {
         this.sailor = sailor;
         this.yOnDeck = yOnDeck;
-        nbTurnToComplete = Math.abs(yOnDeck - sailor.getX()) / 5 + 1;
+        nbTurnToComplete = Math.abs(yOnDeck - sailor.getY()) / 5 + 1;
     }
 
     /**
@@ -50,9 +50,9 @@ public class SailorYMovementObjective implements MovingObjective
         List<GameAction> moveAction = new ArrayList<>();
         int distStillToParkour = yOnDeck - sailor.getY();
         int yMove = 0;
-        if (distStillToParkour > 5)
+        if (distStillToParkour >= 5)
             yMove = 5;
-        else if (distStillToParkour < -5)
+        else if (distStillToParkour <= -5)
             yMove = -5;
         else
             yMove = distStillToParkour;
