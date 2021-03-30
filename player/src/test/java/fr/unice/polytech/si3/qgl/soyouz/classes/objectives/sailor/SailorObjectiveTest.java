@@ -5,6 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
@@ -46,7 +47,7 @@ class SailorObjectiveTest
         Bateau ship = new Bateau("Peqoq", new Deck(3, 3), ent);
         ship.setPosition(new Position(10, 20, 1));
         OnBoardDataHelper obdh = new OnBoardDataHelper(ship, new ArrayList<>(Arrays.asList(sailors)));
-        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1.8, 100));
+        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1.8, 100), new Entity[]{});
         so = new SailorObjective(obdh, sdh, 1000, 2);
     }
 

@@ -3,13 +3,12 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.text.html.parser.Entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +20,7 @@ class SeaDataHelperTest
     void setUp()
     {
         OnboardEntity[] ent = {};
-        sdh = new SeaDataHelper(new Bateau("Peqoq", new Deck(1, 2), ent), new Wind(1, 100));
+        sdh = new SeaDataHelper(new Bateau("Peqoq", new Deck(1, 2), ent), new Wind(1, 100),new Entity[]{});
     }
 
     @Test

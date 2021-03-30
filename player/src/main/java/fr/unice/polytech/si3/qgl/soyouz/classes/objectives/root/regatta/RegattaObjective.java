@@ -68,7 +68,7 @@ public class RegattaObjective implements RootObjective
         if (onBoardDataHelper == null)
             onBoardDataHelper = new OnBoardDataHelper(state.getIp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
         if (seaDataHelper == null)
-            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind());
+            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind(),state.getNp().getVisibleEntities());
         else
             seaDataHelper.update(state);
     }

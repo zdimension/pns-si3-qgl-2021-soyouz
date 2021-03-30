@@ -52,7 +52,7 @@ class CheckpointObjectiveTest
         Bateau ship = new Bateau("Peqoq", new Deck(3, 3), ent);
         ship.setPosition(new Position(10, 10, 1));
         OnBoardDataHelper obdh = new OnBoardDataHelper(ship, new ArrayList<>(Arrays.asList(sailors)));
-        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1, 100));
+        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1, 100),new Entity[]{});
         co = new CheckpointObjective(new Checkpoint(new Position(10, 1000, 0), new Circle(50)), obdh, sdh);
         Entity[] entt = {};
         gs = new GameState(null, new NextRoundParameters(ship, new Wind(1, 100), entt));

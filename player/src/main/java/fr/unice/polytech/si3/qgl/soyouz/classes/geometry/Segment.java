@@ -2,8 +2,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
 public class Segment
 {
-    Point2d a;
-    Point2d b;
+    private Point2d a;
+    private Point2d b;
 
     /**
      * Constructor.
