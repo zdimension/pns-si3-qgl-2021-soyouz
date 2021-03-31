@@ -22,6 +22,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -355,11 +356,17 @@ public class SimulatorCanvas extends JPanel
                 usedEntities.contains(entity) ? Color.RED : new Color(0, true), null);
         }
         var simg = ENTITY_ICONS.get(Marin.class)[0];
+        var i = 0;
         for (Marin sailor : sailors)
         {
-            g.drawImage(simg, sailor.getY() * DECK_GRID_SIZE + DECK_GRID_SIZE / 2,
-                sailor.getX() * DECK_GRID_SIZE + DECK_GRID_SIZE / 2, DECK_GRID_SIZE / 2,
-                DECK_GRID_SIZE / 2, null);
+            var x = sailor.getY() * DECK_GRID_SIZE;
+            var y = sailor.getX() * DECK_GRID_SIZE;
+            var sh = DECK_GRID_SIZE / 2;
+            g.setColor(Color.getHSBColor((float)i / sailors.length, 1, 1));
+            g.fillOval(sh + x, sh + y, sh, sh);
+            g.setColor(Color.BLACK);
+            g.drawImage(simg, sh + x, sh + y, sh, sh, null);
+            i++;
         }
 
         drawDeckGrid(g, b);
