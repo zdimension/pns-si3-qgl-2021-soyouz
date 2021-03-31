@@ -181,10 +181,6 @@ public class Simulator extends JFrame
 
         reset();
 
-        /*var ctxt = OBJECT_MAPPER.getDeserializationContext();
-        var _objectIdReader = ctxt.obj
-        Object id = _objectIdReader.readObjectReference(p, ctxt);
-        ReadableObjectId roid = ctxt.findObjectId(id, ctxt.objectIdGeneratorInstance(), _objectIdReader.resolver);*/
         btnNext.addActionListener(event ->
         {
             playMode = false;
@@ -250,7 +246,7 @@ public class Simulator extends JFrame
     private void computeRound()
     {
         loadNextRound();
-        // mis null a la place du vent
+
         try
         {
             var nrt = cockpit.nextRound(OBJECT_MAPPER.writeValueAsString(np));
