@@ -45,12 +45,14 @@ public class Simulator extends JFrame
     private final ArrayList<OnboardEntity> usedEntities;
     private Cockpit cockpit;
     private final JButton btnNext;
+    private final JButton btnSlowNext;
     private final JButton btnPlay;
 
     private void reset() throws IOException
     {
         timer.stop();
         btnNext.setEnabled(true);
+        btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
         var ipt = Files.readString(Path.of("Week6.json"));
         model = OBJECT_MAPPER.readValue(ipt, InitGameParameters.class);
@@ -77,6 +79,9 @@ public class Simulator extends JFrame
 
         btnNext = new JButton("Next");
         topcont.add(btnNext);
+
+        btnSlowNext = new JButton("Next slow");
+        topcont.add(btnSlowNext);
 
         btnPlay = new JButton("Play");
         topcont.add(btnPlay);
@@ -184,6 +189,14 @@ public class Simulator extends JFrame
         btnNext.addActionListener(event ->
         {
             playMode = false;
+            timer.setDelay(5);
+            playRound();
+        });
+
+        btnSlowNext.addActionListener(event ->
+        {
+            playMode = false;
+            timer.setDelay(50);
             playRound();
         });
 
@@ -198,6 +211,7 @@ public class Simulator extends JFrame
             {
                 btnPlay.setText("Stop");
                 playMode = true;
+                timer.setDelay(5);
                 playRound();
             }
         });
