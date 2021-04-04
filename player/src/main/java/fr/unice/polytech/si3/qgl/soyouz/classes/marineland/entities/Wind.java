@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Wind
 {
+    @JsonAlias("direction")
     private final double orientation;
     private final double strength;
 

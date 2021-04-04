@@ -71,7 +71,20 @@ public class Cockpit implements ICockpit
         try
         {
             updateLogLevel();
-            ip = OBJECT_MAPPER.readValue(game, InitGameParameters.class);
+            initGameInternal(OBJECT_MAPPER.readValue(game, InitGameParameters.class));
+        }
+        catch (Exception e)
+        {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
+    }
+
+    public void initGameInternal(InitGameParameters ip)
+    {
+        try
+        {
+            this.ip = ip;
+            updateLogLevel();
             if (ip.getGoal() instanceof RegattaGoal)
                 objective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
             logger.log(Level.FINEST, "Init game input: " + ip);
@@ -95,16 +108,28 @@ public class Cockpit implements ICockpit
         try
         {
             NextRoundParameters np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
-            logger.log(Level.FINEST, "Next round input: " + np);
-            objective.update(new GameState(ip, np));
-            var actions = objective.resolve(new GameState(ip, np));
-            return OBJECT_MAPPER.writeValueAsString(actions.toArray(GameAction[]::new));
-
+            return OBJECT_MAPPER.writeValueAsString(nextRoundInternal(np));
         }
         catch (Exception e)
         {
             logger.log(Level.SEVERE, "Error writing nextRound : " + e.getMessage());
             return "[]";
+        }
+    }
+
+    public GameAction[] nextRoundInternal(NextRoundParameters np)
+    {
+        try
+        {
+            logger.log(Level.FINEST, "Next round input: " + np);
+            objective.update(new GameState(ip, np));
+            var actions = objective.resolve(new GameState(ip, np));
+            return actions.toArray(GameAction[]::new);
+        }
+        catch (Exception e)
+        {
+            logger.log(Level.SEVERE, "Error writing nextRound : " + e.getMessage());
+            return new GameAction[0];
         }
     }
 

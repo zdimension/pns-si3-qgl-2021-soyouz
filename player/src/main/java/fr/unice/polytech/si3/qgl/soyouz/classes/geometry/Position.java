@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -25,15 +26,15 @@ public class Position extends Point2d
      */
     public Position(@JsonProperty("x") double x,
                     @JsonProperty("y") double y,
-                    @JsonProperty("orientation") double orientation)
+                    @JsonProperty(value = "orientation", defaultValue = "0") double orientation)
     {
         super(x, y);
         this.orientation = orientation;
     }
 
-    public Position(double r, double theta)
+    public static Position fromPolar(double r, double theta)
     {
-        this(r * Math.cos(theta), r * Math.sin(theta), 0);
+        return new Position(r * Math.cos(theta), r * Math.sin(theta), 0);
     }
 
     /**

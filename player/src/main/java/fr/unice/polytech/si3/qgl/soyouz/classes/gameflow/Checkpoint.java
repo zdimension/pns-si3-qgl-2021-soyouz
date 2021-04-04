@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.gameflow;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
@@ -17,8 +18,14 @@ public class Checkpoint extends ShapedEntity
      * @param position The position of the checkpoint.
      * @param shape The shape of the checkpoint.
      */
-    public Checkpoint(@JsonProperty("position")Position position, @JsonProperty("shape")Shape shape)
+    @JsonCreator
+    public Checkpoint(@JsonProperty("position")Position position, @JsonProperty("shape")Shape shape, @JsonProperty("type") String type)
     {
         super(position, shape);
+    }
+
+    public Checkpoint(Position position, Shape shape)
+    {
+        this(position, shape, "checkpoint");
     }
 }

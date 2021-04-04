@@ -1,0 +1,187 @@
+{
+    "goal": {
+        "mode": "REGATTA",
+        "checkpoints": [
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 4036.4115963579497,
+                    "y": 264.956362612613
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 6866.105430167673,
+                    "y": 277.9420045045067
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 6261.605476524839,
+                    "y": 937.2184684684704
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 4024.9876946036743,
+                    "y": -1002.8153153153128
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 3460.8684297910377,
+                    "y": 2243.1024774774787
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            }
+        ]
+    },
+    "ship": {
+        "name": "Licorne",
+        "deck": {
+            "length": 7,
+            "width": 3
+        },
+        "entities": [
+            {
+                "type": "rudder",
+                "x": 6,
+                "y": 1
+            },
+            {
+                "type": "sail",
+                "x": 3,
+                "y": 1
+            },
+            {
+                "type": "oar",
+                "x": 1,
+                "y": 2
+            },
+            {
+                "type": "oar",
+                "x": 2,
+                "y": 2
+            },
+            {
+                "type": "oar",
+                "x": 3,
+                "y": 2
+            },
+            {
+                "type": "oar",
+                "x": 5,
+                "y": 2
+            },
+            {
+                "type": "oar",
+                "x": 4,
+                "y": 2
+            },
+            {
+                "type": "oar",
+                "x": 1,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 2,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 4,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 3,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 5,
+                "y": 0
+            }
+        ],
+        "life": 1050
+    },
+    "wind": {
+        "orientation": 0,
+        "strength": 50
+    },
+    "seaEntities": [
+        {
+            "position": {
+                "x": 5416.415681234441,
+                "y": 211.04307432432563,
+                "orientation": 0.6981317007977318
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "250",
+                "height": "1200"
+            }
+        },
+        {
+            "position": {
+                "x": 3567.708333333334,
+                "y": 1126.3020833333342,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "circle",
+                "radius": "350"
+            }
+        },
+        {
+            "position": {
+                "x": 5144.039698840838,
+                "y": 499.8240427927923,
+                "orientation": 0.7330382858376184
+            },
+            "type": "stream",
+            "shape": {
+                "type": "rectangle",
+                "width": "400",
+                "height": "1350"
+            },
+            "strength": 10
+        }
+    ],
+    "maxRound": 500,
+    "minumumCrewSize": 12,
+    "maximumCrewSize": 12,
+    "startingPositions": [
+        {
+            "x": 2852.173913043478,
+            "y": 1978.827361563518,
+            "orientation": -1.0297442586766543
+        }
+    ]
+}

@@ -49,7 +49,6 @@ public class SimulatorCanvas extends JPanel
     {
         ENTITY_ICONS = Map.of(
             Rame.class, new String[] { "paddle.png" },
-            Marin.class, new String[] { "sailor.png" },
             Gouvernail.class, new String[] { "rudder.png" },
             Voile.class, new String[] { "lifted_sail.png", "lowered_sail.png" }
         ).entrySet().stream().map(e ->
@@ -282,6 +281,8 @@ public class SimulatorCanvas extends JPanel
 
         drawShipVision(g, model.getShip());
 
+        drawNodes(g);
+
         drawShipHistory(g);
 
         if (shipHistory.isEmpty() || !model.getShip().getPosition().equals(shipHistory.get(shipHistory.size() - 1)))
@@ -290,6 +291,11 @@ public class SimulatorCanvas extends JPanel
         }
 
         drawLegendText(g);
+    }
+
+    private void drawNodes(Graphics2D g)
+    {
+
     }
 
     private void drawLegendText(Graphics2D g)
@@ -365,7 +371,7 @@ public class SimulatorCanvas extends JPanel
             g.setColor(Color.getHSBColor((float)i / sailors.length, 1, 1));
             g.fillOval(sh + x, sh + y, sh, sh);
             g.setColor(Color.BLACK);
-            g.drawImage(simg, sh + x, sh + y, sh, sh, null);
+            g.drawString(sailor.getId() + "", sh + x + 3, sh + y + 15);
             i++;
         }
 

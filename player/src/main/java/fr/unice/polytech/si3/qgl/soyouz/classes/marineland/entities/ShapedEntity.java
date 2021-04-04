@@ -17,7 +17,7 @@ public abstract class ShapedEntity
      * Constructor.
      *
      * @param position The position of the entity.
-     * @param shape The shape of the entity.
+     * @param shape    The shape of the entity.
      */
     protected ShapedEntity(Position position, Shape shape)
     {
@@ -53,6 +53,11 @@ public abstract class ShapedEntity
     public Shape getShape()
     {
         return shape;
+    }
+
+    public void setShape(Shape shape)
+    {
+        this.shape = shape;
     }
 
     public boolean contains(Position pos)
