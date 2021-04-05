@@ -69,9 +69,9 @@ public abstract class ShapedEntity
         this.shape = shape;
     }
 
-    public Point2d toLocal(Position pos)
+    public Point2d toLocal(Point2d pos)
     {
-        return pos.sub(position).rotate(-position.getOrientation());
+        return pos.sub(position).rotate(-position.getOrientation() - Math.PI / 2);
     }
 
     public Point2d toGlobal(Point2d pos)
@@ -86,6 +86,6 @@ public abstract class ShapedEntity
 
     public java.util.stream.Stream<Point2d> getShell(Position observer, double shipSize)
     {
-        return shape.getShell(toLocal(observer), shipSize).map(this::toGlobal);
+        return shape.getShell(toLocal(observer)).map(pos -> toGlobal(pos.add(Point2d.fromPolar(shipSize, pos.angle()))));
     }
 }

@@ -131,4 +131,14 @@ public class Point2d
     {
         return new Position(x, y, 0);
     }
+
+    public Point2d normalized()
+    {
+        return this.mul(1 / norm());
+    }
+
+    public double cross(Point2d mul)
+    {
+        return x * mul.y - mul.x * y;
+    }
 }

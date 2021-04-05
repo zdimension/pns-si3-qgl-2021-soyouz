@@ -90,8 +90,28 @@ public class Polygon implements Shape
     }
 
     @Override
-    public Stream<Point2d> getShell(Point2d observer, double shipSize)
+    public Stream<Point2d> getShell(Point2d observer)
     {
-        return Arrays.stream(vertices).map(p -> p.add(Point2d.fromPolar(shipSize, p.angle())));
+        return Arrays.stream(vertices);
+    }
+
+    static boolean ccw(Point2d a, Point2d b, Point2d c)
+    {
+        return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
+    }
+
+    @Override
+    public boolean linePassesThrough(Point2d a, Point2d b)
+    {
+        for (int i = 0; i < vertices.length; i++)
+        {
+            var cur = vertices[i];
+            var nex = vertices[(i + 1) % vertices.length];
+
+            if (ccw(cur, a, b) != ccw(nex, a, b) && ccw(cur, nex, a) != ccw(cur, nex, b))
+                return true;
+        }
+
+        return false;
     }
 }

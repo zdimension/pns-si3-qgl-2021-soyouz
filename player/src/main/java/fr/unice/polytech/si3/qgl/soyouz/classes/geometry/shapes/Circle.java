@@ -18,13 +18,14 @@ public class Circle extends Polygon implements Shape
      *
      * @param radius The radius of the circle.
      */
-    public Circle(@JsonProperty("radius")double radius)
+    public Circle(@JsonProperty("radius") double radius)
     {
         super(0, IntStream.range(0, 180)
-        .mapToObj(angle -> {
-            var rad = 2 * angle * Math.PI / 180d;
-            return new Point2d(radius * Math.cos(rad), radius * Math.sin(rad));
-        }).toArray(Point2d[]::new));
+            .mapToObj(angle ->
+            {
+                var rad = 2 * angle * Math.PI / 180d;
+                return new Point2d(radius * Math.cos(rad), radius * Math.sin(rad));
+            }).toArray(Point2d[]::new));
         this.radius = radius;
     }
 
@@ -50,15 +51,50 @@ public class Circle extends Polygon implements Shape
         return radius * 2;
     }
 
-    /*@Override
+    @Override
     public Stream<Point2d> getShell(Point2d observer)
     {
         var dist = observer.norm();
+        if (dist <= radius)
+            return Stream.empty();
         var a = Math.asin(radius / dist);
         var b = observer.angle();
         return Stream.of(
             new Point2d(radius * -Math.sin(b - a), radius * Math.cos(b - a)),
             new Point2d(radius * Math.sin(b + a), radius * -Math.cos(b + a))
         );
-    }*/
+    }
+
+    @Override
+    public boolean linePassesThrough(Point2d e, Point2d l)
+    {
+        var d = l.sub(e);
+
+        double a = d.dot(d);
+        double b = 2 * e.dot(d);
+        double c = e.dot(e) - radius * radius;
+
+        double discriminant = b * b - 4 * a * c;
+
+        if (discriminant >= 0)
+        {
+            discriminant = Math.sqrt(discriminant);
+
+            double t1 = (-b - discriminant) / (2 * a);
+
+            if (t1 >= 0 && t1 <= 1)
+            {
+                return true;
+            }
+
+            double t2 = (-b + discriminant) / (2 * a);
+
+            if (t2 >= 0 && t2 <= 1)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

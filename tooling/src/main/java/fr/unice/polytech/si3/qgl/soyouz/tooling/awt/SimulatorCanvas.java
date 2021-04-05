@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,12 +23,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class SimulatorCanvas extends JPanel
 {
@@ -70,63 +70,20 @@ public class SimulatorCanvas extends JPanel
     }
 
     private final ArrayList<OnboardEntity> usedEntities;
-
-    public void setModel(InitGameParameters model)
-    {
-        this.model = model;
-    }
-
-    private InitGameParameters model;
-
-    private boolean centered = false;
-
-    public void setNp(NextRoundParameters np)
-    {
-        this.np = np;
-        centerView();
-    }
-
-    private java.util.stream.Stream<Point2d> getEntitiesPositions()
-    {
-        return java.util.stream.Stream.concat(np.getVisibleShapes(), java.util.stream.Stream.of(model.getShip()))
-            .map(ShapedEntity::getPosition);
-    }
-
-    private void centerView()
-    {
-        if (centered) return;
-
-        var min = getEntitiesPositions().reduce(Point2d::min).get();
-        var max = getEntitiesPositions().reduce(Point2d::max).get();
-        cameraPos = max.sub(min).mul(0.5).add(min);
-
-        scale = 0.1;
-
-        centered = true;
-    }
-
-    private NextRoundParameters np;
     private final Stroke DASHED = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL
         , 0, new float[] { 9 }, 0);
     private final Stroke SHAPE_CROSS = new BasicStroke(3, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
     private final Stroke HISTORY = new BasicStroke(1, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
+    private final List<Position> shipHistory = new ArrayList<>();
+    private final List<Point2d> nodes = new ArrayList<>();
+    private InitGameParameters model;
+    private boolean centered = false;
+    private NextRoundParameters np;
     private double scale = 1;
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
-
-    void reset()
-    {
-        cameraPos = new Point2d(0, 0);
-        moveOrigin = null;
-        scale = 1;
-        np = null;
-        centered = false;
-        clearHistory();
-        repaint();
-    }
-
     public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
     {
         this.model = model;
@@ -190,6 +147,48 @@ public class SimulatorCanvas extends JPanel
         });
     }
 
+    public void setModel(InitGameParameters model)
+    {
+        this.model = model;
+    }
+
+    public void setNp(NextRoundParameters np)
+    {
+        this.np = np;
+        centerView();
+    }
+
+    private java.util.stream.Stream<Point2d> getEntitiesPositions()
+    {
+        return java.util.stream.Stream.concat(np.getVisibleShapes(),
+            java.util.stream.Stream.of(model.getShip()))
+            .map(ShapedEntity::getPosition);
+    }
+
+    private void centerView()
+    {
+        if (centered) return;
+
+        var min = getEntitiesPositions().reduce(Point2d::min).get();
+        var max = getEntitiesPositions().reduce(Point2d::max).get();
+        cameraPos = max.sub(min).mul(0.5).add(min);
+
+        scale = 0.1;
+
+        centered = true;
+    }
+
+    void reset()
+    {
+        cameraPos = new Point2d(0, 0);
+        moveOrigin = null;
+        scale = 1;
+        np = null;
+        centered = false;
+        clearHistory();
+        repaint();
+    }
+
     private Point2d getViewCenter()
     {
         return new Point2d(getWidth(), getHeight()).mul(0.5);
@@ -245,8 +244,6 @@ public class SimulatorCanvas extends JPanel
         drawGame(g2d);
     }
 
-    private final List<Position> shipHistory = new ArrayList<>();
-
     /**
      * Dessine le jeu
      *
@@ -254,6 +251,9 @@ public class SimulatorCanvas extends JPanel
      */
     private void drawGame(Graphics2D g)
     {
+        nodes.clear();
+        nodes.add(model.getShip().getPosition());
+
         var goal = model.getGoal();
         if (goal instanceof RegattaGoal)
         {
@@ -262,6 +262,7 @@ public class SimulatorCanvas extends JPanel
             for (int i = 0; i < checkpoints.length; i++)
             {
                 drawCheckpoint(g, checkpoints[i], i);
+                nodes.add(checkpoints[i].getPosition());
             }
         }
 
@@ -269,11 +270,11 @@ public class SimulatorCanvas extends JPanel
         {
             for (ShapedEntity visibleEntity : np.getVisibleEntities())
             {
-                drawEntity(g, visibleEntity);
+                drawEntity(g, visibleEntity, false);
             }
         }
 
-        drawEntity(g, model.getShip());
+        drawEntity(g, model.getShip(), true);
 
         drawShipDeck(g, model.getShip(), model.getSailors());
 
@@ -291,34 +292,93 @@ public class SimulatorCanvas extends JPanel
         drawLegendText(g);
     }
 
+    private void traverseNode(int elem, Set<Pair<Integer, Integer>> lines)
+    {
+        var node = nodes.get(elem);
+
+        outer:
+        for (int i = 0; i < nodes.size(); i++)
+        {
+            Point2d p = nodes.get(i);
+            if (p == node)
+            {
+                continue;
+            }
+
+            for (ShapedEntity ent : np.getVisibleEntities())
+            {
+                if (ent.getShape().linePassesThrough(ent.toLocal(node), ent.toLocal(p)))
+                {
+                    continue outer;
+                }
+            }
+
+            if (lines.add(Pair.of(Math.min(elem, i), Math.max(elem, i))))
+            {
+                traverseNode(i, lines);
+            }
+        }
+    }
+
     private void drawNodes(Graphics2D g)
     {
+        g = (Graphics2D) g.create();
 
+        var ship = model.getShip().getPosition();
+        if (getMousePosition() != null)
+        {
+            ship = mapToWorld(getMousePosition());
+        }
+        var sp = mapToScreen(ship);
+
+        var lines = new HashSet<Pair<Integer, Integer>>();
+        traverseNode(0, lines);
+
+        g.setColor(Color.MAGENTA);
+        for (Pair<Integer, Integer> line : lines)
+        {
+            var a = mapToScreen(nodes.get(line.first));
+            var b = mapToScreen(nodes.get(line.second));
+            g.drawLine(a.x, a.y, b.x, b.y);
+        }
+
+        for (Point2d p : nodes)
+        {
+            drawShape(g, new Circle(10), p.toPosition());
+        }
     }
 
     private void drawLegendText(Graphics2D g)
     {
         var mouse = this.getMousePosition();
         if (mouse == null)
+        {
             return;
+        }
         var p = mapToWorld(mouse);
         g.drawString(String.format("X = %6.2f", p.getX()), 20, getHeight() - 40);
         g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
     }
 
-    private void drawEntity(Graphics2D g, ShapedEntity se)
+    private void drawEntity(Graphics2D g, ShapedEntity se, boolean ignoreGraph)
     {
+        g = (Graphics2D) g.create();
+
         g.setColor(ENTITY_COLORS.get(se.getClass()));
         drawShape(g, se.getShape(), se.getPosition());
 
-        var rad = se.getShape().getMaxDiameter() / 50;
-        g.setColor(Color.MAGENTA);
-        var shell = se.getShell(model.getShip().getPosition(), model.getShip().getShape().getMaxDiameter());
-        shell.forEach(p -> drawShape(g, new Circle(rad), p.toPosition()));
+        if (!ignoreGraph && se instanceof Reef)
+        {
+            var ship = model.getShip().getPosition();
+            var shell = se.getShell(ship, model.getShip().getShape().getMaxDiameter());
+            shell.forEach(nodes::add);
+        }
     }
 
     private void drawShipHistory(Graphics2D g)
     {
+        g = (Graphics2D) g.create();
+
         var x = new int[shipHistory.size()];
         var y = new int[shipHistory.size()];
         for (int i = 0; i < shipHistory.size(); i++)
@@ -353,8 +413,10 @@ public class SimulatorCanvas extends JPanel
         for (OnboardEntity entity : b.getEntities())
         {
             var index = 0;
-            if (entity instanceof Voile && ((Voile)entity).isOpenned())
+            if (entity instanceof Voile && ((Voile) entity).isOpenned())
+            {
                 index = 1;
+            }
             var img = ENTITY_ICONS.get(entity.getClass())[index];
             g.drawImage(img, entity.getY() * DECK_GRID_SIZE, entity.getX() * DECK_GRID_SIZE,
                 DECK_GRID_SIZE, DECK_GRID_SIZE,
@@ -366,7 +428,7 @@ public class SimulatorCanvas extends JPanel
             var x = sailor.getY() * DECK_GRID_SIZE;
             var y = sailor.getX() * DECK_GRID_SIZE;
             var sh = DECK_GRID_SIZE / 2;
-            g.setColor(Color.getHSBColor((float)i / sailors.length, 1, 1));
+            g.setColor(Color.getHSBColor((float) i / sailors.length, 1, 1));
             g.fillOval(sh + x, sh + y, sh, sh);
             g.setColor(Color.BLACK);
             g.drawString(sailor.getId() + "", sh + x + 3, sh + y + 15);
@@ -398,7 +460,7 @@ public class SimulatorCanvas extends JPanel
 
     private void drawCheckpoint(Graphics2D g, Checkpoint c, int i)
     {
-        g = (Graphics2D)g.create();
+        g = (Graphics2D) g.create();
         g.setColor(Color.RED);
         drawShape(g, c.getShape(), c.getPosition());
         g.setColor(Color.BLACK);
@@ -423,7 +485,10 @@ public class SimulatorCanvas extends JPanel
         return (int) (dist * scale);
     }
 
-    private double mapToWorld(int dist) { return dist / scale; }
+    private double mapToWorld(int dist)
+    {
+        return dist / scale;
+    }
 
     private void drawShape(Graphics2D g, Shape s, Position p)
     {
@@ -461,7 +526,7 @@ public class SimulatorCanvas extends JPanel
         }
         else if (s instanceof fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon)
         {
-            var pol = (fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon)s;
+            var pol = (fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon) s;
             var ap = new Polygon();
             for (Point2d pt : pol.getVertices())
             {
@@ -473,7 +538,7 @@ public class SimulatorCanvas extends JPanel
 
         gtr.setStroke(SHAPE_CROSS);
         gtr.setColor(Color.BLACK);
-        gtr.drawPolygon(new Polygon(new int[] {-10, -10, 20}, new int[] { -10, 10, 0}, 3));
+        gtr.drawPolygon(new Polygon(new int[] { -10, -10, 20 }, new int[] { -10, 10, 0 }, 3));
     }
 
     public void clearHistory()
