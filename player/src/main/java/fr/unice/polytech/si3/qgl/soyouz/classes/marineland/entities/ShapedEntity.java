@@ -2,6 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 
@@ -68,8 +69,23 @@ public abstract class ShapedEntity
         this.shape = shape;
     }
 
+    public Point2d toLocal(Position pos)
+    {
+        return pos.sub(position).rotate(-position.getOrientation());
+    }
+
+    public Point2d toGlobal(Point2d pos)
+    {
+        return pos.rotate(Math.PI / 2 + position.getOrientation()).add(position);
+    }
+
     public boolean contains(Position pos)
     {
-        return shape.contains(pos.sub(position).rotate(-position.getOrientation()));
+        return shape.contains(toLocal(pos));
+    }
+
+    public java.util.stream.Stream<Point2d> getShell(Position observer, double shipSize)
+    {
+        return shape.getShell(toLocal(observer), shipSize).map(this::toGlobal);
     }
 }

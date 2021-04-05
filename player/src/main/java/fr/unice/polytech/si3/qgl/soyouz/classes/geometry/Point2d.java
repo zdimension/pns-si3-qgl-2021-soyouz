@@ -22,6 +22,11 @@ public class Point2d
         this.y = y;
     }
 
+    public static Position fromPolar(double r, double theta)
+    {
+        return new Position(r * Math.cos(theta), r * Math.sin(theta), 0);
+    }
+
     /**
      * Getter.
      *
@@ -115,5 +120,15 @@ public class Point2d
             "x=" + x +
             ", y=" + y +
             "}";
+    }
+
+    public double angle()
+    {
+        return Math.atan2(y, x);
+    }
+
+    public Position toPosition()
+    {
+        return new Position(x, y, 0);
     }
 }

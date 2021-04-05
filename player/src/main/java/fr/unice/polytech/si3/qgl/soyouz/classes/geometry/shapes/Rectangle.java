@@ -6,11 +6,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 /**
  * Rectangle Shape.
  */
-public class Rectangle implements Shape
+public class Rectangle extends Polygon implements Shape
 {
     private final double width;
     private final double height;
-    private final double orientation;
 
     /**
      * Constructor.
@@ -23,9 +22,15 @@ public class Rectangle implements Shape
                      @JsonProperty("height") double height,
                      @JsonProperty("orientation") double orientation)
     {
+        super(orientation, new Point2d[]
+            {
+                new Point2d(-width / 2, -height / 2),
+                new Point2d(width / 2, -height / 2),
+                new Point2d(width / 2, height / 2),
+                new Point2d(-width / 2, height / 2)
+            });
         this.width = width;
         this.height = height;
-        this.orientation = orientation;
     }
 
     /**
@@ -46,16 +51,6 @@ public class Rectangle implements Shape
     public double getHeight()
     {
         return height;
-    }
-
-    /**
-     * Getter.
-     *
-     * @return the Orientation of the Rectangle.
-     */
-    public double getOrientation()
-    {
-        return orientation;
     }
 
     @Override

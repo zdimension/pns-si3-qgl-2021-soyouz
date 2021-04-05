@@ -310,6 +310,11 @@ public class SimulatorCanvas extends JPanel
     {
         g.setColor(ENTITY_COLORS.get(se.getClass()));
         drawShape(g, se.getShape(), se.getPosition());
+
+        var rad = se.getShape().getMaxDiameter() / 50;
+        g.setColor(Color.MAGENTA);
+        var shell = se.getShell(model.getShip().getPosition(), model.getShip().getShape().getMaxDiameter());
+        shell.forEach(p -> drawShape(g, new Circle(rad), p.toPosition()));
     }
 
     private void drawShipHistory(Graphics2D g)

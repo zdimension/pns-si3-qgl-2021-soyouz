@@ -32,11 +32,6 @@ public class Position extends Point2d
         this.orientation = orientation;
     }
 
-    public static Position fromPolar(double r, double theta)
-    {
-        return new Position(r * Math.cos(theta), r * Math.sin(theta), 0);
-    }
-
     /**
      * Getter.
      *

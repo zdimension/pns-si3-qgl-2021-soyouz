@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
+import java.util.stream.Stream;
+
 /**
  * SuperClass of every geometrics Shapes.
  */
@@ -19,4 +21,6 @@ public interface Shape
     boolean contains(Point2d p);
 
     double getMaxDiameter();
+
+    Stream<Point2d> getShell(Point2d observer, double shipSize);
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
@@ -134,7 +134,7 @@ public class Simulator extends JFrame
                 }
 
                 var cur = model.getShip().getPosition();
-                var linear = Position.fromPolar(linSpeed, cur.getOrientation());
+                var linear = Point2d.fromPolar(linSpeed, cur.getOrientation());
 
                 for (ShapedEntity visibleEntity : np.getVisibleEntities())
                 {
@@ -219,7 +219,7 @@ public class Simulator extends JFrame
         btnNext.setEnabled(true);
         btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
-        var ipt = Files.readString(Path.of("games/Week8p2.json")).replace("\"ship\": {", "\"ship" +
+        var ipt = Files.readString(Path.of("games/Week8p1.json")).replace("\"ship\": {", "\"ship" +
             "\": {\"type\":\"ship\",");
         model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         np = null;

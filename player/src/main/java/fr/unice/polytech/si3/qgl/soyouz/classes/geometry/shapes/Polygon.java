@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * Polygon shape.
@@ -86,5 +87,11 @@ public class Polygon implements Shape
     {
         // TODO: fails for excentered polygons, gives a value too big
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
+    }
+
+    @Override
+    public Stream<Point2d> getShell(Point2d observer, double shipSize)
+    {
+        return Arrays.stream(vertices).map(p -> p.add(Point2d.fromPolar(shipSize, p.angle())));
     }
 }
