@@ -144,7 +144,6 @@ public class SimulatorCanvas extends JPanel
                 getPos(e)
                     .sub(getViewCenter())
                     .mul(dz)
-                    .invY()
             );
             scale *= factor;
             repaint();
@@ -158,7 +157,6 @@ public class SimulatorCanvas extends JPanel
                 moveOrigin = getPos(e)
                     .sub(getViewCenter())
                     .mul(1 / scale)
-                    .invY()
                     .add(cameraPos);
             }
 
@@ -177,7 +175,7 @@ public class SimulatorCanvas extends JPanel
                 if (moveOrigin != null)
                 {
                     cameraPos =
-                        moveOrigin.sub(((getPos(e).sub(getViewCenter()).mul(1 / scale))).invY());
+                        moveOrigin.sub(((getPos(e).sub(getViewCenter()).mul(1 / scale))));
                     repaint();
                 }
             }
@@ -361,7 +359,6 @@ public class SimulatorCanvas extends JPanel
                 DECK_GRID_SIZE, DECK_GRID_SIZE,
                 usedEntities.contains(entity) ? Color.RED : new Color(0, true), null);
         }
-        var simg = ENTITY_ICONS.get(Marin.class)[0];
         var i = 0;
         for (Marin sailor : sailors)
         {
@@ -405,20 +402,19 @@ public class SimulatorCanvas extends JPanel
         drawShape(g, c.getShape(), c.getPosition());
         g.setColor(Color.BLACK);
         var p = mapToScreen(c.getPosition());
-        g.translate(p.x, p.y);
-        g.drawString(i + "", 0, 0);
+        g.drawString(i + "", p.x - 4, p.y + 4);
     }
 
-    private Point mapToScreen(Position p)
+    private Point mapToScreen(Point2d p)
     {
         return new Point(getWidth() / 2 + mapToScreen(p.getX() - cameraPos.x),
-            this.getHeight() / 2 - mapToScreen(p.getY() - cameraPos.y));
+            this.getHeight() / 2 + mapToScreen(p.getY() - cameraPos.y));
     }
 
     private Position mapToWorld(Point p)
     {
         return new Position(mapToWorld(p.x - getWidth() / 2) + cameraPos.x,
-            -mapToWorld(p.y - getHeight() / 2) + cameraPos.y, 0);
+            mapToWorld(p.y - getHeight() / 2) + cameraPos.y, 0);
     }
 
     private int mapToScreen(double dist)
@@ -445,22 +441,38 @@ public class SimulatorCanvas extends JPanel
             var c = (Circle) s;
             var rad = mapToScreen(c.getRadius());
             gtr.fillOval(-rad, -rad, 2 * rad, 2 * rad);
+            return;
         }
-        else if (s instanceof Rectangle)
+
+        if (!noRot)
+        {
+            gtr.rotate(p.getOrientation(), 0, 0);
+        }
+
+        if (s instanceof Rectangle)
         {
             var r = (Rectangle) s;
             var h = mapToScreen(r.getWidth());
             var w = mapToScreen(r.getHeight());
-            if (!noRot)
-            {
-                gtr.rotate(2 * Math.PI - (p.getOrientation()), 0, 0);
-                //gtr.rotate(-(p.getOrientation() + r.getOrientation()), 0, 0);
-            }
+
             gtr.fillRect(-w / 2, -h / 2, w, h);
-            gtr.setStroke(SHAPE_CROSS);
-            gtr.setColor(Color.BLACK);
-            gtr.drawPolygon(new Polygon(new int[] {-10, -10, 20}, new int[] { -10, 10, 0}, 3));
+
         }
+        else if (s instanceof fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon)
+        {
+            var pol = (fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon)s;
+            var ap = new Polygon();
+            for (Point2d pt : pol.getVertices())
+            {
+                ap.addPoint(mapToScreen(pt.x), mapToScreen(pt.y));
+            }
+
+            gtr.fillPolygon(ap);
+        }
+
+        gtr.setStroke(SHAPE_CROSS);
+        gtr.setColor(Color.BLACK);
+        gtr.drawPolygon(new Polygon(new int[] {-10, -10, 20}, new int[] { -10, 10, 0}, 3));
     }
 
     public void clearHistory()
