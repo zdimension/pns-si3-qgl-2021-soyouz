@@ -219,8 +219,7 @@ public class Simulator extends JFrame
         btnNext.setEnabled(true);
         btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
-        var ipt = Files.readString(Path.of("games/Week8p1.json")).replace("\"ship\": {", "\"ship" +
-            "\": {\"type\":\"ship\",");
+        var ipt = Files.readString(Path.of("games/Week8p1.json"));
         model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         np = null;
         canvas.setModel(model.getIp());

@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
@@ -20,14 +21,20 @@ import java.util.stream.Collectors;
 /**
  * Ship entity.
  */
-@JsonSubTypes({
-    @JsonSubTypes.Type(value = Bateau.class, name = "ship")
-})
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public class Bateau extends AutreBateau
 {
     private final String name;
     private final Deck deck;
     private final OnboardEntity[] entities;
+
+    Bateau(@JsonProperty("name") String name,
+                  @JsonProperty("deck") Deck deck,
+                  @JsonProperty("entities") OnboardEntity[] entities,
+                  @JsonProperty("type") String type)
+    {
+        this(name, deck, entities);
+    }
 
     /**
      * Constructor.
@@ -36,9 +43,7 @@ public class Bateau extends AutreBateau
      * @param deck     The deck of the boat.
      * @param entities The entities on board.
      */
-    public Bateau(@JsonProperty("name") String name,
-                  @JsonProperty("deck") Deck deck,
-                  @JsonProperty("entities") OnboardEntity[] entities)
+    public Bateau(String name, Deck deck, OnboardEntity[] entities)
     {
         this.name = name;
         this.deck = deck;
