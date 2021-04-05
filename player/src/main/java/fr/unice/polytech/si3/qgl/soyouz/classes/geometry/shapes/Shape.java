@@ -17,4 +17,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 public interface Shape
 {
     boolean contains(Point2d p);
+
+    double getMaxDiameter();
 }

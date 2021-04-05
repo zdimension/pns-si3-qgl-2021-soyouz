@@ -35,4 +35,10 @@ public class Circle implements Shape
     {
         return pos.normSquared() <= Math.pow(radius, 2);
     }
+
+    @Override
+    public double getMaxDiameter()
+    {
+        return radius * 2;
+    }
 }

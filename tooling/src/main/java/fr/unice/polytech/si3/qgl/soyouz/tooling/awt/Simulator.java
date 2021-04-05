@@ -1,12 +1,12 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
@@ -33,34 +33,18 @@ public class Simulator extends JFrame
 
     private final Timer timer;
     private final int COMP_STEPS = 10;
+    private final SimulatorCanvas canvas;
+    private final ArrayList<OnboardEntity> usedEntities;
+    private final JButton btnNext;
+    private final JButton btnSlowNext;
+    private final JButton btnPlay;
     private int currentStep = 0;
     private double rotIncrement;
     private double spdIncrement;
     private NextRoundParameters np;
-    private final SimulatorCanvas canvas;
     private RunnerParameters model;
-    private final ArrayList<OnboardEntity> usedEntities;
     private Cockpit cockpit;
-    private final JButton btnNext;
-    private final JButton btnSlowNext;
-    private final JButton btnPlay;
-
-    private void reset() throws IOException
-    {
-        timer.stop();
-        btnNext.setEnabled(true);
-        btnSlowNext.setEnabled(true);
-        btnPlay.setText("Play");
-        var ipt = Files.readString(Path.of("games/Week8p2.json")).replace("\"ship\": {", "\"ship\": {\"type\":\"ship\",");
-        model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
-        np = null;
-        canvas.setModel(model.getIp());
-        cockpit = new Cockpit();
-        cockpit.initGameInternal(model.getIp());
-        usedEntities.clear();
-        canvas.reset();
-        loadNextRound();
-    }
+    private boolean playMode = false;
 
     public Simulator() throws IOException
     {
@@ -70,6 +54,7 @@ public class Simulator extends JFrame
         setSize(600, 600);
 
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
         var topcont = new Panel();
         topcont.setLayout(new BoxLayout(topcont, BoxLayout.X_AXIS));
@@ -129,7 +114,8 @@ public class Simulator extends JFrame
                 var linSpeed = spdIncrement;
                 if (np.getWind() != null)
                 {
-                    var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()), Voile.class);
+                    var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()),
+                        Voile.class);
                     var counts = new Object()
                     {
                         int open;
@@ -138,7 +124,9 @@ public class Simulator extends JFrame
                     sails.forEach(voile ->
                     {
                         if (voile.isOpenned())
+                        {
                             counts.open++;
+                        }
                         counts.total++;
                     });
                     Wind wind = np.getWind();
@@ -148,11 +136,11 @@ public class Simulator extends JFrame
                 var cur = model.getShip().getPosition();
                 var linear = Position.fromPolar(linSpeed, cur.getOrientation());
 
-                for (Entity visibleEntity : np.getVisibleEntities())
+                for (ShapedEntity visibleEntity : np.getVisibleEntities())
                 {
                     if (visibleEntity instanceof Stream)
                     {
-                        var str = (Stream)visibleEntity;
+                        var str = (Stream) visibleEntity;
                         if (str.contains(model.getShip().getPosition()))
                         {
                             linear = linear.add(str.getProjectedStrength().mul(1d / COMP_STEPS));
@@ -225,7 +213,23 @@ public class Simulator extends JFrame
         });
     }
 
-    private boolean playMode = false;
+    private void reset() throws IOException
+    {
+        timer.stop();
+        btnNext.setEnabled(true);
+        btnSlowNext.setEnabled(true);
+        btnPlay.setText("Play");
+        var ipt = Files.readString(Path.of("games/Week8p2.json")).replace("\"ship\": {", "\"ship" +
+            "\": {\"type\":\"ship\",");
+        model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
+        np = null;
+        canvas.setModel(model.getIp());
+        cockpit = new Cockpit();
+        cockpit.initGameInternal(model.getIp());
+        usedEntities.clear();
+        canvas.reset();
+        loadNextRound();
+    }
 
     private void playRound()
     {
@@ -290,11 +294,11 @@ public class Simulator extends JFrame
                     }
                     else if (act instanceof LiftSailAction)
                     {
-                        ((Voile)ent).setOpenned(true);
+                        ((Voile) ent).setOpenned(true);
                     }
                     else if (act instanceof LowerSailAction)
                     {
-                        ((Voile)ent).setOpenned(false);
+                        ((Voile) ent).setOpenned(false);
                     }
                 }
                 else
@@ -309,7 +313,7 @@ public class Simulator extends JFrame
                     var mv = (MoveAction) act;
                     sail.moveRelative(mv.getXDistance(), mv.getYDistance());
                     if (sail.getX() < 0 || sail.getX() >= model.getShip().getDeck().getLength()
-                    || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())
+                        || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())
                     {
                         System.err.println("SAILOR " + sail.getId() + " MOVED OUTSIDE THE DECK");
                     }

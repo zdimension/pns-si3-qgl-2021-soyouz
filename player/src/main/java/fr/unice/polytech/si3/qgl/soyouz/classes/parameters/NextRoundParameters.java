@@ -17,7 +17,7 @@ public class NextRoundParameters
 {
     private final Bateau ship;
     private final Wind wind;
-    private final Entity[] visibleEntities;
+    private final ShapedEntity[] visibleEntities;
 
     /**
      * Constructor.
@@ -28,7 +28,7 @@ public class NextRoundParameters
      */
     public NextRoundParameters(@JsonProperty("ship") Bateau ship,
                                @JsonProperty("wind") Wind wind,
-                               @JsonProperty("visibleEntities") Entity[] visibleEntities)
+                               @JsonProperty("visibleEntities") ShapedEntity[] visibleEntities)
     {
         this.ship = ship;
         this.wind = wind;
@@ -50,7 +50,7 @@ public class NextRoundParameters
      *
      * @return all Entities around and close enough to be seen.
      */
-    public Entity[] getVisibleEntities()
+    public ShapedEntity[] getVisibleEntities()
     {
         return visibleEntities;
     }

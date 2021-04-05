@@ -63,4 +63,10 @@ public class Rectangle implements Shape
     {
         return Math.abs(pos.getX()) <= height / 2 && Math.abs(pos.getY()) <= width / 2;
     }
+
+    @Override
+    public double getMaxDiameter()
+    {
+        return Math.hypot(width, height);
+    }
 }

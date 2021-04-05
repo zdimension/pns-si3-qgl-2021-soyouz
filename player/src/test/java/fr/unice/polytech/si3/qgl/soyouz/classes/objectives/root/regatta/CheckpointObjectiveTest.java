@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
@@ -52,9 +53,9 @@ class CheckpointObjectiveTest
         Bateau ship = new Bateau("Peqoq", new Deck(3, 3), ent);
         ship.setPosition(new Position(10, 10, 1));
         OnBoardDataHelper obdh = new OnBoardDataHelper(ship, new ArrayList<>(Arrays.asList(sailors)));
-        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1, 100),new Entity[]{});
+        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1, 100),new ShapedEntity[]{});
         co = new CheckpointObjective(new Checkpoint(new Position(10, 1000, 0), new Circle(50)), obdh, sdh);
-        Entity[] entt = {};
+        ShapedEntity[] entt = {};
         gs = new GameState(null, new NextRoundParameters(ship, new Wind(1, 100), entt));
     }
 

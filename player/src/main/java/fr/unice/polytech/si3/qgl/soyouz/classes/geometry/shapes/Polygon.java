@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
+import java.util.Arrays;
+
 /**
  * Polygon shape.
  */
@@ -77,5 +79,12 @@ public class Polygon implements Shape
         }
 
         return wn != 0;
+    }
+
+    @Override
+    public double getMaxDiameter()
+    {
+        // TODO: fails for excentered polygons, gives a value too big
+        return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
 }

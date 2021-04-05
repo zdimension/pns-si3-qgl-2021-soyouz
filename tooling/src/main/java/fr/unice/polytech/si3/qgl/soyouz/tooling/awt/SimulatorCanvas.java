@@ -267,7 +267,7 @@ public class SimulatorCanvas extends JPanel
 
         if (np != null)
         {
-            for (Entity visibleEntity : np.getVisibleEntities())
+            for (ShapedEntity visibleEntity : np.getVisibleEntities())
             {
                 drawEntity(g, visibleEntity);
             }
@@ -306,14 +306,10 @@ public class SimulatorCanvas extends JPanel
         g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
     }
 
-    private void drawEntity(Graphics2D g, Entity entity)
+    private void drawEntity(Graphics2D g, ShapedEntity se)
     {
-        if (entity instanceof ShapedEntity)
-        {
-            var se = (ShapedEntity)entity;
-            g.setColor(ENTITY_COLORS.get(se.getClass()));
-            drawShape(g, se.getShape(), se.getPosition());
-        }
+        g.setColor(ENTITY_COLORS.get(se.getClass()));
+        drawShape(g, se.getShape(), se.getPosition());
     }
 
     private void drawShipHistory(Graphics2D g)

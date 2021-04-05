@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
@@ -25,12 +26,11 @@ public class RunnerParameters
     private static final Random RNG = new Random();
     private GameGoal goal;
     private Bateau ship;
-    private Bateau bato;
     private Wind wind;
     private int minumumCrewSize;
     private int maximumCrewSize;
     private Position[] startingPositions;
-    private Entity[] seaEntities;
+    private ShapedEntity[] seaEntities;
     private Marin[] sailors;
     private int maxRound;
     private InitGameParameters ip;
@@ -65,7 +65,7 @@ public class RunnerParameters
         return startingPositions;
     }
 
-    public Entity[] getSeaEntities()
+    public ShapedEntity[] getSeaEntities()
     {
         return seaEntities;
     }

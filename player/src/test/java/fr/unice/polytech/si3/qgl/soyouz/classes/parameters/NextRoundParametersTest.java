@@ -19,7 +19,7 @@ class NextRoundParametersTest
     @BeforeEach
     void setUp()
     {
-        Entity[] ent = {
+        ShapedEntity[] ent = {
             new Reef(),
             new Stream(),
         };

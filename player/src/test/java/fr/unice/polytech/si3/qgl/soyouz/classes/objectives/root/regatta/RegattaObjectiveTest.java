@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
@@ -91,7 +92,7 @@ class RegattaObjectiveTest
 
     void setupObjectiveInLine()
     {
-        Entity[] ent = {};
+        ShapedEntity[] ent = {};
         NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
         gameState = new GameState(ip, np);
         regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
@@ -99,7 +100,7 @@ class RegattaObjectiveTest
 
     void setupObjectiveOnLeft()
     {
-        Entity[] ent = {};
+        ShapedEntity[] ent = {};
         ip.getShip().setPosition(new Position(1000, -1000, -2));
         NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
         gameState = new GameState(ip, np);
@@ -108,7 +109,7 @@ class RegattaObjectiveTest
 
     void setupObjectiveOnRight()
     {
-        Entity[] ent = {};
+        ShapedEntity[] ent = {};
         ip.getShip().setPosition(new Position(1000, 1000, 2));
         NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
         gameState = new GameState(ip, np);
@@ -117,7 +118,7 @@ class RegattaObjectiveTest
 
     void setupObjectiveOnBoat()
     {
-        Entity[] ent = {};
+        ShapedEntity[] ent = {};
         ip.getShip().setPosition(new Position(1000, 0, 0));
         NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
         gameState = new GameState(ip, np);
@@ -126,7 +127,7 @@ class RegattaObjectiveTest
 
     void setupSecondObjectiveOnBoat()
     {
-        Entity[] ent = {};
+        ShapedEntity[] ent = {};
         ip.getShip().setPosition(new Position(2000, 0, 0));
         NextRoundParameters np = new NextRoundParameters(ip.getShip(), new Wind(0, 50), ent);
         gameState = new GameState(ip, np);

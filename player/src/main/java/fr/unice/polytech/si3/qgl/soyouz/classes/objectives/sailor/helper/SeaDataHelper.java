@@ -1,10 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Reef;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 
 /**
  * A Helper that contains all data necessary, related to all sea entities.
@@ -13,7 +10,7 @@ public class SeaDataHelper
 {
     private Bateau ship;
     private Wind wind;
-    private Entity[] visibleEntities;
+    private ShapedEntity[] visibleEntities;
 
     /**
      * Constructor.
@@ -22,7 +19,7 @@ public class SeaDataHelper
      * @param wind The wind.
      * @param visibleEntities all visible entities in the sea
      */
-    public SeaDataHelper(Bateau ship ,Wind wind, Entity[] visibleEntities)
+    public SeaDataHelper(Bateau ship ,Wind wind, ShapedEntity[] visibleEntities)
     {
         this.ship = ship;
         this.wind = wind;
@@ -65,7 +62,7 @@ public class SeaDataHelper
      * Getter
      * @return the visible sea entities
      */
-    public Entity[] getVisibleEntities()
+    public ShapedEntity[] getVisibleEntities()
     {
         return visibleEntities;
     }
@@ -79,7 +76,7 @@ public class SeaDataHelper
     public boolean isAReefNearby(Bateau boat){
         if (visibleEntities.length==0)
             return false;
-        for (Entity entity : visibleEntities){
+        for (ShapedEntity entity : visibleEntities){
             if (entity instanceof Reef){
                 Reef reef = (Reef) entity;
                 Double distance = reef.getPosition().getLength(boat.getPosition());

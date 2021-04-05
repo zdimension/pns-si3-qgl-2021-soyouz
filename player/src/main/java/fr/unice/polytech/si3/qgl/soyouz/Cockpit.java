@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
@@ -30,6 +31,7 @@ public class Cockpit implements ICockpit
     static
     {
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
         System.setProperty("java.util.logging.SimpleFormatter.format",
             "%1$tF %1$tT %4$s %3$s : %5$s%6$s%n");
