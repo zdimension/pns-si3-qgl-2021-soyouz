@@ -47,7 +47,7 @@ public class HeuristicForNodes implements Function<GraphNode, Double>
         double euclideanDistance = calculateEuclideanDistance(edge.nodeU(), edge.nodeV());
         double cost = graph.edgeValue(edge).get();
         double speed = euclideanDistance / cost;
-
+        //TODO : change it according to the right implementation
         return speed;
     }
 

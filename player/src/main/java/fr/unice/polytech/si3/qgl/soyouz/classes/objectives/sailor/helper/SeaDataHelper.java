@@ -6,6 +6,11 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Reef;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * A Helper that contains all data necessary, related to all sea entities.
  */
@@ -14,6 +19,7 @@ public class SeaDataHelper
     private Bateau ship;
     private Wind wind;
     private Entity[] visibleEntities;
+    private Set<Entity> processedEntities;
 
     /**
      * Constructor.
@@ -27,6 +33,7 @@ public class SeaDataHelper
         this.ship = ship;
         this.wind = wind;
         this.visibleEntities = visibleEntities;
+        this.processedEntities = new HashSet<>();
     }
 
     /**
@@ -39,6 +46,10 @@ public class SeaDataHelper
         this.wind = state.getNp().getWind();
         this.ship = state.getNp().getShip();
         this.visibleEntities = state.getNp().getVisibleEntities();
+        Set<Entity> newEntities = Arrays.stream(visibleEntities).filter(this::isANewEntity).collect(Collectors.toSet());
+        addProcessedEntities(newEntities);
+        //TODO : Appeler update du graphe ?
+
     }
 
     /**
@@ -70,24 +81,16 @@ public class SeaDataHelper
         return visibleEntities;
     }
 
-    //TODO : Need to verify if this works as intended
-    /**
-     * Determine if a reef is nearby our boat
-     * @param boat
-     * @return
-     */
-    public boolean isAReefNearby(Bateau boat){
-        if (visibleEntities.length==0)
-            return false;
-        for (Entity entity : visibleEntities){
-            if (entity instanceof Reef){
-                Reef reef = (Reef) entity;
-                Double distance = reef.getPosition().getLength(boat.getPosition());
-                if (distance<200){
-                    return true;
-                }
-            }
-        }
-        return false;
+    public boolean isANewEntity(Entity entity){
+        return !processedEntities.contains(entity);
     }
+
+    public void addProcessedEntity(Entity entity){
+        processedEntities.add(entity);
+    }
+
+    public void addProcessedEntities(Set<Entity> entities){
+        processedEntities.addAll(entities);
+    }
+
 }
