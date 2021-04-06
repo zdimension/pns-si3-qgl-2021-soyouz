@@ -1,0 +1,445 @@
+{
+    "goal": {
+        "mode": "REGATTA",
+        "checkpoints": [
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 4811.197916666662,
+                    "y": 2421.875000000001
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 1500.6510416666626,
+                    "y": 2303.8736979166674
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 1119.7916666666645,
+                    "y": 1230.468750000001
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": "50"
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 1087.2395833333337,
+                    "y": -253.9062499999986
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": "100"
+                }
+            },
+            {
+                "type": "checkpoint",
+                "position": {
+                    "x": 2386.8815104166624,
+                    "y": 435.3841145833322
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": "100"
+                }
+            }
+        ]
+    },
+    "ship": {
+        "name": "SheepShip",
+        "deck": {
+            "length": 10,
+            "width": 5
+        },
+        "entities": [
+            {
+                "type": "sail",
+                "x": 3,
+                "y": 2
+            },
+            {
+                "type": "oar",
+                "x": 1,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 2,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 3,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 5,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 4,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 1,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 6,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 3,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 2,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 5,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 4,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 6,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 0,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 7,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 7,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 8,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 8,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 9,
+                "y": 4
+            },
+            {
+                "type": "oar",
+                "x": 9,
+                "y": 0
+            },
+            {
+                "type": "rudder",
+                "x": 9,
+                "y": 2
+            }
+        ],
+        "life": 2500
+    },
+    "wind": {
+        "direction": -1.5708,
+        "strength": 100
+    },
+    "seaEntities": [
+        {
+            "position": {
+                "x": 3749.999999999994,
+                "y": 2327.473958333335,
+                "orientation": 1.5707963267948966
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "150",
+                "height": "550"
+            }
+        },
+        {
+            "position": {
+                "x": 1897.786458333332,
+                "y": 2324.2187499999995,
+                "orientation": 1.4835298641951802
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "75",
+                "height": "700"
+            }
+        },
+        {
+            "position": {
+                "x": 2591.145833333331,
+                "y": 696.614583333333,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "1500"
+            }
+        },
+        {
+            "position": {
+                "x": 1861.9791666666626,
+                "y": -32.55208333333362,
+                "orientation": 1.5707963267948966
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "1500"
+            }
+        },
+        {
+            "position": {
+                "x": 2825.5208333333294,
+                "y": 1184.8958333333323,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "2000"
+            }
+        },
+        {
+            "position": {
+                "x": 2832.0312499999936,
+                "y": -781.2500000000002,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "2000"
+            }
+        },
+        {
+            "position": {
+                "x": 745.4427083333318,
+                "y": 2047.5260416666686,
+                "orientation": 2.1467549799530254
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "100",
+                "height": "1000"
+            }
+        },
+        {
+            "position": {
+                "x": 2838.541666666671,
+                "y": 1816.4062499999995,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": 500,
+                "height": "2000"
+            }
+        },
+        {
+            "position": {
+                "x": 5475.260416666671,
+                "y": 2506.5104166666674,
+                "orientation": 1.5707963267948966
+            },
+            "type": "reef",
+            "shape": {
+                "type": "polygon",
+                "vertices": [
+                    {
+                        "x": 0,
+                        "y": "350"
+                    },
+                    {
+                        "x": "-50",
+                        "y": 0
+                    },
+                    {
+                        "x": 0,
+                        "y": "-430"
+                    }
+                ]
+            }
+        },
+        {
+            "position": {
+                "x": 2838.5416666666683,
+                "y": 3151.041666666667,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": 500,
+                "height": "2000"
+            }
+        },
+        {
+            "position": {
+                "x": 1471.354166666665,
+                "y": 1608.0729166666663,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "100",
+                "height": "750"
+            }
+        },
+        {
+            "position": {
+                "x": 1097.0052083333298,
+                "y": 559.082031250002,
+                "orientation": 1.5707963267948966
+            },
+            "type": "stream",
+            "shape": {
+                "type": "rectangle",
+                "width": 200,
+                "height": 1000
+            },
+            "strength": 200
+        },
+        {
+            "position": {
+                "x": 3808.5937499999973,
+                "y": 195.31249999999974,
+                "orientation": 1.5707963267948966
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "2000"
+            }
+        },
+        {
+            "position": {
+                "x": 3307.2916666666615,
+                "y": -273.43750000000034,
+                "orientation": 1.5707963267948966
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "1000"
+            }
+        },
+        {
+            "position": {
+                "x": 2617.1874999999986,
+                "y": 175.7812499999995,
+                "orientation": 1.5707963267948966
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "1000"
+            }
+        },
+        {
+            "position": {
+                "x": 2395.8333333333285,
+                "y": 149.73958333333286,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "400"
+            }
+        },
+        {
+            "position": {
+                "x": 2220.052083333329,
+                "y": -58.59375000000051,
+                "orientation": 1.5707963267948966
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "450"
+            }
+        },
+        {
+            "position": {
+                "x": 2701.822916666665,
+                "y": 2630.2083333333353,
+                "orientation": 1.53588974175501
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": "50",
+                "height": "600"
+            }
+        }
+    ],
+    "maxRound": 750,
+    "minumumCrewSize": 20,
+    "maximumCrewSize": 20,
+    "startingPositions": [
+        {
+            "x": 6699.21875,
+            "y": 2499.9999999999995,
+            "orientation": 1.5882496193148399
+        }
+    ]
+}

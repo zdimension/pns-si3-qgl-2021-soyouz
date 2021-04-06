@@ -271,9 +271,9 @@ public class Simulator extends JFrame
         btnNext.setEnabled(true);
         //btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
-        if (false)
+        if (true)
         {
-            var ipt = Files.readString(Path.of("games/Week8p2.json"));
+            var ipt = Files.readString(Path.of("games/Week9.json"));
             model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         }
         else
