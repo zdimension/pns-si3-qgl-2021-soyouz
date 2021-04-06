@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class SimulatorCanvas extends JPanel
 {
@@ -310,7 +309,7 @@ public class SimulatorCanvas extends JPanel
         drawLegendText(g);
     }
 
-    private void traverseNode(int elem, Set<Pair<Integer, Integer>> lines)
+    private void traverseNode(int elem, Set<Pair<Integer, Integer>> lines, double shipSize)
     {
         var node = nodes.get(elem);
 
@@ -325,7 +324,7 @@ public class SimulatorCanvas extends JPanel
 
             for (ShapedEntity ent : np.getVisibleEntities())
             {
-                if (ent instanceof Reef && ent.getShape().linePassesThrough(ent.toLocal(node), ent.toLocal(p)))
+                if (ent instanceof Reef && ent.getShape().linePassesThrough(ent.toLocal(node), ent.toLocal(p), shipSize))
                 {
                     continue outer;
                 }
@@ -333,7 +332,7 @@ public class SimulatorCanvas extends JPanel
 
             if (lines.add(Pair.of(Math.min(elem, i), Math.max(elem, i))))
             {
-                traverseNode(i, lines);
+                traverseNode(i, lines, shipSize);
             }
         }
     }
@@ -345,8 +344,9 @@ public class SimulatorCanvas extends JPanel
 
         g = (Graphics2D) g.create();
 
+        var diam = model.getShip().getShape().getMaxDiameter();
         var lines = new HashSet<Pair<Integer, Integer>>();
-        traverseNode(0, lines);
+        traverseNode(0, lines, diam);
 
         var gnodes = new ArrayList<Node>();
         for (Point2d node : nodes)

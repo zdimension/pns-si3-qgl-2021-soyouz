@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
@@ -8,7 +7,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Reef;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.SailorObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
@@ -16,7 +14,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SeaData
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Graph;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -89,10 +86,9 @@ public class CheckpointObjective implements RootObjective
 
     private final List<Point2d> nodes = new ArrayList<>();
 
-    private void traverseNode(Reef[] arr, int elem, Set<Pair<Integer, Integer>> lines)
+    private void traverseNode(Reef[] arr, int elem, Set<Pair<Integer, Integer>> lines, double shipSize)
     {
         var node = nodes.get(elem);
-
         outer:
         for (int i = 0; i < nodes.size(); i++)
         {
@@ -104,7 +100,7 @@ public class CheckpointObjective implements RootObjective
 
             for (Reef reef : arr)
             {
-                if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p)))
+                if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize))
                 {
                     continue outer;
                 }
@@ -112,7 +108,7 @@ public class CheckpointObjective implements RootObjective
 
             if (lines.add(Pair.of(Math.min(elem, i), Math.max(elem, i))))
             {
-                traverseNode(arr, i, lines);
+                traverseNode(arr, i, lines, shipSize);
             }
         }
     }
@@ -140,7 +136,7 @@ public class CheckpointObjective implements RootObjective
         }
 
         var lines = new HashSet<Pair<Integer, Integer>>();
-        traverseNode(reef, 0, lines);
+        traverseNode(reef, 0, lines, diam);
 
         var gnodes = new ArrayList<Node>();
         for (Point2d node : nodes)
@@ -170,37 +166,5 @@ public class CheckpointObjective implements RootObjective
         /*angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
         distanceToCp = boat.getPosition().getLength(cp.getPosition());
         distanceToCp += ((Circle) cp.getShape()).getRadius();*/
-    }
-
-    /**
-     * Calculate the angle in rad between the boat and the current checkpoint.
-     *
-     * @param boat Our boat.
-     * @return an angle in rad.
-     */
-    private double calculateAngleBetweenBoatAndCheckpoint(Bateau boat)
-    {
-        double boatOrientation = boat.getPosition().getOrientation();
-        Pair<Double, Double> boatVector = Pair.of(Math.cos(boatOrientation),
-            Math.sin(boatOrientation));
-        Pair<Double, Double> cpVector = Pair.of(cp.getPosition().getX() - boat.getPosition().getX(),
-            cp.getPosition().getY() - boat.getPosition().getY());
-        double normDirection = Math.sqrt(Math.pow(cpVector.first, 2) + Math.pow(cpVector.second,
-            2));
-        var scalar = boatVector.first * cpVector.first + boatVector.second * cpVector.second;
-        double beforeAcos = scalar / normDirection;
-        if (beforeAcos >= 1 && beforeAcos < 1.0000000001)
-        {
-            beforeAcos = 1.0;
-        }
-
-        double angle = Math.acos(beforeAcos);
-
-        if (cpVector.second - boatVector.second < 0)
-        {
-            angle = -angle;
-        }
-
-        return angle;
     }
 }

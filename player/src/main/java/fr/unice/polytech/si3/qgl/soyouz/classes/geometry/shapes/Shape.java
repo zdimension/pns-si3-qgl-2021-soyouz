@@ -24,5 +24,5 @@ public interface Shape
 
     Stream<Point2d> getShell(Point2d observer, double shipSize);
 
-    boolean linePassesThrough(Point2d a, Point2d b);
+    boolean linePassesThrough(Point2d a, Point2d b, double shipSize);
 }

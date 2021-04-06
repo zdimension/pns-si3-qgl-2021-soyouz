@@ -117,12 +117,14 @@ public class Polygon implements Shape
     }
 
     @Override
-    public boolean linePassesThrough(Point2d a, Point2d b)
+    public boolean linePassesThrough(Point2d a, Point2d b, double shipSize)
     {
-        for (int i = 0; i < vertices.length; i++)
+        var pts = getShell(null, shipSize).toArray(Point2d[]::new);
+
+        for (int i = 0; i < pts.length; i++)
         {
-            var cur = vertices[i];
-            var nex = vertices[(i + 1) % vertices.length];
+            var cur = pts[i];
+            var nex = pts[(i + 1) % pts.length];
 
             if (ccw(cur, a, b) != ccw(nex, a, b) && ccw(cur, nex, a) != ccw(cur, nex, b))
                 return true;

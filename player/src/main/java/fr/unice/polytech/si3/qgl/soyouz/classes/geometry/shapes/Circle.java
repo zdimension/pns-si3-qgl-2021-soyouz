@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Circle shape.
@@ -67,13 +66,14 @@ public class Circle extends Polygon implements Shape
     }*/
 
     @Override
-    public boolean linePassesThrough(Point2d e, Point2d l)
+    public boolean linePassesThrough(Point2d e, Point2d l, double shipSize)
     {
+        var rad = radius + shipSize;
         var d = l.sub(e);
 
         double a = d.dot(d);
         double b = 2 * e.dot(d);
-        double c = e.dot(e) - radius * radius;
+        double c = e.dot(e) - rad * rad;
 
         double discriminant = b * b - 4 * a * c;
 
