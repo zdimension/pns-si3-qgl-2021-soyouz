@@ -155,6 +155,10 @@ public class CheckpointObjective implements RootObjective
 
         var graph = new Graph(gnodes, 0, 1);
         var path = graph.getShortestPath();
+        if (path.size() < 2)
+        {
+            logger.severe("WTF CHEMIN PAS FINI");
+        }
         var point = path.get(1).position.sub(boat.getPosition());
         angleToCp = point.angle() - boat.getPosition().getOrientation();
         distanceToCp = point.norm();

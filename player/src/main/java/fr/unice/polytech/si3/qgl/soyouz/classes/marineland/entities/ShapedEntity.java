@@ -71,12 +71,12 @@ public abstract class ShapedEntity
 
     public Point2d toLocal(Point2d pos)
     {
-        return pos.sub(position).rotate(-position.getOrientation() - Math.PI / 2);
+        return pos.sub(position).rotate(-position.getOrientation());
     }
 
     public Point2d toGlobal(Point2d pos)
     {
-        return pos.rotate(Math.PI / 2 + position.getOrientation()).add(position);
+        return pos.rotate(position.getOrientation()).add(position);
     }
 
     public boolean contains(Position pos)

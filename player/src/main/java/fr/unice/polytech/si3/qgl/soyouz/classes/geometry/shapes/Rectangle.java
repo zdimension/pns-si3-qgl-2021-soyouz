@@ -24,10 +24,10 @@ public class Rectangle extends Polygon implements Shape
     {
         super(orientation, new Point2d[]
             {
-                new Point2d(-width / 2, -height / 2),
-                new Point2d(width / 2, -height / 2),
-                new Point2d(width / 2, height / 2),
-                new Point2d(-width / 2, height / 2)
+                new Point2d(-height / 2, -width / 2),
+                new Point2d(height / 2, -width / 2),
+                new Point2d(height / 2, width / 2),
+                new Point2d(-height / 2, width / 2)
             });
         this.width = width;
         this.height = height;

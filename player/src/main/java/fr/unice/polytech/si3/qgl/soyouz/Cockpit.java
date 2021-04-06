@@ -115,6 +115,7 @@ public class Cockpit implements ICockpit
         catch (Exception e)
         {
             logger.log(Level.SEVERE, "Error writing nextRound : " + e.getMessage());
+            e.printStackTrace();
             return "[]";
         }
     }

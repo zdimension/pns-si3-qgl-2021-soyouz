@@ -20,10 +20,10 @@ public class Circle extends Polygon implements Shape
      */
     public Circle(@JsonProperty("radius") double radius)
     {
-        super(0, IntStream.range(0, 180)
+        super(0, IntStream.range(0, 16)
             .mapToObj(angle ->
             {
-                var rad = 2 * angle * Math.PI / 180d;
+                var rad = 2 * angle * Math.PI / 16;
                 return new Point2d(radius * Math.cos(rad), radius * Math.sin(rad));
             }).toArray(Point2d[]::new));
         this.radius = radius;
@@ -51,7 +51,7 @@ public class Circle extends Polygon implements Shape
         return radius * 2;
     }
 
-    @Override
+    /*@Override
     public Stream<Point2d> getShell(Point2d observer, double shipSize)
     {
         var dist = observer.norm();
@@ -64,7 +64,7 @@ public class Circle extends Polygon implements Shape
             Point2d.fromPolar(rad + shipSize, b - a),
             Point2d.fromPolar(rad + shipSize, b + a)
         );
-    }
+    }*/
 
     @Override
     public boolean linePassesThrough(Point2d e, Point2d l)

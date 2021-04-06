@@ -19,7 +19,7 @@ public class Application
     {
         var mapper = new ObjectMapper();
         mapper.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
-        var test = mapper.readValue(Files.readString(Path.of("games/initGame.json")), InitGameParameters.class);
+        var test = mapper.readValue(Files.readString(Path.of("games/Week8p1_real.json")), InitGameParameters.class);
 
         new Simulator().setVisible(true);
     }

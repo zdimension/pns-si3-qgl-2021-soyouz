@@ -75,6 +75,21 @@ public class RunnerParameters
         return maxRound;
     }
 
+    public RunnerParameters()
+    {
+
+    }
+
+    public RunnerParameters(InitGameParameters pars, NextRoundParameters nps)
+    {
+        ip = pars;
+        sailors = Arrays.stream(pars.getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(), o.getName())).toArray(Marin[]::new);
+        goal = pars.getGoal();
+        ship = pars.getShip();
+        seaEntities = nps.getVisibleEntities();
+        wind = nps.getWind();
+    }
+
     @JsonIgnore
     public Marin[] getSailors()
     {
@@ -127,7 +142,9 @@ public class RunnerParameters
         return new NextRoundParameters(
             ship,
             wind,
-            seaEntities
+            Arrays.stream(seaEntities).filter(p -> p.getShell(ship.getPosition(), 0).anyMatch(
+                pt -> pt.sub(ship.getPosition()).norm() < 1000
+            )).toArray(ShapedEntity[]::new) // todo: vigie
         );
     }
 }

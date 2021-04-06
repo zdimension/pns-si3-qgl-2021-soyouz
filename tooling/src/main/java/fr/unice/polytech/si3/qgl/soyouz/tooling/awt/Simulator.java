@@ -14,6 +14,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
@@ -270,8 +271,19 @@ public class Simulator extends JFrame
         btnNext.setEnabled(true);
         //btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
-        var ipt = Files.readString(Path.of("games/Week8p1.json"));
-        model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
+        if (true)
+        {
+            var ipt = Files.readString(Path.of("games/Week8.json"));
+            model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
+        }
+        else
+        {
+            model = new RunnerParameters(
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p1_real.json")), InitGameParameters.class),
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p1_real_next.json")), NextRoundParameters.class)
+            );
+        }
+
         np = null;
         canvas.setModel(model.getIp());
         currentCheckpoint = 0;
@@ -295,11 +307,8 @@ public class Simulator extends JFrame
 
     private void loadNextRound()
     {
-        if (np == null)
-        {
-            np = model.getNp();
-            canvas.setNp(np);
-        }
+        np = model.getNp();
+        canvas.setNp(np);
     }
 
     private void computeRound()

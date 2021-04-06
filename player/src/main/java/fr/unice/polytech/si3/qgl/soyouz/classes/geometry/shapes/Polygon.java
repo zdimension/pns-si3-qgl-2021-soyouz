@@ -102,6 +102,8 @@ public class Polygon implements Shape
             var dta = nex.sub(cur);
 
             var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
+            if(cur.sub(change).normSquared() < cur.normSquared())
+                change = change.mul(-1);
             pts[i] = cur.sub(change);
             pts[ni] = nex.sub(change);
         }
