@@ -271,16 +271,16 @@ public class Simulator extends JFrame
         btnNext.setEnabled(true);
         //btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
-        if (true)
+        if (false)
         {
-            var ipt = Files.readString(Path.of("games/Week8.json"));
+            var ipt = Files.readString(Path.of("games/Week8p2.json"));
             model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         }
         else
         {
             model = new RunnerParameters(
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p1_real.json")), InitGameParameters.class),
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p1_real_next.json")), NextRoundParameters.class)
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p2_real.json")), InitGameParameters.class),
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p2_real_next.json")), NextRoundParameters.class)
             );
         }
 
