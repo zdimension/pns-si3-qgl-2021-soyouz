@@ -141,4 +141,9 @@ public class Point2d
     {
         return x * mul.y - mul.x * y;
     }
+
+    public Point2d ortho()
+    {
+        return new Point2d(-y, x);
+    }
 }

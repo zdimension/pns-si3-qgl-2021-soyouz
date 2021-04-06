@@ -15,6 +15,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Graph;
+import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import javax.imageio.ImageIO;
@@ -78,12 +80,14 @@ public class SimulatorCanvas extends JPanel
         BasicStroke.JOIN_BEVEL);
     private final List<Position> shipHistory = new ArrayList<>();
     private final List<Point2d> nodes = new ArrayList<>();
+    public Checkpoint currentCheckpoint;
     private InitGameParameters model;
     private boolean centered = false;
     private NextRoundParameters np;
     private double scale = 1;
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
+    public boolean drawPath = true;
     public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
     {
         this.model = model;
@@ -244,6 +248,18 @@ public class SimulatorCanvas extends JPanel
         drawGame(g2d);
     }
 
+    private Position getDebugShipPosition()
+    {
+        var ship = model.getShip().getPosition();
+        var mp = getMousePosition();
+        if (mp != null)
+        {
+            ship = mapToWorld(mp);
+        }
+
+        return ship;
+    }
+
     /**
      * Dessine le jeu
      *
@@ -252,7 +268,8 @@ public class SimulatorCanvas extends JPanel
     private void drawGame(Graphics2D g)
     {
         nodes.clear();
-        nodes.add(model.getShip().getPosition());
+        nodes.add(getDebugShipPosition());
+
 
         var goal = model.getGoal();
         if (goal instanceof RegattaGoal)
@@ -262,7 +279,8 @@ public class SimulatorCanvas extends JPanel
             for (int i = 0; i < checkpoints.length; i++)
             {
                 drawCheckpoint(g, checkpoints[i], i);
-                nodes.add(checkpoints[i].getPosition());
+                if (currentCheckpoint == checkpoints[i])
+                    nodes.add(checkpoints[i].getPosition());
             }
         }
 
@@ -307,7 +325,7 @@ public class SimulatorCanvas extends JPanel
 
             for (ShapedEntity ent : np.getVisibleEntities())
             {
-                if (ent.getShape().linePassesThrough(ent.toLocal(node), ent.toLocal(p)))
+                if (ent instanceof Reef && ent.getShape().linePassesThrough(ent.toLocal(node), ent.toLocal(p)))
                 {
                     continue outer;
                 }
@@ -322,26 +340,42 @@ public class SimulatorCanvas extends JPanel
 
     private void drawNodes(Graphics2D g)
     {
-        g = (Graphics2D) g.create();
+        if (!drawPath)
+            return;
 
-        var ship = model.getShip().getPosition();
-        if (getMousePosition() != null)
-        {
-            ship = mapToWorld(getMousePosition());
-        }
-        var sp = mapToScreen(ship);
+        g = (Graphics2D) g.create();
 
         var lines = new HashSet<Pair<Integer, Integer>>();
         traverseNode(0, lines);
 
-        g.setColor(Color.MAGENTA);
-        for (Pair<Integer, Integer> line : lines)
+        var gnodes = new ArrayList<Node>();
+        for (Point2d node : nodes)
         {
-            var a = mapToScreen(nodes.get(line.first));
-            var b = mapToScreen(nodes.get(line.second));
-            g.drawLine(a.x, a.y, b.x, b.y);
+            gnodes.add(new Node(node));
         }
 
+        g.setColor(Color.ORANGE);
+        for (Pair<Integer, Integer> line : lines)
+        {
+            var sa = mapToScreen(nodes.get(line.first));
+            var sb = mapToScreen(nodes.get(line.second));
+            g.drawLine(sa.x, sa.y, sb.x, sb.y);
+
+            gnodes.get(line.first).addNeighbour(gnodes.get(line.second));
+        }
+
+        var graph = new Graph(gnodes, 0, 1);
+        var path = graph.getShortestPath();
+        //System.out.println(path.size());
+        g.setColor(Color.MAGENTA);
+        for (int i = 0; i < path.size() - 1; i++)
+        {
+            var cur = mapToScreen(path.get(i).position);
+            var nex = mapToScreen(path.get(i + 1).position);
+            g.drawLine(cur.x, cur.y, nex.x, nex.y);
+        }
+
+        g.setColor(Color.BLACK);
         for (Point2d p : nodes)
         {
             drawShape(g, new Circle(10), p.toPosition());
@@ -369,8 +403,7 @@ public class SimulatorCanvas extends JPanel
 
         if (!ignoreGraph && se instanceof Reef)
         {
-            var ship = model.getShip().getPosition();
-            var shell = se.getShell(ship, model.getShip().getShape().getMaxDiameter());
+            var shell = se.getShell(getDebugShipPosition(), model.getShip().getShape().getMaxDiameter());
             shell.forEach(nodes::add);
         }
     }

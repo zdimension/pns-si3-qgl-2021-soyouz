@@ -1,10 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.Arrays;
@@ -55,8 +52,14 @@ public class NextRoundParameters
         return visibleEntities;
     }
 
+    public Stream<Reef> getReef()
+    {
+        return Util.filterType(Arrays.stream(visibleEntities), Reef.class);
+    }
+
     public Stream<ShapedEntity> getVisibleShapes()
     {
+        // TODO
         return Util.filterType(Arrays.stream(visibleEntities), ShapedEntity.class);
     }
 

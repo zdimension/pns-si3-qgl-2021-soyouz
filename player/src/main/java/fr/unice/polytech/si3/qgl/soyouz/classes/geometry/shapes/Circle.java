@@ -52,16 +52,17 @@ public class Circle extends Polygon implements Shape
     }
 
     @Override
-    public Stream<Point2d> getShell(Point2d observer)
+    public Stream<Point2d> getShell(Point2d observer, double shipSize)
     {
         var dist = observer.norm();
-        if (dist <= radius)
+        var rad = radius + shipSize;
+        if (dist <= rad)
             return Stream.empty();
-        var a = Math.asin(radius / dist);
+        var a = Math.asin(rad / dist);
         var b = observer.angle();
         return Stream.of(
-            new Point2d(radius * -Math.sin(b - a), radius * Math.cos(b - a)),
-            new Point2d(radius * Math.sin(b + a), radius * -Math.cos(b + a))
+            Point2d.fromPolar(rad + shipSize, b - a),
+            Point2d.fromPolar(rad + shipSize, b + a)
         );
     }
 

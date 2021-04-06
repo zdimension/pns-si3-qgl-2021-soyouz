@@ -90,9 +90,23 @@ public class Polygon implements Shape
     }
 
     @Override
-    public Stream<Point2d> getShell(Point2d observer)
+    public Stream<Point2d> getShell(Point2d observer, double shipSize)
     {
-        return Arrays.stream(vertices);
+        var pts = vertices.clone();
+
+        for (int i = 0; i < pts.length; i++)
+        {
+            var cur = pts[i];
+            var ni =(i + 1) % pts.length;
+            var nex = pts[ni];
+            var dta = nex.sub(cur);
+
+            var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
+            pts[i] = cur.sub(change);
+            pts[ni] = nex.sub(change);
+        }
+
+        return Arrays.stream(pts);
     }
 
     static boolean ccw(Point2d a, Point2d b, Point2d c)

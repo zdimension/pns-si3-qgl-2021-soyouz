@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
@@ -36,8 +38,9 @@ public class Simulator extends JFrame
     private final SimulatorCanvas canvas;
     private final ArrayList<OnboardEntity> usedEntities;
     private final JButton btnNext;
-    private final JButton btnSlowNext;
+    //private final JButton btnSlowNext;
     private final JButton btnPlay;
+    private int speed = 1;
     private int currentStep = 0;
     private double rotIncrement;
     private double spdIncrement;
@@ -45,6 +48,9 @@ public class Simulator extends JFrame
     private RunnerParameters model;
     private Cockpit cockpit;
     private boolean playMode = false;
+    private static final String[] SPEEDS = {"Slow", "Medium", "Fast"};
+    private static final int[] DELAYS = {50, 10, 5};
+    private int currentCheckpoint;
 
     public Simulator() throws IOException
     {
@@ -62,8 +68,8 @@ public class Simulator extends JFrame
         btnNext = new JButton("Next");
         topcont.add(btnNext);
 
-        btnSlowNext = new JButton("Next slow");
-        topcont.add(btnSlowNext);
+        /*btnSlowNext = new JButton("Next slow");
+        topcont.add(btnSlowNext);*/
 
         btnPlay = new JButton("Play");
         topcont.add(btnPlay);
@@ -94,6 +100,22 @@ public class Simulator extends JFrame
             canvas.clearHistory();
         });
 
+        var btnPath = new JButton("Hide path");
+        btnPath.addActionListener(e ->
+        {
+            if (canvas.drawPath = !canvas.drawPath)
+            {
+                btnPath.setText("Hide path");
+            }
+            else
+            {
+                btnPath.setText("Show path");
+            }
+        });
+        topcont.add(btnPath);
+
+
+
         add(topcont, BorderLayout.NORTH);
 
         addWindowListener(new WindowAdapter()
@@ -106,7 +128,7 @@ public class Simulator extends JFrame
             }
         });
 
-        timer = new Timer(5, new ActionListener()
+        timer = new Timer(10, new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent event)
@@ -152,6 +174,14 @@ public class Simulator extends JFrame
                 System.out.println("Ship position : " + model.getShip().getPosition());
                 if (++currentStep >= COMP_STEPS)
                 {
+                    if (getCheckpoints()[currentCheckpoint].contains(model.getShip().getPosition()))
+                    {
+                        currentCheckpoint++;
+                        if (currentCheckpoint >= getCheckpoints().length)
+                            currentCheckpoint = 0;
+                        updateCanvasCheckpoint();
+                    }
+
                     if (playMode)
                     {
                         computeRound();
@@ -169,21 +199,32 @@ public class Simulator extends JFrame
             }
         });
 
+        var btnSpeed = new JButton("Speed : Medium");
+        btnSpeed.addActionListener(e ->
+        {
+            this.speed++;
+            if (this.speed == 3)
+                this.speed = 0;
+            btnSpeed.setText("Speed : " + SPEEDS[this.speed]);
+            timer.setDelay(DELAYS[this.speed]);
+        });
+        topcont.add(btnSpeed);
+
         reset();
 
         btnNext.addActionListener(event ->
         {
             playMode = false;
-            timer.setDelay(5);
+            //timer.setDelay(5);
             playRound();
         });
 
-        btnSlowNext.addActionListener(event ->
+        /*btnSlowNext.addActionListener(event ->
         {
             playMode = false;
             timer.setDelay(50);
             playRound();
-        });
+        });*/
 
         btnPlay.addActionListener(event ->
         {
@@ -196,7 +237,7 @@ public class Simulator extends JFrame
             {
                 btnPlay.setText("Stop");
                 playMode = true;
-                timer.setDelay(5);
+                //timer.setDelay(5);
                 playRound();
             }
         });
@@ -213,20 +254,32 @@ public class Simulator extends JFrame
         });
     }
 
+    private Checkpoint[] getCheckpoints()
+    {
+        return ((RegattaGoal) model.getGoal()).getCheckpoints();
+    }
+
+    private void updateCanvasCheckpoint()
+    {
+        canvas.currentCheckpoint = getCheckpoints()[currentCheckpoint];
+    }
+
     private void reset() throws IOException
     {
         timer.stop();
         btnNext.setEnabled(true);
-        btnSlowNext.setEnabled(true);
+        //btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
         var ipt = Files.readString(Path.of("games/Week8p1.json"));
         model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         np = null;
         canvas.setModel(model.getIp());
+        currentCheckpoint = 0;
         cockpit = new Cockpit();
         cockpit.initGameInternal(model.getIp());
         usedEntities.clear();
         canvas.reset();
+        updateCanvasCheckpoint();
         loadNextRound();
     }
 
