@@ -273,7 +273,7 @@ public class Simulator extends JFrame
         btnPlay.setText("Play");
         if (true)
         {
-            var ipt = Files.readString(Path.of("games/Week7.json"));
+            var ipt = Files.readString(Path.of("games/Week9.json"));
             model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         }
         else
@@ -383,17 +383,11 @@ public class Simulator extends JFrame
         }
         var noars = model.getShip().getNumberOar();
         var oarFactor = 165.0 * activeOars.size() / noars;
-        var sailSpeed = np.getWind().getStrength()
-            * Math.cos(np.getWind().getOrientation() - model.getShip().getPosition().getOrientation())
-            * Util.filterType(Arrays.stream(model.getShip().getEntities()),
-            Voile.class).filter(Voile::isOpenned).count()
-            / model.getShip().getNumberSail();
-        var dirSpeed = oarFactor + sailSpeed;
         var activeOarsLeft = activeOars.stream().filter(o -> o.getY() == 0).count();
         var activeOarsRight = activeOars.size() - activeOarsLeft;
         var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
         var totalRot = oarRot + rudderRotate;
         rotIncrement = totalRot / COMP_STEPS;
-        spdIncrement = dirSpeed / COMP_STEPS;
+        spdIncrement = oarFactor / COMP_STEPS;
     }
 }
