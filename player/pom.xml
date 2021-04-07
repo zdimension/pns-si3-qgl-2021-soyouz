@@ -57,6 +57,7 @@
             <version>0.1-SNAPSHOT</version>
         </dependency>
 
+
         <!-- Serialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

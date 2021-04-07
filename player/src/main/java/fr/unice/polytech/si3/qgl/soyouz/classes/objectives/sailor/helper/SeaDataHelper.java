@@ -3,6 +3,11 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * A Helper that contains all data necessary, related to all sea entities.
  */
@@ -36,6 +41,7 @@ public class SeaDataHelper
         this.wind = state.getNp().getWind();
         this.ship = state.getNp().getShip();
         this.visibleEntities = state.getNp().getVisibleEntities();
+
     }
 
     /**
@@ -66,25 +72,5 @@ public class SeaDataHelper
     {
         return visibleEntities;
     }
-
-    //TODO : Need to verify if this works as intended
-    /**
-     * Determine if a reef is nearby our boat
-     * @param boat
-     * @return
-     */
-    public boolean isAReefNearby(Bateau boat){
-        if (visibleEntities.length==0)
-            return false;
-        for (ShapedEntity entity : visibleEntities){
-            if (entity instanceof Reef){
-                Reef reef = (Reef) entity;
-                Double distance = reef.getPosition().getLength(boat.getPosition());
-                if (distance<200){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+    
 }
