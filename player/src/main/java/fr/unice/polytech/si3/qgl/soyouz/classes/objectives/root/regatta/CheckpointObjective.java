@@ -155,8 +155,13 @@ public class CheckpointObjective implements RootObjective
         {
             logger.severe("WTF CHEMIN PAS FINI");
         }
-        var point = path.get(1).position.sub(boat.getPosition());
-        angleToCp = point.angle() - boat.getPosition().getOrientation();
+        var point = path.get(1).position.sub(boat.getPosition()).rotate(-boat.getPosition().getOrientation());
+        angleToCp = point.angle();
+        while (angleToCp > Math.PI)
+            angleToCp -= Math.PI;
+        while (angleToCp < -Math.PI)
+            angleToCp += Math.PI;
+
         distanceToCp = point.norm();
 
         logger.info(String.format("New target: D=%.2f, ANGLE=%.2f°", distanceToCp,
