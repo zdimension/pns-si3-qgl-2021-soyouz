@@ -13,6 +13,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Graph;
@@ -78,7 +79,6 @@ public class SimulatorCanvas extends JPanel
     private final Stroke HISTORY = new BasicStroke(1, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
     private final List<Position> shipHistory = new ArrayList<>();
-    private final List<Point2d> nodes = new ArrayList<>();
     public Checkpoint currentCheckpoint;
     private InitGameParameters model;
     private boolean centered = false;
@@ -266,10 +266,6 @@ public class SimulatorCanvas extends JPanel
      */
     private void drawGame(Graphics2D g)
     {
-        nodes.clear();
-        nodes.add(getDebugShipPosition());
-
-
         var goal = model.getGoal();
         if (goal instanceof RegattaGoal)
         {
@@ -278,8 +274,6 @@ public class SimulatorCanvas extends JPanel
             for (int i = 0; i < checkpoints.length; i++)
             {
                 drawCheckpoint(g, checkpoints[i], i);
-                if (currentCheckpoint == checkpoints[i])
-                    nodes.add(checkpoints[i].getPosition());
             }
         }
 
@@ -309,34 +303,6 @@ public class SimulatorCanvas extends JPanel
         drawLegendText(g);
     }
 
-    private void traverseNode(int elem, Set<Pair<Integer, Integer>> lines, double shipSize)
-    {
-        var node = nodes.get(elem);
-
-        outer:
-        for (int i = 0; i < nodes.size(); i++)
-        {
-            Point2d p = nodes.get(i);
-            if (p == node)
-            {
-                continue;
-            }
-
-            for (ShapedEntity ent : np.getVisibleEntities())
-            {
-                if (ent instanceof Reef && ent.getShape().linePassesThrough(ent.toLocal(node), ent.toLocal(p), shipSize))
-                {
-                    continue outer;
-                }
-            }
-
-            if (lines.add(Pair.of(Math.min(elem, i), Math.max(elem, i))))
-            {
-                traverseNode(i, lines, shipSize);
-            }
-        }
-    }
-
     private void drawNodes(Graphics2D g)
     {
         if (!drawPath)
@@ -344,30 +310,20 @@ public class SimulatorCanvas extends JPanel
 
         g = (Graphics2D) g.create();
 
-        var diam = model.getShip().getShape().getMaxDiameter();
-        var lines = new HashSet<Pair<Integer, Integer>>();
-        traverseNode(0, lines, diam);
-
-        var gnodes = new ArrayList<Node>();
-        for (Point2d node : nodes)
-        {
-            gnodes.add(new Node(node));
-        }
-
+        var lines = CheckpointObjective.lines;
+        if (lines == null)
+            return;
+        var nodes = CheckpointObjective.nodes;
         g.setColor(Color.ORANGE);
         for (Pair<Integer, Integer> line : lines)
         {
             var sa = mapToScreen(nodes.get(line.first));
             var sb = mapToScreen(nodes.get(line.second));
             g.drawLine(sa.x, sa.y, sb.x, sb.y);
-
-            gnodes.get(line.first).addNeighbour(gnodes.get(line.second));
         }
 
-        var graph = new Graph(gnodes, 0, 1);
-        var path = graph.getShortestPath();
-        //System.out.println(path.size());
         g.setColor(Color.MAGENTA);
+        var path = CheckpointObjective.path;
         for (int i = 0; i < path.size() - 1; i++)
         {
             var cur = mapToScreen(path.get(i).position);
@@ -400,12 +356,6 @@ public class SimulatorCanvas extends JPanel
 
         g.setColor(ENTITY_COLORS.get(se.getClass()));
         drawShape(g, se.getShape(), se.getPosition());
-
-        if (!ignoreGraph && se instanceof Reef)
-        {
-            var shell = se.getShell(getDebugShipPosition(), model.getShip().getShape().getMaxDiameter());
-            shell.forEach(nodes::add);
-        }
     }
 
     private void drawShipHistory(Graphics2D g)

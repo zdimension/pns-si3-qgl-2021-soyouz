@@ -34,6 +34,8 @@ public class CheckpointObjective implements RootObjective
     private SailorObjective roundObjective;
     private double angleToCp;
     private double distanceToCp;
+    public static HashSet<Pair<Integer, Integer>> lines;
+    public static  List<Node> path;
 
     /**
      * Constructor.
@@ -84,7 +86,7 @@ public class CheckpointObjective implements RootObjective
         return roundObjective.resolve();
     }
 
-    private final List<Point2d> nodes = new ArrayList<>();
+    public static final List<Point2d> nodes = new ArrayList<>();
 
     private void traverseNode(Reef[] arr, int elem, Set<Pair<Integer, Integer>> lines, double shipSize)
     {
@@ -135,7 +137,7 @@ public class CheckpointObjective implements RootObjective
             r.getShell(boat.getPosition(), diam).forEach(nodes::add);
         }
 
-        var lines = new HashSet<Pair<Integer, Integer>>();
+        lines = new HashSet<>();
         traverseNode(reef, 0, lines, diam);
 
         var gnodes = new ArrayList<Node>();
@@ -150,7 +152,7 @@ public class CheckpointObjective implements RootObjective
         }
 
         var graph = new Graph(gnodes, 0, 1);
-        var path = graph.getShortestPath();
+        path = graph.getShortestPath();
         if (path.size() < 2)
         {
             logger.severe("WTF CHEMIN PAS FINI");
