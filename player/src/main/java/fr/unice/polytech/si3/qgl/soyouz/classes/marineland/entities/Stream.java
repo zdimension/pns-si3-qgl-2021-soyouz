@@ -16,4 +16,10 @@ public class Stream extends ShapedEntity implements Entity
         var angle = getPosition().getOrientation();
         return new Position(strength * Math.cos(angle), strength * Math.sin(angle), 0);
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        return super.equals(obj) && obj instanceof Stream && ((Stream) obj).strength == strength;
+    }
 }

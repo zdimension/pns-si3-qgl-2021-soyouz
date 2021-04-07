@@ -6,6 +6,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 
+import java.util.Objects;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = AutreBateau.class, name = "ship"),
@@ -87,5 +89,12 @@ public abstract class ShapedEntity
     public java.util.stream.Stream<Point2d> getShell(Position observer, double shipSize)
     {
         return shape.getShell(toLocal(observer), shipSize * 4).map(this::toGlobal);
+    }
+
+    public boolean equals(Object obj)
+    {
+        return obj instanceof ShapedEntity
+            && Objects.equals(((ShapedEntity) obj).position, position)
+            && Objects.equals(((ShapedEntity) obj).shape, shape);
     }
 }

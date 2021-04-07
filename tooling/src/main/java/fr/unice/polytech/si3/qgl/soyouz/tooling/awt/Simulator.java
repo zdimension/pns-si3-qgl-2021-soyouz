@@ -291,6 +291,7 @@ public class Simulator extends JFrame
         cockpit.initGameInternal(model.getIp());
         usedEntities.clear();
         canvas.reset();
+        canvas.setCockpit(cockpit);
         updateCanvasCheckpoint();
         loadNextRound();
     }

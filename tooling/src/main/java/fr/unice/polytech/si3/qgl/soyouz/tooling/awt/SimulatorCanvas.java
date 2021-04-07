@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
@@ -16,8 +17,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voil
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
-import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Graph;
-import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import javax.imageio.ImageIO;
@@ -87,6 +86,8 @@ public class SimulatorCanvas extends JPanel
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
     public boolean drawPath = true;
+    private Cockpit cockpit;
+
     public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
     {
         this.model = model;
@@ -161,9 +162,14 @@ public class SimulatorCanvas extends JPanel
         centerView();
     }
 
+    private List<ShapedEntity> getVisibleShapes()
+    {
+        return cockpit.entityMemory;
+    }
+
     private java.util.stream.Stream<Point2d> getEntitiesPositions()
     {
-        return java.util.stream.Stream.concat(np.getVisibleShapes(),
+        return java.util.stream.Stream.concat(getVisibleShapes().stream(),
             java.util.stream.Stream.of(model.getShip()))
             .map(ShapedEntity::getPosition);
     }
@@ -279,7 +285,7 @@ public class SimulatorCanvas extends JPanel
 
         if (np != null)
         {
-            for (ShapedEntity visibleEntity : np.getVisibleEntities())
+            for (ShapedEntity visibleEntity : getVisibleShapes())
             {
                 drawEntity(g, visibleEntity, false);
             }
@@ -527,5 +533,10 @@ public class SimulatorCanvas extends JPanel
     public void clearHistory()
     {
         shipHistory.clear();
+    }
+
+    public void setCockpit(Cockpit cockpit)
+    {
+        this.cockpit = cockpit;
     }
 }

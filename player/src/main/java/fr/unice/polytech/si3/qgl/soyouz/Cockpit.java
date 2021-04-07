@@ -7,6 +7,7 @@ import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
@@ -120,11 +121,19 @@ public class Cockpit implements ICockpit
         }
     }
 
+    public final List<ShapedEntity> entityMemory = new ArrayList<>();
+
     public GameAction[] nextRoundInternal(NextRoundParameters np)
     {
         try
         {
             logger.log(Level.FINEST, "Next round input: " + np);
+            for (ShapedEntity ent : np.getVisibleEntities())
+            {
+                if (!entityMemory.contains(ent))
+                    entityMemory.add(ent);
+            }
+            np =new NextRoundParameters(np.getShip(), np.getWind(), entityMemory.toArray(new ShapedEntity[0]));
             objective.update(new GameState(ip, np));
             var actions = objective.resolve(new GameState(ip, np));
             return actions.toArray(GameAction[]::new);

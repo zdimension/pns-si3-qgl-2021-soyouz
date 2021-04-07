@@ -16,4 +16,11 @@ public class AutreBateau extends ShapedEntity implements Entity
     {
         return life;
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        return super.equals(obj) && obj instanceof AutreBateau && ((AutreBateau) obj).life == life;
+    }
 }
