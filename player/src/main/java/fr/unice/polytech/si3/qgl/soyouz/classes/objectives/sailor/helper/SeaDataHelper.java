@@ -19,7 +19,6 @@ public class SeaDataHelper
     private Bateau ship;
     private Wind wind;
     private Entity[] visibleEntities;
-    private Set<Entity> processedEntities;
 
     /**
      * Constructor.
@@ -33,7 +32,6 @@ public class SeaDataHelper
         this.ship = ship;
         this.wind = wind;
         this.visibleEntities = visibleEntities;
-        this.processedEntities = new HashSet<>();
     }
 
     /**
@@ -46,9 +44,6 @@ public class SeaDataHelper
         this.wind = state.getNp().getWind();
         this.ship = state.getNp().getShip();
         this.visibleEntities = state.getNp().getVisibleEntities();
-        Set<Entity> newEntities = Arrays.stream(visibleEntities).filter(this::isANewEntity).collect(Collectors.toSet());
-        addProcessedEntities(newEntities);
-        //TODO : Appeler update du graphe ?
 
     }
 
@@ -79,18 +74,6 @@ public class SeaDataHelper
     public Entity[] getVisibleEntities()
     {
         return visibleEntities;
-    }
-
-    public boolean isANewEntity(Entity entity){
-        return !processedEntities.contains(entity);
-    }
-
-    public void addProcessedEntity(Entity entity){
-        processedEntities.add(entity);
-    }
-
-    public void addProcessedEntities(Set<Entity> entities){
-        processedEntities.addAll(entities);
     }
 
 }
