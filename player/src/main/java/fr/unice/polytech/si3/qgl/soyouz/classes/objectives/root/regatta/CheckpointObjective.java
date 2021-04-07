@@ -102,7 +102,8 @@ public class CheckpointObjective implements RootObjective
 
             for (Reef reef : arr)
             {
-                if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize))
+                if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize)
+                && !reef.contains(onBoardDataHelper.getShip().getPosition()))
                 {
                     continue outer;
                 }
