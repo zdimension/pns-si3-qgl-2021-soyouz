@@ -128,14 +128,18 @@ public class Cockpit implements ICockpit
         try
         {
             logger.log(Level.FINEST, "Next round input: " + np);
+            var changed = false;
             for (ShapedEntity ent : np.getVisibleEntities())
             {
                 if (!entityMemory.contains(ent))
+                {
                     entityMemory.add(ent);
+                    changed = true;
+                }
             }
+            changed = true;
             np =new NextRoundParameters(np.getShip(), np.getWind(), entityMemory.toArray(new ShapedEntity[0]));
-            objective.update(new GameState(ip, np));
-            var actions = objective.resolve(new GameState(ip, np));
+            var actions = objective.resolve(new GameState(ip, np, changed));
             return actions.toArray(GameAction[]::new);
         }
         catch (Exception e)

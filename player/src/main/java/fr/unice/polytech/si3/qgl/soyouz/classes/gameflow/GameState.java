@@ -10,6 +10,7 @@ public class GameState
 {
     final InitGameParameters ip;
     final NextRoundParameters np;
+    final boolean recalculatePathfinding;
 
     /**
      * Constructor.
@@ -19,8 +20,14 @@ public class GameState
      */
     public GameState(InitGameParameters ip, NextRoundParameters np)
     {
+        this(ip, np, true);
+    }
+
+    public GameState(InitGameParameters ip, NextRoundParameters np, boolean recalculatePathfinding)
+    {
         this.ip = ip;
         this.np = np;
+        this.recalculatePathfinding = recalculatePathfinding;
     }
 
     /**
@@ -41,5 +48,10 @@ public class GameState
     public NextRoundParameters getNp()
     {
         return np;
+    }
+
+    public boolean isRecalculatePathfinding()
+    {
+        return recalculatePathfinding;
     }
 }

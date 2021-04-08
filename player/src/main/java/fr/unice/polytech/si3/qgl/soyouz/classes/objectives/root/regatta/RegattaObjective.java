@@ -48,8 +48,7 @@ public class RegattaObjective implements RootObjective
      *
      * @param state of the game
      */
-    @Override
-    public void update(GameState state)
+    private void update(GameState state)
     {
         if (initialisationObjective.isValidated())
         {
@@ -119,6 +118,8 @@ public class RegattaObjective implements RootObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
+        update(state);
+
         return initialisationObjective.isValidated() ? currentCheckpoint.resolve(state)
             : initialisationObjective.resolve();
     }

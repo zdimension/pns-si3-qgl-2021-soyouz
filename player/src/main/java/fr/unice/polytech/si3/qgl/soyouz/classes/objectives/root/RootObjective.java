@@ -27,11 +27,4 @@ public interface RootObjective extends Objective
      * @return a list of all actions to send to JSON
      */
     List<GameAction> resolve(GameState state);
-
-    /**
-     * Update the current checkpoint to reach.
-     *
-     * @param state of the game
-     */
-    void update(GameState state);
 }
