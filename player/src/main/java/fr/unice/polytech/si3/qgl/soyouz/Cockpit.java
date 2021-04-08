@@ -12,6 +12,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,6 +173,4 @@ public class Cockpit implements ICockpit
         root.setLevel(logLevel);
         Arrays.stream(root.getHandlers()).forEach(h -> h.setLevel(logLevel));
     }
-
-
 }
