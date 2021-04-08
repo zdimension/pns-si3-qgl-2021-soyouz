@@ -10,10 +10,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
@@ -51,7 +48,8 @@ public class SimulatorCanvas extends JPanel
         ENTITY_ICONS = Map.of(
             Rame.class, new String[] { "paddle.png" },
             Gouvernail.class, new String[] { "rudder.png" },
-            Voile.class, new String[] { "lifted_sail.png", "lowered_sail.png" }
+            Voile.class, new String[] { "lifted_sail.png", "lowered_sail.png" },
+            Vigie.class, new String[] { "crow-nest.png "}
         ).entrySet().stream().map(e ->
         {
             try
