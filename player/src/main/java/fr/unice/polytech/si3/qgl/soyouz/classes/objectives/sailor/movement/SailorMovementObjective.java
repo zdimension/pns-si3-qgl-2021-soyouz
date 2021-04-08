@@ -8,6 +8,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Class to move a sailor based on X and Y positions.
  */
@@ -64,6 +66,7 @@ public class SailorMovementObjective implements MovingObjective
     @Override
     public List<GameAction> resolve()
     {
+        trace();
         List<GameAction> moveAction = new ArrayList<>();
         int xMove = resolveXMove();
         int yMove = resolveYMove(xMove);

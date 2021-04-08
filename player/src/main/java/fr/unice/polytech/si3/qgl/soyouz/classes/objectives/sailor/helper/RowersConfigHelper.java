@@ -6,6 +6,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Class to determine the optimal OarConfiguration to be the closest possible to the objective.
  */
@@ -68,6 +70,7 @@ public class RowersConfigHelper
      */
     private void setForwardPossibilities()
     {
+        trace();
         int maxSailorOnEachSide = determineMaxSailorNumberOnEachSide();
         for (int i = 1; i <= maxSailorOnEachSide; i++)
         {
@@ -83,6 +86,7 @@ public class RowersConfigHelper
      */
     private int determineMaxSailorNumberOnEachSide()
     {
+        trace();
         int mSailors = this.mutableSailors;
         int sailorLeft = immutableLeftSailor;
         int sailorRight = immutableRightSailor;
@@ -114,6 +118,7 @@ public class RowersConfigHelper
      */
     private void setTurnPossibilities()
     {
+        trace();
         int maxLeftNb = immutableLeftSailor + mutableSailors;
         int maxRightNb = immutableRightSailor + mutableSailors;
         if (neededRotation > 0)
@@ -131,6 +136,7 @@ public class RowersConfigHelper
      */
     private void setLeftTurnPossibilities(int maxLeftNb, int maxRightNb)
     {
+        trace();
         for (int rightNb = 0; rightNb <= maxRightNb; rightNb++)
         {
             for (int leftNb = 0; (leftNb < rightNb) && leftNb < (maxLeftNb - (rightNb
@@ -146,6 +152,7 @@ public class RowersConfigHelper
      */
     private void setRightTurnPossibilities(int maxLeftNb, int maxRightNb)
     {
+        trace();
         for (int leftNb = 0; leftNb <= maxLeftNb; leftNb++)
         {
             for (int rightNb = 0; (rightNb < leftNb) && rightNb < (maxRightNb - (leftNb
@@ -163,6 +170,7 @@ public class RowersConfigHelper
      */
     public OarConfiguration findOptRowersConfiguration()
     {
+        trace();
         if (Gouvernail.ALLOWED_ROTATION.first < neededRotation && neededRotation < Gouvernail.ALLOWED_ROTATION.second)
         {
             return resolveBasedOnSpeed();
@@ -189,6 +197,7 @@ public class RowersConfigHelper
      */
     private OarConfiguration resolveBasedOnRotation(List<OarConfiguration> turnPossibilities)
     {
+        trace();
         OarConfiguration optimalConfiguration = turnPossibilities.get(0);
         double difference = Math.abs(neededRotation - optimalConfiguration.getAngleOfRotation());
         for (OarConfiguration configuration : turnPossibilities)
@@ -211,6 +220,7 @@ public class RowersConfigHelper
      */
     private OarConfiguration resolveBasedOnSpeed()
     {
+        trace();
         OarConfiguration optimalConfiguration = forwardPossibilities.get(0);
         double difference = distToCheckpoint - optimalConfiguration.getLinearSpeed();
         for (OarConfiguration configuration : forwardPossibilities)

@@ -3,6 +3,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Class to determine the optimal Sails configuration to be the closest possible to the objective.
  */
@@ -36,6 +38,7 @@ public class SailConfigHelper
      */
     public int findOptSailConfiguration()
     {
+        trace();
         int optimalConfig = 0;
         double diff = distToCheckpoint;
         for (int i = 1; i <= nbOfSails; i++)

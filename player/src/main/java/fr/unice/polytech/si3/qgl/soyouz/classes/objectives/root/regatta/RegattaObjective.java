@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Race type objective.
  */
@@ -50,6 +52,7 @@ public class RegattaObjective implements RootObjective
      */
     private void update(GameState state)
     {
+        trace();
         if (initialisationObjective.isValidated())
         {
             updateHelpers(state);
@@ -64,6 +67,7 @@ public class RegattaObjective implements RootObjective
      */
     private void updateHelpers(GameState state)
     {
+        trace();
         if (onBoardDataHelper == null)
             onBoardDataHelper = new OnBoardDataHelper(state.getIp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
         if (seaDataHelper == null)
@@ -79,6 +83,7 @@ public class RegattaObjective implements RootObjective
      */
     private void updateCheckpoint(GameState state)
     {
+        trace();
         if (currentCheckpoint == null)
             currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper, seaDataHelper);
         if (currentCheckpoint.isValidated(state))
@@ -118,6 +123,7 @@ public class RegattaObjective implements RootObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
+        trace();
         update(state);
 
         return initialisationObjective.isValidated() ? currentCheckpoint.resolve(state)

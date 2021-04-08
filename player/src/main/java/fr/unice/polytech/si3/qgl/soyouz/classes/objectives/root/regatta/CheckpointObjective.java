@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Checkpoint type of objective
  */
@@ -77,6 +79,7 @@ public class CheckpointObjective implements RootObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
+        trace();
         update(state);
 
         if (roundObjective == null || roundObjective.isValidated())
@@ -137,6 +140,7 @@ public class CheckpointObjective implements RootObjective
      */
     private void update(GameState state)
     {
+        trace();
         Bateau boat = state.getNp().getShip();
 
         if (state.isRecalculatePathfinding() || path == null)
@@ -148,12 +152,14 @@ public class CheckpointObjective implements RootObjective
             var reef = state.getNp().getVisibleEntities();
 
             var diam = boat.getShape().getMaxDiameter();
+            logger.info("Computing shells");
             for (ShapedEntity r : reef)
             {
                 r.getShell(boat.getPosition(), diam).forEach(nodes::add);
             }
 
             lines = new HashSet<>();
+            logger.info(nodes.size() + " nodes; start traverse");
             traverseNode(state.getNp().getVisibleEntities(), 0, lines, diam);
 
             var gnodes = new ArrayList<Node>();
@@ -167,7 +173,9 @@ public class CheckpointObjective implements RootObjective
                 gnodes.get(line.first).addNeighbour(gnodes.get(line.second));
             }
 
+            logger.info("Computing graph");
             var graph = new Graph(gnodes, 0, 1);
+            logger.info("Fetching shortest path");
             path = graph.getShortestPath();
             if (path.size() < 2)
             {
