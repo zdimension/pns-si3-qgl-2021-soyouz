@@ -23,7 +23,7 @@ import java.util.logging.*;
 public class Cockpit implements ICockpit
 {
     private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger logger = Logger.getLogger(Cockpit.class.getSimpleName());
     private static final boolean ENABLE_TRACE = false;
 
@@ -156,7 +156,7 @@ public class Cockpit implements ICockpit
                 }
             }
             logger.info("Added " + added + " entities; total " + entityMemory.size());
-            logger.info(OBJECT_MAPPER.writeValueAsString(entityMemory));
+            logger.info(OBJECT_MAPPER.writeValueAsString(entityMemory.values()));
             var changed = added != 0;
             changed = true;
             np = new NextRoundParameters(np.getShip(), np.getWind(),

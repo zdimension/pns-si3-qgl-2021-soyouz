@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
@@ -160,6 +162,14 @@ public class CheckpointObjective implements RootObjective
 
             lines = new HashSet<>();
             logger.info(nodes.size() + " nodes; start traverse");
+            try
+            {
+                logger.info(Cockpit.OBJECT_MAPPER.writeValueAsString(nodes));
+            }
+            catch (JsonProcessingException e)
+            {
+                e.printStackTrace();
+            }
             traverseNode(state.getNp().getVisibleEntities(), 0, lines, diam);
 
             var gnodes = new ArrayList<Node>();
@@ -179,7 +189,8 @@ public class CheckpointObjective implements RootObjective
             path = graph.getShortestPath();
             if (path.size() < 2)
             {
-                logger.severe("WTF CHEMIN PAS FINI");
+                logger.severe("Empty path, keeping old target");
+                return;
             }
         }
 
