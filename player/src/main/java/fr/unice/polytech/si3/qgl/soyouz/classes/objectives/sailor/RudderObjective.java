@@ -12,6 +12,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.Sailo
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * The rudder rotation related objective.
  */
@@ -43,6 +45,7 @@ public class RudderObjective implements OnBoardObjective
      */
     private void setMovement(Bateau ship)
     {
+        trace();
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         if (!ship.hasAt(sailor.getX(), sailor.getY(), Gouvernail.class))
         {
@@ -69,6 +72,7 @@ public class RudderObjective implements OnBoardObjective
     @Override
     public List<GameAction> resolve()
     {
+        trace();
         List<GameAction> actions = new ArrayList<>();
         if (movement.size() == 1)
             actions.addAll(movement.get(0).resolve());

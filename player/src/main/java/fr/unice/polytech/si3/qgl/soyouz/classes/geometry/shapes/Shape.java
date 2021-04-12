@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -20,6 +21,7 @@ public interface Shape
 {
     boolean contains(Point2d p);
 
+    @JsonIgnore
     double getMaxDiameter();
 
     Stream<Point2d> getShell(Point2d observer, double shipSize);

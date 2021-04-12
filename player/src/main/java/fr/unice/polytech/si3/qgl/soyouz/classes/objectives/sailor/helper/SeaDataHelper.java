@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * A Helper that contains all data necessary, related to all sea entities.
  */
@@ -38,6 +40,7 @@ public class SeaDataHelper
      */
     public void update(GameState state)
     {
+        trace();
         this.wind = state.getNp().getWind();
         this.ship = state.getNp().getShip();
         this.visibleEntities = state.getNp().getVisibleEntities();

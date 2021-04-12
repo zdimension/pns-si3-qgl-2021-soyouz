@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Class to handle every rower movement and row actions.
  */
@@ -70,6 +72,7 @@ public class RowersObjective implements OnBoardObjective
      */
     private void setupRowers(Bateau ship, List<Marin> rowers)
     {
+        trace();
         List<Marin> leftRowers = rowers.stream()
             .filter(sailor -> sailor.getY() == 0).collect(Collectors.toList());
         List<Marin> rightRowers = rowers.stream()
@@ -94,6 +97,7 @@ public class RowersObjective implements OnBoardObjective
      */
     private void moveRowersToOars(Bateau ship, List<Marin> middleRowers)
     {
+        trace();
         while (nbOarRightWanted > 0 && !middleRowers.isEmpty())
         {
             movingRowers.add(new SailorYMovementObjective(middleRowers.get(0), ship.getDeck().getWidth() - 1));
@@ -114,6 +118,7 @@ public class RowersObjective implements OnBoardObjective
      */
     private void setupImmutableRowers(Bateau ship, List<Marin> immutableRowers)
     {
+        trace();
         List<Marin> leftRowers = immutableRowers.stream()
             .filter(sailor -> sailor.getY() == 0).collect(Collectors.toList());
         List<Marin> rightRowers = immutableRowers.stream()
@@ -130,6 +135,7 @@ public class RowersObjective implements OnBoardObjective
      */
     private void makeLeftRowersRow(List<Marin> leftRowers)
     {
+        trace();
         if (nbOarLeftWanted >= leftRowers.size())
         {
             rowingSailors.addAll(leftRowers);
@@ -154,6 +160,7 @@ public class RowersObjective implements OnBoardObjective
      */
     private void makeRightRowersRow(List<Marin> rightRowers)
     {
+        trace();
         if (nbOarRightWanted >= rightRowers.size())
         {
             rowingSailors.addAll(rightRowers);
@@ -190,6 +197,7 @@ public class RowersObjective implements OnBoardObjective
     @Override
     public List<GameAction> resolve()
     {
+        trace();
         List<GameAction> actions = new ArrayList<>();
         movingRowers.forEach(obj -> {
             actions.addAll(obj.resolve());

@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
@@ -7,6 +9,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Reef;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.SailorObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
@@ -20,6 +24,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
 
 /**
  * Checkpoint type of objective
@@ -75,6 +81,7 @@ public class CheckpointObjective implements RootObjective
     @Override
     public List<GameAction> resolve(GameState state)
     {
+        trace();
         update(state);
 
         if (roundObjective == null || roundObjective.isValidated())
@@ -88,22 +95,34 @@ public class CheckpointObjective implements RootObjective
 
     public static final List<Point2d> nodes = new ArrayList<>();
 
-    private void traverseNode(Reef[] arr, int elem, Set<Pair<Integer, Integer>> lines, double shipSize)
+    private void traverseNode(ShapedEntity[] arr, int elem, Set<Pair<Integer, Integer>> lines, double shipSize)
     {
         var node = nodes.get(elem);
         outer:
         for (int i = 0; i < nodes.size(); i++)
         {
-            Point2d p = nodes.get(i);
-            if (p == node)
+            if (i == elem)
             {
                 continue;
             }
+            Point2d p = nodes.get(i);
 
-            for (Reef reef : arr)
+            var line = p.sub(node);
+
+            for (ShapedEntity reef : arr)
             {
+                if (reef.contains(onBoardDataHelper.getShip().getPosition()))
+                    continue;
+
+                if (reef instanceof Stream)
+                {
+                    var ps = ((Stream) reef).getProjectedStrength().dot(line);
+                    int x = 123;
+                }
+
                 if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize)
-                && !reef.contains(onBoardDataHelper.getShip().getPosition()))
+                && (reef instanceof Reef ||
+                    (reef instanceof Stream && ((Stream) reef).getProjectedStrength().dot(line) != 1234)))
                 {
                     continue outer;
                 }
@@ -121,43 +140,60 @@ public class CheckpointObjective implements RootObjective
      *
      * @param state of the game
      */
-    @Override
-    public void update(GameState state)
+    private void update(GameState state)
     {
+        trace();
         Bateau boat = state.getNp().getShip();
 
-        nodes.clear();
-        nodes.add(boat.getPosition());
-        nodes.add(cp.getPosition());
-
-        var reef = state.getNp().getReef().toArray(Reef[]::new);
-
-        var diam = boat.getShape().getMaxDiameter();
-        for (Reef r : reef)
+        if (state.isRecalculatePathfinding() || path == null)
         {
-            r.getShell(boat.getPosition(), diam).forEach(nodes::add);
+            nodes.clear();
+            nodes.add(boat.getPosition());
+            nodes.add(cp.getPosition());
+
+            var reef = state.getNp().getVisibleEntities();
+
+            var diam = boat.getShape().getMaxDiameter();
+            logger.info("Computing shells");
+            for (ShapedEntity r : reef)
+            {
+                r.getShell(boat.getPosition(), diam).forEach(nodes::add);
+            }
+
+            lines = new HashSet<>();
+            logger.info(nodes.size() + " nodes; start traverse");
+            try
+            {
+                logger.info(Cockpit.OBJECT_MAPPER.writeValueAsString(nodes));
+            }
+            catch (JsonProcessingException e)
+            {
+                e.printStackTrace();
+            }
+            traverseNode(state.getNp().getVisibleEntities(), 0, lines, diam);
+
+            var gnodes = new ArrayList<Node>();
+            for (Point2d node : nodes)
+            {
+                gnodes.add(new Node(node));
+            }
+
+            for (Pair<Integer, Integer> line : lines)
+            {
+                gnodes.get(line.first).addNeighbour(gnodes.get(line.second));
+            }
+
+            logger.info("Computing graph");
+            var graph = new Graph(gnodes, 0, 1);
+            logger.info("Fetching shortest path");
+            path = graph.getShortestPath();
+            if (path.size() < 2)
+            {
+                logger.severe("Empty path, keeping old target");
+                return;
+            }
         }
 
-        lines = new HashSet<>();
-        traverseNode(reef, 0, lines, diam);
-
-        var gnodes = new ArrayList<Node>();
-        for (Point2d node : nodes)
-        {
-            gnodes.add(new Node(node));
-        }
-
-        for (Pair<Integer, Integer> line : lines)
-        {
-            gnodes.get(line.first).addNeighbour(gnodes.get(line.second));
-        }
-
-        var graph = new Graph(gnodes, 0, 1);
-        path = graph.getShortestPath();
-        if (path.size() < 2)
-        {
-            logger.severe("WTF CHEMIN PAS FINI");
-        }
         var point = path.get(1).position.sub(boat.getPosition()).rotate(-boat.getPosition().getOrientation());
         angleToCp = point.angle();
         while (angleToCp > Math.PI)

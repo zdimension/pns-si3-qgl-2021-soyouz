@@ -13,10 +13,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaO
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.*;
 
@@ -26,8 +23,9 @@ import java.util.logging.*;
 public class Cockpit implements ICockpit
 {
     private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger logger = Logger.getLogger(Cockpit.class.getSimpleName());
+    private static final boolean ENABLE_TRACE = false;
 
     static
     {
@@ -35,7 +33,7 @@ public class Cockpit implements ICockpit
         OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
         System.setProperty("java.util.logging.SimpleFormatter.format",
-            "%1$tF %1$tT %4$s %3$s : %5$s%6$s%n");
+            "%1$tF %1$tL %4$s %3$s : %5$s%6$s%n");
 
         var fmt = new SimpleFormatter();
         logger.getParent().addHandler(new Handler()
@@ -59,10 +57,24 @@ public class Cockpit implements ICockpit
             }
         });
     }
-
-    static int i = 0;
+    
+    public final Map<String, ShapedEntity> entityMemory = new HashMap<>();
     private InitGameParameters ip;
     private RootObjective objective;
+
+    public static void trace()
+    {
+        if (!ENABLE_TRACE)
+        {
+            return;
+        }
+
+        logger.info(
+            Thread.currentThread().getStackTrace()[2].toString() +
+                " from " +
+                Thread.currentThread().getStackTrace()[3].toString()
+        );
+    }
 
     /**
      * Parse all the initial Game Parameters into a InitGameParameters object.
@@ -72,6 +84,7 @@ public class Cockpit implements ICockpit
     @Override
     public void initGame(String game)
     {
+        trace();
         try
         {
             updateLogLevel();
@@ -79,23 +92,26 @@ public class Cockpit implements ICockpit
         }
         catch (Exception e)
         {
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 
     public void initGameInternal(InitGameParameters ip)
     {
+        trace();
         try
         {
             this.ip = ip;
             updateLogLevel();
             if (ip.getGoal() instanceof RegattaGoal)
+            {
                 objective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
-            logger.log(Level.FINEST, "Init game input: " + ip);
+            }
+            logger.info("Init game input: " + ip);
         }
         catch (Exception e)
         {
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.severe(e.getMessage());
         }
     }
 
@@ -109,6 +125,7 @@ public class Cockpit implements ICockpit
     @Override
     public String nextRound(String round)
     {
+        trace();
         try
         {
             NextRoundParameters np = OBJECT_MAPPER.readValue(round, NextRoundParameters.class);
@@ -116,28 +133,35 @@ public class Cockpit implements ICockpit
         }
         catch (Exception e)
         {
-            logger.log(Level.SEVERE, "Error writing nextRound : " + e.getMessage());
+            logger.severe("Error writing nextRound : " + e.getMessage());
             e.printStackTrace();
             return "[]";
         }
     }
 
-    public final List<ShapedEntity> entityMemory = new ArrayList<>();
-
     public GameAction[] nextRoundInternal(NextRoundParameters np)
     {
-        i++;
+        trace();
         try
         {
-            logger.log(Level.FINEST, "Next round input: " + np);
+            logger.info("Next round input: " + np);
+            var added = 0;
             for (ShapedEntity ent : np.getVisibleEntities())
             {
-                if (!entityMemory.contains(ent))
-                    entityMemory.add(ent);
+                var json = OBJECT_MAPPER.writeValueAsString(ent);
+                if (!entityMemory.containsKey(json))
+                {
+                    entityMemory.put(json, ent);
+                    added++;
+                }
             }
-            np =new NextRoundParameters(np.getShip(), np.getWind(), entityMemory.toArray(new ShapedEntity[0]));
-            objective.update(new GameState(ip, np));
-            var actions = objective.resolve(new GameState(ip, np));
+            logger.info("Added " + added + " entities; total " + entityMemory.size());
+            logger.info(OBJECT_MAPPER.writeValueAsString(entityMemory.values()));
+            var changed = added != 0;
+            changed = true;
+            np = new NextRoundParameters(np.getShip(), np.getWind(),
+                entityMemory.values().toArray(new ShapedEntity[0]));
+            var actions = objective.resolve(new GameState(ip, np, changed));
             return actions.toArray(GameAction[]::new);
         }
         catch (Exception e)
@@ -168,6 +192,4 @@ public class Cockpit implements ICockpit
         root.setLevel(logLevel);
         Arrays.stream(root.getHandlers()).forEach(h -> h.setLevel(logLevel));
     }
-
-
 }

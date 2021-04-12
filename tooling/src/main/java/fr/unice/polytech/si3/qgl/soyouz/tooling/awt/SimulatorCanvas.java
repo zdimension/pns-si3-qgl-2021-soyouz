@@ -160,9 +160,9 @@ public class SimulatorCanvas extends JPanel
         centerView();
     }
 
-    private List<ShapedEntity> getVisibleShapes()
+    private Collection<ShapedEntity> getVisibleShapes()
     {
-        return cockpit.entityMemory;
+        return cockpit.entityMemory.values();
     }
 
     private java.util.stream.Stream<Point2d> getEntitiesPositions()

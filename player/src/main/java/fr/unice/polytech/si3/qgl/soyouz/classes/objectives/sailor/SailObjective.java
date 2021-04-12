@@ -17,6 +17,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Sail objective.
  */
@@ -53,6 +55,7 @@ public class SailObjective implements OnBoardObjective
      */
     private void setupSails(Bateau ship, int nbSailOpenedOpt)
     {
+        trace();
         List<Voile> sails = Util.filterType(Arrays.stream(ship.getEntities())
             .filter(ent -> ent instanceof Voile), Voile.class).collect(Collectors.toList());
         List<Voile> openedSails = sails.stream().filter(Voile::isOpenned).collect(Collectors.toList());
@@ -82,6 +85,7 @@ public class SailObjective implements OnBoardObjective
      */
     private void setMovement()
     {
+        trace();
         List<Voile> sailsOpen = sailsToOpen.stream()
             .sorted(Comparator.comparing(OnboardEntity::getX)).collect(Collectors.toList());
         List<Voile> sailsClose = sailsToClose.stream()
@@ -123,6 +127,7 @@ public class SailObjective implements OnBoardObjective
     @Override
     public List<GameAction> resolve()
     {
+        trace();
         List<GameAction> actions = new ArrayList<>();
         movement.forEach(obj -> actions.addAll(obj.resolve()));
         if (!isValidated())

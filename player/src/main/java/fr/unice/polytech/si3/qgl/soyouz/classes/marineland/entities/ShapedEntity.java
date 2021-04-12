@@ -88,7 +88,7 @@ public abstract class ShapedEntity
 
     public java.util.stream.Stream<Point2d> getShell(Position observer, double shipSize)
     {
-        return shape.getShell(toLocal(observer), shipSize * 4).map(this::toGlobal);
+        return shape.getShell(toLocal(observer), shipSize * 8).map(this::toGlobal);
     }
 
     public boolean equals(Object obj)

@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * A Helper that contains all data necessary, related to all onboars entities and sailors.
  */
@@ -52,6 +54,7 @@ public class OnBoardDataHelper
      */
     private void setupUselessSailors(List<Marin> sailors)
     {
+        trace();
         List<Marin> uselessSailors = new ArrayList<>();
         sailors.forEach(sailor -> {
             LineOnBoat line = new LineOnBoat(ship, sailor.getX());
@@ -69,6 +72,7 @@ public class OnBoardDataHelper
      */
     private void setupImmutableRowers(List<Marin> sailors)
     {
+        trace();
         List<Marin> sailorOnOar = sailors.stream()
             .filter(sailor -> ship.hasAt(sailor.getX(), sailor.getY(), Rame.class))
             .collect(Collectors.toList());
@@ -92,6 +96,7 @@ public class OnBoardDataHelper
      */
     private void setupRudderSailor(List<Marin> sailors)
     {
+        trace();
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         rudderSailor = sailors.stream()
             .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
@@ -106,6 +111,7 @@ public class OnBoardDataHelper
      */
     private void setupSailSailor(List<Marin> sailors)
     {
+        trace();
         List<OnboardEntity> sails = Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).collect(Collectors.toList());
         sails.forEach(ent ->
             sailSailors.add(sailors.stream()

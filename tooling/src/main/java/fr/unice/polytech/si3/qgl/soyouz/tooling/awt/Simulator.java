@@ -41,7 +41,7 @@ public class Simulator extends JFrame
     private final JButton btnNext;
     //private final JButton btnSlowNext;
     private final JButton btnPlay;
-    private int speed = 1;
+    private int speed = 0;
     private int currentStep = 0;
     private double rotIncrement;
     private double spdIncrement;
@@ -50,7 +50,7 @@ public class Simulator extends JFrame
     private Cockpit cockpit;
     private boolean playMode = false;
     private static final String[] SPEEDS = {"Slow", "Medium", "Fast"};
-    private static final int[] DELAYS = {50, 10, 5};
+    private static final int[] DELAYS = {50, 10, 0};
     private int currentCheckpoint;
 
     public Simulator() throws IOException
@@ -179,8 +179,13 @@ public class Simulator extends JFrame
                     {
                         currentCheckpoint++;
                         if (currentCheckpoint >= getCheckpoints().length)
-                            currentCheckpoint = 0;
-                        updateCanvasCheckpoint();
+                        {
+                            btnPlay.doClick();
+                        }
+                        else
+                        {
+                            updateCanvasCheckpoint();
+                        }
                     }
 
                     if (playMode)
@@ -200,7 +205,7 @@ public class Simulator extends JFrame
             }
         });
 
-        var btnSpeed = new JButton("Speed : Medium");
+        var btnSpeed = new JButton();
         btnSpeed.addActionListener(e ->
         {
             this.speed++;
@@ -209,6 +214,7 @@ public class Simulator extends JFrame
             btnSpeed.setText("Speed : " + SPEEDS[this.speed]);
             timer.setDelay(DELAYS[this.speed]);
         });
+        btnSpeed.doClick();
         topcont.add(btnSpeed);
 
         reset();
@@ -316,7 +322,10 @@ public class Simulator extends JFrame
     {
         loadNextRound();
 
+        var time = System.currentTimeMillis();
         var res = cockpit.nextRoundInternal(np);
+        time -= System.currentTimeMillis();
+        System.out.println("Next round took " + -time + "ms");
         var activeOars = new ArrayList<Rame>();
         var rudderRotate = 0d;
         for (GameAction act : res)

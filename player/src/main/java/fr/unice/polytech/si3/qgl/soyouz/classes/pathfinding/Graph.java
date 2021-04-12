@@ -2,6 +2,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding;
 
 import java.util.*;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 public class Graph
 {
     private final List<Node> path;
@@ -10,6 +12,7 @@ public class Graph
 
     public Graph(List<Node> nodes, int start, int end)
     {
+        trace();
         this.start = nodes.get(start);
         this.start.minCostToStart = 0;
         this.end = nodes.get(end);
@@ -30,6 +33,7 @@ public class Graph
 
     private void doAStar()
     {
+        trace();
         var queue = new ArrayList<Node>();
         queue.add(start);
         do
@@ -65,6 +69,7 @@ public class Graph
 
     private void buildShortestPath(List<Node> path, Node end)
     {
+        trace();
         if (end.nearestToStart == null)
         {
             return;

@@ -7,6 +7,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Class to move a sailor only based on X position.
  */
@@ -47,6 +49,7 @@ public class SailorXMovementObjective implements MovingObjective
     @Override
     public List<GameAction> resolve()
     {
+        trace();
         List<GameAction> moveAction = new ArrayList<>();
         int distStillToParkour = xOnDeck - sailor.getX();
         int xMove = 0;

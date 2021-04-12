@@ -7,6 +7,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
+
 /**
  * Top level objective for all sailors. Generate all sub objective to make the ship turn and move.
  */
@@ -24,10 +26,11 @@ public class SailorObjective implements OnBoardObjective
      * Constructor.
      *
      * @param onBoardDataHelper The data helper.
-     * @param distance The distance between the ship and the checkpoint.
-     * @param rotation The angle between the ship and the checkpoint.
+     * @param distance          The distance between the ship and the checkpoint.
+     * @param rotation          The angle between the ship and the checkpoint.
      */
-    public SailorObjective(OnBoardDataHelper onBoardDataHelper, SeaDataHelper seaDataHelper, double distance, double rotation)
+    public SailorObjective(OnBoardDataHelper onBoardDataHelper, SeaDataHelper seaDataHelper,
+                           double distance, double rotation)
     {
         this.onBoardDataHelper = onBoardDataHelper;
         this.seaDataHelper = seaDataHelper;
@@ -41,6 +44,7 @@ public class SailorObjective implements OnBoardObjective
      */
     private void setupSubObjectives()
     {
+        trace();
         double rot = rotation;
         setupRowerObjective();
         setupRudderObjective();
@@ -52,6 +56,7 @@ public class SailorObjective implements OnBoardObjective
      */
     private void setupRowerObjective()
     {
+        trace();
         int leftImmutable = (int) onBoardDataHelper.getImmutableRowers().stream()
             .filter(sailor -> sailor.getY() == 0).count();
         int rightImmutable = (int) onBoardDataHelper.getImmutableRowers().stream()
@@ -61,7 +66,8 @@ public class SailorObjective implements OnBoardObjective
             onBoardDataHelper.getMutableRowers().size(), leftImmutable, rightImmutable,
             onBoardDataHelper.getShip().getNumberOar());
         OarConfiguration oarConfigWanted = rowersConfigHelper.findOptRowersConfiguration();
-        rowersObjective = new RowersObjective(onBoardDataHelper.getShip(), onBoardDataHelper.getMutableRowers(),
+        rowersObjective = new RowersObjective(onBoardDataHelper.getShip(),
+            onBoardDataHelper.getMutableRowers(),
             onBoardDataHelper.getImmutableRowers(), oarConfigWanted.getSailorConfiguration());
         distance -= oarConfigWanted.getLinearSpeed();
         rotation -= oarConfigWanted.getAngleOfRotation();
@@ -72,6 +78,7 @@ public class SailorObjective implements OnBoardObjective
      */
     private void setupRudderObjective()
     {
+        trace();
         RudderConfigHelper rudderConfigHelper = new RudderConfigHelper(rotation);
         rudderObjective = new RudderObjective(onBoardDataHelper.getShip(),
             rudderConfigHelper.findOptRudderRotation(), onBoardDataHelper.getRudderSailor());
@@ -81,7 +88,9 @@ public class SailorObjective implements OnBoardObjective
     /**
      * Setup the sail objective.
      */
-    private void setupSailObjective(double rot){
+    private void setupSailObjective(double rot)
+    {
+        trace();
         SailConfigHelper sailConfigHelper = new SailConfigHelper(distance, rot,
             seaDataHelper.getShip().getNumberSail(), seaDataHelper.getShip(),
             seaDataHelper.getWind());
@@ -108,6 +117,7 @@ public class SailorObjective implements OnBoardObjective
     @Override
     public List<GameAction> resolve()
     {
+        trace();
         List<GameAction> actions = new ArrayList<>();
         actions.addAll(rowersObjective.resolve());
         actions.addAll(rudderObjective.resolve());
