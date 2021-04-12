@@ -60,6 +60,7 @@ public class Cockpit implements ICockpit
         });
     }
 
+    static int i = 0;
     private InitGameParameters ip;
     private RootObjective objective;
 
@@ -125,6 +126,7 @@ public class Cockpit implements ICockpit
 
     public GameAction[] nextRoundInternal(NextRoundParameters np)
     {
+        i++;
         try
         {
             logger.log(Level.FINEST, "Next round input: " + np);

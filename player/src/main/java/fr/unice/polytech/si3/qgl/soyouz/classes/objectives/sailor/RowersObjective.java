@@ -8,8 +8,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.Sailo
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Class to handle every rower movement and row actions.
@@ -78,8 +80,10 @@ public class RowersObjective implements OnBoardObjective
             .collect(Collectors.toList());
         makeLeftRowersRow(leftRowers);
         makeRightRowersRow(rightRowers);
+        List<Marin> remainingRowers = Stream.of(leftRowers, rightRowers, middleRower)
+            .flatMap(Collection::stream).collect(Collectors.toList());
         if (nbOarLeftWanted > 0 || nbOarRightWanted > 0)
-            moveRowersToOars(ship, middleRower);
+            moveRowersToOars(ship, remainingRowers);
     }
 
     /**
@@ -197,6 +201,4 @@ public class RowersObjective implements OnBoardObjective
         rowingSailors.forEach(rower -> actions.add(new OarAction(rower)));
         return actions;
     }
-    //TODO : ICI SI LA CONFIG N'EST PAS ATTEIGNABLE IMMEDIATEMENT ALORS DEPLACE SEULEMENT LES MARINS
-    //TODO METTRE EN PLACE UNE STRATEGIE OU L'ON SUPPRIME 1 MARIN DE CHAQUE COTE ?
 }
