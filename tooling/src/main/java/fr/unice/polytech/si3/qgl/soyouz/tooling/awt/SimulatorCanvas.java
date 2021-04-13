@@ -49,7 +49,7 @@ public class SimulatorCanvas extends JPanel
             Rame.class, new String[] { "paddle.png" },
             Gouvernail.class, new String[] { "rudder.png" },
             Voile.class, new String[] { "lifted_sail.png", "lowered_sail.png" },
-            Vigie.class, new String[] { "crow-nest.png "}
+            Vigie.class, new String[] { "crow_nest.png"}
         ).entrySet().stream().map(e ->
         {
             try
