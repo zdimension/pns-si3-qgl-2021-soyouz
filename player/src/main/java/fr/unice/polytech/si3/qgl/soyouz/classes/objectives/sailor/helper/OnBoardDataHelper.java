@@ -7,6 +7,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,6 +88,12 @@ public class OnBoardDataHelper
             }
         });
         sailors.removeAll(immutableRowers);
+    }
+
+    private boolean isImmutablePos(PosOnShip pos) {
+        LineOnBoat line = new LineOnBoat(ship, pos.getX());
+        return line.getOars().size() == 1 || line.getOars().size() == 2 &&
+            immutableRowers.stream().anyMatch(s -> s.getX() == line.getX());
     }
 
     /**
