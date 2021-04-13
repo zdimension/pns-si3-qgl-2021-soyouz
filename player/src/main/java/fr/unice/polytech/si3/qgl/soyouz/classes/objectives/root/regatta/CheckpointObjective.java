@@ -40,8 +40,8 @@ public class CheckpointObjective implements RootObjective
     private SailorObjective roundObjective;
     private double angleToCp;
     private double distanceToCp;
-    public static HashSet<Pair<Integer, Integer>> lines;
-    public static  List<Node> path;
+    public static final HashSet<Pair<Integer, Integer>> lines = new HashSet<>();
+    public static List<Node> path;
 
     /**
      * Constructor.
@@ -160,7 +160,7 @@ public class CheckpointObjective implements RootObjective
                 r.getShell(boat.getPosition(), diam).forEach(nodes::add);
             }
 
-            lines = new HashSet<>();
+            lines.clear();
             logger.info(nodes.size() + " nodes; start traverse");
             try
             {
