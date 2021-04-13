@@ -126,7 +126,17 @@ public class RegattaObjective implements RootObjective
         trace();
         update(state);
 
-        return initialisationObjective.isValidated() ? currentCheckpoint.resolve(state)
-            : initialisationObjective.resolve();
+        if (initialisationObjective.isValidated())
+            return currentCheckpoint.resolve(state);
+        else
+        {
+            List<GameAction> ga = initialisationObjective.resolve();
+            if (initialisationObjective.isValidated())
+            {
+                update(state);
+                ga.addAll(currentCheckpoint.resolve(state));
+            }
+            return ga;
+        }
     }
 }
