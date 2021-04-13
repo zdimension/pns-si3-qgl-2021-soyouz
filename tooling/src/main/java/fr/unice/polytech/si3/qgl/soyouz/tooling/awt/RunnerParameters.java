@@ -137,14 +137,14 @@ public class RunnerParameters
     }
 
     @JsonIgnore
-    public NextRoundParameters getNp()
+    public NextRoundParameters getNp(boolean vigie)
     {
         return new NextRoundParameters(
             ship,
             wind,
             Arrays.stream(seaEntities).filter(p -> p.getShell(ship.getPosition(), 0).anyMatch(
-                pt -> pt.sub(ship.getPosition()).norm() < 1000
-            )).toArray(ShapedEntity[]::new) // todo: vigie
+                pt -> pt.sub(ship.getPosition()).norm() < (vigie ? 5000 : 1000)
+            )).toArray(ShapedEntity[]::new)
         );
     }
 }

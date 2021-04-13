@@ -29,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class Simulator extends JFrame
 {
@@ -314,9 +315,23 @@ public class Simulator extends JFrame
 
     private void loadNextRound()
     {
-        np = model.getNp();
+        np = model.getNp(vigie);
         canvas.setNp(np);
     }
+
+    private static final java.util.List<Class<? extends GameAction>> ACTIONS_ORDER = java.util.List.of(
+        MoveAction.class,
+        OarAction.class,
+        LiftSailAction.class,
+        LowerSailAction.class,
+        TurnAction.class,
+        WatchAction.class
+        // turn cannon
+        // load cannon
+        // shoot cannon
+    );
+
+    private boolean vigie = false;
 
     private void computeRound()
     {
@@ -324,6 +339,7 @@ public class Simulator extends JFrame
 
         var time = System.currentTimeMillis();
         var res = cockpit.nextRoundInternal(np);
+        Arrays.sort(res, Comparator.comparingInt(act -> ACTIONS_ORDER.indexOf(act.getClass())));
         time -= System.currentTimeMillis();
         System.out.println("Next round took " + -time + "ms");
         var activeOars = new ArrayList<Rame>();
@@ -370,6 +386,10 @@ public class Simulator extends JFrame
                     else if (act instanceof LowerSailAction)
                     {
                         ((Voile) ent).setOpenned(false);
+                    }
+                    else if (act instanceof WatchAction)
+                    {
+                        vigie = true;
                     }
                 }
                 else
