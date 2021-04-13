@@ -5,6 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -147,7 +148,7 @@ public class OnBoardDataHelper
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         rudderSailor = sailors.stream()
             .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
-            .collect(Collectors.toList()).get(0);
+            .findFirst().get();
         sailors.remove(rudderSailor);
     }
 
@@ -159,12 +160,10 @@ public class OnBoardDataHelper
     private void setupSailSailor(List<Marin> sailors)
     {
         trace();
-        List<OnboardEntity> sails =
-            Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).collect(Collectors.toList());
-        sails.forEach(ent ->
+        Util.filterType(Arrays.stream(ship.getEntities()), Voile.class).forEach(ent ->
             sailSailors.add(sailors.stream()
                 .filter(sailor -> sailor.getPos().equals(ent.getPosCoord()))
-                .collect(Collectors.toList()).get(0))
+                .findFirst().get())
         );
         sailors.removeAll(sailSailors);
     }
