@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.init
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -40,8 +41,14 @@ public class InitSailorPositionObjective implements MovingObjective
         linesOnBoat = setLinesOnBoat(ship);
         lineWithRudder = linesOnBoat.stream().filter(line -> line.getRudder() != null)
             .collect(Collectors.toList()).get(0);
+        if(ship.findFirstEntity(Vigie.class) != null){
+
         lineWithCrownest = linesOnBoat.stream().filter(line -> line.getCrownest() != null)
             .collect(Collectors.toList()).get(0);
+        }
+        else{
+            lineWithCrownest = null;
+        }
         linesWithSails = linesOnBoat.stream().filter(line -> line.getSail() != null)
             .collect(Collectors.toList());
         generateSubObjectives(ship);
@@ -72,7 +79,9 @@ public class InitSailorPositionObjective implements MovingObjective
         handleUselessSailors(ship);
         generateMovingToRudderObjective();
         generateMovingToSailsObjective(determineHowManySailorsToSail(ship));
-        generateMovingToCrownestObjectve();
+        if(ship.findFirstEntity(Vigie.class) != null){
+            generateMovingToCrownestObjectve();
+        }
         movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));
     }
 

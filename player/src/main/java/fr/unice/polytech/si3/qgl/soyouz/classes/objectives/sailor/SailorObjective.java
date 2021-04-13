@@ -54,18 +54,27 @@ public class SailorObjective implements OnBoardObjective
     {
         trace();
         double rot = rotation;
-        //in case the watcher sailor has just been brought back to its row, it cannot move again
-        if (seaDataHelper.getTurnsBeforeWatch() == 0)
+        if (onBoardDataHelper.getShip().findFirstEntity(Vigie.class) == null)
         {
-            setupWatchObjective();
             setupRowerObjective();
             setupRudderObjective();
+            watchObjective = null;
         }
         else
         {
-            setupRowerObjective();
-            setupRudderObjective();
-            setupWatchObjective();
+            //in case the watcher sailor has just been brought back to its row, it cannot move again
+            if (seaDataHelper.getTurnsBeforeWatch() == 0)
+            {
+                setupWatchObjective();
+                setupRowerObjective();
+                setupRudderObjective();
+            }
+            else
+            {
+                setupRowerObjective();
+                setupRudderObjective();
+                setupWatchObjective();
+            }
         }
         setupSailObjective(rot);
     }
@@ -134,24 +143,26 @@ public class SailorObjective implements OnBoardObjective
                     if (sailortemp.isPresent())
                     {
                         var sailor = sailortemp.get();
-                        onBoardDataHelper.addSailorToCrownest(sailor);
-                        watchObjective = new WatchObjective(onBoardDataHelper.getShip(), sailor,
-                            null);
+                        if (onBoardDataHelper.addSailorToCrownest(sailor))
+                        {
+                            watchObjective = new WatchObjective(onBoardDataHelper.getShip(), sailor,
+                                null);
+                        }
                     }
                     break;
                 case SeaDataHelper.TURNS_BEFORE_WATCH:
-                    //move sailor
-                    //todo cas où personnes n'est sur la vigie
                     if (onBoardDataHelper.getCrownestSailor() != null)
                     {
-                        watchObjective = new WatchObjective(onBoardDataHelper.getShip(),
-                            onBoardDataHelper.getCrownestSailor(),
-                            onBoardDataHelper.getCrownestOldPos());
-                        onBoardDataHelper.removeSailorFromCrownest();
+                        var tempSailor = onBoardDataHelper.getCrownestSailor();
+                        var tempPos = onBoardDataHelper.getCrownestOldPos();
+                        if (onBoardDataHelper.removeSailorFromCrownest())
+                        {
+                            watchObjective = new WatchObjective(onBoardDataHelper.getShip(),
+                                tempSailor, tempPos);
+                        }
                     }
                     break;
                 default:
-                    //do nothing
                     watchObjective = new WatchObjective(null, null);
             }
         }
@@ -175,7 +186,7 @@ public class SailorObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated() && watchObjective.isValidated();
+        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated() && (watchObjective == null || watchObjective.isValidated());
     }
 
     /**
@@ -191,7 +202,10 @@ public class SailorObjective implements OnBoardObjective
         actions.addAll(rowersObjective.resolve());
         actions.addAll(rudderObjective.resolve());
         actions.addAll(sailObjective.resolve());
-        actions.addAll(watchObjective.resolve());
+        if (watchObjective != null)
+        {
+            actions.addAll(watchObjective.resolve());
+        }
         return actions;
     }
 }

@@ -76,19 +76,24 @@ public class OnBoardDataHelper
     {
         trace();
         OnboardEntity crownest = ship.findFirstEntity(Vigie.class);
-        var isThereWatcher = sailors.stream()
-            .filter(sailor -> sailor.getPos().equals(crownest.getPosCoord()));
-        if (isThereWatcher.findFirst().isPresent())
+        if (crownest != null)
         {
-            watchSailor = isThereWatcher.collect(Collectors.toList()).get(0);
-            oldWatchPosition = null;
-            sailors.remove(watchSailor);
+            var isThereWatcher = sailors.stream()
+                .filter(sailor -> sailor.getPos().equals(crownest.getPosCoord()));
+            if (isThereWatcher.findFirst().isPresent())
+            {
+                watchSailor = isThereWatcher.collect(Collectors.toList()).get(0);
+                oldWatchPosition = null;
+                sailors.remove(watchSailor);
+            }
+            else
+            {
+                watchSailor = null;
+                oldWatchPosition = null;
+            }
         }
-        else
-        {
-            watchSailor = null;
-            oldWatchPosition = null;
-        }
+        watchSailor = null;
+        oldWatchPosition = null;
     }
 
     public boolean isWatcherThereForever()
@@ -232,7 +237,8 @@ public class OnBoardDataHelper
             }
             return true;
         }
-        else{
+        else
+        {
             return false;
         }
     }
@@ -241,7 +247,8 @@ public class OnBoardDataHelper
     {
         if (watchSailor == null && oldWatchPosition == null)
         {
-            if(!mutableRowers.contains(sailor) && !immutableRowers.contains(sailor)){
+            if (!mutableRowers.contains(sailor) && !immutableRowers.contains(sailor))
+            {
                 return false;
             }
             if (isImmutablePos(sailor.getPosOnShip()))
