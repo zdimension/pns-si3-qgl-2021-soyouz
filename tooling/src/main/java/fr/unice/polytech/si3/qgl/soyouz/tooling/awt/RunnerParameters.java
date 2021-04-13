@@ -126,14 +126,14 @@ public class RunnerParameters
             ship.setPosition(startingPositions[0]); // TODO
             ship.setShape(new Rectangle(ship.getDeck().getWidth(), ship.getDeck().getLength(), ship.getPosition().getOrientation()));
 
-            ip = new InitGameParameters(
-                goal,
-                ship,
-                Arrays.stream(getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(), o.getName())).toArray(Marin[]::new)
-            );
+            ip = new InitGameParameters(goal, ship, getSailors());
         }
 
-        return ip;
+        return new InitGameParameters(
+            goal,
+            ship,
+            Arrays.stream(ip.getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(), o.getName())).toArray(Marin[]::new)
+        );
     }
 
     @JsonIgnore

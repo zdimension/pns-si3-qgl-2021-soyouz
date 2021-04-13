@@ -280,7 +280,7 @@ public class Simulator extends JFrame
         btnPlay.setText("Play");
         if (true)
         {
-            var ipt = Files.readString(Path.of("games/Week9.json"));
+            var ipt = Files.readString(Path.of("games/Week10p.json"));
             model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         }
         else
@@ -402,6 +402,7 @@ public class Simulator extends JFrame
                 if (act instanceof MoveAction)
                 {
                     var mv = (MoveAction) act;
+                    var pos = sail.getPosOnShip().getPosCoords();
                     sail.moveRelative(mv.getXDistance(), mv.getYDistance());
                     if (sail.getX() < 0 || sail.getX() >= model.getShip().getDeck().getLength()
                         || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())
