@@ -15,8 +15,8 @@ import java.util.Objects;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = Rame.class, name = "oar"),
     @JsonSubTypes.Type(value = Gouvernail.class, name = "rudder"),
-    @JsonSubTypes.Type(value = Voile.class, name = "sail")
-
+    @JsonSubTypes.Type(value = Voile.class, name = "sail"),
+    @JsonSubTypes.Type(value = Vigie.class, name = "watch")
 })
 public abstract class OnboardEntity
 {
