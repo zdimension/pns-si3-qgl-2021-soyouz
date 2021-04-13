@@ -23,6 +23,7 @@ public class InitSailorPositionObjective implements MovingObjective
     private final List<Marin> sailors;
     private final List<LineOnBoat> linesOnBoat;
     private final LineOnBoat lineWithRudder;
+    private final LineOnBoat lineWithCrownest;
     private final List<LineOnBoat> linesWithSails;
     private final List<MovingObjective> movingSailorsObjectives;
 
@@ -38,6 +39,8 @@ public class InitSailorPositionObjective implements MovingObjective
         this.sailors = getAllSailorsSortedByXPos(sailors);
         linesOnBoat = setLinesOnBoat(ship);
         lineWithRudder = linesOnBoat.stream().filter(line -> line.getRudder() != null)
+            .collect(Collectors.toList()).get(0);
+        lineWithCrownest = linesOnBoat.stream().filter(line -> line.getCrownest() != null)
             .collect(Collectors.toList()).get(0);
         linesWithSails = linesOnBoat.stream().filter(line -> line.getSail() != null)
             .collect(Collectors.toList());
@@ -59,8 +62,6 @@ public class InitSailorPositionObjective implements MovingObjective
         }
     }
 
-    //TODO assigner à vigie
-
     /**
      * Determine all sub movement objectives for each sailors.
      *
@@ -71,7 +72,21 @@ public class InitSailorPositionObjective implements MovingObjective
         handleUselessSailors(ship);
         generateMovingToRudderObjective();
         generateMovingToSailsObjective(determineHowManySailorsToSail(ship));
+        generateMovingToCrownestObjectve();
         movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));
+    }
+
+    /**
+     * Moves a sailor to the crow's nest if there is any extra sailor
+     */
+    private void generateMovingToCrownestObjectve(){
+        if(sailors.size() > 0){
+            //for now it is just choosing the last sailor available rather than the closest one
+            // because I should store the number of sailors available through generateSubObjectives
+            // but I'll do it later
+            movingSailorsObjectives.add(new SailorMovementObjective(sailors.get(0), lineWithCrownest.getCrownest().getPos()));
+            sailors.remove(0);
+        }
     }
 
     /**

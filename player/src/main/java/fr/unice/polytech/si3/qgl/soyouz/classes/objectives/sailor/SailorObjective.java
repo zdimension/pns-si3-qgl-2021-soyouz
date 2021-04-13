@@ -1,11 +1,18 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
 
@@ -47,10 +54,20 @@ public class SailorObjective implements OnBoardObjective
     {
         trace();
         double rot = rotation;
-        setupRowerObjective();
-        setupRudderObjective();
+        //in case the watcher sailor has just been brought back to its row, it cannot move again
+        if (seaDataHelper.getTurnsBeforeWatch() == 0)
+        {
+            setupWatchObjective();
+            setupRowerObjective();
+            setupRudderObjective();
+        }
+        else
+        {
+            setupRowerObjective();
+            setupRudderObjective();
+            setupWatchObjective();
+        }
         setupSailObjective(rot);
-        setupWatchObjective();
     }
 
     /**
@@ -100,8 +117,54 @@ public class SailorObjective implements OnBoardObjective
             sailConfigHelper.findOptSailConfiguration(), onBoardDataHelper.getSailSailors());
     }
 
-    private void setupWatchObjective(){
+    private void setupWatchObjective()
+    {
+        if (onBoardDataHelper.isWatcherThereForever())
+        {
+            watchObjective = new WatchObjective(onBoardDataHelper.getShip(),
+                onBoardDataHelper.getCrownestSailor());
+        }
+        else
+        {
+            switch (seaDataHelper.getTurnsBeforeWatch())
+            {
+                case 0:
+                    var sailortemp =
+                        getClosestRower(onBoardDataHelper.getShip().findFirstEntity(Vigie.class).getPos());
+                    if (sailortemp.isPresent())
+                    {
+                        var sailor = sailortemp.get();
+                        onBoardDataHelper.addSailorToCrownest(sailor);
+                        watchObjective = new WatchObjective(onBoardDataHelper.getShip(), sailor,
+                            null);
+                    }
+                    break;
+                case SeaDataHelper.TURNS_BEFORE_WATCH:
+                    //move sailor
+                    //todo cas où personnes n'est sur la vigie
+                    if (onBoardDataHelper.getCrownestSailor() != null)
+                    {
+                        watchObjective = new WatchObjective(onBoardDataHelper.getShip(),
+                            onBoardDataHelper.getCrownestSailor(),
+                            onBoardDataHelper.getCrownestOldPos());
+                        onBoardDataHelper.removeSailorFromCrownest();
+                    }
+                    break;
+                default:
+                    //do nothing
+                    watchObjective = new WatchObjective(null, null);
+            }
+        }
+    }
 
+    private Optional<Marin> getClosestRower(PosOnShip pos)
+    {
+        return Stream.concat(onBoardDataHelper.getImmutableRowers().stream(),
+            onBoardDataHelper.getMutableRowers().stream())
+            .map(marin -> Pair.of(marin, marin.getPosOnShip().dist(pos)))
+            .filter(pair -> pair.second <= Marin.MAX_MOVE)
+            .min(Comparator.comparingInt(Pair::getSecond))
+            .map(pair -> pair.first);
     }
 
     /**
@@ -112,7 +175,7 @@ public class SailorObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated();
+        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated() && watchObjective.isValidated();
     }
 
     /**
@@ -128,6 +191,7 @@ public class SailorObjective implements OnBoardObjective
         actions.addAll(rowersObjective.resolve());
         actions.addAll(rudderObjective.resolve());
         actions.addAll(sailObjective.resolve());
+        actions.addAll(watchObjective.resolve());
         return actions;
     }
 }

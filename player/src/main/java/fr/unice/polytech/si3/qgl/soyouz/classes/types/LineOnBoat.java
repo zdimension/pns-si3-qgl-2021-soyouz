@@ -1,10 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +16,7 @@ public class LineOnBoat implements Comparable<LineOnBoat>
     private final List<Rame> oars;
     private Gouvernail rudder;
     private Voile sail;
+    private Vigie crownest;
     private final int x;
 
     /**
@@ -33,6 +31,7 @@ public class LineOnBoat implements Comparable<LineOnBoat>
         oars = new ArrayList<>();
         rudder = null;
         sail = null;
+        crownest = null;
 
         List<OnboardEntity> ent = Arrays.stream(ship.getEntities())
             .filter(entity -> entity.getX() == x).collect(Collectors.toList());
@@ -44,6 +43,8 @@ public class LineOnBoat implements Comparable<LineOnBoat>
                 rudder = (Gouvernail) entity;
             else if (entity instanceof Voile)
                 sail = (Voile) entity;
+            else if(entity instanceof Vigie)
+                crownest = (Vigie) entity;
         });
     }
 
@@ -77,6 +78,13 @@ public class LineOnBoat implements Comparable<LineOnBoat>
     {
         return sail;
     }
+
+    /**
+     * Getter
+     *
+     * @return the crownest if there is one
+     */
+    public Vigie getCrownest() {return crownest; }
 
     /**
      * Getter.

@@ -2,10 +2,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
@@ -36,7 +33,7 @@ public class OnBoardDataHelper
     /**
      * Constructor.
      *
-     * @param ship The ship.
+     * @param ship    The ship.
      * @param sailors All sailors on the ship.
      */
     public OnBoardDataHelper(Bateau ship, List<Marin> sailors)
@@ -49,6 +46,7 @@ public class OnBoardDataHelper
         setupRudderSailor(sailors);
         setupSailSailor(sailors);
         setupImmutableRowers(sailors);
+        setupCrownestSailor(sailors);
         setupUselessSailors(sailors);
         mutableRowers = sailors;
     }
@@ -63,12 +61,39 @@ public class OnBoardDataHelper
     {
         trace();
         List<Marin> uselessSailors = new ArrayList<>();
-        sailors.forEach(sailor -> {
+        sailors.forEach(sailor ->
+        {
             LineOnBoat line = new LineOnBoat(ship, sailor.getX());
             if (line.getOars().isEmpty())
+            {
                 uselessSailors.add(sailor);
+            }
         });
         sailors.removeAll(uselessSailors);
+    }
+
+    private void setupCrownestSailor(List<Marin> sailors)
+    {
+        trace();
+        OnboardEntity crownest = ship.findFirstEntity(Vigie.class);
+        var isThereWatcher = sailors.stream()
+            .filter(sailor -> sailor.getPos().equals(crownest.getPosCoord()));
+        if (isThereWatcher.findFirst().isPresent())
+        {
+            watchSailor = isThereWatcher.collect(Collectors.toList()).get(0);
+            oldWatchPosition = null;
+            sailors.remove(watchSailor);
+        }
+        else
+        {
+            watchSailor = null;
+            oldWatchPosition = null;
+        }
+    }
+
+    public boolean isWatcherThereForever()
+    {
+        return watchSailor != null && oldWatchPosition == null;
     }
 
     /**
@@ -83,10 +108,13 @@ public class OnBoardDataHelper
         List<Marin> sailorOnOar = sailors.stream()
             .filter(sailor -> ship.hasAt(sailor.getX(), sailor.getY(), Rame.class))
             .collect(Collectors.toList());
-        sailorOnOar.forEach(sailor -> {
+        sailorOnOar.forEach(sailor ->
+        {
             LineOnBoat line = new LineOnBoat(ship, sailor.getX());
             if (line.getOars().size() == 1)
+            {
                 immutableRowers.add(sailor);
+            }
             if (line.getOars().size() == 2 &&
                 sailorOnOar.stream().filter(s -> s.getX() == line.getX()).count() == 2)
             {
@@ -96,7 +124,8 @@ public class OnBoardDataHelper
         sailors.removeAll(immutableRowers);
     }
 
-    private boolean isImmutablePos(PosOnShip pos) {
+    private boolean isImmutablePos(PosOnShip pos)
+    {
         LineOnBoat line = new LineOnBoat(ship, pos.getX());
         return line.getOars().size() == 1 || line.getOars().size() == 2 &&
             immutableRowers.stream().anyMatch(s -> s.getX() == line.getX());
@@ -125,7 +154,8 @@ public class OnBoardDataHelper
     private void setupSailSailor(List<Marin> sailors)
     {
         trace();
-        List<OnboardEntity> sails = Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).collect(Collectors.toList());
+        List<OnboardEntity> sails =
+            Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).collect(Collectors.toList());
         sails.forEach(ent ->
             sailSailors.add(sailors.stream()
                 .filter(sailor -> sailor.getPos().equals(ent.getPosCoord()))
@@ -172,6 +202,61 @@ public class OnBoardDataHelper
     public Marin getRudderSailor()
     {
         return rudderSailor;
+    }
+
+    public Marin getCrownestSailor()
+    {
+        return watchSailor;
+    }
+
+    public PosOnShip getCrownestOldPos()
+    {
+        return oldWatchPosition;
+    }
+
+    public boolean removeSailorFromCrownest()
+    {
+        if (watchSailor != null && oldWatchPosition != null)
+        {
+
+            var temp = watchSailor;
+            watchSailor = null;
+            oldWatchPosition = null;
+            if (isImmutablePos(temp.getPosOnShip()))
+            {
+                immutableRowers.add(temp);
+            }
+            else
+            {
+                mutableRowers.add(temp);
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean addSailorToCrownest(Marin sailor)
+    {
+        if (watchSailor == null && oldWatchPosition == null)
+        {
+            if(!mutableRowers.contains(sailor) && !immutableRowers.contains(sailor)){
+                return false;
+            }
+            if (isImmutablePos(sailor.getPosOnShip()))
+            {
+                immutableRowers.remove(sailor);
+            }
+            else
+            {
+                mutableRowers.remove(sailor);
+            }
+            watchSailor = sailor;
+            oldWatchPosition = sailor.getPosOnShip();
+            return true;
+        }
+        return false;
     }
 
     /**

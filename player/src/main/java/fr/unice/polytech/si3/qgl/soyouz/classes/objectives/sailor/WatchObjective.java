@@ -1,15 +1,14 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.TurnAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.WatchAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +24,29 @@ public class WatchObjective implements OnBoardObjective
     List<MovingObjective> movement;
 
 
-    public WatchObjective(Bateau ship, Marin sailor)
+    public WatchObjective(Bateau ship, Marin sailor, PosOnShip oldRowPos)
     {
         this.sailor = sailor;
         movement = new ArrayList<>();
+        if (oldRowPos == null)
+        {
+            setMovement(ship);
+        }
+        else
+        {
+            movingBack(oldRowPos);
+        }
+    }
+
+    public WatchObjective(Bateau ship, Marin sailor)
+    {
+        this.sailor = sailor;
+        if(ship == null || sailor == null)
+            return;
+        movement = new ArrayList<>();
         setMovement(ship);
+
+
     }
 
     private void setMovement(Bateau ship)
@@ -40,6 +57,12 @@ public class WatchObjective implements OnBoardObjective
         {
             movement.add(new SailorMovementObjective(sailor, crownest.getPos()));
         }
+    }
+
+    private void movingBack(PosOnShip pos)
+    {
+        trace();
+        movement.add(new SailorMovementObjective(sailor, pos));
     }
 
     @Override
@@ -54,9 +77,14 @@ public class WatchObjective implements OnBoardObjective
         trace();
         List<GameAction> actions = new ArrayList<>();
         if (movement.size() == 1)
+        {
             actions.addAll(movement.get(0).resolve());
+        }
         if (movement.isEmpty() || movement.get(0).isValidated())
-            actions.add(new WatchAction(sailor));
+        {
+            if(sailor != null)
+                actions.add(new WatchAction(sailor));
+        }
         return actions;
     }
 }
