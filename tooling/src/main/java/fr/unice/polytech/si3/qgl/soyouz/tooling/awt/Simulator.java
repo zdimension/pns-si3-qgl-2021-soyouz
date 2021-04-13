@@ -14,6 +14,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
@@ -292,10 +293,11 @@ public class Simulator extends JFrame
         }
 
         np = null;
-        canvas.setModel(model.getIp());
+        CheckpointObjective.lines.clear();
+        canvas.setModel(model.getIp(false));
         currentCheckpoint = 0;
         cockpit = new Cockpit();
-        cockpit.initGameInternal(model.getIp());
+        cockpit.initGameInternal(model.getIp(true));
         usedEntities.clear();
         canvas.reset();
         canvas.setCockpit(cockpit);

@@ -185,13 +185,18 @@ public class SimulatorCanvas extends JPanel
         centered = true;
     }
 
-    void reset()
+    void resetCamera()
     {
         cameraPos = new Point2d(0, 0);
         moveOrigin = null;
         scale = 1;
-        np = null;
         centered = false;
+    }
+
+    void reset()
+    {
+        np = null;
+        //resetCamera();
         clearHistory();
         repaint();
     }
@@ -315,7 +320,7 @@ public class SimulatorCanvas extends JPanel
         g = (Graphics2D) g.create();
 
         var lines = CheckpointObjective.lines;
-        if (lines == null)
+        if (lines.isEmpty())
             return;
         var nodes = CheckpointObjective.nodes;
         g.setColor(Color.ORANGE);

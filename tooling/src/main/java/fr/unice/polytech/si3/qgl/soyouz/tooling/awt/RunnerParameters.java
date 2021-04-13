@@ -2,14 +2,11 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.GameGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
@@ -18,6 +15,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -34,6 +32,22 @@ public class RunnerParameters
     private Marin[] sailors;
     private int maxRound;
     private InitGameParameters ip;
+
+    public RunnerParameters()
+    {
+
+    }
+
+    public RunnerParameters(InitGameParameters pars, NextRoundParameters nps)
+    {
+        ip = pars;
+        sailors = Arrays.stream(pars.getSailors()).map(o -> new Marin(o.getId(), o.getX(),
+            o.getY(), o.getName())).toArray(Marin[]::new);
+        goal = pars.getGoal();
+        ship = pars.getShip();
+        seaEntities = nps.getVisibleEntities();
+        wind = nps.getWind();
+    }
 
     public Bateau getShip()
     {
@@ -75,21 +89,6 @@ public class RunnerParameters
         return maxRound;
     }
 
-    public RunnerParameters()
-    {
-
-    }
-
-    public RunnerParameters(InitGameParameters pars, NextRoundParameters nps)
-    {
-        ip = pars;
-        sailors = Arrays.stream(pars.getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(), o.getName())).toArray(Marin[]::new);
-        goal = pars.getGoal();
-        ship = pars.getShip();
-        seaEntities = nps.getVisibleEntities();
-        wind = nps.getWind();
-    }
-
     @JsonIgnore
     public Marin[] getSailors()
     {
@@ -97,7 +96,8 @@ public class RunnerParameters
         {
             var sailCount = RNG.nextInt(maximumCrewSize - minumumCrewSize + 1) + minumumCrewSize;
 
-            var sails = new HashMap<PosOnShip, Marin>();
+            var res = new Marin[sailCount];
+            var sails = new HashSet<PosOnShip>();
             for (int i = 0; i < sailCount; i++)
             {
                 PosOnShip pos;
@@ -108,32 +108,43 @@ public class RunnerParameters
                         RNG.nextInt(ship.getDeck().getWidth())
                     );
                 }
-                while (sails.containsKey(pos));
-                sails.put(pos, new Marin(i, pos.getX(), pos.getY(), "Marin" + i));
+                while (sails.contains(pos));
+                var sailor = new Marin(i, pos.getX(), pos.getY(), "Marin" + i);
+                sails.add(pos);
+                res[i] = sailor;
             }
 
-            sailors = sails.values().toArray(new Marin[0]);
+            sailors = res;
         }
 
         return this.sailors;
     }
 
     @JsonIgnore
-    public InitGameParameters getIp()
+    public InitGameParameters getIp(boolean cloneSailors)
     {
         if (ip == null)
         {
             ship.setPosition(startingPositions[0]); // TODO
-            ship.setShape(new Rectangle(ship.getDeck().getWidth(), ship.getDeck().getLength(), ship.getPosition().getOrientation()));
+            ship.setShape(new Rectangle(ship.getDeck().getWidth(), ship.getDeck().getLength(),
+                ship.getPosition().getOrientation()));
 
             ip = new InitGameParameters(goal, ship, getSailors());
         }
 
-        return new InitGameParameters(
-            goal,
-            ship,
-            Arrays.stream(ip.getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(), o.getName())).toArray(Marin[]::new)
-        );
+        if (cloneSailors)
+        {
+            return new InitGameParameters(
+                goal,
+                ship,
+                Arrays.stream(ip.getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(),
+                    o.getName())).toArray(Marin[]::new)
+            );
+        }
+        else
+        {
+            return ip;
+        }
     }
 
     @JsonIgnore
