@@ -19,6 +19,7 @@ public class SailorObjective implements OnBoardObjective
     private double distance;
     private double rotation;
     private RudderObjective rudderObjective;
+    private WatchObjective watchObjective;
     private SailObjective sailObjective;
     private RowersObjective rowersObjective;
 
@@ -49,6 +50,7 @@ public class SailorObjective implements OnBoardObjective
         setupRowerObjective();
         setupRudderObjective();
         setupSailObjective(rot);
+        setupWatchObjective();
     }
 
     /**
@@ -96,6 +98,10 @@ public class SailorObjective implements OnBoardObjective
             seaDataHelper.getWind());
         sailObjective = new SailObjective(onBoardDataHelper.getShip(),
             sailConfigHelper.findOptSailConfiguration(), onBoardDataHelper.getSailSailors());
+    }
+
+    private void setupWatchObjective(){
+
     }
 
     /**

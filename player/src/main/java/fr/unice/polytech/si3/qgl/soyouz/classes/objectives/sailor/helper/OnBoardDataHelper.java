@@ -25,7 +25,13 @@ public class OnBoardDataHelper
     private final List<Marin> immutableRowers;
     private final List<Marin> sailSailors;
     private Marin rudderSailor;
+    private Marin watchSailor;
+    private PosOnShip oldWatchPosition;
     private final Bateau ship;
+    //nouvelle entite vigiesailor
+    //methode pour attribuer un marin à la vigie qui est aux rames puis l'y remettre
+    //stocker son état pré-mouvement
+    //setup mutable rower()
 
     /**
      * Constructor.
