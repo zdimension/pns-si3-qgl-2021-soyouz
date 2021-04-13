@@ -28,6 +28,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -183,6 +185,8 @@ public class Simulator extends JFrame
                         if (currentCheckpoint >= getCheckpoints().length)
                         {
                             btnPlay.doClick();
+                            System.out.println(Duration.between(gameStart, LocalDateTime.now()));
+                            gameStart = null;
                         }
                         else
                         {
@@ -305,6 +309,8 @@ public class Simulator extends JFrame
         loadNextRound();
     }
 
+    private LocalDateTime gameStart = null;
+
     private void playRound()
     {
         btnNext.setEnabled(false);
@@ -317,6 +323,8 @@ public class Simulator extends JFrame
 
     private void loadNextRound()
     {
+        if (gameStart == null)
+            gameStart = LocalDateTime.now();
         np = model.getNp(vigie);
         canvas.setNp(np);
     }
