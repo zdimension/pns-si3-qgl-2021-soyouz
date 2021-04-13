@@ -7,6 +7,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,13 @@ public class OnBoardDataHelper
     private final List<Marin> immutableRowers;
     private final List<Marin> sailSailors;
     private Marin rudderSailor;
+    private Marin watchSailor;
+    private PosOnShip oldWatchPosition;
     private final Bateau ship;
+    //nouvelle entite vigiesailor
+    //methode pour attribuer un marin à la vigie qui est aux rames puis l'y remettre
+    //stocker son état pré-mouvement
+    //setup mutable rower()
 
     /**
      * Constructor.

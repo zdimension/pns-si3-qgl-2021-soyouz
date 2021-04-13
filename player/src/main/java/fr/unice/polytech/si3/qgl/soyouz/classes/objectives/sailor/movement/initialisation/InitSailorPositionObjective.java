@@ -59,6 +59,8 @@ public class InitSailorPositionObjective implements MovingObjective
         }
     }
 
+    //TODO assigner à vigie
+
     /**
      * Determine all sub movement objectives for each sailors.
      *
