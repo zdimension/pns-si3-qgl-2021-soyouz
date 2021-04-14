@@ -41,12 +41,7 @@ public class WatchObjective implements OnBoardObjective
     public WatchObjective(Bateau ship, Marin sailor)
     {
         this.sailor = sailor;
-        if(ship == null || sailor == null)
-            return;
         movement = new ArrayList<>();
-        setMovement(ship);
-
-
     }
 
     private void setMovement(Bateau ship)

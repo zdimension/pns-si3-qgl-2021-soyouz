@@ -80,10 +80,11 @@ public class OnBoardDataHelper
         if (crownest != null)
         {
             var isThereWatcher = sailors.stream()
-                .filter(sailor -> sailor.getPos().equals(crownest.getPosCoord()));
-            if (isThereWatcher.findFirst().isPresent())
+                .filter(sailor -> sailor.getPos().equals(crownest.getPosCoord()))
+                .findFirst();
+            if (isThereWatcher.isPresent())
             {
-                watchSailor = isThereWatcher.collect(Collectors.toList()).get(0);
+                watchSailor = isThereWatcher.get();
                 oldWatchPosition = null;
                 sailors.remove(watchSailor);
             }
@@ -93,8 +94,8 @@ public class OnBoardDataHelper
                 oldWatchPosition = null;
             }
         }
-        watchSailor = null;
-        oldWatchPosition = null;
+        //watchSailor = null;
+        //oldWatchPosition = null;
     }
 
     public boolean isWatcherThereForever()
@@ -161,9 +162,9 @@ public class OnBoardDataHelper
     {
         trace();
         Util.filterType(Arrays.stream(ship.getEntities()), Voile.class).forEach(ent ->
-            sailSailors.add(sailors.stream()
+            sailors.stream()
                 .filter(sailor -> sailor.getPos().equals(ent.getPosCoord()))
-                .findFirst().get())
+                .findFirst().ifPresent(sailSailors::add)
         );
         sailors.removeAll(sailSailors);
     }

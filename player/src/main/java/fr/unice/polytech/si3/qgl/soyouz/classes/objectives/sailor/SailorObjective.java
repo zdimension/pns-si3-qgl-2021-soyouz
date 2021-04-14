@@ -163,7 +163,7 @@ public class SailorObjective implements OnBoardObjective
                     }
                     break;
                 default:
-                    watchObjective = new WatchObjective(null, null);
+                    watchObjective = null;
             }
         }
     }
