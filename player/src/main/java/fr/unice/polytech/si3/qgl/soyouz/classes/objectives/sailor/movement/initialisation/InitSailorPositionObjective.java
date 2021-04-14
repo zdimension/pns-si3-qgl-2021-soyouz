@@ -71,9 +71,9 @@ public class InitSailorPositionObjective implements MovingObjective
     private void generateSubObjectives(Bateau ship)
     {
         handleUselessSailors(ship);
+        generateMovingToWatchObjective(ship);
         generateMovingToRudderObjective();
         generateMovingToSailsObjective(determineHowManySailorsToSail(ship));
-        generateMovingToWatchObjective(ship);
         movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));
     }
 
@@ -84,7 +84,7 @@ public class InitSailorPositionObjective implements MovingObjective
      */
     private void generateMovingToWatchObjective(Bateau ship)
     {
-        if (ship.getEntities().length < sailors.size())
+        if (ship.getEntities().length <= sailors.size())
         {
             Marin sailorCloseToWatch = findClosestSailorFromEntity(lineWithWatch.getWatch());
             movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToWatch, lineWithWatch.getWatch().getPos()));
@@ -137,7 +137,7 @@ public class InitSailorPositionObjective implements MovingObjective
         switch (nbSails)
         {
             case 1:
-                return sailors.size() % 2 == 1 ? 1 : 0;
+                return sailors.size() % 2 == 1 || sailors.size() > nbOars ? 1 : 0;
             case 2:
                 if (sailors.size() % 2 == 0)
                 {

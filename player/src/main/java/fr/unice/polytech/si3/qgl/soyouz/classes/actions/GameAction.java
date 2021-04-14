@@ -16,7 +16,8 @@ import org.jetbrains.annotations.Nullable;
     @JsonSubTypes.Type(value = OarAction.class, name = "OAR"),
     @JsonSubTypes.Type(value = TurnAction.class, name = "TURN"),
     @JsonSubTypes.Type(value = LiftSailAction.class, name = "LIFT_SAIL"),
-    @JsonSubTypes.Type(value = LowerSailAction.class, name = "LOWER_SAIL")
+    @JsonSubTypes.Type(value = LowerSailAction.class, name = "LOWER_SAIL"),
+    @JsonSubTypes.Type(value = WatchAction.class, name = "WATCH")
 })
 public abstract class GameAction
 {

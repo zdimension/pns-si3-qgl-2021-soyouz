@@ -3,10 +3,10 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +23,8 @@ public class OnBoardDataHelper
 {
     private List<Marin> mutableRowers;
     private final List<Marin> immutableRowers;
+    private final List<Marin> leftImmutableRowers;
+    private final List<Marin> rightImmutableRowers;
     private final List<Marin> sailSailors;
     private Marin rudderSailor;
     private Marin watchSailor;
@@ -33,13 +35,15 @@ public class OnBoardDataHelper
     /**
      * Constructor.
      *
-     * @param ship The ship.
+     * @param ship    The ship.
      * @param sailors All sailors on the ship.
      */
     public OnBoardDataHelper(Bateau ship, List<Marin> sailors)
     {
         mutableRowers = new ArrayList<>();
         immutableRowers = new ArrayList<>();
+        leftImmutableRowers = new ArrayList<>();
+        rightImmutableRowers = new ArrayList<>();
         sailSailors = new ArrayList<>();
         rudderSailor = null;
         watchSailor = null;
@@ -63,6 +67,8 @@ public class OnBoardDataHelper
         rowerGoingToWatch.ifPresent(sailor ->
         {
             immutableRowers.remove(sailor);
+            leftImmutableRowers.remove(sailor);
+            rightImmutableRowers.remove(sailor);
             oldWatchPosition = sailor.getPosOnShip();
             watchSailor = sailor;
             return;
@@ -79,18 +85,28 @@ public class OnBoardDataHelper
 
     /**
      * Switch back the watcher to the oars.
+     *
+     * @return a move action if necessary.
      */
-    public MovingObjective switchWatcherToOar()
+    public SailorMovementObjective switchWatcherToOar()
     {
         if (watchSailor != null)
         {
             Marin sailorToMove = watchSailor;
+            PosOnShip posToReachBack = oldWatchPosition;
             if (isImmutablePos(oldWatchPosition))
+            {
                 immutableRowers.add(watchSailor);
+                if (oldWatchPosition.getY() == 0)
+                    leftImmutableRowers.add(watchSailor);
+                else
+                    rightImmutableRowers.add(watchSailor);
+            }
             else
                 transitionSailor = watchSailor;
             watchSailor = null;
-            return new SailorMovementObjective(sailorToMove, oldWatchPosition);
+            oldWatchPosition = null;
+            return new SailorMovementObjective(sailorToMove, posToReachBack);
         }
         else if (transitionSailor != null)
         {
@@ -109,10 +125,13 @@ public class OnBoardDataHelper
     {
         trace();
         List<Marin> uselessSailors = new ArrayList<>();
-        sailors.forEach(sailor -> {
+        sailors.forEach(sailor ->
+        {
             LineOnBoat line = new LineOnBoat(ship, sailor.getX());
             if (line.getOars().isEmpty())
+            {
                 uselessSailors.add(sailor);
+            }
         });
         sailors.removeAll(uselessSailors);
     }
@@ -125,7 +144,7 @@ public class OnBoardDataHelper
     private void setupWatchSailor(List<Marin> sailors)
     {
         trace();
-        OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
+        OnboardEntity rudder = ship.findFirstEntity(Vigie.class);
         Optional<Marin> potentialWatcher = sailors.stream()
             .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
             .findFirst();
@@ -148,10 +167,13 @@ public class OnBoardDataHelper
         List<Marin> sailorOnOar = sailors.stream()
             .filter(sailor -> ship.hasAt(sailor.getX(), sailor.getY(), Rame.class))
             .collect(Collectors.toList());
-        sailorOnOar.forEach(sailor -> {
+        sailorOnOar.forEach(sailor ->
+        {
             LineOnBoat line = new LineOnBoat(ship, sailor.getX());
             if (line.getOars().size() == 1)
+            {
                 immutableRowers.add(sailor);
+            }
             if (line.getOars().size() == 2 &&
                 sailorOnOar.stream().filter(s -> s.getX() == line.getX()).count() == 2)
             {
@@ -159,8 +181,27 @@ public class OnBoardDataHelper
             }
         });
         sailors.removeAll(immutableRowers);
+        setupSideImmutableRowers();
     }
 
+    /**
+     * Setup immutable rowers on each side.
+     */
+    private void setupSideImmutableRowers()
+    {
+        leftImmutableRowers.addAll(immutableRowers.stream()
+            .filter(sailor -> sailor.getY() == 0).collect(Collectors.toList()));
+        rightImmutableRowers.addAll(immutableRowers.stream()
+            .filter(sailor -> sailor.getY() == ship.getDeck().getWidth() - 1)
+            .collect(Collectors.toList()));
+    }
+
+    /**
+     * Determine if a pos in on a immutable row.
+     *
+     * @param pos The position.
+     * @return True if it is, false otherwise.
+     */
     private boolean isImmutablePos(PosOnShip pos) {
         trace();
         LineOnBoat line = new LineOnBoat(ship, pos.getX());
@@ -179,7 +220,7 @@ public class OnBoardDataHelper
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         rudderSailor = sailors.stream()
             .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
-            .collect(Collectors.toList()).get(0);
+            .findFirst().get();
         sailors.remove(rudderSailor);
     }
 
@@ -191,11 +232,10 @@ public class OnBoardDataHelper
     private void setupSailSailor(List<Marin> sailors)
     {
         trace();
-        List<OnboardEntity> sails = Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).collect(Collectors.toList());
-        sails.forEach(ent ->
-            sailSailors.add(sailors.stream()
+        Util.filterType(Arrays.stream(ship.getEntities()), Voile.class).forEach(ent ->
+            sailors.stream()
                 .filter(sailor -> sailor.getPos().equals(ent.getPosCoord()))
-                .collect(Collectors.toList()).get(0))
+                .findFirst().ifPresent(sailSailors::add)
         );
         sailors.removeAll(sailSailors);
     }
@@ -238,6 +278,26 @@ public class OnBoardDataHelper
     public List<Marin> getImmutableRowers()
     {
         return immutableRowers;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return all right immutable rowers.
+     */
+    public List<Marin> getRightImmutableRowers()
+    {
+        return rightImmutableRowers;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return all left immutable rowers.
+     */
+    public List<Marin> getLeftImmutableRowers()
+    {
+        return leftImmutableRowers;
     }
 
     /**

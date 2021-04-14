@@ -16,6 +16,7 @@ import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
  */
 public class SeaDataHelper
 {
+    public final static int TURNS_BEFORE_WATCH = 5;
     private Bateau ship;
     private Wind wind;
     private ShapedEntity[] visibleEntities;
@@ -33,7 +34,7 @@ public class SeaDataHelper
         this.ship = ship;
         this.wind = wind;
         this.visibleEntities = visibleEntities;
-        lastWatchPos = null;
+        lastWatchPos = ship.getPosition();
     }
 
     /**
@@ -47,7 +48,6 @@ public class SeaDataHelper
         this.wind = state.getNp().getWind();
         this.ship = state.getNp().getShip();
         this.visibleEntities = state.getNp().getVisibleEntities();
-
     }
 
     /**
@@ -98,5 +98,4 @@ public class SeaDataHelper
     {
         return visibleEntities;
     }
-    
 }

@@ -134,10 +134,10 @@ class RegattaObjectiveTest
         regattaObjective = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
     }
 
-    @Test
+/*    @Test
     void resolveInitialisation()
     {
-        /*InitGameParameters ip = setupInitObjective();
+        InitGameParameters ip = setupInitObjective();
         GameState gs = new GameState(ip, new NextRoundParameters(
             ip.getShip(), new Wind(1, 1), null));
         RegattaObjective rO = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
@@ -145,7 +145,7 @@ class RegattaObjectiveTest
         assertEquals(3, gameActions.size());
         gameActions.forEach(act -> {
             assertTrue(act instanceof MoveAction);
-        });*/
+        });
     }
 
     @Test
@@ -153,7 +153,7 @@ class RegattaObjectiveTest
     {
         setupObjectiveInLine();
         Bateau ship = gameState.getIp().getShip();
-        /*ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
+        ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
         assertEquals(6, gameActions.size());
         List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction).collect(Collectors.toList());
         List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction).collect(Collectors.toList());
@@ -171,7 +171,7 @@ class RegattaObjectiveTest
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1) oarUsedOnRight++;
         }
         assertEquals(2, oarUsedOnLeft);
-        assertEquals(2, oarUsedOnRight);*/
+        assertEquals(2, oarUsedOnRight);
     }
 
     @Test
@@ -179,7 +179,7 @@ class RegattaObjectiveTest
     {
         setupObjectiveOnLeft();
         Bateau ship = gameState.getIp().getShip();
-        /*ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
+        ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
         assertEquals(4, gameActions.size());
         List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction).collect(Collectors.toList());
         List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction).collect(Collectors.toList());
@@ -197,7 +197,7 @@ class RegattaObjectiveTest
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1) oarUsedOnRight++;
         }
         assertEquals(0, oarUsedOnLeft);
-        assertEquals(2, oarUsedOnRight);*/
+        assertEquals(2, oarUsedOnRight);
     }
 
     @Test
@@ -205,7 +205,7 @@ class RegattaObjectiveTest
     {
         setupObjectiveOnRight();
         Bateau ship = gameState.getIp().getShip();
-        /*ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
+        ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
         assertEquals(4, gameActions.size());
         List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction).collect(Collectors.toList());
         List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction).collect(Collectors.toList());
@@ -223,7 +223,7 @@ class RegattaObjectiveTest
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1) oarUsedOnRight++;
         }
         assertEquals(2, oarUsedOnLeft);
-        assertEquals(0, oarUsedOnRight);*/
+        assertEquals(0, oarUsedOnRight);
     }
 
     @Test
@@ -241,16 +241,16 @@ class RegattaObjectiveTest
         checkpointNumber.setAccessible(true);
         int numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(0, numCheckpoint);
-        /*regattaObjective.resolve(gameState);
+        regattaObjective.resolve(gameState);
         regattaObjective.update(gameState);
         numCheckpoint = checkpointNumber.getInt(regattaObjective);
-        assertEquals(0, numCheckpoint);*/
+        assertEquals(0, numCheckpoint);
     }
 
     @Test
     void updateWhenOnCp() throws NoSuchFieldException, IllegalAccessException
     {
-        /*setupObjectiveOnBoat();
+        setupObjectiveOnBoat();
         Field checkpointNumber = RegattaObjective.class.getDeclaredField("numCheckpoint");
         checkpointNumber.setAccessible(true);
         int numCheckpoint = checkpointNumber.getInt(regattaObjective);
@@ -261,6 +261,6 @@ class RegattaObjectiveTest
         setupSecondObjectiveOnBoat();
         regattaObjective.update(gameState);
         numCheckpoint = checkpointNumber.getInt(regattaObjective);
-        assertEquals(0, numCheckpoint);*/
-    }
+        assertEquals(0, numCheckpoint);
+    }*/
 }

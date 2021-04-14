@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -25,7 +24,7 @@ public class SailorObjective implements OnBoardObjective
     private WatchObjective watchObjective;
     private SailObjective sailObjective;
     private RowersObjective rowersObjective;
-    private MovingObjective transitionObjective;
+    private SailorMovementObjective transitionObjective;
 
     /**
      * Constructor.
@@ -63,18 +62,13 @@ public class SailorObjective implements OnBoardObjective
     private void setupRowerObjective()
     {
         trace();
-        int leftImmutable = (int) onBoardDataHelper.getImmutableRowers().stream()
-            .filter(sailor -> sailor.getY() == 0).count();
-        int rightImmutable = (int) onBoardDataHelper.getImmutableRowers().stream()
-            .filter(sailor -> sailor.getY() == onBoardDataHelper.getShip().getDeck().getWidth() - 1)
-            .count();
         RowersConfigHelper rowersConfigHelper = new RowersConfigHelper(rotation, distance,
-            onBoardDataHelper.getMutableRowers().size(), leftImmutable, rightImmutable,
-            onBoardDataHelper.getShip().getNumberOar());
+            onBoardDataHelper.getMutableRowers().size(), onBoardDataHelper.getLeftImmutableRowers().size(),
+            onBoardDataHelper.getRightImmutableRowers().size(), onBoardDataHelper.getShip().getNumberOar());
         OarConfiguration oarConfigWanted = rowersConfigHelper.findOptRowersConfiguration();
         rowersObjective = new RowersObjective(onBoardDataHelper.getShip(),
-            onBoardDataHelper.getMutableRowers(),
-            onBoardDataHelper.getImmutableRowers(), oarConfigWanted.getSailorConfiguration());
+            onBoardDataHelper.getMutableRowers(), onBoardDataHelper.getLeftImmutableRowers(),
+            onBoardDataHelper.getRightImmutableRowers(), oarConfigWanted.getSailorConfiguration());
         distance -= oarConfigWanted.getLinearSpeed();
         rotation -= oarConfigWanted.getAngleOfRotation();
     }
@@ -138,7 +132,7 @@ public class SailorObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated();
+        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated() && (watchObjective == null || watchObjective.isValidated());
     }
 
     /**

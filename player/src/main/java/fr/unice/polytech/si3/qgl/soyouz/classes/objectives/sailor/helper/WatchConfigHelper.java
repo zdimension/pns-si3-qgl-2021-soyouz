@@ -32,6 +32,7 @@ public class WatchConfigHelper
      */
     public boolean findOptWatchConfiguration()
     {
+        var lenght = currentPosition.getLength(lastWatchPosition);
         return currentPosition.getLength(lastWatchPosition) >= 4000 && lastWatcherPosition == null;
     }
 }

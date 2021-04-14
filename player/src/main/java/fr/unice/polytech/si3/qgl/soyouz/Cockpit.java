@@ -33,7 +33,7 @@ public class Cockpit implements ICockpit
         OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
         System.setProperty("java.util.logging.SimpleFormatter.format",
-            "%1$tF %1$tL %4$s %3$s : %5$s%6$s%n");
+            "%1$tF %1$tT:%1$tL %4$s %3$s : %5$s%6$s%n");
 
         var fmt = new SimpleFormatter();
         logger.getParent().addHandler(new Handler()
@@ -107,7 +107,7 @@ public class Cockpit implements ICockpit
             {
                 objective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
             }
-            logger.info("Init game input: " + ip);
+            logger.info("Init game input: " + OBJECT_MAPPER.writeValueAsString(ip));
         }
         catch (Exception e)
         {

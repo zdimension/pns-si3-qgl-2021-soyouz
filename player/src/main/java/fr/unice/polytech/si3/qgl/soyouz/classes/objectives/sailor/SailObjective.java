@@ -32,9 +32,9 @@ public class SailObjective implements OnBoardObjective
     /**
      * Constructor.
      *
-     * @param ship The ship.
+     * @param ship            The ship.
      * @param nbSailOpenedOpt The number of sails to open.
-     * @param sailors The sails sailors.
+     * @param sailors         The sails sailors.
      */
     public SailObjective(Bateau ship, int nbSailOpenedOpt, List<Marin> sailors)
     {
@@ -50,7 +50,7 @@ public class SailObjective implements OnBoardObjective
     /**
      * Determine how many sails will be opened/closed.
      *
-     * @param ship The ship.
+     * @param ship            The ship.
      * @param nbSailOpenedOpt The number of sails that should be opened.
      */
     private void setupSails(Bateau ship, int nbSailOpenedOpt)
@@ -58,8 +58,10 @@ public class SailObjective implements OnBoardObjective
         trace();
         List<Voile> sails = Util.filterType(Arrays.stream(ship.getEntities())
             .filter(ent -> ent instanceof Voile), Voile.class).collect(Collectors.toList());
-        List<Voile> openedSails = sails.stream().filter(Voile::isOpenned).collect(Collectors.toList());
-        List<Voile> closedSails = sails.stream().filter(sail -> !sail.isOpenned()).collect(Collectors.toList());
+        List<Voile> openedSails =
+            sails.stream().filter(Voile::isOpenned).collect(Collectors.toList());
+        List<Voile> closedSails =
+            sails.stream().filter(sail -> !sail.isOpenned()).collect(Collectors.toList());
         int diff = nbSailOpenedOpt - openedSails.size();
         while (diff != 0)
         {
@@ -92,14 +94,16 @@ public class SailObjective implements OnBoardObjective
             .sorted(Comparator.comparing(OnboardEntity::getX)).collect(Collectors.toList());
         List<Marin> sailor = sailors.stream()
             .sorted(Comparator.comparing(Marin::getX)).collect(Collectors.toList());
-        sailsOpen.forEach(sail -> {
-            if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPosCoord())))
+        sailsOpen.forEach(sail ->
+        {
+            if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPosCoord())) && !sailor.isEmpty())
             {
                 movement.add(new SailorMovementObjective(sailor.get(0), sail.getPos()));
                 sailor.remove(0);
             }
         });
-        sailsClose.forEach(sail -> {
+        sailsClose.forEach(sail ->
+        {
             if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPosCoord())))
             {
                 movement.add(new SailorMovementObjective(sailor.get(0), sail.getPos()));
@@ -131,18 +135,29 @@ public class SailObjective implements OnBoardObjective
         List<GameAction> actions = new ArrayList<>();
         movement.forEach(obj -> actions.addAll(obj.resolve()));
         if (!isValidated())
+        {
             return actions;
-        sailsToOpen.forEach(sail -> {
-            //noinspection OptionalGetWithoutIsPresent
-            Marin sailor = sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst().get();
-            actions.add(new LiftSailAction(sailor));
-            sail.setOpenned(true);
+        }
+        sailsToOpen.forEach(sail ->
+        {
+            var sailorTemp =
+                sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst();
+            if (sailorTemp.isPresent())
+            {
+                Marin sailor = sailorTemp.get();
+                actions.add(new LiftSailAction(sailor));
+                sail.setOpenned(true);
+            }
         });
-        sailsToClose.forEach(sail -> {
-            //noinspection OptionalGetWithoutIsPresent
-            Marin sailor = sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst().get();
-            actions.add(new LowerSailAction(sailor));
-            sail.setOpenned(false);
+        sailsToClose.forEach(sail ->
+        {
+            var sailorTemp =
+                sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst();
+            if(sailorTemp.isPresent()){
+                Marin sailor = sailorTemp.get();
+                actions.add(new LowerSailAction(sailor));
+                sail.setOpenned(false);
+            }
         });
         return actions;
     }

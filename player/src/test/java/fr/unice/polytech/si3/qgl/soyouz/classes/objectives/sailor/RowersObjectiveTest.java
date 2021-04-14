@@ -43,9 +43,17 @@ class RowersObjectiveTest
         immutableRower2.add(new Marin(3, 0, 0, "Tum"));
         immutableRower2.add(new Marin(4, 1, 0, "Tym"));
         List<Marin> mutableRower2 = new ArrayList<>();
+        List<Marin> immutableRowerLeft = immutableRower.stream().filter(rower -> rower.getY() == 0)
+            .collect(Collectors.toList());
+        List<Marin> immutableRowerRight = immutableRower.stream().filter(rower -> rower.getY() > 0)
+            .collect(Collectors.toList());
+        List<Marin> immutableRower2Left = immutableRower2.stream().filter(rower -> rower.getY() == 0)
+            .collect(Collectors.toList());
+        List<Marin> immutableRower2Right = immutableRower2.stream().filter(rower -> rower.getY() > 0)
+            .collect(Collectors.toList());
         mutableRower2.add(new Marin(5, 0, 1, "Tem"));
-        roLeft = new RowersObjective(ship, mutableRower, immutableRower, Pair.of(2, 1));
-        roRight = new RowersObjective(ship, mutableRower2, immutableRower2, Pair.of(1, 2));
+        roLeft = new RowersObjective(ship, mutableRower, immutableRowerLeft, immutableRowerRight, Pair.of(2, 1));
+        roRight = new RowersObjective(ship, mutableRower2, immutableRower2Left, immutableRower2Right, Pair.of(1, 2));
     }
 
     @Test
