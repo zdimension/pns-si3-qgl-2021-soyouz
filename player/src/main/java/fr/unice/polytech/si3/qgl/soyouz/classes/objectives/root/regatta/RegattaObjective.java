@@ -131,7 +131,7 @@ public class RegattaObjective implements RootObjective
         else
         {
             List<GameAction> ga = initialisationObjective.resolve();
-            if (initialisationObjective.isValidated())
+            if (initialisationObjective.isValidated() && onBoardDataHelper.getMutableRowers().isEmpty())
             {
                 update(state);
                 ga.addAll(currentCheckpoint.resolve(state));

@@ -76,7 +76,7 @@ public class RudderObjective implements OnBoardObjective
         List<GameAction> actions = new ArrayList<>();
         if (movement.size() == 1)
             actions.addAll(movement.get(0).resolve());
-        if (movement.isEmpty() || movement.get(0).isValidated())
+        if (isValidated())
             actions.add(new TurnAction(sailor, rotation));
         return actions;
     }

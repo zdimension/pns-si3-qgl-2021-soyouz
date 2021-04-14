@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.init
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -24,6 +25,7 @@ public class InitSailorPositionObjective implements MovingObjective
     private final List<LineOnBoat> linesOnBoat;
     private final LineOnBoat lineWithRudder;
     private final List<LineOnBoat> linesWithSails;
+    private final LineOnBoat lineWithWatch;
     private final List<MovingObjective> movingSailorsObjectives;
 
     /**
@@ -41,6 +43,8 @@ public class InitSailorPositionObjective implements MovingObjective
             .collect(Collectors.toList()).get(0);
         linesWithSails = linesOnBoat.stream().filter(line -> line.getSail() != null)
             .collect(Collectors.toList());
+        lineWithWatch = linesOnBoat.stream().filter(line -> line.getWatch() != null)
+            .collect(Collectors.toList()).get(0);
         generateSubObjectives(ship);
     }
 
@@ -59,8 +63,6 @@ public class InitSailorPositionObjective implements MovingObjective
         }
     }
 
-    //TODO assigner à vigie
-
     /**
      * Determine all sub movement objectives for each sailors.
      *
@@ -71,7 +73,45 @@ public class InitSailorPositionObjective implements MovingObjective
         handleUselessSailors(ship);
         generateMovingToRudderObjective();
         generateMovingToSailsObjective(determineHowManySailorsToSail(ship));
+        generateMovingToWatchObjective(ship);
         movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));
+    }
+
+    /**
+     * Move a sailor to the watch if judged necessary.
+     *
+     * @param ship The ship.
+     */
+    private void generateMovingToWatchObjective(Bateau ship)
+    {
+        if (ship.getEntities().length < sailors.size())
+        {
+            Marin sailorCloseToWatch = findClosestSailorFromEntity(lineWithWatch.getWatch());
+            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToWatch, lineWithWatch.getWatch().getPos()));
+            sailors.remove(sailorCloseToWatch);
+        }
+    }
+
+    /**
+     * Find the sailor that's the closest to the entity.
+     *
+     * @param entity The entity to reach.
+     * @return the closest sailor.
+     */
+    private Marin findClosestSailorFromEntity(OnboardEntity entity)
+    {
+        Marin sailorCloseToEntity = sailors.get(0);
+        int dist = entity.getPos().dist(sailorCloseToEntity.getPosOnShip());
+        for (Marin sailor : sailors)
+        {
+            int distance = entity.getPos().dist(sailor.getPosOnShip());
+            if (distance <= dist)
+            {
+                dist = distance;
+                sailorCloseToEntity = sailor;
+            }
+        }
+        return sailorCloseToEntity;
     }
 
     /**
@@ -79,17 +119,7 @@ public class InitSailorPositionObjective implements MovingObjective
      */
     private void generateMovingToRudderObjective()
     {
-        Marin sailorCloseToRudder = sailors.get(0);
-        int dist = lineWithRudder.getRudder().getPos().dist(sailorCloseToRudder.getPosOnShip());
-        for (Marin sailor : sailors)
-        {
-            int distance = lineWithRudder.getRudder().getPos().dist(sailor.getPosOnShip());
-            if (distance <= dist)
-            {
-                dist = distance;
-                sailorCloseToRudder = sailor;
-            }
-        }
+        Marin sailorCloseToRudder = findClosestSailorFromEntity(lineWithRudder.getRudder());
         movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToRudder, lineWithRudder.getRudder().getPos()));
         sailors.remove(sailorCloseToRudder);
     }

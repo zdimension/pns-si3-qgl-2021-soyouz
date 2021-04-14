@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class SeaDataHelper
     private Bateau ship;
     private Wind wind;
     private ShapedEntity[] visibleEntities;
+    private Position lastWatchPos;
 
     /**
      * Constructor.
@@ -31,6 +33,7 @@ public class SeaDataHelper
         this.ship = ship;
         this.wind = wind;
         this.visibleEntities = visibleEntities;
+        lastWatchPos = null;
     }
 
     /**
@@ -45,6 +48,26 @@ public class SeaDataHelper
         this.ship = state.getNp().getShip();
         this.visibleEntities = state.getNp().getVisibleEntities();
 
+    }
+
+    /**
+     * Setter.
+     *
+     * @param pos The position where a Watch action occured.
+     */
+    public void setLastWatchPos(Position pos)
+    {
+        lastWatchPos = pos;
+    }
+
+    /**
+     * Getter.
+     *
+     * @return The position where the last Watch action was thrown.
+     */
+    public Position getLastWatchPos()
+    {
+        return lastWatchPos;
     }
 
     /**
