@@ -107,22 +107,13 @@ public class CheckpointObjective implements RootObjective
             }
             Point2d p = nodes.get(i);
 
-            var line = p.sub(node);
-
             for (ShapedEntity reef : arr)
             {
                 if (reef.contains(onBoardDataHelper.getShip().getPosition()))
                     continue;
 
-                if (reef instanceof Stream)
-                {
-                    var ps = ((Stream) reef).getProjectedStrength().dot(line);
-                    int x = 123;
-                }
-
                 if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize)
-                && (reef instanceof Reef ||
-                    (reef instanceof Stream && ((Stream) reef).getProjectedStrength().dot(line) != 1234)))
+                && reef instanceof Reef)
                 {
                     continue outer;
                 }
