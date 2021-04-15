@@ -44,7 +44,7 @@ public class InitSailorPositionObjective implements MovingObjective
         linesWithSails = linesOnBoat.stream().filter(line -> line.getSail() != null)
             .collect(Collectors.toList());
         lineWithWatch = linesOnBoat.stream().filter(line -> line.getWatch() != null)
-            .collect(Collectors.toList()).get(0);
+            .findFirst().orElse(null);
         generateSubObjectives(ship);
     }
 
@@ -84,7 +84,7 @@ public class InitSailorPositionObjective implements MovingObjective
      */
     private void generateMovingToWatchObjective(Bateau ship)
     {
-        if (ship.getEntities().length <= sailors.size())
+        if (lineWithWatch != null && ship.getEntities().length <= sailors.size())
         {
             Marin sailorCloseToWatch = findClosestSailorFromEntity(lineWithWatch.getWatch());
             movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToWatch, lineWithWatch.getWatch().getPos()));

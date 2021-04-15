@@ -148,6 +148,8 @@ public class OnBoardDataHelper
     {
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Vigie.class);
+        if (rudder == null)
+            return;
         Optional<Marin> potentialWatcher = sailors.stream()
             .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
             .findFirst();

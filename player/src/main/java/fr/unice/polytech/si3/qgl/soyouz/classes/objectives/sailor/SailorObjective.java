@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -103,6 +104,8 @@ public class SailorObjective implements OnBoardObjective
      */
     private void setupWatchObjective(){
         trace();
+        if (seaDataHelper.getShip().findFirstEntity(Vigie.class) == null)
+            return;
         if (onBoardDataHelper.getWatchSailor() != null && onBoardDataHelper.getOldWatchPosition() == null)
         {
             watchObjective = new WatchObjective(onBoardDataHelper.getShip(), onBoardDataHelper.getWatchSailor());
