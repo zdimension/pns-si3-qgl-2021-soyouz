@@ -24,7 +24,7 @@ public interface Shape
     @JsonIgnore
     double getMaxDiameter();
 
-    Stream<Point2d> getShell(Point2d observer, double shipSize);
+    Stream<Point2d> getShell(double shipSize);
 
     boolean linePassesThrough(Point2d a, Point2d b, double shipSize);
 }

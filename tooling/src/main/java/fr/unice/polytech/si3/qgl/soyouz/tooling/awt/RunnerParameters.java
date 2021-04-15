@@ -14,7 +14,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -153,7 +152,7 @@ public class RunnerParameters
         return new NextRoundParameters(
             ship,
             wind,
-            Arrays.stream(seaEntities).filter(p -> p.getShell(ship.getPosition(), 0).anyMatch(
+            Arrays.stream(seaEntities).filter(p -> p.getShell().anyMatch(
                 pt -> pt.sub(ship.getPosition()).norm() < (vigie ? 5000 : 1000)
             )).toArray(ShapedEntity[]::new)
         );

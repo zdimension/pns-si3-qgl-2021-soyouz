@@ -22,7 +22,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
@@ -95,7 +94,7 @@ public class CheckpointObjective implements RootObjective
 
     public static final List<Point2d> nodes = new ArrayList<>();
 
-    private void traverseNode(ShapedEntity[] arr, int elem, Set<Pair<Integer, Integer>> lines, double shipSize)
+    private void traverseNode(ShapedEntity[] arr, int elem, List<Node> lines, double shipSize)
     {
         var node = nodes.get(elem);
         outer:
@@ -113,13 +112,13 @@ public class CheckpointObjective implements RootObjective
                     continue;
 
                 if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize)
-                && reef instanceof Reef)
+                && (reef instanceof Reef || reef instanceof Stream))
                 {
                     continue outer;
                 }
             }
 
-            if (lines.add(Pair.of(Math.min(elem, i), Math.max(elem, i))))
+            if (lines.get(elem).addNeighbour(lines.get(i)))
             {
                 traverseNode(arr, i, lines, shipSize);
             }
@@ -148,10 +147,9 @@ public class CheckpointObjective implements RootObjective
             logger.info("Computing shells");
             for (ShapedEntity r : reef)
             {
-                r.getShell(boat.getPosition(), diam).forEach(nodes::add);
+                r.getShell().forEach(nodes::add);
             }
 
-            lines.clear();
             logger.info(nodes.size() + " nodes; start traverse");
             try
             {
@@ -161,18 +159,13 @@ public class CheckpointObjective implements RootObjective
             {
                 e.printStackTrace();
             }
-            traverseNode(state.getNp().getVisibleEntities(), 0, lines, diam);
-
             var gnodes = new ArrayList<Node>();
             for (Point2d node : nodes)
             {
                 gnodes.add(new Node(node));
             }
 
-            for (Pair<Integer, Integer> line : lines)
-            {
-                gnodes.get(line.first).addNeighbour(gnodes.get(line.second));
-            }
+            traverseNode(state.getNp().getVisibleEntities(), 0, gnodes, diam);
 
             logger.info("Computing graph");
             var graph = new Graph(gnodes, 0, 1);

@@ -24,6 +24,7 @@ public class Polygon implements Shape
     {
         this.orientation = orientation;
         this.vertices = vertices;
+        this.lastShell = new Point2d[vertices.length];
     }
 
     /**
@@ -89,26 +90,34 @@ public class Polygon implements Shape
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
 
+    private double lastShipSize = Double.NaN;
+    private final Point2d[] lastShell;
+
     @Override
-    public Stream<Point2d> getShell(Point2d observer, double shipSize)
+    public Stream<Point2d> getShell(double shipSize)
     {
-        var pts = vertices.clone();
-
-        for (int i = 0; i < pts.length; i++)
+        if (shipSize != lastShipSize)
         {
-            var cur = pts[i];
-            var ni =(i + 1) % pts.length;
-            var nex = pts[ni];
-            var dta = nex.sub(cur);
+            System.arraycopy(vertices, 0, lastShell, 0, vertices.length);
 
-            var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
-            if(cur.sub(change).normSquared() < cur.normSquared())
-                change = change.mul(-1);
-            pts[i] = cur.sub(change);
-            pts[ni] = nex.sub(change);
+            for (int i = 0; i < lastShell.length; i++)
+            {
+                var cur = lastShell[i];
+                var ni = (i + 1) % lastShell.length;
+                var nex = lastShell[ni];
+                var dta = nex.sub(cur);
+
+                var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
+                if (cur.sub(change).normSquared() < cur.normSquared())
+                    change = change.mul(-1);
+                lastShell[i] = cur.sub(change);
+                lastShell[ni] = nex.sub(change);
+            }
+
+            lastShipSize = shipSize;
         }
 
-        return Arrays.stream(pts);
+        return Arrays.stream(lastShell);
     }
 
     static boolean ccw(Point2d a, Point2d b, Point2d c)
@@ -119,7 +128,7 @@ public class Polygon implements Shape
     @Override
     public boolean linePassesThrough(Point2d a, Point2d b, double shipSize)
     {
-        var pts = getShell(null, shipSize).toArray(Point2d[]::new);
+        var pts = getShell(shipSize).toArray(Point2d[]::new);
 
         for (int i = 0; i < pts.length; i++)
         {

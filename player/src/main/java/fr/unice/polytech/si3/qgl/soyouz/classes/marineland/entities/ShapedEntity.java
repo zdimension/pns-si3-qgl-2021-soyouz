@@ -6,6 +6,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", defaultImpl = Void.class)
@@ -86,9 +87,17 @@ public abstract class ShapedEntity
         return shape.contains(toLocal(pos));
     }
 
-    public java.util.stream.Stream<Point2d> getShell(Position observer, double shipSize)
+    private Position lastShellPosition = null;
+    private Point2d[] lastShell = null;
+
+    public java.util.stream.Stream<Point2d> getShell()
     {
-        return shape.getShell(toLocal(observer), shipSize * 8).map(this::toGlobal);
+        if (position != lastShellPosition || lastShell == null)
+        {
+            lastShell = shape.getShell(80).map(this::toGlobal).toArray(Point2d[]::new);
+            lastShellPosition = position;
+        }
+        return Arrays.stream(lastShell);
     }
 
     public boolean equals(Object obj)
