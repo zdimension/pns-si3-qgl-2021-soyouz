@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,17 +31,19 @@ public class RowersObjective implements OnBoardObjective
      *
      * @param ship The ship.
      * @param mutableRowers All rowers able to move from a side to another.
-     * @param immutableRowers All sailors fixed to a specific oar.
+     * @param leftImmutableRowers All sailors fixed to a specific oar on the left of the ship.
+     * @param rightImmutableRowers All sailors fixed to a specific oar on the right of the ship.
      * @param rowerConfigurationWanted The wanted configuration of rowers.
      */
-    public RowersObjective(Bateau ship, List<Marin> mutableRowers, List<Marin> immutableRowers, Pair<Integer, Integer> rowerConfigurationWanted)
+    public RowersObjective(Bateau ship, List<Marin> mutableRowers, List<Marin> leftImmutableRowers,
+                   List<Marin> rightImmutableRowers, Pair<Integer, Integer> rowerConfigurationWanted)
     {
         nbOarLeftWanted = rowerConfigurationWanted.first;
         nbOarRightWanted = rowerConfigurationWanted.second;
-        setupNbOarWantedOnEachSide(rowerConfigurationWanted, mutableRowers, immutableRowers);
+        setupNbOarWantedOnEachSide(rowerConfigurationWanted, mutableRowers, leftImmutableRowers, rightImmutableRowers);
         movingRowers = new ArrayList<>();
         rowingSailors = new ArrayList<>();
-        setupImmutableRowers(ship, immutableRowers);
+        setupImmutableRowers(leftImmutableRowers, rightImmutableRowers);
         setupRowers(ship, mutableRowers);
     }
 
@@ -49,13 +52,16 @@ public class RowersObjective implements OnBoardObjective
      *
      * @param rowerConfigurationWanted The configuration wanted.
      * @param rowers All rowers that can move.
-     * @param immutableRowers All rowers that can't move.
+     * @param leftImmutableRowers All sailors fixed to a specific oar on the left of the ship.
+     * @param rightImmutableRowers All sailors fixed to a specific oar on the right of the ship.
      */
-    private void setupNbOarWantedOnEachSide(Pair<Integer, Integer> rowerConfigurationWanted, List<Marin> rowers, List<Marin> immutableRowers)
+    private void setupNbOarWantedOnEachSide(Pair<Integer, Integer> rowerConfigurationWanted,
+        List<Marin> rowers, List<Marin> leftImmutableRowers, List<Marin> rightImmutableRowers)
     {
         nbOarLeftWanted = rowerConfigurationWanted.first;
         nbOarRightWanted = rowerConfigurationWanted.second;
-        while ((nbOarLeftWanted + nbOarRightWanted) > (rowers.size() + immutableRowers.size()))
+        while ((nbOarLeftWanted + nbOarRightWanted) >
+            (rowers.size() + leftImmutableRowers.size() + rightImmutableRowers.size()))
         {
             if (nbOarLeftWanted > 0)
                 nbOarLeftWanted--;
@@ -113,17 +119,14 @@ public class RowersObjective implements OnBoardObjective
     /**
      * Setup all immutable rowers and make them oar.
      *
-     * @param ship The ship.
-     * @param immutableRowers Rowers that can't move.
+     * @param leftImmutableRowers All sailors fixed to a specific oar on the left of the ship.
+     * @param rightImmutableRowers All sailors fixed to a specific oar on the right of the ship.
      */
-    private void setupImmutableRowers(Bateau ship, List<Marin> immutableRowers)
+    private void setupImmutableRowers(List<Marin> leftImmutableRowers, List<Marin> rightImmutableRowers)
     {
         trace();
-        List<Marin> leftRowers = immutableRowers.stream()
-            .filter(sailor -> sailor.getY() == 0).collect(Collectors.toList());
-        List<Marin> rightRowers = immutableRowers.stream()
-            .filter(sailor -> sailor.getY() == ship.getDeck().getWidth() - 1)
-            .collect(Collectors.toList());
+        List<Marin> leftRowers = new ArrayList<>(leftImmutableRowers);
+        List<Marin> rightRowers = new ArrayList<>(rightImmutableRowers);
         makeLeftRowersRow(leftRowers);
         makeRightRowersRow(rightRowers);
     }

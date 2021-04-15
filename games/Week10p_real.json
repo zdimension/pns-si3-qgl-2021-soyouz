@@ -1,0 +1,275 @@
+{
+    "goal": {
+        "mode": "REGATTA",
+        "checkpoints": [
+            {
+                "position": {
+                    "x": 5686.956521739134,
+                    "y": 2516.2866449511375,
+                    "orientation": 0.0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100.0
+                }
+            },
+            {
+                "position": {
+                    "x": 9199.99999999999,
+                    "y": 2451.1400651465797,
+                    "orientation": 0.0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100.0
+                }
+            },
+            {
+                "position": {
+                    "x": 11921.739130434802,
+                    "y": 2491.85667752443,
+                    "orientation": 0.0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100.0
+                }
+            },
+            {
+                "position": {
+                    "x": 14800.000000000018,
+                    "y": 2255.700325732901,
+                    "orientation": 0.0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100.0
+                }
+            },
+            {
+                "position": {
+                    "x": 2173.9130434782646,
+                    "y": 2499.9999999999995,
+                    "orientation": 0.0
+                },
+                "shape": {
+                    "type": "circle",
+                    "radius": 100.0
+                }
+            }
+        ]
+    },
+    "ship": {
+        "type": "ship",
+        "position": {
+            "x": 2460.9375,
+            "y": 2513.020833333333,
+            "orientation": 0.0
+        },
+        "name": "soyouz",
+        "deck": {
+            "width": 4,
+            "length": 9
+        },
+        "entities": [
+            {
+                "x": 1,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 5,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 6,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 7,
+                "y": 3,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 5,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 6,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 7,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 2,
+                "type": "rudder"
+            },
+            {
+                "x": 4,
+                "y": 1,
+                "type": "sail",
+                "openned": false
+            },
+            {
+                "x": 1,
+                "y": 2,
+                "type": "watch"
+            }
+        ],
+        "life": 1800,
+        "shape": {
+            "type": "rectangle",
+            "width": 4.0,
+            "height": 9.0,
+            "orientation": 0.0
+        }
+    },
+    "sailors": [
+        {
+            "x": 0,
+            "y": 0,
+            "id": 0,
+            "name": "Edward Teach"
+        },
+        {
+            "x": 0,
+            "y": 1,
+            "id": 1,
+            "name": "Edward Teach"
+        },
+        {
+            "x": 0,
+            "y": 2,
+            "id": 2,
+            "name": "Tom Pouce"
+        },
+        {
+            "x": 0,
+            "y": 3,
+            "id": 3,
+            "name": "Edward Teach"
+        },
+        {
+            "x": 1,
+            "y": 0,
+            "id": 4,
+            "name": "Luffy Teach"
+        },
+        {
+            "x": 1,
+            "y": 1,
+            "id": 5,
+            "name": "Luffy Pouce"
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "id": 6,
+            "name": "Edward Pouce"
+        },
+        {
+            "x": 1,
+            "y": 3,
+            "id": 7,
+            "name": "Luffy Pouce"
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "id": 8,
+            "name": "Edward Teach"
+        },
+        {
+            "x": 2,
+            "y": 1,
+            "id": 9,
+            "name": "Jack Teach"
+        },
+        {
+            "x": 2,
+            "y": 2,
+            "id": 10,
+            "name": "Jack Pouce"
+        },
+        {
+            "x": 2,
+            "y": 3,
+            "id": 11,
+            "name": "Luffy Teach"
+        },
+        {
+            "x": 3,
+            "y": 0,
+            "id": 12,
+            "name": "Luffy Pouce"
+        },
+        {
+            "x": 3,
+            "y": 1,
+            "id": 13,
+            "name": "Luffy Pouce"
+        },
+        {
+            "x": 3,
+            "y": 2,
+            "id": 14,
+            "name": "Edward Pouce"
+        },
+        {
+            "x": 3,
+            "y": 3,
+            "id": 15,
+            "name": "Tom Pouce"
+        },
+        {
+            "x": 4,
+            "y": 0,
+            "id": 16,
+            "name": "Luffy Teach"
+        }
+    ],
+    "shipCount": 1
+}

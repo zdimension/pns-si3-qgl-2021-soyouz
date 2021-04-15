@@ -205,10 +205,5 @@ public class CheckpointObjective implements RootObjective
 
         logger.info(String.format("New target: D=%.2f, ANGLE=%.2f°", distanceToCp,
             Math.toDegrees(angleToCp)));
-
-
-        /*angleToCp = calculateAngleBetweenBoatAndCheckpoint(state.getNp().getShip());
-        distanceToCp = boat.getPosition().getLength(cp.getPosition());
-        distanceToCp += ((Circle) cp.getShape()).getRadius();*/
     }
 }

@@ -16,7 +16,7 @@ public class LineOnBoat implements Comparable<LineOnBoat>
     private final List<Rame> oars;
     private Gouvernail rudder;
     private Voile sail;
-    private Vigie crownest;
+    private Vigie watch;
     private final int x;
 
     /**
@@ -31,7 +31,7 @@ public class LineOnBoat implements Comparable<LineOnBoat>
         oars = new ArrayList<>();
         rudder = null;
         sail = null;
-        crownest = null;
+        watch = null;
 
         List<OnboardEntity> ent = Arrays.stream(ship.getEntities())
             .filter(entity -> entity.getX() == x).collect(Collectors.toList());
@@ -43,8 +43,8 @@ public class LineOnBoat implements Comparable<LineOnBoat>
                 rudder = (Gouvernail) entity;
             else if (entity instanceof Voile)
                 sail = (Voile) entity;
-            else if(entity instanceof Vigie)
-                crownest = (Vigie) entity;
+            else if (entity instanceof Vigie)
+                watch = (Vigie) entity;
         });
     }
 
@@ -80,11 +80,14 @@ public class LineOnBoat implements Comparable<LineOnBoat>
     }
 
     /**
-     * Getter
+     * Getter.
      *
-     * @return the crownest if there is one
+     * @return the watch if there is one.
      */
-    public Vigie getCrownest() {return crownest; }
+    public Vigie getWatch()
+    {
+        return watch;
+    }
 
     /**
      * Getter.

@@ -45,7 +45,7 @@ class InitSailorPositionObjectiveTest
         Bateau ship = new Bateau("Peqoq", new Deck(3, 5), ent);
         ispo = new InitSailorPositionObjective(ship, sailors);
     }
-
+/*
     @Test
     void isValidated()
     {
@@ -60,5 +60,5 @@ class InitSailorPositionObjectiveTest
         List<GameAction> ga = ispo.resolve();
         assertEquals(6, ga.size());
         ga.forEach(act -> assertTrue(act instanceof MoveAction));
-    }
+    }*/
 }

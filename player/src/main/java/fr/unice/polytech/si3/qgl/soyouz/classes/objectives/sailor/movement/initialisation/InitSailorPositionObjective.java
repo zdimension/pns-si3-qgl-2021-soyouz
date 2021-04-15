@@ -3,7 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.init
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -24,8 +24,8 @@ public class InitSailorPositionObjective implements MovingObjective
     private final List<Marin> sailors;
     private final List<LineOnBoat> linesOnBoat;
     private final LineOnBoat lineWithRudder;
-    private final LineOnBoat lineWithCrownest;
     private final List<LineOnBoat> linesWithSails;
+    private final LineOnBoat lineWithWatch;
     private final List<MovingObjective> movingSailorsObjectives;
 
     /**
@@ -41,16 +41,10 @@ public class InitSailorPositionObjective implements MovingObjective
         linesOnBoat = setLinesOnBoat(ship);
         lineWithRudder = linesOnBoat.stream().filter(line -> line.getRudder() != null)
             .collect(Collectors.toList()).get(0);
-        if(ship.findFirstEntity(Vigie.class) != null){
-
-        lineWithCrownest = linesOnBoat.stream().filter(line -> line.getCrownest() != null)
-            .collect(Collectors.toList()).get(0);
-        }
-        else{
-            lineWithCrownest = null;
-        }
         linesWithSails = linesOnBoat.stream().filter(line -> line.getSail() != null)
             .collect(Collectors.toList());
+        lineWithWatch = linesOnBoat.stream().filter(line -> line.getWatch() != null)
+            .collect(Collectors.toList()).get(0);
         generateSubObjectives(ship);
     }
 
@@ -77,25 +71,47 @@ public class InitSailorPositionObjective implements MovingObjective
     private void generateSubObjectives(Bateau ship)
     {
         handleUselessSailors(ship);
+        generateMovingToWatchObjective(ship);
         generateMovingToRudderObjective();
         generateMovingToSailsObjective(determineHowManySailorsToSail(ship));
-        if(ship.findFirstEntity(Vigie.class) != null){
-            generateMovingToCrownestObjectve();
-        }
         movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));
     }
 
     /**
-     * Moves a sailor to the crow's nest if there is any extra sailor
+     * Move a sailor to the watch if judged necessary.
+     *
+     * @param ship The ship.
      */
-    private void generateMovingToCrownestObjectve(){
-        if(sailors.size() > 0){
-            //for now it is just choosing the last sailor available rather than the closest one
-            // because I should store the number of sailors available through generateSubObjectives
-            // but I'll do it later
-            movingSailorsObjectives.add(new SailorMovementObjective(sailors.get(0), lineWithCrownest.getCrownest().getPos()));
-            sailors.remove(0);
+    private void generateMovingToWatchObjective(Bateau ship)
+    {
+        if (ship.getEntities().length <= sailors.size())
+        {
+            Marin sailorCloseToWatch = findClosestSailorFromEntity(lineWithWatch.getWatch());
+            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToWatch, lineWithWatch.getWatch().getPos()));
+            sailors.remove(sailorCloseToWatch);
         }
+    }
+
+    /**
+     * Find the sailor that's the closest to the entity.
+     *
+     * @param entity The entity to reach.
+     * @return the closest sailor.
+     */
+    private Marin findClosestSailorFromEntity(OnboardEntity entity)
+    {
+        Marin sailorCloseToEntity = sailors.get(0);
+        int dist = entity.getPos().dist(sailorCloseToEntity.getPosOnShip());
+        for (Marin sailor : sailors)
+        {
+            int distance = entity.getPos().dist(sailor.getPosOnShip());
+            if (distance <= dist)
+            {
+                dist = distance;
+                sailorCloseToEntity = sailor;
+            }
+        }
+        return sailorCloseToEntity;
     }
 
     /**
@@ -103,17 +119,7 @@ public class InitSailorPositionObjective implements MovingObjective
      */
     private void generateMovingToRudderObjective()
     {
-        Marin sailorCloseToRudder = sailors.get(0);
-        int dist = lineWithRudder.getRudder().getPos().dist(sailorCloseToRudder.getPosOnShip());
-        for (Marin sailor : sailors)
-        {
-            int distance = lineWithRudder.getRudder().getPos().dist(sailor.getPosOnShip());
-            if (distance <= dist)
-            {
-                dist = distance;
-                sailorCloseToRudder = sailor;
-            }
-        }
+        Marin sailorCloseToRudder = findClosestSailorFromEntity(lineWithRudder.getRudder());
         movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToRudder, lineWithRudder.getRudder().getPos()));
         sailors.remove(sailorCloseToRudder);
     }
@@ -131,7 +137,7 @@ public class InitSailorPositionObjective implements MovingObjective
         switch (nbSails)
         {
             case 1:
-                return sailors.size() % 2 == 1 ? 1 : 0;
+                return sailors.size() % 2 == 1 || sailors.size() > nbOars ? 1 : 0;
             case 2:
                 if (sailors.size() % 2 == 0)
                 {

@@ -134,7 +134,8 @@ public class RegattaObjective implements RootObjective
             if (initialisationObjective.isValidated())
             {
                 update(state);
-                ga.addAll(currentCheckpoint.resolve(state));
+                if (onBoardDataHelper.getMutableRowers().isEmpty())
+                    ga.addAll(currentCheckpoint.resolve(state));
             }
             return ga;
         }

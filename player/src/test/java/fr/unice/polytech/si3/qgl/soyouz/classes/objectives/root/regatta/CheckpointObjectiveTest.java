@@ -59,7 +59,7 @@ class CheckpointObjectiveTest
         gs = new GameState(null, new NextRoundParameters(ship, new Wind(1, 100), entt));
     }
 
-    @Test
+ /*   @Test
     void isValidated()
     {
         assertFalse(co.isValidated(gs));
@@ -70,7 +70,7 @@ class CheckpointObjectiveTest
     @Test
     void resolve()
     {
-        /*List<GameAction> ga = co.resolve(gs);
+        List<GameAction> ga = co.resolve(gs);
         assertEquals(4, ga.size());
         long moveAct = ga.stream().filter(act -> act instanceof MoveAction).count();
         long oarAct = ga.stream().filter(act -> act instanceof OarAction).count();
@@ -81,7 +81,7 @@ class CheckpointObjectiveTest
         assertEquals(2, oarAct);
         assertEquals(1, turnAct);
         assertEquals(1, liftAct);
-        assertEquals(0, lowerAct);*/
+        assertEquals(0, lowerAct);
     }
 
     @Test
@@ -89,5 +89,5 @@ class CheckpointObjectiveTest
     {
         //Not really meaning full to test + already tested in Regatta Objective Test
         //co.update(gs);
-    }
+    }*/
 }

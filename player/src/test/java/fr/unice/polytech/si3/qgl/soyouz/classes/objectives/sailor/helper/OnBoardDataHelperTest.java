@@ -3,10 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,14 +25,15 @@ class OnBoardDataHelperTest
             new Rame(1, 0),
             new Rame(2, 2),
             new Gouvernail(1, 2),
-            new Voile(2, 0, false)
+            new Voile(2, 0, false),
+            new Vigie(2,1)
         };
         Marin[] sailors = {
             new Marin(0, 0, 1, "Tom"),
             new Marin(1, 1, 0, "Tam"),
             new Marin(2, 2, 2, "Tem"),
             new Marin(3, 1, 2, "tum"),
-            new Marin(4, 2, 0, "Tim")
+            new Marin(4, 2, 0, "Tim"),
         };
         Bateau ship = new Bateau("Peqoq", new Deck(3, 3), ent);
         obdh = new OnBoardDataHelper(ship, new ArrayList<>(Arrays.asList(sailors)));
@@ -76,6 +74,6 @@ class OnBoardDataHelperTest
         assertEquals("Peqoq", obdh.getShip().getName());
         assertEquals(3, obdh.getShip().getDeck().getWidth());
         assertEquals(3, obdh.getShip().getDeck().getLength());
-        assertEquals(6, obdh.getShip().getEntities().length);
+        assertEquals(7, obdh.getShip().getEntities().length);
     }
 }
