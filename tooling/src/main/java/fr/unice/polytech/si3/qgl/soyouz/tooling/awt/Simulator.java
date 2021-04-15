@@ -291,8 +291,8 @@ public class Simulator extends JFrame
         else
         {
             model = new RunnerParameters(
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p2_real.json")), InitGameParameters.class),
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week8p2_real_next.json")), NextRoundParameters.class)
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real.json")), InitGameParameters.class),
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real_next.json")), NextRoundParameters.class)
             );
         }
 

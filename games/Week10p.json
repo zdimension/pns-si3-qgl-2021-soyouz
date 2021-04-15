@@ -147,7 +147,7 @@
                 "y": 1
             },
             {
-                "type": "crownest",
+                "type": "watch",
                 "x": 1,
                 "y": 2
             }
@@ -155,8 +155,8 @@
         "life": 1800
     },
     "wind": {
-        "direction": -1.5708,
-        "strength": 100
+        "direction": 0,
+        "strength": 0
     },
     "seaEntities": [
         {
@@ -242,3 +242,4 @@
         }
     ]
 }
+
