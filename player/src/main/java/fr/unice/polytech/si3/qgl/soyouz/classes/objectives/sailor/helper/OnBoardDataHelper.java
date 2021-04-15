@@ -64,23 +64,26 @@ public class OnBoardDataHelper
     {
         Optional<Marin> rowerGoingToWatch = immutableRowers.stream()
             .filter(sailor -> sailor.isAbsPosReachable(ship.findFirstPosOfEntity(Vigie.class))).findFirst();
-        rowerGoingToWatch.ifPresent(sailor ->
+        if (rowerGoingToWatch.isPresent())
         {
+            Marin sailor = rowerGoingToWatch.get();
             immutableRowers.remove(sailor);
             leftImmutableRowers.remove(sailor);
             rightImmutableRowers.remove(sailor);
             oldWatchPosition = sailor.getPosOnShip();
             watchSailor = sailor;
-            return;
-        });
-        rowerGoingToWatch = mutableRowers.stream()
-            .filter(sailor -> sailor.isAbsPosReachable(ship.findFirstPosOfEntity(Vigie.class))).findFirst();
-        rowerGoingToWatch.ifPresent(sailor ->
+        }
+        else
         {
-            mutableRowers.remove(sailor);
-            oldWatchPosition = sailor.getPosOnShip();
-            watchSailor = sailor;
-        });
+            rowerGoingToWatch = mutableRowers.stream()
+                .filter(sailor -> sailor.isAbsPosReachable(ship.findFirstPosOfEntity(Vigie.class))).findFirst();
+            rowerGoingToWatch.ifPresent(sailor ->
+            {
+                mutableRowers.remove(sailor);
+                oldWatchPosition = sailor.getPosOnShip();
+                watchSailor = sailor;
+            });
+        }
     }
 
     /**
