@@ -70,14 +70,6 @@ class PositionTest
     }
 
     @Test
-    void isFacingPositionTest()
-    {
-        Position pos2 = new Position(10, 0, Math.PI / 2);
-        assertTrue(pos2.isFacingPosition(position));
-        assertFalse(position.isFacingPosition(pos2));
-    }
-
-    @Test
     void addTest()
     {
         Position pos2 = new Position(10, 0, Math.PI / 2);

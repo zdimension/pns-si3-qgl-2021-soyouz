@@ -23,8 +23,8 @@ class RudderConfigHelperTest
     @Test
     void findOptRudderRotation()
     {
-        assertEquals(Gouvernail.ALLOWED_ROTATION.first, inferiorRotation.findOptRudderRotation());
+        assertEquals(-Gouvernail.ALLOWED_ROTATION, inferiorRotation.findOptRudderRotation());
         assertEquals(Math.PI / 5, inRangeRotation.findOptRudderRotation());
-        assertEquals(Gouvernail.ALLOWED_ROTATION.second, superiorRotation.findOptRudderRotation());
+        assertEquals(Gouvernail.ALLOWED_ROTATION, superiorRotation.findOptRudderRotation());
     }
 }

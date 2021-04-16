@@ -55,7 +55,7 @@ public class RowersConfigHelper
      */
     private void setOaringPossibilities()
     {
-        if (Gouvernail.ALLOWED_ROTATION.first < neededRotation && neededRotation < Gouvernail.ALLOWED_ROTATION.second)
+        if (Gouvernail.isValid(neededRotation))
         {
             setForwardPossibilities();
         }
@@ -171,7 +171,7 @@ public class RowersConfigHelper
     public OarConfiguration findOptRowersConfiguration()
     {
         trace();
-        if (Gouvernail.ALLOWED_ROTATION.first < neededRotation && neededRotation < Gouvernail.ALLOWED_ROTATION.second)
+        if (Gouvernail.isValid(neededRotation))
         {
             return resolveBasedOnSpeed();
         }

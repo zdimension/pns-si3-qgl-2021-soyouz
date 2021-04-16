@@ -27,7 +27,7 @@ public class RudderConfigHelper
      */
     private boolean rudderRotationIsInRange()
     {
-        return neededRotation > Gouvernail.ALLOWED_ROTATION.first && neededRotation < Gouvernail.ALLOWED_ROTATION.second;
+        return Gouvernail.isValid(neededRotation);
     }
 
     /**
@@ -44,14 +44,7 @@ public class RudderConfigHelper
         }
         else
         {
-            if (neededRotation < 0)
-            {
-                return Gouvernail.ALLOWED_ROTATION.first;
-            }
-            else
-            {
-                return Gouvernail.ALLOWED_ROTATION.second;
-            }
+            return Math.signum(neededRotation) * Gouvernail.ALLOWED_ROTATION;
         }
     }
 }

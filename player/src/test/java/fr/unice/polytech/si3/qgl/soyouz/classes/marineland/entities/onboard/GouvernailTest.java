@@ -48,11 +48,4 @@ class GouvernailTest
         assertEquals(new PosOnShip(1, 2), rudder.getPos());
         assertNotEquals(new PosOnShip(2, 2), rudder.getPos());
     }
-
-    @Test
-    void rangeTest()
-    {
-        assertEquals(-0.78539816339, Gouvernail.ALLOWED_ROTATION.first);
-        assertEquals(0.78539816339, Gouvernail.ALLOWED_ROTATION.second);
-    }
 }

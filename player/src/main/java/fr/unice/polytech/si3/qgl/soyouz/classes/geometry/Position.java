@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.atan2;
 
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
@@ -87,17 +86,6 @@ public class Position extends Point2d
     public int hashCode()
     {
         return Objects.hash(x, y, orientation);
-    }
-
-    /**
-     * Determine if a point is facing another (with a 0.01 error %).
-     *
-     * @param pos The second point position.
-     * @return true if they are facing, false otherwise.
-     */
-    public boolean isFacingPosition(Position pos)
-    {
-        return abs(atan2(pos.getY() - this.getY(), pos.getX() - this.getX()) - this.getOrientation()) < 0.01;
     }
 
     /**

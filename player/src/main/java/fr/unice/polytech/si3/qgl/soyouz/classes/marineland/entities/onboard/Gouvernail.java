@@ -8,9 +8,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
  */
 public class Gouvernail extends OnboardEntity
 {
-
-    public static final Pair<Double, Double> ALLOWED_ROTATION = Pair.of(-0.78539816339,
-        0.78539816339);
+    public static final double ALLOWED_ROTATION = Math.PI / 4;
 
     /**
      * Constructor.
@@ -21,5 +19,10 @@ public class Gouvernail extends OnboardEntity
     public Gouvernail(@JsonProperty("x") int x, @JsonProperty("y") int y)
     {
         super(x, y);
+    }
+
+    public static boolean isValid(double rotation)
+    {
+        return Math.abs(rotation) <= ALLOWED_ROTATION;
     }
 }
