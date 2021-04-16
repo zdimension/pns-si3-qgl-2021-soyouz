@@ -102,31 +102,9 @@ public class Marin
      * @return the position of the sailor.
      */
     @JsonIgnore
-    public Pair<Integer, Integer> getPos()
+    public PosOnShip getPos()
     {
-        return Pair.of(getX(), getY());
-    }
-
-    /**
-     * Getter.
-     *
-     * @return the position of the sailor.
-     */
-    public PosOnShip getPosOnShip()
-    {
-        return new PosOnShip(getX(), getY());
-    }
-
-    /**
-     * Getter.
-     *
-     * @return the coordinates of this on the
-     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
-     */
-    @JsonIgnore
-    public Pair<Integer, Integer> getGridPosition()
-    {
-        return Pair.of(x, y);
+        return PosOnShip.of(getX(), getY());
     }
 
     /**
@@ -142,63 +120,37 @@ public class Marin
     /**
      * Moves this sailor the number of cells specified. This sailor can move up to 5 cells.
      *
-     * @param xDist to move on X axis.
-     * @param yDist to move on Y axis.
+     * @param pos to move.
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveRelative(int xDist, int yDist)
+    public PosOnShip moveRelative(PosOnShip pos)
     {
-        if (!isRelPosReachable(xDist, yDist))
+        if (!isRelPosReachable(pos))
         {
             throw new IllegalArgumentException("Sailor must move 5 cells or lower");
         }
-        this.x += xDist;
-        this.y += yDist;
-        return this.getGridPosition();
-    }
-
-    /**
-     * Moves this sailor the number of cells specified. This sailor can move up to 5 cells.
-     *
-     * @param dist to move on x and y axis.
-     * @return new absolute position.
-     * @throws IllegalArgumentException if it wants to move further than 5 cells.
-     */
-    public Pair<Integer, Integer> moveRelative(Pair<Integer, Integer> dist)
-    {
-        return moveRelative(dist.getFirst(), dist.getSecond());
+        this.x += pos.getX();
+        this.y += pos.getY();
+        return this.getPos();
     }
 
     /**
      * Moves this sailor at the specified cell. This sailor can move up to 5 cells.
      *
-     * @param xPos to reach on X axis.
-     * @param yPos to reach on Y axis.
+     * @param pos to reach.
      * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public Pair<Integer, Integer> moveAbsolute(int xPos, int yPos)
+    public PosOnShip moveAbsolute(PosOnShip pos)
     {
-        if (!this.isAbsPosReachable(xPos, yPos))
+        if (!this.isAbsPosReachable(pos))
         {
             throw new IllegalArgumentException("Sailor must move 5 cells or lower");
         }
-        this.x = xPos;
-        this.y = yPos;
-        return this.getGridPosition();
-    }
-
-    /**
-     * Moves this sailor at the specified cell. This sailor can move up to 5 cells.
-     *
-     * @param pos to move on x and y axis.
-     * @return new absolute position.
-     * @throws IllegalArgumentException if it wants to move further than 5 cells.
-     */
-    public Pair<Integer, Integer> moveAbsolute(Pair<Integer, Integer> pos)
-    {
-        return moveAbsolute(pos.getFirst(), pos.getSecond());
+        this.x = pos.getX();
+        this.y = pos.getY();
+        return this.getPos();
     }
 
     /**
@@ -208,9 +160,9 @@ public class Marin
      * @param yDist distance on X axis
      * @return if this sailor can move the number of cells specified
      */
-    public boolean isRelPosReachable(int xDist, int yDist)
+    public boolean isRelPosReachable(PosOnShip pos)
     {
-        return Math.abs(xDist) + Math.abs(yDist) <= MAX_MOVE;
+        return pos.norm() <= MAX_MOVE;
     }
 
     /**
@@ -231,7 +183,7 @@ public class Marin
      * @param pos a Pair of coords (X,Y).
      * @return if the absolute position is reachable for this sailor.
      */
-    public boolean isAbsPosReachable(Pair<Integer, Integer> pos)
+    public boolean isAbsPosReachable(PosOnShip pos)
     {
         return isAbsPosReachable(pos.getFirst(), pos.getSecond());
     }
@@ -254,7 +206,7 @@ public class Marin
      * @param pos The position of the entity.
      * @return a number of turn.
      */
-    public int numberExtraRoundsToReachEntity(Pair<Integer, Integer> pos)
+    public int numberExtraRoundsToReachEntity(PosOnShip pos)
     {
         return numberExtraRoundsToReachEntity(pos.getFirst(), pos.getSecond());
     }

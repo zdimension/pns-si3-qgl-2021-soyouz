@@ -39,8 +39,8 @@ public class CheckpointObjective implements RootObjective
     private SailorObjective roundObjective;
     private double angleToCp;
     private double distanceToCp;
-    public static final HashSet<Pair<Integer, Integer>> lines = new HashSet<>();
     public static List<Node> path;
+    public static Graph graph;
 
     /**
      * Constructor.
@@ -168,7 +168,7 @@ public class CheckpointObjective implements RootObjective
             traverseNode(state.getNp().getVisibleEntities(), 0, gnodes, diam);
 
             logger.info("Computing graph");
-            var graph = new Graph(gnodes, 0, 1);
+            graph = new Graph(gnodes, 0, 1);
             logger.info("Fetching shortest path");
             path = graph.getShortestPath();
             if (path.size() < 2)

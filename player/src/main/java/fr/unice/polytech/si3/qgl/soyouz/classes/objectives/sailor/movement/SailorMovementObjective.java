@@ -70,7 +70,7 @@ public class SailorMovementObjective implements MovingObjective
         List<GameAction> moveAction = new ArrayList<>();
         int xMove = resolveXMove();
         int yMove = resolveYMove(xMove);
-        sailor.moveRelative(xMove, yMove);
+        sailor.moveRelative(PosOnShip.of(xMove, yMove));
         moveAction.add(new MoveAction(sailor, xMove, yMove));
         nbTurnToComplete--;
         return moveAction;

@@ -45,7 +45,7 @@ public class WatchObjective implements OnBoardObjective
     {
         trace();
         OnboardEntity watch = ship.findFirstEntity(Vigie.class);
-        if (!ship.hasAt(sailor.getX(), sailor.getY(), Vigie.class))
+        if (!ship.hasAt(sailor.getPos(), Vigie.class))
         {
             movement.add(new SailorMovementObjective(sailor, watch.getPos()));
         }

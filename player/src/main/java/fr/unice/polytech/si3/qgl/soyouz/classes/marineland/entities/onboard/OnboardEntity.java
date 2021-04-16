@@ -61,9 +61,9 @@ public abstract class OnboardEntity
      *
      * @return the position of the entity.
      */
-    public Pair<Integer, Integer> getPosCoord()
+    public PosOnShip getPosCoord()
     {
-        return Pair.of(getX(), getY());
+        return PosOnShip.of(getX(), getY());
     }
 
     public PosOnShip getPos()

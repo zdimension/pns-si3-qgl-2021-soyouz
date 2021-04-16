@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class SailorYMovementObjective implements MovingObjective
             yMove = -5;
         else
             yMove = distStillToParkour;
-        sailor.moveRelative(0, yMove);
+        sailor.moveRelative(PosOnShip.of( 0, yMove));
         moveAction.add(new MoveAction(sailor, 0, yMove));
         nbTurnToComplete--;
         return moveAction;

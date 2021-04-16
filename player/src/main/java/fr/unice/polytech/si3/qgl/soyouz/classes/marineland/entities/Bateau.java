@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
@@ -105,37 +106,15 @@ public class Bateau extends AutreBateau
     }
 
     /**
-     * Determines which
-     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity} is
-     * set on a specific {@link Point2d}.
-     *
-     * @param xPos The abscissa of the Point to analyse.
-     * @param yPos The ordinate of the Point to analyse.
-     * @return optional entity on the given cell.
-     */
-    public Optional<OnboardEntity> getEntityHere(int xPos, int yPos)
-    {
-        for (OnboardEntity ent : entities)
-        {
-            if (ent.getX() == xPos && ent.getY() == yPos)
-            {
-                return Optional.of(ent);
-            }
-        }
-        return Optional.empty();
-    }
-
-    /**
      * Determine if a specific object is places at a specific position.
      *
-     * @param xPos The potential abscissa of the object.
-     * @param yPos The potential ordinate of the object.
+     *@param pos The coords we want to analyse.
      * @param cls  The Class of object researched.
      * @return true if there is the object, false otherwise.
      */
-    public boolean hasAt(int xPos, int yPos, Class<?> cls)
+    public boolean hasAt(PosOnShip pos, Class<?> cls)
     {
-        return cls.isInstance(getEntityHere(xPos, yPos).orElse(null));
+        return cls.isInstance(getEntityHere(pos).orElse(null));
     }
 
     /**
@@ -146,9 +125,9 @@ public class Bateau extends AutreBateau
      * @param pos The coords we want to analyse.
      * @return optional entity on the given cell.
      */
-    public Optional<OnboardEntity> getEntityHere(Pair<Integer, Integer> pos)
+    public Optional<OnboardEntity> getEntityHere(PosOnShip pos)
     {
-        return getEntityHere(pos.getFirst(), pos.getSecond());
+        return Arrays.stream(entities).filter(ent -> ent.getPos().equals(pos)).findFirst();
     }
 
     /**
@@ -182,7 +161,7 @@ public class Bateau extends AutreBateau
      * @param ent to find the position of.
      * @return the fist position found of the given entity.
      */
-    public Pair<Integer, Integer> findFirstPosOfEntity(Class<? extends OnboardEntity> ent)
+    public PosOnShip findFirstPosOfEntity(Class<? extends OnboardEntity> ent)
     {
         return Util.filterType(Arrays.stream(this.entities), ent).findFirst()
             .map(OnboardEntity::getPosCoord).orElse(null);

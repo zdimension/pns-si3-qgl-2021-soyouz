@@ -25,12 +25,12 @@ class OarConfigurationTest
     @Test
     void getSailorConfiguration()
     {
-        assertEquals(Pair.of(1,3), configurationLeft.getSailorConfiguration());
-        assertNotEquals(Pair.of(2,3), configurationLeft.getSailorConfiguration());
-        assertEquals(Pair.of(2,2), configurationStraight.getSailorConfiguration());
-        assertNotEquals(Pair.of(2,3), configurationStraight.getSailorConfiguration());
-        assertEquals(Pair.of(3,1), configurationRight.getSailorConfiguration());
-        assertNotEquals(Pair.of(3,2), configurationRight.getSailorConfiguration());
+        assertEquals(PosOnShip.of(1,3), configurationLeft.getSailorConfiguration());
+        assertNotEquals(PosOnShip.of(2,3), configurationLeft.getSailorConfiguration());
+        assertEquals(PosOnShip.of(2,2), configurationStraight.getSailorConfiguration());
+        assertNotEquals(PosOnShip.of(2,3), configurationStraight.getSailorConfiguration());
+        assertEquals(PosOnShip.of(3,1), configurationRight.getSailorConfiguration());
+        assertNotEquals(PosOnShip.of(3,2), configurationRight.getSailorConfiguration());
     }
 
     @Test

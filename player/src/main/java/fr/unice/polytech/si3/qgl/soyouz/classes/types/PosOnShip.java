@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -30,23 +31,27 @@ public class PosOnShip
     /**
      * Constructor.
      *
-     * @param pos A pair of Abscissa and Ordinate.
-     */
-    public PosOnShip(Pair<Integer, Integer> pos)
-    {
-        this.x = pos.first;
-        this.y = pos.second;
-    }
-
-    /**
-     * Constructor.
-     *
      * @param ent An entity.
      */
     public PosOnShip(OnboardEntity ent)
     {
         this.x = ent.getX();
         this.y = ent.getY();
+    }
+
+    public static PosOnShip of(int x, int y)
+    {
+        return new PosOnShip(x, y);
+    }
+
+    public int getFirst()
+    {
+        return getX();
+    }
+
+    public int getSecond()
+    {
+        return getY();
     }
 
     /**
@@ -70,16 +75,6 @@ public class PosOnShip
     }
 
     /**
-     * Getter.
-     *
-     * @return the Pair of coords..
-     */
-    public Pair<Integer, Integer> getPosCoords()
-    {
-        return Pair.of(getX(), getY());
-    }
-
-    /**
      * Determine the distance between two positions.
      *
      * @param pos2 The second position.
@@ -88,6 +83,11 @@ public class PosOnShip
     public int dist(PosOnShip pos2)
     {
         return Math.abs(x - pos2.getX()) + Math.abs(y - pos2.getY());
+    }
+
+    public int norm()
+    {
+        return Math.abs(x) + Math.abs(y);
     }
 
     /**
@@ -134,5 +134,10 @@ public class PosOnShip
     public int hashCode()
     {
         return Objects.hash(x, y);
+    }
+
+    public PosOnShip add(PosOnShip delta)
+    {
+        return new PosOnShip(x + delta.x, y + delta.y);
     }
 }

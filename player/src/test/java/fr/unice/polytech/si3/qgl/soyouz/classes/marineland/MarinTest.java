@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,17 +55,17 @@ class MarinTest
 
     @Test
     void isAbsPosReachableTest(){
-        assertTrue(sailor.isAbsPosReachable(Pair.of(3,3)));
-        assertTrue(sailor.isAbsPosReachable(Pair.of(6,4)));
-        assertFalse(sailor.isAbsPosReachable(Pair.of(7,4)));
-        assertFalse(sailor.isAbsPosReachable(Pair.of(6,5)));
+        assertTrue(sailor.isAbsPosReachable(PosOnShip.of(3,3)));
+        assertTrue(sailor.isAbsPosReachable(PosOnShip.of(6,4)));
+        assertFalse(sailor.isAbsPosReachable(PosOnShip.of(7,4)));
+        assertFalse(sailor.isAbsPosReachable(PosOnShip.of(6,5)));
     }
 
     @Test
     void numberExtraRoundsToReachEntity(){
-        assertEquals(0,sailor.numberExtraRoundsToReachEntity(Pair.of(3,3)));
+        assertEquals(0,sailor.numberExtraRoundsToReachEntity(PosOnShip.of(3,3)));
         assertEquals(0,sailor.numberExtraRoundsToReachEntity(3,3));
-        assertEquals(1,sailor.numberExtraRoundsToReachEntity(Pair.of(8,3)));
+        assertEquals(1,sailor.numberExtraRoundsToReachEntity(PosOnShip.of(8,3)));
         assertEquals(1,sailor.numberExtraRoundsToReachEntity(8,3));
     }
 
@@ -77,11 +78,11 @@ class MarinTest
     }
 
     @Test
-    void getGridPosition()
+    void getPos()
     {
-        assertNotEquals(Pair.of(2, 2), sailor.getGridPosition());
-        assertEquals(Pair.of(3, 2), sailor.getGridPosition());
-        assertNotEquals(Pair.of(3, 3), sailor.getGridPosition());
+        assertNotEquals(PosOnShip.of(2, 2), sailor.getPos());
+        assertEquals(PosOnShip.of(3, 2), sailor.getPos());
+        assertNotEquals(PosOnShip.of(3, 3), sailor.getPos());
     }
 
     @Test
@@ -93,45 +94,45 @@ class MarinTest
     @Test
     void moveRelative()
     {
-        sailor.moveRelative(2, 1);
+        sailor.moveRelative(PosOnShip.of(2, 1));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(4, 4));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(PosOnShip.of(4, 4)));
     }
 
     @Test
     void testMoveRelative()
     {
-        sailor.moveRelative(Pair.of(2, 1));
+        sailor.moveRelative(PosOnShip.of(2, 1));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(Pair.of(4, 4)));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(PosOnShip.of(4, 4)));
     }
 
     @Test
     void moveAbsolute()
     {
-        sailor.moveAbsolute(5, 3);
+        sailor.moveAbsolute(PosOnShip.of(5, 3));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(17, 6));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17, 6)));
     }
 
     @Test
     void testMoveAbsolute()
     {
-        sailor.moveAbsolute(Pair.of(5, 3));
+        sailor.moveAbsolute(PosOnShip.of(5, 3));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(Pair.of(17, 6)));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17, 6)));
     }
 
     @Test
     void isRelPosReachable()
     {
-        assertTrue(sailor.isRelPosReachable(4, 1));
-        assertFalse(sailor.isRelPosReachable(4, 2));
-        assertFalse(sailor.isRelPosReachable(5, 1));
+        assertTrue(sailor.isRelPosReachable(PosOnShip.of(4, 1)));
+        assertFalse(sailor.isRelPosReachable(PosOnShip.of(4, 2)));
+        assertFalse(sailor.isRelPosReachable(PosOnShip.of(5, 1)));
     }
 
     @Test

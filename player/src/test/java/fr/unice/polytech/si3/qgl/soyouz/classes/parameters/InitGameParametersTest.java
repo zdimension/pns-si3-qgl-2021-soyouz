@@ -11,6 +11,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,12 +79,12 @@ class InitGameParametersTest
     {
         Marin[] marins = ip.getSailors();
         assertEquals(6, marins.length);
-        assertEquals(Pair.of(0, 0), marins[0].getGridPosition());
-        assertEquals(Pair.of(0, 2), marins[1].getGridPosition());
-        assertEquals(Pair.of(1, 0), marins[2].getGridPosition());
-        assertEquals(Pair.of(1, 2), marins[3].getGridPosition());
-        assertEquals(Pair.of(0, 1), marins[4].getGridPosition());
-        assertEquals(Pair.of(1, 1), marins[5].getGridPosition());
+        assertEquals(PosOnShip.of(0, 0), marins[0].getPos());
+        assertEquals(PosOnShip.of(0, 2), marins[1].getPos());
+        assertEquals(PosOnShip.of(1, 0), marins[2].getPos());
+        assertEquals(PosOnShip.of(1, 2), marins[3].getPos());
+        assertEquals(PosOnShip.of(0, 1), marins[4].getPos());
+        assertEquals(PosOnShip.of(1, 1), marins[5].getPos());
         assertEquals(ip.getSailorById(0).get(), marins[0]);
     }
 }

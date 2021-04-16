@@ -37,9 +37,9 @@ class GouvernailTest
     @Test
     void getPosCoord()
     {
-        assertNotEquals(Pair.of(1,3), rudder.getPosCoord());
-        assertEquals(Pair.of(1,2), rudder.getPosCoord());
-        assertNotEquals(Pair.of(2,2), rudder.getPosCoord());
+        assertNotEquals(PosOnShip.of(1,3), rudder.getPosCoord());
+        assertEquals(PosOnShip.of(1,2), rudder.getPosCoord());
+        assertNotEquals(PosOnShip.of(2,2), rudder.getPosCoord());
     }
 
     @Test

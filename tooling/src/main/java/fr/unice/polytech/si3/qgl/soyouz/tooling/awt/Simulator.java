@@ -297,7 +297,7 @@ public class Simulator extends JFrame
         }
 
         np = null;
-        CheckpointObjective.lines.clear();
+        CheckpointObjective.graph = null;
         canvas.setModel(model.getIp(false));
         currentCheckpoint = 0;
         cockpit = new Cockpit();
@@ -360,7 +360,7 @@ public class Simulator extends JFrame
             var entType = act.entityNeeded;
             if (entType != null)
             {
-                var entOpt = model.getShip().getEntityHere(act.getSailor().getGridPosition());
+                var entOpt = model.getShip().getEntityHere(act.getSailor().getPos());
                 if (entOpt.isPresent())
                 {
                     var ent = entOpt.get();
@@ -412,8 +412,8 @@ public class Simulator extends JFrame
                 if (act instanceof MoveAction)
                 {
                     var mv = (MoveAction) act;
-                    var pos = sail.getPosOnShip().getPosCoords();
-                    sail.moveRelative(mv.getXDistance(), mv.getYDistance());
+                    var pos = sail.getPos();
+                    sail.moveRelative(mv.getDelta());
                     if (sail.getX() < 0 || sail.getX() >= model.getShip().getDeck().getLength()
                         || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())
                     {

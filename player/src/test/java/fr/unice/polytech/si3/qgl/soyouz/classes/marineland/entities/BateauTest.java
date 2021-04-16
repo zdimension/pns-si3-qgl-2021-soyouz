@@ -6,6 +6,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,17 +87,17 @@ class BateauTest
     @Test
     void getEntityHere()
     {
-        assertTrue(ship.getEntityHere(0, 0).isPresent());
-        assertTrue(ship.getEntityHere(0, 2).isPresent());
-        assertTrue(ship.getEntityHere(1, 1).isEmpty());
+        assertTrue(ship.getEntityHere(PosOnShip.of(0, 0)).isPresent());
+        assertTrue(ship.getEntityHere(PosOnShip.of(0, 2)).isPresent());
+        assertTrue(ship.getEntityHere(PosOnShip.of(1, 1)).isEmpty());
     }
 
     @Test
     void testGetEntityHere()
     {
-        assertTrue(ship.getEntityHere(Pair.of(0, 0)).isPresent());
-        assertTrue(ship.getEntityHere(Pair.of(0, 2)).isPresent());
-        assertTrue(ship.getEntityHere(Pair.of(1, 1)).isEmpty());
+        assertTrue(ship.getEntityHere(PosOnShip.of(0, 0)).isPresent());
+        assertTrue(ship.getEntityHere(PosOnShip.of(0, 2)).isPresent());
+        assertTrue(ship.getEntityHere(PosOnShip.of(1, 1)).isEmpty());
     }
 
     @Test
@@ -108,7 +109,7 @@ class BateauTest
 
     @Test
     void findFirstPosOfEntityTest(){
-        assertEquals(Pair.of(0,2), ship.findFirstPosOfEntity(Rame.class));
+        assertEquals(PosOnShip.of(0,2), ship.findFirstPosOfEntity(Rame.class));
     }
 
     @Test
@@ -118,8 +119,8 @@ class BateauTest
 
     @Test
     void hasAtTest(){
-        assertTrue(ship.hasAt(0,0,Rame.class));
-        assertFalse(ship.hasAt(0,0, Gouvernail.class));
+        assertTrue(ship.hasAt(PosOnShip.of(0, 0), Rame.class));
+        assertFalse(ship.hasAt(PosOnShip.of(0, 0), Gouvernail.class));
     }
 
     //No Point in testing a toString only for coverage purposes

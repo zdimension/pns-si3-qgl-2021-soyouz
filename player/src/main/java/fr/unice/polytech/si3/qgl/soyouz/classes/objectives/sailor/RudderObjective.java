@@ -47,7 +47,7 @@ public class RudderObjective implements OnBoardObjective
     {
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
-        if (!ship.hasAt(sailor.getX(), sailor.getY(), Gouvernail.class))
+        if (!ship.hasAt(sailor.getPos(), Gouvernail.class))
         {
             movement.add(new SailorMovementObjective(sailor, rudder.getPos()));
         }

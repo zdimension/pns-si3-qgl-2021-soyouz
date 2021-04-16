@@ -101,10 +101,10 @@ public class InitSailorPositionObjective implements MovingObjective
     private Marin findClosestSailorFromEntity(OnboardEntity entity)
     {
         Marin sailorCloseToEntity = sailors.get(0);
-        int dist = entity.getPos().dist(sailorCloseToEntity.getPosOnShip());
+        int dist = entity.getPos().dist(sailorCloseToEntity.getPos());
         for (Marin sailor : sailors)
         {
-            int distance = entity.getPos().dist(sailor.getPosOnShip());
+            int distance = entity.getPos().dist(sailor.getPos());
             if (distance <= dist)
             {
                 dist = distance;
@@ -162,10 +162,10 @@ public class InitSailorPositionObjective implements MovingObjective
         for (int i = 0; i < nbSailorToSail; i++)
         {
             Marin sailorCloseToSail = sailors.get(0);
-            int dist = linesWithSails.get(i).getSail().getPos().dist(sailorCloseToSail.getPosOnShip());
+            int dist = linesWithSails.get(i).getSail().getPos().dist(sailorCloseToSail.getPos());
             for (Marin sailor : sailors)
             {
-                int distance = linesWithSails.get(i).getSail().getPos().dist(sailor.getPosOnShip());
+                int distance = linesWithSails.get(i).getSail().getPos().dist(sailor.getPos());
                 if (distance <= dist)
                 {
                     dist = distance;

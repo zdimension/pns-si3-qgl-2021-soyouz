@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,11 +60,11 @@ class MoveActionTest
     @Test
     void newPosTest()
     {
-        assertEquals(Pair.of(3, 2), moveAction.newPos());
-        assertNotEquals(Pair.of(2, 3), moveAction.newPos());
-        assertNotEquals(Pair.of(4, 2), moveAction.newPos());
-        assertNotEquals(Pair.of(2, 2), moveAction.newPos());
-        assertNotEquals(Pair.of(4, 3), moveAction.newPos());
+        assertEquals(PosOnShip.of(3, 2), moveAction.newPos());
+        assertNotEquals(PosOnShip.of(2, 3), moveAction.newPos());
+        assertNotEquals(PosOnShip.of(4, 2), moveAction.newPos());
+        assertNotEquals(PosOnShip.of(2, 2), moveAction.newPos());
+        assertNotEquals(PosOnShip.of(4, 3), moveAction.newPos());
     }
 
     @Test

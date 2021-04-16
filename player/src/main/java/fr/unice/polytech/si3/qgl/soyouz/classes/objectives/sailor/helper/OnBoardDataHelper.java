@@ -70,7 +70,7 @@ public class OnBoardDataHelper
             immutableRowers.remove(sailor);
             leftImmutableRowers.remove(sailor);
             rightImmutableRowers.remove(sailor);
-            oldWatchPosition = sailor.getPosOnShip();
+            oldWatchPosition = sailor.getPos();
             watchSailor = sailor;
         }
         else
@@ -80,7 +80,7 @@ public class OnBoardDataHelper
             rowerGoingToWatch.ifPresent(sailor ->
             {
                 mutableRowers.remove(sailor);
-                oldWatchPosition = sailor.getPosOnShip();
+                oldWatchPosition = sailor.getPos();
                 watchSailor = sailor;
             });
         }
@@ -170,7 +170,7 @@ public class OnBoardDataHelper
     {
         trace();
         List<Marin> sailorOnOar = sailors.stream()
-            .filter(sailor -> ship.hasAt(sailor.getX(), sailor.getY(), Rame.class))
+            .filter(sailor -> ship.hasAt(sailor.getPos(), Rame.class))
             .collect(Collectors.toList());
         sailorOnOar.forEach(sailor ->
         {

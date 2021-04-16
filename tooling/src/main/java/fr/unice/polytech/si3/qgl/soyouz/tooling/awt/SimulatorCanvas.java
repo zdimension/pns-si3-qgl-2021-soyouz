@@ -14,6 +14,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import javax.imageio.ImageIO;
@@ -319,15 +320,19 @@ public class SimulatorCanvas extends JPanel
 
         g = (Graphics2D) g.create();
 
-        var lines = CheckpointObjective.lines;
-        if (lines.isEmpty())
+        var graph = CheckpointObjective.graph;
+        if (graph == null)
             return;
+
         var nodes = CheckpointObjective.nodes;
         g.setColor(Color.ORANGE);
-        for (Pair<Integer, Integer> line : lines)
+
+        var lines = graph.getEdges();
+
+        for (Pair<Node, Node> line : lines)
         {
-            var sa = mapToScreen(nodes.get(line.first));
-            var sb = mapToScreen(nodes.get(line.second));
+            var sa = mapToScreen(line.first.position);
+            var sb = mapToScreen(line.second.position);
             g.drawLine(sa.x, sa.y, sb.x, sb.y);
         }
 
