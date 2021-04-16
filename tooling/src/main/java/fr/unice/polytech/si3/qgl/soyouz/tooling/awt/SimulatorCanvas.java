@@ -24,13 +24,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SimulatorCanvas extends JPanel
 {
-    public static final int SHAPE_CROSS_SIZE = 10;
     private static final Color BACKGROUND = new Color(202, 219, 255);
     private static final Map<Class<?>, Image[]> ENTITY_ICONS;
     private static final int DECK_GRID_SIZE = 40;
@@ -50,7 +51,7 @@ public class SimulatorCanvas extends JPanel
             Rame.class, new String[] { "paddle.png" },
             Gouvernail.class, new String[] { "rudder.png" },
             Voile.class, new String[] { "lifted_sail.png", "lowered_sail.png" },
-            Vigie.class, new String[] { "crow_nest.png"}
+            Vigie.class, new String[] { "crow_nest.png" }
         ).entrySet().stream().map(e ->
         {
             try
@@ -77,14 +78,13 @@ public class SimulatorCanvas extends JPanel
     private final Stroke HISTORY = new BasicStroke(1, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
     private final List<Position> shipHistory = new ArrayList<>();
-    public Checkpoint currentCheckpoint;
+    public boolean drawPath = true;
     private InitGameParameters model;
     private boolean centered = false;
     private NextRoundParameters np;
     private double scale = 1;
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
-    public boolean drawPath = true;
     private Cockpit cockpit;
 
     public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
@@ -186,18 +186,9 @@ public class SimulatorCanvas extends JPanel
         centered = true;
     }
 
-    void resetCamera()
-    {
-        cameraPos = new Point2d(0, 0);
-        moveOrigin = null;
-        scale = 1;
-        centered = false;
-    }
-
     void reset()
     {
         np = null;
-        //resetCamera();
         clearHistory();
         repaint();
     }
@@ -257,18 +248,6 @@ public class SimulatorCanvas extends JPanel
         drawGame(g2d);
     }
 
-    private Position getDebugShipPosition()
-    {
-        var ship = model.getShip().getPosition();
-        var mp = getMousePosition();
-        if (mp != null)
-        {
-            ship = mapToWorld(mp);
-        }
-
-        return ship;
-    }
-
     /**
      * Dessine le jeu
      *
@@ -291,11 +270,11 @@ public class SimulatorCanvas extends JPanel
         {
             for (ShapedEntity visibleEntity : getVisibleShapes())
             {
-                drawEntity(g, visibleEntity, false);
+                drawEntity(g, visibleEntity);
             }
         }
 
-        drawEntity(g, model.getShip(), true);
+        drawEntity(g, model.getShip());
 
         drawShipDeck(g, model.getShip(), model.getSailors());
 
@@ -316,13 +295,17 @@ public class SimulatorCanvas extends JPanel
     private void drawNodes(Graphics2D g)
     {
         if (!drawPath)
+        {
             return;
+        }
 
         g = (Graphics2D) g.create();
 
         var graph = CheckpointObjective.graph;
         if (graph == null)
+        {
             return;
+        }
 
         var nodes = CheckpointObjective.nodes;
         g.setColor(Color.ORANGE);
@@ -364,7 +347,7 @@ public class SimulatorCanvas extends JPanel
         g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
     }
 
-    private void drawEntity(Graphics2D g, ShapedEntity se, boolean ignoreGraph)
+    private void drawEntity(Graphics2D g, ShapedEntity se)
     {
         g = (Graphics2D) g.create();
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class SailorYMovementObjectiveTest
 {
     SailorYMovementObjective mov1Turn;
@@ -23,11 +24,17 @@ class SailorYMovementObjectiveTest
     private void resolveObjs()
     {
         if (!mov1Turn.isValidated())
+        {
             mov1Turn.resolve();
+        }
         if (!mov2Turn.isValidated())
+        {
             mov2Turn.resolve();
+        }
         if (!mov3Turn.isValidated())
+        {
             mov3Turn.resolve();
+        }
     }
 
     @Test

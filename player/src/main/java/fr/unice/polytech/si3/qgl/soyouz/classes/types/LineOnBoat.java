@@ -14,16 +14,16 @@ import java.util.stream.Collectors;
 public class LineOnBoat implements Comparable<LineOnBoat>
 {
     private final List<Rame> oars;
+    private final int x;
     private Gouvernail rudder;
     private Voile sail;
     private Vigie watch;
-    private final int x;
 
     /**
      * Constructor.
      *
      * @param ship The ship.
-     * @param x The abscissa of the line.
+     * @param x    The abscissa of the line.
      */
     public LineOnBoat(Bateau ship, int x)
     {
@@ -36,15 +36,24 @@ public class LineOnBoat implements Comparable<LineOnBoat>
         List<OnboardEntity> ent = Arrays.stream(ship.getEntities())
             .filter(entity -> entity.getX() == x).collect(Collectors.toList());
 
-        ent.forEach(entity -> {
+        ent.forEach(entity ->
+        {
             if (entity instanceof Rame)
+            {
                 oars.add((Rame) entity);
+            }
             else if (entity instanceof Gouvernail)
+            {
                 rudder = (Gouvernail) entity;
+            }
             else if (entity instanceof Voile)
+            {
                 sail = (Voile) entity;
+            }
             else if (entity instanceof Vigie)
+            {
                 watch = (Vigie) entity;
+            }
         });
     }
 
@@ -109,9 +118,13 @@ public class LineOnBoat implements Comparable<LineOnBoat>
     public boolean equals(Object o)
     {
         if (!(o instanceof LineOnBoat))
+        {
             return false;
+        }
         if (o == this)
+        {
             return true;
+        }
         return ((LineOnBoat) o).x == this.x;
     }
 
@@ -125,7 +138,9 @@ public class LineOnBoat implements Comparable<LineOnBoat>
     public int compareTo(LineOnBoat line)
     {
         if (this.x == line.x)
+        {
             return 0;
+        }
         return this.x < line.x ? -1 : 1;
     }
 

@@ -64,9 +64,12 @@ class BateauTest
     void getEntities()
     {
         assertEquals(6, ship.getEntities().length);
-        int oarCount = (int)Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Rame).count();
-        int sailCount = (int)Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).count();
-        int rudderCount = (int)Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Gouvernail).count();
+        int oarCount =
+            (int) Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Rame).count();
+        int sailCount =
+            (int) Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Voile).count();
+        int rudderCount =
+            (int) Arrays.stream(ship.getEntities()).filter(ent -> ent instanceof Gouvernail).count();
         assertEquals(4, oarCount);
         assertEquals(1, sailCount);
         assertEquals(1, rudderCount);
@@ -101,31 +104,36 @@ class BateauTest
     }
 
     @Test
-    void getNbOfOarOnEachSideTest(){
+    void getNbOfOarOnEachSideTest()
+    {
         Pair<Integer, Integer> combi = ship.getNbOfOarOnEachSide();
-        assertEquals(2,combi.first);
-        assertEquals(2,combi.second);
+        assertEquals(2, combi.first);
+        assertEquals(2, combi.second);
     }
 
     @Test
-    void findFirstPosOfEntityTest(){
-        assertEquals(PosOnShip.of(0,2), ship.findFirstPosOfEntity(Rame.class));
+    void findFirstPosOfEntityTest()
+    {
+        assertEquals(PosOnShip.of(0, 2), ship.findFirstPosOfEntity(Rame.class));
     }
 
     @Test
-    void findFirstEntityTest(){
+    void findFirstEntityTest()
+    {
         assertEquals(new Rame(0, 2), ship.findFirstEntity(Rame.class));
     }
 
     @Test
-    void hasAtTest(){
+    void hasAtTest()
+    {
         assertTrue(ship.hasAt(PosOnShip.of(0, 0), Rame.class));
         assertFalse(ship.hasAt(PosOnShip.of(0, 0), Gouvernail.class));
     }
 
     //No Point in testing a toString only for coverage purposes
     @Test
-    void toStringTest(){
+    void toStringTest()
+    {
         String shipString = ship.toString();
         assertEquals(134, shipString.length());
     }

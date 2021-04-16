@@ -4,7 +4,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
 
@@ -99,7 +98,9 @@ public class Graph
         {
             var i = nodes.indexOf(nb);
             if (lines.add(Pair.of(Math.min(i, id), Math.max(i, id))))
+            {
                 getEdges(nb, lines);
+            }
         }
     }
 

@@ -153,7 +153,8 @@ public class SailObjective implements OnBoardObjective
         {
             var sailorTemp =
                 sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst();
-            if(sailorTemp.isPresent()){
+            if (sailorTemp.isPresent())
+            {
                 Marin sailor = sailorTemp.get();
                 actions.add(new LowerSailAction(sailor));
                 sail.setOpenned(false);

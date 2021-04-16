@@ -42,7 +42,9 @@ class InitRowersPositionObjectiveTest
         Bateau ship = new Bateau("Peqoq", new Deck(3, 5), ent);
         List<LineOnBoat> linesOnBoat = new ArrayList<>();
         for (int i = 0; i < ship.getDeck().getLength(); i++)
+        {
             linesOnBoat.add(new LineOnBoat(ship, i));
+        }
         irpo = new InitRowersPositionObjective(rowers, linesOnBoat);
     }
 

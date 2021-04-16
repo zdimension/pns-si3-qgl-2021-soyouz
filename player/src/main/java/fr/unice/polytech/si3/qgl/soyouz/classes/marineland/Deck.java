@@ -13,10 +13,10 @@ public class Deck
     /**
      * Constructor.
      *
-     * @param width Y axis.
+     * @param width  Y axis.
      * @param length X axis.
      */
-    public Deck(@JsonProperty("width")int width,@JsonProperty("length") int length)
+    public Deck(@JsonProperty("width") int width, @JsonProperty("length") int length)
     {
         this.width = width;
         this.length = length;

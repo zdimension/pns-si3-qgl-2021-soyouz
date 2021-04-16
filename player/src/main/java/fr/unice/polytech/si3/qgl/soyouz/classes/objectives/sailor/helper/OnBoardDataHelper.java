@@ -21,15 +21,15 @@ import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
  */
 public class OnBoardDataHelper
 {
-    private List<Marin> mutableRowers;
     private final List<Marin> immutableRowers;
     private final List<Marin> leftImmutableRowers;
     private final List<Marin> rightImmutableRowers;
     private final List<Marin> sailSailors;
+    private final Bateau ship;
+    private List<Marin> mutableRowers;
     private Marin rudderSailor;
     private Marin watchSailor;
     private PosOnShip oldWatchPosition;
-    private final Bateau ship;
     private Marin transitionSailor;
 
     /**
@@ -101,12 +101,18 @@ public class OnBoardDataHelper
             {
                 immutableRowers.add(watchSailor);
                 if (oldWatchPosition.getY() == 0)
+                {
                     leftImmutableRowers.add(watchSailor);
+                }
                 else
+                {
                     rightImmutableRowers.add(watchSailor);
+                }
             }
             else
+            {
                 transitionSailor = watchSailor;
+            }
             watchSailor = null;
             oldWatchPosition = null;
             return new SailorMovementObjective(sailorToMove, posToReachBack);
@@ -149,7 +155,9 @@ public class OnBoardDataHelper
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Vigie.class);
         if (rudder == null)
+        {
             return;
+        }
         Optional<Marin> potentialWatcher = sailors.stream()
             .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
             .findFirst();
@@ -207,7 +215,8 @@ public class OnBoardDataHelper
      * @param pos The position.
      * @return True if it is, false otherwise.
      */
-    private boolean isImmutablePos(PosOnShip pos) {
+    private boolean isImmutablePos(PosOnShip pos)
+    {
         trace();
         LineOnBoat line = new LineOnBoat(ship, pos.getX());
         return line.getOars().size() == 1 || line.getOars().size() == 2 &&

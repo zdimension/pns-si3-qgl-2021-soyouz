@@ -37,7 +37,20 @@ import java.util.Comparator;
 public class Simulator extends JFrame
 {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
+    private static final String[] SPEEDS = { "Slow", "Medium", "Fast" };
+    private static final int[] DELAYS = { 50, 10, 0 };
+    private static final java.util.List<Class<? extends GameAction>> ACTIONS_ORDER =
+        java.util.List.of(
+        MoveAction.class,
+        OarAction.class,
+        LiftSailAction.class,
+        LowerSailAction.class,
+        TurnAction.class,
+        WatchAction.class
+        // turn cannon
+        // load cannon
+        // shoot cannon
+    );
     private final Timer timer;
     private final int COMP_STEPS = 10;
     private final SimulatorCanvas canvas;
@@ -53,9 +66,9 @@ public class Simulator extends JFrame
     private RunnerParameters model;
     private Cockpit cockpit;
     private boolean playMode = false;
-    private static final String[] SPEEDS = {"Slow", "Medium", "Fast"};
-    private static final int[] DELAYS = {50, 10, 0};
     private int currentCheckpoint;
+    private LocalDateTime gameStart = null;
+    private boolean vigie = false;
 
     public Simulator() throws IOException
     {
@@ -118,7 +131,6 @@ public class Simulator extends JFrame
             }
         });
         topcont.add(btnPath);
-
 
 
         add(topcont, BorderLayout.NORTH);
@@ -188,10 +200,6 @@ public class Simulator extends JFrame
                             System.out.println(Duration.between(gameStart, LocalDateTime.now()));
                             gameStart = null;
                         }
-                        else
-                        {
-                            updateCanvasCheckpoint();
-                        }
                     }
 
                     if (playMode)
@@ -216,7 +224,9 @@ public class Simulator extends JFrame
         {
             this.speed++;
             if (this.speed == 3)
+            {
                 this.speed = 0;
+            }
             btnSpeed.setText("Speed : " + SPEEDS[this.speed]);
             timer.setDelay(DELAYS[this.speed]);
         });
@@ -272,11 +282,6 @@ public class Simulator extends JFrame
         return ((RegattaGoal) model.getGoal()).getCheckpoints();
     }
 
-    private void updateCanvasCheckpoint()
-    {
-        canvas.currentCheckpoint = getCheckpoints()[currentCheckpoint];
-    }
-
     private void reset() throws IOException
     {
         timer.stop();
@@ -285,14 +290,16 @@ public class Simulator extends JFrame
         btnPlay.setText("Play");
         if (true)
         {
-            var ipt = Files.readString(Path.of("games/Week10.json"));
+            var ipt = Files.readString(Path.of("games/Week8p1.json"));
             model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
         }
         else
         {
             model = new RunnerParameters(
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real.json")), InitGameParameters.class),
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real_next.json")), NextRoundParameters.class)
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real.json")),
+                    InitGameParameters.class),
+                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real_next.json"))
+                    , NextRoundParameters.class)
             );
         }
 
@@ -305,11 +312,8 @@ public class Simulator extends JFrame
         usedEntities.clear();
         canvas.reset();
         canvas.setCockpit(cockpit);
-        updateCanvasCheckpoint();
         loadNextRound();
     }
-
-    private LocalDateTime gameStart = null;
 
     private void playRound()
     {
@@ -324,24 +328,12 @@ public class Simulator extends JFrame
     private void loadNextRound()
     {
         if (gameStart == null)
+        {
             gameStart = LocalDateTime.now();
+        }
         np = model.getNp(vigie);
         canvas.setNp(np);
     }
-
-    private static final java.util.List<Class<? extends GameAction>> ACTIONS_ORDER = java.util.List.of(
-        MoveAction.class,
-        OarAction.class,
-        LiftSailAction.class,
-        LowerSailAction.class,
-        TurnAction.class,
-        WatchAction.class
-        // turn cannon
-        // load cannon
-        // shoot cannon
-    );
-
-    private boolean vigie = false;
 
     private void computeRound()
     {
@@ -412,7 +404,6 @@ public class Simulator extends JFrame
                 if (act instanceof MoveAction)
                 {
                     var mv = (MoveAction) act;
-                    var pos = sail.getPos();
                     sail.moveRelative(mv.getDelta());
                     if (sail.getX() < 0 || sail.getX() >= model.getShip().getDeck().getLength()
                         || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())

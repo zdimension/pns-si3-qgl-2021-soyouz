@@ -1,12 +1,11 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
 
-import static java.lang.Math.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.atan2;
 
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
@@ -60,28 +59,6 @@ public class Position extends Point2d
     public double getOrientation()
     {
         return orientation;
-    }
-
-    /**
-     * Determine the distance between two points.
-     *
-     * @param pos The second point.
-     * @return a pair that represent the distance between those two points.
-     */
-    public Pair<Double, Double> getDistance(Position pos)
-    {
-        return Pair.of(abs(this.getX() - pos.getX()), abs(this.getY() - pos.getY()));
-    }
-
-    /**
-     * Determine the distance between two positions.
-     *
-     * @param pos The second position.
-     * @return the distance between this and pos.
-     */
-    public double getLength(Position pos)
-    {
-        return sqrt(pow(this.getX() - pos.getX(), 2) + pow(this.getY() - pos.getY(), 2));
     }
 
     /**

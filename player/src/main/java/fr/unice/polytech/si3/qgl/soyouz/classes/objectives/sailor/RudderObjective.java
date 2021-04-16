@@ -26,9 +26,9 @@ public class RudderObjective implements OnBoardObjective
     /**
      * Constructor.
      *
-     * @param ship The ship.
+     * @param ship     The ship.
      * @param rotation The wanted rotation.
-     * @param sailor The sailor attached to the rudder.
+     * @param sailor   The sailor attached to the rudder.
      */
     public RudderObjective(Bateau ship, double rotation, Marin sailor)
     {
@@ -75,9 +75,13 @@ public class RudderObjective implements OnBoardObjective
         trace();
         List<GameAction> actions = new ArrayList<>();
         if (movement.size() == 1)
+        {
             actions.addAll(movement.get(0).resolve());
+        }
         if (isValidated())
+        {
             actions.add(new TurnAction(sailor, rotation));
+        }
         return actions;
     }
 }

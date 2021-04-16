@@ -29,7 +29,7 @@ class RudderObjectiveTest
         Bateau ship = new Bateau("Peqoq", new Deck(2, 2), ent);
         Marin onRudder = new Marin(0, 1, 1, "Tom");
         Marin notOnRudder = new Marin(1, 1, 0, "Tim");
-        double rotation = Math.PI/10;
+        double rotation = Math.PI / 10;
         roWithoutMovement = new RudderObjective(ship, rotation, onRudder);
         roWithMovement = new RudderObjective(ship, rotation, notOnRudder);
     }
@@ -50,9 +50,9 @@ class RudderObjectiveTest
         List<GameAction> ga = roWithMovement.resolve();
         MoveAction ma = (MoveAction) ga.get(0);
         TurnAction ta = (TurnAction) ga.get(1);
-        assertEquals(Math.PI/10, taWithoutMovement.getRotation());
+        assertEquals(Math.PI / 10, taWithoutMovement.getRotation());
         assertEquals(0, ma.getXDistance());
         assertEquals(1, ma.getYDistance());
-        assertEquals(Math.PI/10, ta.getRotation());
+        assertEquals(Math.PI / 10, ta.getRotation());
     }
 }

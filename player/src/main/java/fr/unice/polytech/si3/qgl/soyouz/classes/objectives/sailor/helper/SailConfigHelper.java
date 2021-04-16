@@ -19,11 +19,12 @@ public class SailConfigHelper
      * Constructor.
      *
      * @param distToCheckpoint The distance between the ship and the checkpoint.
-     * @param nbOfSails The number of sail onboard.
-     * @param ship The ship.
-     * @param wind The wind.
+     * @param nbOfSails        The number of sail onboard.
+     * @param ship             The ship.
+     * @param wind             The wind.
      */
-    public SailConfigHelper(double distToCheckpoint, double orientation, int nbOfSails, Bateau ship, Wind wind)
+    public SailConfigHelper(double distToCheckpoint, double orientation, int nbOfSails,
+                            Bateau ship, Wind wind)
     {
         this.distToCheckpoint = distToCheckpoint;
         this.orientation = ship.getPosition().getOrientation() + orientation;
@@ -62,7 +63,9 @@ public class SailConfigHelper
     private double windAdditionalSpeed(int openedSails)
     {
         if (nbOfSails > 0)
+        {
             return ((double) openedSails / nbOfSails) * wind.getStrength() * Math.cos(wind.getOrientation() - orientation);
+        }
         return 0;
     }
 }

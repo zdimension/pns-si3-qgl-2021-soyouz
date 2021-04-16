@@ -19,6 +19,8 @@ public abstract class ShapedEntity
 {
     private Position position;
     private Shape shape;
+    private Position lastShellPosition = null;
+    private Point2d[] lastShell = null;
 
     protected ShapedEntity()
     {
@@ -86,9 +88,6 @@ public abstract class ShapedEntity
     {
         return shape.contains(toLocal(pos));
     }
-
-    private Position lastShellPosition = null;
-    private Point2d[] lastShell = null;
 
     public java.util.stream.Stream<Point2d> getShell()
     {

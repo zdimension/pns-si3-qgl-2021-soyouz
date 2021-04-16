@@ -21,7 +21,8 @@ public class TurnAction extends GameAction
      *
      * @param sailor A Sailor.
      */
-    public TurnAction(@JsonProperty("sailorId") Marin sailor, @JsonProperty("rotation") Double rotation)
+    public TurnAction(@JsonProperty("sailorId") Marin sailor,
+                      @JsonProperty("rotation") Double rotation)
     {
         super(sailor, Gouvernail.class);
         this.rotation = rotation;

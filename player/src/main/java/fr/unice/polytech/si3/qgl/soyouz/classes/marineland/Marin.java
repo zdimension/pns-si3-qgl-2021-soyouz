@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
  * He Ho Freshwater sailor !
@@ -33,10 +32,10 @@ public class Marin
      * @param y    Its base y position.
      * @param name Its name.
      */
-    public Marin( int id,
-                  int x,
-                  int y,
-                  String name)
+    public Marin(int id,
+                 int x,
+                 int y,
+                 String name)
     {
         this.id = id;
         this.x = x;
@@ -197,7 +196,7 @@ public class Marin
      */
     public int numberExtraRoundsToReachEntity(int xPos, int yPos)
     {
-        return (Math.abs(this.x - xPos) + Math.abs(this.y - yPos))/ MAX_MOVE;
+        return (Math.abs(this.x - xPos) + Math.abs(this.y - yPos)) / MAX_MOVE;
     }
 
     /**

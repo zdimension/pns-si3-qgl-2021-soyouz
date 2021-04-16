@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
  * Action to move a {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin}.

@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
  */
 public class Circle extends Polygon implements Shape
 {
+    public static final int VERTEX_COUNT = 16;
     private final double radius;
 
     /**
@@ -19,10 +20,10 @@ public class Circle extends Polygon implements Shape
      */
     public Circle(@JsonProperty("radius") double radius)
     {
-        super(0, IntStream.range(0, 16)
+        super(0, IntStream.range(0, VERTEX_COUNT)
             .mapToObj(angle ->
             {
-                var rad = 2 * angle * Math.PI / 16;
+                var rad = 2 * angle * Math.PI / VERTEX_COUNT;
                 return new Point2d(radius * Math.cos(rad), radius * Math.sin(rad));
             }).toArray(Point2d[]::new));
         this.radius = radius;
@@ -49,21 +50,6 @@ public class Circle extends Polygon implements Shape
     {
         return radius * 2;
     }
-
-    /*@Override
-    public Stream<Point2d> getShell(Point2d observer, double shipSize)
-    {
-        var dist = observer.norm();
-        var rad = radius + shipSize;
-        if (dist <= rad)
-            return Stream.empty();
-        var a = Math.asin(rad / dist);
-        var b = observer.angle();
-        return Stream.of(
-            Point2d.fromPolar(rad + shipSize, b - a),
-            Point2d.fromPolar(rad + shipSize, b + a)
-        );
-    }*/
 
     @Override
     public boolean linePassesThrough(Point2d e, Point2d l, double shipSize)

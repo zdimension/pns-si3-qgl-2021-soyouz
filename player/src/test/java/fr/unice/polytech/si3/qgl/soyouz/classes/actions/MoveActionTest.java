@@ -2,7 +2,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.actions;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -89,6 +88,7 @@ class MoveActionTest
     @Test
     void toStringTest()
     {
-        assertEquals("MoveAction : x = 3 y = 2 | sailor : Marin{id=1, name='Tom Pouce', x=0, y=0}", moveAction.toString());
+        assertEquals("MoveAction : x = 3 y = 2 | sailor : Marin{id=1, name='Tom Pouce', x=0, " +
+            "y=0}", moveAction.toString());
     }
 }

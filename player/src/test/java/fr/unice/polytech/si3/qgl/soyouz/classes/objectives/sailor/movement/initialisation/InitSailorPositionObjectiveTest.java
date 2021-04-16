@@ -1,7 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.initialisation;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
@@ -9,15 +7,11 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouv
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
-import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class InitSailorPositionObjectiveTest
 {

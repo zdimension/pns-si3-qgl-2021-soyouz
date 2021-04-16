@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,18 +43,10 @@ class PositionTest
     }
 
     @Test
-    void getDistance()
-    {
-        Pair<Double, Double> dist = position.getDistance(new Position(20, 40, 60));
-        assertEquals(10, dist.getFirst());
-        assertEquals(20, dist.getSecond());
-    }
-
-    @Test
     void getLength()
     {
         Position pos2 = new Position(20, 30, 0);
-        double distance = position.getLength(pos2);
+        double distance = position.distance(pos2);
         assertEquals(14.142135623730951, distance);
         assertEquals(distance,
             sqrt(pow(position.getX() - pos2.getX(), 2) + pow(position.getY() - pos2.getY(), 2)));

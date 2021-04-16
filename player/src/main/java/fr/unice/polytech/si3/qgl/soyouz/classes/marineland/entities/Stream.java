@@ -1,5 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 
 public class Stream extends ShapedEntity implements Entity
@@ -11,10 +13,10 @@ public class Stream extends ShapedEntity implements Entity
         return strength;
     }
 
+    @JsonIgnore
     public Position getProjectedStrength()
     {
-        var angle = getPosition().getOrientation();
-        return new Position(strength * Math.cos(angle), strength * Math.sin(angle), 0);
+        return Point2d.fromPolar(strength, getPosition().getOrientation());
     }
 
     @Override

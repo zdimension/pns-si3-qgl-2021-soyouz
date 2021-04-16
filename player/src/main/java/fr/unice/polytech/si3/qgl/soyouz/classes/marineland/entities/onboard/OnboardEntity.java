@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
 

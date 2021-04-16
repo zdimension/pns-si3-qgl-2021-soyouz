@@ -14,7 +14,7 @@ class PointTest
     @BeforeEach
     void init()
     {
-        point = new Point2d(1,2);
+        point = new Point2d(1, 2);
     }
 
     @Test

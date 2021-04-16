@@ -1,11 +1,9 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Entity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
@@ -15,13 +13,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voil
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SeaDataHelper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SailorObjectiveTest
 {
@@ -47,7 +41,8 @@ class SailorObjectiveTest
         };
         Bateau ship = new Bateau("Peqoq", new Deck(3, 3), ent);
         ship.setPosition(new Position(10, 20, 1));
-        OnBoardDataHelper obdh = new OnBoardDataHelper(ship, new ArrayList<>(Arrays.asList(sailors)));
+        OnBoardDataHelper obdh = new OnBoardDataHelper(ship,
+            new ArrayList<>(Arrays.asList(sailors)));
         SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1.8, 100), new ShapedEntity[0]);
         so = new SailorObjective(obdh, sdh, 1000, 2);
     }

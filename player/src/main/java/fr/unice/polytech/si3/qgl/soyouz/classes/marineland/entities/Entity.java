@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**

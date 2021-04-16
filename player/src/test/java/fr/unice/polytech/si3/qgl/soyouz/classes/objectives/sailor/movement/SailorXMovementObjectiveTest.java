@@ -24,11 +24,17 @@ class SailorXMovementObjectiveTest
     private void resolveObjs()
     {
         if (!mov1Turn.isValidated())
+        {
             mov1Turn.resolve();
+        }
         if (!mov2Turn.isValidated())
+        {
             mov2Turn.resolve();
+        }
         if (!mov3Turn.isValidated())
+        {
             mov3Turn.resolve();
+        }
     }
 
     @Test

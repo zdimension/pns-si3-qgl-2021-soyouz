@@ -16,7 +16,7 @@ public class Point2d
      * @param x The abscissa of the point.
      * @param y The ordinate of the point.
      */
-    public Point2d(@JsonProperty("x")double x, @JsonProperty("y")double y)
+    public Point2d(@JsonProperty("x") double x, @JsonProperty("y") double y)
     {
         this.x = x;
         this.y = y;
@@ -60,11 +60,6 @@ public class Point2d
     public Point2d mul(double d)
     {
         return new Point2d(d * x, d * y);
-    }
-
-    public Point2d invY()
-    {
-        return new Point2d(x, -y);
     }
 
     public double normSquared()
@@ -132,18 +127,13 @@ public class Point2d
         return new Position(x, y, 0);
     }
 
-    public Point2d normalized()
-    {
-        return this.mul(1 / norm());
-    }
-
-    public double cross(Point2d mul)
-    {
-        return x * mul.y - mul.x * y;
-    }
-
     public Point2d ortho()
     {
         return new Point2d(-y, x);
+    }
+
+    public double distance(Point2d other)
+    {
+        return sub(other).norm();
     }
 }

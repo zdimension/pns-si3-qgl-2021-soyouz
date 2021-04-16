@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,9 +39,9 @@ class RameTest
     @Test
     void getPosCoord()
     {
-        assertEquals(PosOnShip.of(1,0), rame1.getPosCoord());
-        assertEquals(PosOnShip.of(1,1), rame2.getPosCoord());
-        assertEquals(PosOnShip.of(2,2), rame3.getPosCoord());
+        assertEquals(PosOnShip.of(1, 0), rame1.getPosCoord());
+        assertEquals(PosOnShip.of(1, 1), rame2.getPosCoord());
+        assertEquals(PosOnShip.of(2, 2), rame3.getPosCoord());
     }
 
     @Test

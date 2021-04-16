@@ -61,9 +61,11 @@ public class InitRowersPositionObjective implements MovingObjective
 
     /**
      * Generate all sub objectives AKA x-placement objectives.
+     *
      * @param nbSailorsExceeding The number of sailor in addition to the number of lines.
      */
-    private void generateSubObjectives(int nbSailorsExceeding) {
+    private void generateSubObjectives(int nbSailorsExceeding)
+    {
         int nbSailorPlaced = 0;
         for (LineOnBoat line : linesOnBoatWithOars)
         {
@@ -78,7 +80,8 @@ public class InitRowersPositionObjective implements MovingObjective
             {
                 if (nbSailorsExceeding > 0)
                 {
-                    generateSubObjectiveForTwoSailorsOnTheSameLine(line, sailors.get(nbSailorPlaced),
+                    generateSubObjectiveForTwoSailorsOnTheSameLine(line,
+                        sailors.get(nbSailorPlaced),
                         sailors.get(nbSailorPlaced + 1));
                     nbSailorPlaced += 2;
                     nbSailorsExceeding--;
@@ -96,11 +99,12 @@ public class InitRowersPositionObjective implements MovingObjective
     /**
      * Move each rowers on the same line on their dedicater oar based on their Y position.
      *
-     * @param line The current line.
+     * @param line    The current line.
      * @param sailor1 The first sailor of the line.
      * @param sailor2 The second sailor of the line.
      */
-    private void generateSubObjectiveForTwoSailorsOnTheSameLine(LineOnBoat line, Marin sailor1, Marin sailor2)
+    private void generateSubObjectiveForTwoSailorsOnTheSameLine(LineOnBoat line, Marin sailor1,
+                                                                Marin sailor2)
     {
         Marin sailorLeft = (sailor1.getY() < sailor2.getY()) ? sailor1 : sailor2;
         Marin sailorRight = sailorLeft.equals(sailor1) ? sailor2 : sailor1;
@@ -131,9 +135,12 @@ public class InitRowersPositionObjective implements MovingObjective
     public List<GameAction> resolve()
     {
         List<GameAction> moveActions = new ArrayList<>();
-        sailorMoveObjectives.forEach(obj -> {
+        sailorMoveObjectives.forEach(obj ->
+        {
             if (!obj.isValidated())
+            {
                 moveActions.addAll(obj.resolve());
+            }
         });
         return moveActions;
     }

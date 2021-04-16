@@ -14,11 +14,11 @@ public class Rectangle extends Polygon implements Shape
     /**
      * Constructor.
      *
-     * @param width The width of the rectangle.
-     * @param height The height of the rectangle.
+     * @param width       The width of the rectangle.
+     * @param height      The height of the rectangle.
      * @param orientation The orientation of the rectangle.
      */
-    public Rectangle(@JsonProperty("width")double width,
+    public Rectangle(@JsonProperty("width") double width,
                      @JsonProperty("height") double height,
                      @JsonProperty("orientation") double orientation)
     {

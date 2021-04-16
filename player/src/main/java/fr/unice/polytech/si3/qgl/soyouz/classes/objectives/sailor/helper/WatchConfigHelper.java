@@ -15,10 +15,11 @@ public class WatchConfigHelper
     /**
      * Constructor.
      *
-     * @param currentPosition The actual ship position.
+     * @param currentPosition   The actual ship position.
      * @param lastWatchPosition The position where the last watch action was thrown.
      */
-    public WatchConfigHelper(Position currentPosition, Position lastWatchPosition, PosOnShip lastWatcherPosition)
+    public WatchConfigHelper(Position currentPosition, Position lastWatchPosition,
+                             PosOnShip lastWatcherPosition)
     {
         this.currentPosition = currentPosition;
         this.lastWatchPosition = lastWatchPosition;
@@ -32,7 +33,6 @@ public class WatchConfigHelper
      */
     public boolean findOptWatchConfiguration()
     {
-        var lenght = currentPosition.getLength(lastWatchPosition);
-        return currentPosition.getLength(lastWatchPosition) >= 4000 && lastWatcherPosition == null;
+        return currentPosition.distance(lastWatchPosition) >= 4000 && lastWatcherPosition == null;
     }
 }

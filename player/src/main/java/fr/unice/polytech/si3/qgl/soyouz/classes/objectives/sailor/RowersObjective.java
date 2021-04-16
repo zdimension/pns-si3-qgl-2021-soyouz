@@ -9,7 +9,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,26 +20,28 @@ import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
  */
 public class RowersObjective implements OnBoardObjective
 {
-    private int nbOarLeftWanted;
-    private int nbOarRightWanted;
     private final List<SailorYMovementObjective> movingRowers;
     private final List<Marin> rowingSailors;
+    private int nbOarLeftWanted;
+    private int nbOarRightWanted;
 
     /**
      * Constructor.
      *
-     * @param ship The ship.
-     * @param mutableRowers All rowers able to move from a side to another.
-     * @param leftImmutableRowers All sailors fixed to a specific oar on the left of the ship.
-     * @param rightImmutableRowers All sailors fixed to a specific oar on the right of the ship.
+     * @param ship                     The ship.
+     * @param mutableRowers            All rowers able to move from a side to another.
+     * @param leftImmutableRowers      All sailors fixed to a specific oar on the left of the ship.
+     * @param rightImmutableRowers     All sailors fixed to a specific oar on the right of the ship.
      * @param rowerConfigurationWanted The wanted configuration of rowers.
      */
     public RowersObjective(Bateau ship, List<Marin> mutableRowers, List<Marin> leftImmutableRowers,
-                   List<Marin> rightImmutableRowers, Pair<Integer, Integer> rowerConfigurationWanted)
+                           List<Marin> rightImmutableRowers,
+                           Pair<Integer, Integer> rowerConfigurationWanted)
     {
         nbOarLeftWanted = rowerConfigurationWanted.first;
         nbOarRightWanted = rowerConfigurationWanted.second;
-        setupNbOarWantedOnEachSide(rowerConfigurationWanted, mutableRowers, leftImmutableRowers, rightImmutableRowers);
+        setupNbOarWantedOnEachSide(rowerConfigurationWanted, mutableRowers, leftImmutableRowers,
+            rightImmutableRowers);
         movingRowers = new ArrayList<>();
         rowingSailors = new ArrayList<>();
         setupImmutableRowers(leftImmutableRowers, rightImmutableRowers);
@@ -51,12 +52,13 @@ public class RowersObjective implements OnBoardObjective
      * Determine how many oars will be used on each side based on the configuration wanted.
      *
      * @param rowerConfigurationWanted The configuration wanted.
-     * @param rowers All rowers that can move.
-     * @param leftImmutableRowers All sailors fixed to a specific oar on the left of the ship.
-     * @param rightImmutableRowers All sailors fixed to a specific oar on the right of the ship.
+     * @param rowers                   All rowers that can move.
+     * @param leftImmutableRowers      All sailors fixed to a specific oar on the left of the ship.
+     * @param rightImmutableRowers     All sailors fixed to a specific oar on the right of the ship.
      */
     private void setupNbOarWantedOnEachSide(Pair<Integer, Integer> rowerConfigurationWanted,
-        List<Marin> rowers, List<Marin> leftImmutableRowers, List<Marin> rightImmutableRowers)
+                                            List<Marin> rowers, List<Marin> leftImmutableRowers,
+                                            List<Marin> rightImmutableRowers)
     {
         nbOarLeftWanted = rowerConfigurationWanted.first;
         nbOarRightWanted = rowerConfigurationWanted.second;
@@ -64,16 +66,20 @@ public class RowersObjective implements OnBoardObjective
             (rowers.size() + leftImmutableRowers.size() + rightImmutableRowers.size()))
         {
             if (nbOarLeftWanted > 0)
+            {
                 nbOarLeftWanted--;
+            }
             if (nbOarRightWanted > 0)
+            {
                 nbOarRightWanted--;
+            }
         }
     }
 
     /**
      * Setup every movable rowers to the wanted side.
      *
-     * @param ship The ship.
+     * @param ship   The ship.
      * @param rowers All mutable rowers.
      */
     private void setupRowers(Bateau ship, List<Marin> rowers)
@@ -92,13 +98,15 @@ public class RowersObjective implements OnBoardObjective
         List<Marin> remainingRowers = Stream.of(leftRowers, rightRowers, middleRower)
             .flatMap(Collection::stream).collect(Collectors.toList());
         if (nbOarLeftWanted > 0 || nbOarRightWanted > 0)
+        {
             moveRowersToOars(ship, remainingRowers);
+        }
     }
 
     /**
      * Generate the movement objective to place the rower on its oar.
      *
-     * @param ship The ship.
+     * @param ship         The ship.
      * @param middleRowers Rowers at the middle of two oars.
      */
     private void moveRowersToOars(Bateau ship, List<Marin> middleRowers)
@@ -106,7 +114,8 @@ public class RowersObjective implements OnBoardObjective
         trace();
         while (nbOarRightWanted > 0 && !middleRowers.isEmpty())
         {
-            movingRowers.add(new SailorYMovementObjective(middleRowers.get(0), ship.getDeck().getWidth() - 1));
+            movingRowers.add(new SailorYMovementObjective(middleRowers.get(0),
+                ship.getDeck().getWidth() - 1));
             middleRowers.remove(0);
         }
         while (nbOarLeftWanted > 0 && !middleRowers.isEmpty())
@@ -119,10 +128,11 @@ public class RowersObjective implements OnBoardObjective
     /**
      * Setup all immutable rowers and make them oar.
      *
-     * @param leftImmutableRowers All sailors fixed to a specific oar on the left of the ship.
+     * @param leftImmutableRowers  All sailors fixed to a specific oar on the left of the ship.
      * @param rightImmutableRowers All sailors fixed to a specific oar on the right of the ship.
      */
-    private void setupImmutableRowers(List<Marin> leftImmutableRowers, List<Marin> rightImmutableRowers)
+    private void setupImmutableRowers(List<Marin> leftImmutableRowers,
+                                      List<Marin> rightImmutableRowers)
     {
         trace();
         List<Marin> leftRowers = new ArrayList<>(leftImmutableRowers);
@@ -202,13 +212,18 @@ public class RowersObjective implements OnBoardObjective
     {
         trace();
         List<GameAction> actions = new ArrayList<>();
-        movingRowers.forEach(obj -> {
+        movingRowers.forEach(obj ->
+        {
             actions.addAll(obj.resolve());
             if (obj.isValidated())
+            {
                 rowingSailors.add(obj.getSailor());
+            }
         });
         if (!isValidated())
+        {
             return actions;
+        }
         rowingSailors.forEach(rower -> actions.add(new OarAction(rower)));
         return actions;
     }

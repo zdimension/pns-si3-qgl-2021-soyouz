@@ -15,7 +15,8 @@ public class Voile extends OnboardEntity
      * @param x Abscissa of the entity.
      * @param y Ordinate of the entity.
      */
-    public Voile(@JsonProperty("x") int x, @JsonProperty("y") int y, @JsonProperty("openned") boolean openned)
+    public Voile(@JsonProperty("x") int x, @JsonProperty("y") int y,
+                 @JsonProperty("openned") boolean openned)
     {
         super(x, y);
         this.openned = openned;

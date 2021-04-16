@@ -17,9 +17,10 @@ public class Wind
      * Constructor.
      *
      * @param orientation The orientation of the blow.
-     * @param strength The strength of the blow.
+     * @param strength    The strength of the blow.
      */
-    public Wind(@JsonProperty("orientation") double orientation, @JsonProperty("strength") double strength)
+    public Wind(@JsonProperty("orientation") double orientation,
+                @JsonProperty("strength") double strength)
     {
         this.orientation = orientation;
         this.strength = strength;

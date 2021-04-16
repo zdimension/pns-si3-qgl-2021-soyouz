@@ -27,11 +27,11 @@ class RowersObjectiveTest
     void setUp()
     {
         OnboardEntity[] ent = {
-          new Rame(0, 0),
-          new Rame(0, 2),
-          new Rame(1, 0),
-          new Rame(1, 2),
-          new Rame(2, 2)
+            new Rame(0, 0),
+            new Rame(0, 2),
+            new Rame(1, 0),
+            new Rame(1, 2),
+            new Rame(2, 2)
         };
         Bateau ship = new Bateau("Peqoq", new Deck(3, 3), ent);
         List<Marin> immutableRower = new ArrayList<>();
@@ -47,13 +47,17 @@ class RowersObjectiveTest
             .collect(Collectors.toList());
         List<Marin> immutableRowerRight = immutableRower.stream().filter(rower -> rower.getY() > 0)
             .collect(Collectors.toList());
-        List<Marin> immutableRower2Left = immutableRower2.stream().filter(rower -> rower.getY() == 0)
+        List<Marin> immutableRower2Left =
+            immutableRower2.stream().filter(rower -> rower.getY() == 0)
             .collect(Collectors.toList());
-        List<Marin> immutableRower2Right = immutableRower2.stream().filter(rower -> rower.getY() > 0)
+        List<Marin> immutableRower2Right =
+            immutableRower2.stream().filter(rower -> rower.getY() > 0)
             .collect(Collectors.toList());
         mutableRower2.add(new Marin(5, 0, 1, "Tem"));
-        roLeft = new RowersObjective(ship, mutableRower, immutableRowerLeft, immutableRowerRight, Pair.of(2, 1));
-        roRight = new RowersObjective(ship, mutableRower2, immutableRower2Left, immutableRower2Right, Pair.of(1, 2));
+        roLeft = new RowersObjective(ship, mutableRower, immutableRowerLeft, immutableRowerRight,
+            Pair.of(2, 1));
+        roRight = new RowersObjective(ship, mutableRower2, immutableRower2Left,
+            immutableRower2Right, Pair.of(1, 2));
     }
 
     @Test
@@ -72,19 +76,23 @@ class RowersObjectiveTest
     {
         List<MoveAction> nbMoveActionRoLeft = Util.filterType(roLeft.resolve().stream()
             .filter(act -> act instanceof MoveAction), MoveAction.class).collect(Collectors.toList());
-        long nbOarActionRoLeft = roLeft.resolve().stream().filter(act -> act instanceof OarAction).count();
+        long nbOarActionRoLeft =
+            roLeft.resolve().stream().filter(act -> act instanceof OarAction).count();
         List<MoveAction> nbMoveActionRoRight = Util.filterType(roRight.resolve().stream()
             .filter(act -> act instanceof MoveAction), MoveAction.class).collect(Collectors.toList());
-        long nbOarActionRoRight = roRight.resolve().stream().filter(act -> act instanceof OarAction).count();
+        long nbOarActionRoRight =
+            roRight.resolve().stream().filter(act -> act instanceof OarAction).count();
         assertEquals(1, nbMoveActionRoLeft.size());
         assertEquals(3, nbOarActionRoLeft);
         assertEquals(1, nbMoveActionRoRight.size());
         assertEquals(3, nbOarActionRoRight);
-        nbMoveActionRoLeft.forEach(act -> {
+        nbMoveActionRoLeft.forEach(act ->
+        {
             assertEquals(-1, act.getYDistance());
             assertEquals(0, act.getXDistance());
         });
-        nbMoveActionRoRight.forEach(act -> {
+        nbMoveActionRoRight.forEach(act ->
+        {
             assertEquals(1, act.getYDistance());
             assertEquals(0, act.getXDistance());
         });

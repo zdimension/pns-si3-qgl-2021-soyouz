@@ -21,7 +21,8 @@ public class SailorYMovementObjective implements MovingObjective
 
     /**
      * Constructor.
-     * @param sailor The sailor that will move.
+     *
+     * @param sailor  The sailor that will move.
      * @param yOnDeck The Y position wanted.
      */
     public SailorYMovementObjective(Marin sailor, int yOnDeck)
@@ -55,12 +56,18 @@ public class SailorYMovementObjective implements MovingObjective
         int distStillToParkour = yOnDeck - sailor.getY();
         int yMove = 0;
         if (distStillToParkour >= 5)
+        {
             yMove = 5;
+        }
         else if (distStillToParkour <= -5)
+        {
             yMove = -5;
+        }
         else
+        {
             yMove = distStillToParkour;
-        sailor.moveRelative(PosOnShip.of( 0, yMove));
+        }
+        sailor.moveRelative(PosOnShip.of(0, yMove));
         moveAction.add(new MoveAction(sailor, 0, yMove));
         nbTurnToComplete--;
         return moveAction;
@@ -68,6 +75,7 @@ public class SailorYMovementObjective implements MovingObjective
 
     /**
      * Getter.
+     *
      * @return the number of turn needed to complete the objective.
      */
     public int getNbTurnToComplete()

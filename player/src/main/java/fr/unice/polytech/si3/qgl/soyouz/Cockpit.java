@@ -22,8 +22,8 @@ import java.util.logging.*;
  */
 public class Cockpit implements ICockpit
 {
-    private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
     private static final Logger logger = Logger.getLogger(Cockpit.class.getSimpleName());
     private static final boolean ENABLE_TRACE = false;
 
@@ -57,7 +57,7 @@ public class Cockpit implements ICockpit
             }
         });
     }
-    
+
     public final Map<String, ShapedEntity> entityMemory = new HashMap<>();
     private InitGameParameters ip;
     private RootObjective objective;

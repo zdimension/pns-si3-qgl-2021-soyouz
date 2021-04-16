@@ -16,7 +16,7 @@ class GameStateTest
     @BeforeEach
     void init()
     {
-        ip = new InitGameParameters(null,null,null);
+        ip = new InitGameParameters(null, null, null);
         np = new NextRoundParameters(null, null, null);
         gs = new GameState(ip, np);
     }

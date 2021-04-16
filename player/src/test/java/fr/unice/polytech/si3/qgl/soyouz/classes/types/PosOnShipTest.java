@@ -1,7 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -53,15 +52,15 @@ class PosOnShipTest
     @Test
     void getPosCoord()
     {
-        assertNotEquals(PosOnShip.of(0,2), posByCoords);
-        assertEquals(PosOnShip.of(1,2), posByCoords);
-        assertNotEquals(PosOnShip.of(1,3), posByCoords);
-        assertNotEquals(PosOnShip.of(1,3), posByPairOfCoords);
-        assertEquals(PosOnShip.of(2,3), posByPairOfCoords);
-        assertNotEquals(PosOnShip.of(2,4), posByPairOfCoords);
-        assertNotEquals(PosOnShip.of(2,4), posByEntityCoords);
-        assertEquals(PosOnShip.of(3,4), posByEntityCoords);
-        assertNotEquals(PosOnShip.of(3,5), posByEntityCoords);
+        assertNotEquals(PosOnShip.of(0, 2), posByCoords);
+        assertEquals(PosOnShip.of(1, 2), posByCoords);
+        assertNotEquals(PosOnShip.of(1, 3), posByCoords);
+        assertNotEquals(PosOnShip.of(1, 3), posByPairOfCoords);
+        assertEquals(PosOnShip.of(2, 3), posByPairOfCoords);
+        assertNotEquals(PosOnShip.of(2, 4), posByPairOfCoords);
+        assertNotEquals(PosOnShip.of(2, 4), posByEntityCoords);
+        assertEquals(PosOnShip.of(3, 4), posByEntityCoords);
+        assertNotEquals(PosOnShip.of(3, 5), posByEntityCoords);
     }
 
     @Test

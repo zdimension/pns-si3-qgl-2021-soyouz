@@ -1,8 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.types;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Objects;
 

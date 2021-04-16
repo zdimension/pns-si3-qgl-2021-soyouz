@@ -4,7 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RowersConfigHelperTest
 {
@@ -19,11 +19,11 @@ class RowersConfigHelperTest
     @BeforeEach
     void setUp()
     {
-        leftTurn = new RowersConfigHelper(Math.PI/2, 200, 3, 2, 2, 8);
+        leftTurn = new RowersConfigHelper(Math.PI / 2, 200, 3, 2, 2, 8);
         straightForward = new RowersConfigHelper(0, 500, 3, 2, 2, 8);
-        smallLeft = new RowersConfigHelper(Math.PI/10, 10, 3, 2, 2, 8);
-        smallRight = new RowersConfigHelper(-Math.PI/10, 10, 3, 2, 2, 8);
-        rightTurn = new RowersConfigHelper(-Math.PI/2, 200, 3, 2, 2, 8);
+        smallLeft = new RowersConfigHelper(Math.PI / 10, 10, 3, 2, 2, 8);
+        smallRight = new RowersConfigHelper(-Math.PI / 10, 10, 3, 2, 2, 8);
+        rightTurn = new RowersConfigHelper(-Math.PI / 2, 200, 3, 2, 2, 8);
         notBalancedLeft = new RowersConfigHelper(0, 500, 3, 3, 1, 8);
         notBalancedRight = new RowersConfigHelper(0, 500, 3, 1, 3, 8);
     }
@@ -31,12 +31,18 @@ class RowersConfigHelperTest
     @Test
     void findOptRowersConfiguration()
     {
-        assertEquals(Pair.of(1,5), leftTurn.findOptRowersConfiguration().getSailorConfiguration());
-        assertEquals(Pair.of(3,3), straightForward.findOptRowersConfiguration().getSailorConfiguration());
-        assertEquals(Pair.of(0,1), smallLeft.findOptRowersConfiguration().getSailorConfiguration());
-        assertEquals(Pair.of(1,0), smallRight.findOptRowersConfiguration().getSailorConfiguration());
-        assertEquals(Pair.of(5,1), rightTurn.findOptRowersConfiguration().getSailorConfiguration());
-        assertEquals(Pair.of(3,3), notBalancedLeft.findOptRowersConfiguration().getSailorConfiguration());
-        assertEquals(Pair.of(3,3), notBalancedRight.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(1, 5), leftTurn.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(3, 3),
+            straightForward.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(0, 1),
+            smallLeft.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(1, 0),
+            smallRight.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(5, 1),
+            rightTurn.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(3, 3),
+            notBalancedLeft.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(3, 3),
+            notBalancedRight.findOptRowersConfiguration().getSailorConfiguration());
     }
 }

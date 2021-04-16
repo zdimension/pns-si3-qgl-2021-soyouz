@@ -31,7 +31,7 @@ public class InitSailorPositionObjective implements MovingObjective
     /**
      * Constructor.
      *
-     * @param ship The ship.
+     * @param ship    The ship.
      * @param sailors All sailors on the ship.
      */
     public InitSailorPositionObjective(Bateau ship, List<Marin> sailors)
@@ -50,6 +50,7 @@ public class InitSailorPositionObjective implements MovingObjective
 
     /**
      * Determine how many sailors wii be exceeding the number of entities and move them around.
+     *
      * @param ship The ship.
      */
     private void handleUselessSailors(Bateau ship)
@@ -58,7 +59,8 @@ public class InitSailorPositionObjective implements MovingObjective
         {
             LineOnBoat lineWithNothing = linesOnBoat.stream()
                 .filter(line -> line.getOars().isEmpty()).collect(Collectors.toList()).get(0);
-            movingSailorsObjectives.add(new SailorXMovementObjective(sailors.get(0), lineWithNothing.getX()));
+            movingSailorsObjectives.add(new SailorXMovementObjective(sailors.get(0),
+                lineWithNothing.getX()));
             sailors.remove(0);
         }
     }
@@ -87,7 +89,8 @@ public class InitSailorPositionObjective implements MovingObjective
         if (lineWithWatch != null && ship.getEntities().length <= sailors.size())
         {
             Marin sailorCloseToWatch = findClosestSailorFromEntity(lineWithWatch.getWatch());
-            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToWatch, lineWithWatch.getWatch().getPos()));
+            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToWatch,
+                lineWithWatch.getWatch().getPos()));
             sailors.remove(sailorCloseToWatch);
         }
     }
@@ -120,7 +123,8 @@ public class InitSailorPositionObjective implements MovingObjective
     private void generateMovingToRudderObjective()
     {
         Marin sailorCloseToRudder = findClosestSailorFromEntity(lineWithRudder.getRudder());
-        movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToRudder, lineWithRudder.getRudder().getPos()));
+        movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToRudder,
+            lineWithRudder.getRudder().getPos()));
         sailors.remove(sailorCloseToRudder);
     }
 
@@ -142,11 +146,18 @@ public class InitSailorPositionObjective implements MovingObjective
                 if (sailors.size() % 2 == 0)
                 {
                     if (sailors.size() > nbOars)
+                    {
                         return 2;
+                    }
                     else
+                    {
                         return 0;
+                    }
                 }
-                else return 1;
+                else
+                {
+                    return 1;
+                }
             default:
                 return 0;
         }
@@ -172,7 +183,8 @@ public class InitSailorPositionObjective implements MovingObjective
                     sailorCloseToSail = sailor;
                 }
             }
-            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToSail, linesWithSails.get(i).getSail().getPos()));
+            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToSail,
+                linesWithSails.get(i).getSail().getPos()));
             sailors.remove(sailorCloseToSail);
         }
     }
@@ -200,7 +212,9 @@ public class InitSailorPositionObjective implements MovingObjective
     {
         List<LineOnBoat> lines = new ArrayList<>();
         for (int i = 0; i < ship.getDeck().getLength(); i++)
+        {
             lines.add(new LineOnBoat(ship, i));
+        }
         Collections.sort(lines);
         return lines;
     }
@@ -225,9 +239,12 @@ public class InitSailorPositionObjective implements MovingObjective
     public List<GameAction> resolve()
     {
         List<GameAction> moveActions = new ArrayList<>();
-        movingSailorsObjectives.forEach(obj -> {
+        movingSailorsObjectives.forEach(obj ->
+        {
             if (!obj.isValidated())
+            {
                 moveActions.addAll(obj.resolve());
+            }
         });
         return moveActions;
     }

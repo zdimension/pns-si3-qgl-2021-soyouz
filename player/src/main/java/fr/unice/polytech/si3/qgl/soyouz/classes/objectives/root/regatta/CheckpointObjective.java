@@ -17,10 +17,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoard
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SeaDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Graph;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -31,16 +29,17 @@ import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
  */
 public class CheckpointObjective implements RootObjective
 {
-    private static final Logger logger = Logger.getLogger(CheckpointObjective.class.getSimpleName());
-
+    public static final List<Point2d> nodes = new ArrayList<>();
+    private static final Logger logger =
+        Logger.getLogger(CheckpointObjective.class.getSimpleName());
+    public static List<Node> path;
+    public static Graph graph;
     private final Checkpoint cp;
     private final OnBoardDataHelper onBoardDataHelper;
     private final SeaDataHelper seaDataHelper;
     private SailorObjective roundObjective;
     private double angleToCp;
     private double distanceToCp;
-    public static List<Node> path;
-    public static Graph graph;
 
     /**
      * Constructor.
@@ -67,7 +66,7 @@ public class CheckpointObjective implements RootObjective
     @Override
     public boolean isValidated(GameState state)
     {
-        return state.getNp().getShip().getPosition().getLength(cp.getPosition())
+        return state.getNp().getShip().getPosition().distance(cp.getPosition())
             <= ((Circle) cp.getShape()).getRadius();
     }
 
@@ -92,8 +91,6 @@ public class CheckpointObjective implements RootObjective
         return roundObjective.resolve();
     }
 
-    public static final List<Point2d> nodes = new ArrayList<>();
-
     private void traverseNode(ShapedEntity[] arr, int elem, List<Node> lines, double shipSize)
     {
         var node = nodes.get(elem);
@@ -109,10 +106,12 @@ public class CheckpointObjective implements RootObjective
             for (ShapedEntity reef : arr)
             {
                 if (reef.contains(onBoardDataHelper.getShip().getPosition()))
+                {
                     continue;
+                }
 
                 if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize)
-                && (reef instanceof Reef || reef instanceof Stream))
+                    && (reef instanceof Reef || reef instanceof Stream))
                 {
                     continue outer;
                 }
@@ -178,12 +177,17 @@ public class CheckpointObjective implements RootObjective
             }
         }
 
-        var point = path.get(1).position.sub(boat.getPosition()).rotate(-boat.getPosition().getOrientation());
+        var point =
+            path.get(1).position.sub(boat.getPosition()).rotate(-boat.getPosition().getOrientation());
         angleToCp = point.angle();
         while (angleToCp > Math.PI)
+        {
             angleToCp -= Math.PI;
+        }
         while (angleToCp < -Math.PI)
+        {
             angleToCp += Math.PI;
+        }
 
         distanceToCp = point.norm();
 

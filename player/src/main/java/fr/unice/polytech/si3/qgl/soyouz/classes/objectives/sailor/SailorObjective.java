@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.*;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
 
@@ -64,8 +63,10 @@ public class SailorObjective implements OnBoardObjective
     {
         trace();
         RowersConfigHelper rowersConfigHelper = new RowersConfigHelper(rotation, distance,
-            onBoardDataHelper.getMutableRowers().size(), onBoardDataHelper.getLeftImmutableRowers().size(),
-            onBoardDataHelper.getRightImmutableRowers().size(), onBoardDataHelper.getShip().getNumberOar());
+            onBoardDataHelper.getMutableRowers().size(),
+            onBoardDataHelper.getLeftImmutableRowers().size(),
+            onBoardDataHelper.getRightImmutableRowers().size(),
+            onBoardDataHelper.getShip().getNumberOar());
         OarConfiguration oarConfigWanted = rowersConfigHelper.findOptRowersConfiguration();
         rowersObjective = new RowersObjective(onBoardDataHelper.getShip(),
             onBoardDataHelper.getMutableRowers(), onBoardDataHelper.getLeftImmutableRowers(),
@@ -102,22 +103,28 @@ public class SailorObjective implements OnBoardObjective
     /**
      * Setup the watch objective.
      */
-    private void setupWatchObjective(){
+    private void setupWatchObjective()
+    {
         trace();
         if (seaDataHelper.getShip().findFirstEntity(Vigie.class) == null)
+        {
             return;
+        }
         if (onBoardDataHelper.getWatchSailor() != null && onBoardDataHelper.getOldWatchPosition() == null)
         {
-            watchObjective = new WatchObjective(onBoardDataHelper.getShip(), onBoardDataHelper.getWatchSailor());
+            watchObjective = new WatchObjective(onBoardDataHelper.getShip(),
+                onBoardDataHelper.getWatchSailor());
         }
         else
         {
-            WatchConfigHelper watchConfigHelper = new WatchConfigHelper(seaDataHelper.getShip().getPosition(),
+            WatchConfigHelper watchConfigHelper =
+                new WatchConfigHelper(seaDataHelper.getShip().getPosition(),
                 seaDataHelper.getLastWatchPos(), onBoardDataHelper.getOldWatchPosition());
             if (watchConfigHelper.findOptWatchConfiguration())
             {
                 onBoardDataHelper.switchRowerToWatch();
-                watchObjective = new WatchObjective(onBoardDataHelper.getShip(), onBoardDataHelper.getWatchSailor());
+                watchObjective = new WatchObjective(onBoardDataHelper.getShip(),
+                    onBoardDataHelper.getWatchSailor());
                 seaDataHelper.setLastWatchPos(seaDataHelper.getShip().getPosition());
             }
             else
@@ -149,12 +156,16 @@ public class SailorObjective implements OnBoardObjective
         trace();
         List<GameAction> actions = new ArrayList<>();
         if (transitionObjective != null)
+        {
             actions.addAll(transitionObjective.resolve());
+        }
         actions.addAll(rowersObjective.resolve());
         actions.addAll(rudderObjective.resolve());
         actions.addAll(sailObjective.resolve());
         if (watchObjective != null)
+        {
             actions.addAll(watchObjective.resolve());
+        }
         return actions;
     }
 }

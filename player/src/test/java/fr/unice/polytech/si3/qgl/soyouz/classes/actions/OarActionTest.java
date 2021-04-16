@@ -46,7 +46,8 @@ class OarActionTest
     @Test
     void toStringTest()
     {
-        assertEquals("OarAction : sailor : Marin{id=1, name='Tom Pouce', x=0, y=0}", oarAction.toString());
+        assertEquals("OarAction : sailor : Marin{id=1, name='Tom Pouce', x=0, y=0}",
+            oarAction.toString());
     }
 
 }

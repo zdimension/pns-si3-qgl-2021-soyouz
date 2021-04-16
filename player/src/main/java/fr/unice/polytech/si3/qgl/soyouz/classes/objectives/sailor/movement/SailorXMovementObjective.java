@@ -21,7 +21,8 @@ public class SailorXMovementObjective implements MovingObjective
 
     /**
      * Constructor.
-     * @param sailor The sailor that will move.
+     *
+     * @param sailor  The sailor that will move.
      * @param xOnDeck The X position wanted.
      */
     public SailorXMovementObjective(Marin sailor, int xOnDeck)
@@ -55,11 +56,17 @@ public class SailorXMovementObjective implements MovingObjective
         int distStillToParkour = xOnDeck - sailor.getX();
         int xMove = 0;
         if (distStillToParkour >= 5)
+        {
             xMove = 5;
+        }
         else if (distStillToParkour <= -5)
+        {
             xMove = -5;
+        }
         else
+        {
             xMove = distStillToParkour;
+        }
         sailor.moveRelative(PosOnShip.of(xMove, 0));
         moveAction.add(new MoveAction(sailor, xMove, 0));
         nbTurnToComplete--;
@@ -68,6 +75,7 @@ public class SailorXMovementObjective implements MovingObjective
 
     /**
      * Getter.
+     *
      * @return the number of turn needed to complete the objective.
      */
     public int getNbTurnToComplete()

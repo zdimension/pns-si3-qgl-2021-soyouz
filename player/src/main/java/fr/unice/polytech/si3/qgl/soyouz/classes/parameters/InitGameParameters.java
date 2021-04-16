@@ -21,11 +21,11 @@ public class InitGameParameters
     /**
      * Construcor.
      *
-     * @param goal The game goal.
-     * @param ship The ship.
+     * @param goal    The game goal.
+     * @param ship    The ship.
      * @param sailors The list of sailors on the ship.
      */
-    public InitGameParameters(@JsonProperty("goal")GameGoal goal,
+    public InitGameParameters(@JsonProperty("goal") GameGoal goal,
                               @JsonProperty("ship") Bateau ship,
                               @JsonProperty("sailors") Marin[] sailors)
     {

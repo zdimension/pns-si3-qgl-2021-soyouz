@@ -22,7 +22,9 @@ public class Node
     public boolean addNeighbour(Node neighbour)
     {
         if (connections.containsKey(neighbour))
+        {
             return false;
+        }
         var distance = neighbour.position.sub(this.position).norm();
         connections.put(neighbour, distance);
         neighbour.connections.put(this, distance);

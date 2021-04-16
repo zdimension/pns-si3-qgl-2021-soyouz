@@ -28,12 +28,12 @@ public class RowersConfigHelper
     /**
      * Constructor.
      *
-     * @param neededRotation The angle between the boat and the CP.
-     * @param distToCheckpoint The distance between the ship and the CP.
-     * @param mutableSailors The number of sailors that can move.
+     * @param neededRotation       The angle between the boat and the CP.
+     * @param distToCheckpoint     The distance between the ship and the CP.
+     * @param mutableSailors       The number of sailors that can move.
      * @param immutableRightSailor The number of sailors already placed on a right oar.
-     * @param immutableLeftSailor The number of sailors already placed on a left oar.
-     * @param totalNbOfOar The total number of oars.
+     * @param immutableLeftSailor  The number of sailors already placed on a left oar.
+     * @param totalNbOfOar         The total number of oars.
      */
     public RowersConfigHelper(double neededRotation, double distToCheckpoint, int mutableSailors
         , int immutableRightSailor, int immutableLeftSailor, int totalNbOfOar)
@@ -140,7 +140,7 @@ public class RowersConfigHelper
         for (int rightNb = 0; rightNb <= maxRightNb; rightNb++)
         {
             for (int leftNb = 0; (leftNb < rightNb) && leftNb < (maxLeftNb - (rightNb
-            - immutableRightSailor)); leftNb++)
+                - immutableRightSailor)); leftNb++)
             {
                 leftTurnPossibilities.add(new OarConfiguration(leftNb, rightNb, totalNbOfOar));
             }

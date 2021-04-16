@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class OnBoardDataHelperTest
 {
@@ -26,7 +26,7 @@ class OnBoardDataHelperTest
             new Rame(2, 2),
             new Gouvernail(1, 2),
             new Voile(2, 0, false),
-            new Vigie(2,1)
+            new Vigie(2, 1)
         };
         Marin[] sailors = {
             new Marin(0, 0, 1, "Tom"),

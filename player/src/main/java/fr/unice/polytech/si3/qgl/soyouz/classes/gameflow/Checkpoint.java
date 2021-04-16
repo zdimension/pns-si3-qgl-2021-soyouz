@@ -18,10 +18,11 @@ public class Checkpoint extends ShapedEntity
      * Constructor.
      *
      * @param position The position of the checkpoint.
-     * @param shape The shape of the checkpoint.
+     * @param shape    The shape of the checkpoint.
      */
     @JsonCreator
-    public Checkpoint(@JsonProperty("position")Position position, @JsonProperty("shape")Shape shape, @JsonProperty("type") String type)
+    public Checkpoint(@JsonProperty("position") Position position,
+                      @JsonProperty("shape") Shape shape, @JsonProperty("type") String type)
     {
         super(position, shape);
     }

@@ -13,18 +13,44 @@ public class Polygon implements Shape
 {
     private final double orientation;
     private final Point2d[] vertices;
+    private final Point2d[] lastShell;
+    private double lastShipSize = Double.NaN;
 
     /**
      * Constructor.
      *
      * @param orientation The orientation of the polygon.
-     * @param vertices All points that compose the shape.
+     * @param vertices    All points that compose the shape.
      */
-    public Polygon(@JsonProperty("orientation")double orientation,@JsonProperty("vertices") Point2d[] vertices)
+    public Polygon(@JsonProperty("orientation") double orientation,
+                   @JsonProperty("vertices") Point2d[] vertices)
     {
         this.orientation = orientation;
         this.vertices = vertices;
         this.lastShell = new Point2d[vertices.length];
+    }
+
+    /**
+     * @param a start
+     * @param b end
+     * @param p point
+     * @return the distance between the point p and the line segment [a;b]
+     */
+    static double distanceToLine(Point2d a, Point2d b, Point2d p)
+    {
+        return (b.getX() - a.getX()) * (p.getY() - a.getY())
+            - (p.getX() - a.getX()) * (b.getY() - a.getY());
+    }
+
+    /**
+     * @param a start
+     * @param b end
+     * @param p point
+     * @return the side of the line segment [a;b] on which the point p lies
+     */
+    static boolean side(Point2d a, Point2d b, Point2d p)
+    {
+        return distanceToLine(a, b, p) > 0;
     }
 
     /**
@@ -47,15 +73,16 @@ public class Polygon implements Shape
         return vertices.clone();
     }
 
-    static double IsLeft(Point2d p0, Point2d p1, Point2d p2)
-    {
-        return (p1.getX() - p0.getX()) * (p2.getY() - p0.getY())
-            - (p2.getX() - p0.getX()) * (p1.getY() - p0.getY());
-    }
-
     @Override
     public boolean contains(Point2d p)
     {
+        // Copyright 2001, 2012, 2021 Dan Sunday
+        // This code may be freely used and modified for any purpose
+        // providing that this copyright notice is included with it.
+        // There is no warranty for this code, and the author of it cannot
+        // be held liable for any real or imagined damage from its use.
+        // Users of this code must verify correctness for their application.
+
         var wn = 0; // the winding number counter
         var j = vertices.length - 1;
 
@@ -63,20 +90,30 @@ public class Polygon implements Shape
         for (var i = 0; i < vertices.length; j = i++)
         {
             if (p.isOnLine(vertices[i], vertices[j]))
+            {
                 return true;
+            }
             if (vertices[i].getY() <= p.getY())
             {
                 // start y <= P.y
                 if (vertices[j].getY() > p.getY()) // an upward crossing
-                    if (IsLeft(vertices[i], vertices[j], p) > 0) // P left of  edge
+                {
+                    if (distanceToLine(vertices[i], vertices[j], p) > 0) // P left of  edge
+                    {
                         ++wn; // have  a valid up intersect
+                    }
+                }
             }
             else
             {
                 // start y > P.y (no test needed)
                 if (vertices[j].getY() <= p.getY()) // a downward crossing
-                    if (IsLeft(vertices[i], vertices[j], p) < 0) // P right of  edge
+                {
+                    if (distanceToLine(vertices[i], vertices[j], p) < 0) // P right of  edge
+                    {
                         --wn; // have  a valid down intersect
+                    }
+                }
             }
         }
 
@@ -89,9 +126,6 @@ public class Polygon implements Shape
         // TODO: fails for excentered polygons, gives a value too big
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
-
-    private double lastShipSize = Double.NaN;
-    private final Point2d[] lastShell;
 
     @Override
     public Stream<Point2d> getShell(double shipSize)
@@ -109,7 +143,9 @@ public class Polygon implements Shape
 
                 var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
                 if (cur.sub(change).normSquared() < cur.normSquared())
+                {
                     change = change.mul(-1);
+                }
                 lastShell[i] = cur.sub(change);
                 lastShell[ni] = nex.sub(change);
             }
@@ -118,11 +154,6 @@ public class Polygon implements Shape
         }
 
         return Arrays.stream(lastShell);
-    }
-
-    static boolean ccw(Point2d a, Point2d b, Point2d c)
-    {
-        return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
     }
 
     @Override
@@ -135,8 +166,10 @@ public class Polygon implements Shape
             var cur = pts[i];
             var nex = pts[(i + 1) % pts.length];
 
-            if (ccw(cur, a, b) != ccw(nex, a, b) && ccw(cur, nex, a) != ccw(cur, nex, b))
+            if (side(cur, a, b) != side(nex, a, b) && side(cur, nex, a) != side(cur, nex, b))
+            {
                 return true;
+            }
         }
 
         return false;

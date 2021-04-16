@@ -29,7 +29,8 @@ class DeckTest
     }
 
     @Test
-    void toStringTest(){
-        assertEquals("Deck{width=2, length=1}",deck.toString());
+    void toStringTest()
+    {
+        assertEquals("Deck{width=2, length=1}", deck.toString());
     }
 }

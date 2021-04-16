@@ -13,24 +13,27 @@ class VoileTest
     @BeforeEach
     void init()
     {
-        voile = new Voile(1,1,false);
-        voile2 = new Voile(2,2,true);
+        voile = new Voile(1, 1, false);
+        voile2 = new Voile(2, 2, true);
     }
 
     @Test
-    void isOpenedTest(){
+    void isOpenedTest()
+    {
         assertFalse(voile.isOpenned());
         assertTrue(voile2.isOpenned());
     }
 
     @Test
-    void setOpened(){
+    void setOpened()
+    {
         voile.setOpenned(true);
         assertTrue(voile.isOpenned());
     }
 
     @Test
-    void equals(){
+    void equals()
+    {
         boolean equals = voile.equals(voile);
         boolean notEquals = voile.equals(null);
         boolean notEquals2 = voile.equals(voile2);
@@ -41,7 +44,8 @@ class VoileTest
     }
 
     @Test
-    void hashCodeTest(){
+    void hashCodeTest()
+    {
         assertNotEquals(voile.hashCode(), voile2.hashCode());
     }
 

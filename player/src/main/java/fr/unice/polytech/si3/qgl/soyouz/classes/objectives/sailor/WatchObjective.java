@@ -8,7 +8,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Onbo
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class WatchObjective implements OnBoardObjective
     /**
      * Constructor.
      *
-     * @param ship The ship.
+     * @param ship   The ship.
      * @param sailor The sailor attached to the Watch.
      */
     public WatchObjective(Bateau ship, Marin sailor)
@@ -74,9 +73,13 @@ public class WatchObjective implements OnBoardObjective
         trace();
         List<GameAction> actions = new ArrayList<>();
         if (movement.size() == 1)
+        {
             actions.addAll(movement.get(0).resolve());
+        }
         if (isValidated())
+        {
             actions.add(new WatchAction(sailor));
+        }
         return actions;
     }
 }

@@ -2,15 +2,10 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
@@ -31,9 +26,9 @@ public class Bateau extends AutreBateau
     private final OnboardEntity[] entities;
 
     Bateau(@JsonProperty("name") String name,
-                  @JsonProperty("deck") Deck deck,
-                  @JsonProperty("entities") OnboardEntity[] entities,
-                  @JsonProperty("type") String type)
+           @JsonProperty("deck") Deck deck,
+           @JsonProperty("entities") OnboardEntity[] entities,
+           @JsonProperty("type") String type)
     {
         this(name, deck, entities);
     }
@@ -108,8 +103,8 @@ public class Bateau extends AutreBateau
     /**
      * Determine if a specific object is places at a specific position.
      *
-     *@param pos The coords we want to analyse.
-     * @param cls  The Class of object researched.
+     * @param pos The coords we want to analyse.
+     * @param cls The Class of object researched.
      * @return true if there is the object, false otherwise.
      */
     public boolean hasAt(PosOnShip pos, Class<?> cls)
@@ -216,11 +211,11 @@ public class Bateau extends AutreBateau
             {
                 str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'G';
             }
-            else if(ent instanceof Voile)
+            else if (ent instanceof Voile)
             {
                 str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'L';
             }
-            else if(ent instanceof Vigie)
+            else if (ent instanceof Vigie)
             {
                 str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'V';
             }

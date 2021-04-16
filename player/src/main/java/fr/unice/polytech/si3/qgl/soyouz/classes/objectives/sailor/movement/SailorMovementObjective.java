@@ -23,7 +23,7 @@ public class SailorMovementObjective implements MovingObjective
     /**
      * Constructor.
      *
-     * @param sailor The sailor that will move.
+     * @param sailor  The sailor that will move.
      * @param xOnDeck The X position wanted.
      * @param yOnDeck The Y position wanted.
      */
@@ -33,14 +33,14 @@ public class SailorMovementObjective implements MovingObjective
         this.xOnDeck = xOnDeck;
         this.yOnDeck = yOnDeck;
         nbTurnToComplete = Math.abs((xOnDeck - sailor.getX()) + (yOnDeck
-         - sailor.getY())) / 5 + 1;
+            - sailor.getY())) / 5 + 1;
     }
 
     /**
      * Alternative Constructor.
      *
      * @param sailor The sailor that will move.
-     * @param pos The PosOnShip wanted.
+     * @param pos    The PosOnShip wanted.
      */
     public SailorMovementObjective(Marin sailor, PosOnShip pos)
     {
@@ -85,9 +85,13 @@ public class SailorMovementObjective implements MovingObjective
     {
         int xDistStillToParkour = xOnDeck - sailor.getX();
         if (xDistStillToParkour >= 5)
+        {
             return 5;
+        }
         else if (xDistStillToParkour <= -5)
+        {
             return -5;
+        }
         return xDistStillToParkour;
     }
 
@@ -102,7 +106,9 @@ public class SailorMovementObjective implements MovingObjective
         int moveCredit = 5 - Math.abs(xMove);
         int yDistStillToParkour = yOnDeck - sailor.getY();
         if (moveCredit < Math.abs(yDistStillToParkour))
+        {
             return yDistStillToParkour > 0 ? moveCredit : -moveCredit;
+        }
         return yDistStillToParkour;
     }
 

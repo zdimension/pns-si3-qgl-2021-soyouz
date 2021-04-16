@@ -24,9 +24,9 @@ public class RegattaObjective implements RootObjective
 {
     private static final Logger logger = Logger.getLogger(RegattaObjective.class.getSimpleName());
     private final RegattaGoal goalData;
+    private final InitSailorPositionObjective initialisationObjective;
     private int numCheckpoint = 0;
     private CheckpointObjective currentCheckpoint;
-    private final InitSailorPositionObjective initialisationObjective;
     private OnBoardDataHelper onBoardDataHelper;
     private SeaDataHelper seaDataHelper;
 
@@ -42,7 +42,8 @@ public class RegattaObjective implements RootObjective
         currentCheckpoint = null;
         onBoardDataHelper = null;
         seaDataHelper = null;
-        initialisationObjective = new InitSailorPositionObjective(ip.getShip(), new ArrayList<>(Arrays.asList(ip.getSailors())));
+        initialisationObjective = new InitSailorPositionObjective(ip.getShip(),
+            new ArrayList<>(Arrays.asList(ip.getSailors())));
     }
 
     /**
@@ -69,11 +70,19 @@ public class RegattaObjective implements RootObjective
     {
         trace();
         if (onBoardDataHelper == null)
-            onBoardDataHelper = new OnBoardDataHelper(state.getIp().getShip(), new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
+        {
+            onBoardDataHelper = new OnBoardDataHelper(state.getIp().getShip(),
+                new ArrayList<>(Arrays.asList(state.getIp().getSailors())));
+        }
         if (seaDataHelper == null)
-            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind(),state.getNp().getVisibleEntities());
+        {
+            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind(),
+                state.getNp().getVisibleEntities());
+        }
         else
+        {
             seaDataHelper.update(state);
+        }
     }
 
     /**
@@ -85,7 +94,10 @@ public class RegattaObjective implements RootObjective
     {
         trace();
         if (currentCheckpoint == null)
-            currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper, seaDataHelper);
+        {
+            currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint],
+                onBoardDataHelper, seaDataHelper);
+        }
         if (currentCheckpoint.isValidated(state))
         {
             if (goalData.getCheckpoints().length - 1 > numCheckpoint)
@@ -98,7 +110,8 @@ public class RegattaObjective implements RootObjective
                 logger.log(Level.INFO, "Regatta ended");
                 numCheckpoint = 0;
             }
-            currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint], onBoardDataHelper, seaDataHelper);
+            currentCheckpoint = new CheckpointObjective(goalData.getCheckpoints()[numCheckpoint],
+                onBoardDataHelper, seaDataHelper);
         }
     }
 
@@ -111,7 +124,7 @@ public class RegattaObjective implements RootObjective
     @Override
     public boolean isValidated(GameState state)
     {
-        return numCheckpoint == ((RegattaGoal)state.getIp().getGoal()).getCheckpoints().length - 1;
+        return numCheckpoint == ((RegattaGoal) state.getIp().getGoal()).getCheckpoints().length - 1;
     }
 
     /**
@@ -127,7 +140,9 @@ public class RegattaObjective implements RootObjective
         update(state);
 
         if (initialisationObjective.isValidated())
+        {
             return currentCheckpoint.resolve(state);
+        }
         else
         {
             List<GameAction> ga = initialisationObjective.resolve();
@@ -135,7 +150,9 @@ public class RegattaObjective implements RootObjective
             {
                 update(state);
                 if (onBoardDataHelper.getMutableRowers().isEmpty())
+                {
                     ga.addAll(currentCheckpoint.resolve(state));
+                }
             }
             return ga;
         }

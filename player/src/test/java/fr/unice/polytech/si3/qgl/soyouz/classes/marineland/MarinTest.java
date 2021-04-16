@@ -2,7 +2,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -54,19 +53,21 @@ class MarinTest
     }
 
     @Test
-    void isAbsPosReachableTest(){
-        assertTrue(sailor.isAbsPosReachable(PosOnShip.of(3,3)));
-        assertTrue(sailor.isAbsPosReachable(PosOnShip.of(6,4)));
-        assertFalse(sailor.isAbsPosReachable(PosOnShip.of(7,4)));
-        assertFalse(sailor.isAbsPosReachable(PosOnShip.of(6,5)));
+    void isAbsPosReachableTest()
+    {
+        assertTrue(sailor.isAbsPosReachable(PosOnShip.of(3, 3)));
+        assertTrue(sailor.isAbsPosReachable(PosOnShip.of(6, 4)));
+        assertFalse(sailor.isAbsPosReachable(PosOnShip.of(7, 4)));
+        assertFalse(sailor.isAbsPosReachable(PosOnShip.of(6, 5)));
     }
 
     @Test
-    void numberExtraRoundsToReachEntity(){
-        assertEquals(0,sailor.numberExtraRoundsToReachEntity(PosOnShip.of(3,3)));
-        assertEquals(0,sailor.numberExtraRoundsToReachEntity(3,3));
-        assertEquals(1,sailor.numberExtraRoundsToReachEntity(PosOnShip.of(8,3)));
-        assertEquals(1,sailor.numberExtraRoundsToReachEntity(8,3));
+    void numberExtraRoundsToReachEntity()
+    {
+        assertEquals(0, sailor.numberExtraRoundsToReachEntity(PosOnShip.of(3, 3)));
+        assertEquals(0, sailor.numberExtraRoundsToReachEntity(3, 3));
+        assertEquals(1, sailor.numberExtraRoundsToReachEntity(PosOnShip.of(8, 3)));
+        assertEquals(1, sailor.numberExtraRoundsToReachEntity(8, 3));
     }
 
     @Test
@@ -115,7 +116,8 @@ class MarinTest
         sailor.moveAbsolute(PosOnShip.of(5, 3));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17, 6)));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17,
+            6)));
     }
 
     @Test
@@ -124,7 +126,8 @@ class MarinTest
         sailor.moveAbsolute(PosOnShip.of(5, 3));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17, 6)));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17,
+            6)));
     }
 
     @Test

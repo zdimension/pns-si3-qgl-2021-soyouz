@@ -2,12 +2,9 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
 
@@ -16,7 +13,6 @@ import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
  */
 public class SeaDataHelper
 {
-    public final static int TURNS_BEFORE_WATCH = 5;
     private Bateau ship;
     private Wind wind;
     private ShapedEntity[] visibleEntities;
@@ -25,11 +21,11 @@ public class SeaDataHelper
     /**
      * Constructor.
      *
-     * @param ship The ship.
-     * @param wind The wind.
+     * @param ship            The ship.
+     * @param wind            The wind.
      * @param visibleEntities all visible entities in the sea
      */
-    public SeaDataHelper(Bateau ship ,Wind wind, ShapedEntity[] visibleEntities)
+    public SeaDataHelper(Bateau ship, Wind wind, ShapedEntity[] visibleEntities)
     {
         this.ship = ship;
         this.wind = wind;
@@ -51,16 +47,6 @@ public class SeaDataHelper
     }
 
     /**
-     * Setter.
-     *
-     * @param pos The position where a Watch action occured.
-     */
-    public void setLastWatchPos(Position pos)
-    {
-        lastWatchPos = pos;
-    }
-
-    /**
      * Getter.
      *
      * @return The position where the last Watch action was thrown.
@@ -68,6 +54,16 @@ public class SeaDataHelper
     public Position getLastWatchPos()
     {
         return lastWatchPos;
+    }
+
+    /**
+     * Setter.
+     *
+     * @param pos The position where a Watch action occured.
+     */
+    public void setLastWatchPos(Position pos)
+    {
+        lastWatchPos = pos;
     }
 
     /**
@@ -90,12 +86,4 @@ public class SeaDataHelper
         return ship;
     }
 
-    /**
-     * Getter
-     * @return the visible sea entities
-     */
-    public ShapedEntity[] getVisibleEntities()
-    {
-        return visibleEntities;
-    }
 }

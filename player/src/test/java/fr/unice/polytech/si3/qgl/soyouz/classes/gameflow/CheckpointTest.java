@@ -15,7 +15,7 @@ class CheckpointTest
     @BeforeEach
     void init()
     {
-        checkpoints = new Checkpoint[]{
+        checkpoints = new Checkpoint[] {
             new Checkpoint(new Position(10, 10, 5), new Circle(10)),
             new Checkpoint(new Position(20, 10, 10), new Circle(10)),
             new Checkpoint(new Position(30, 10, 15), new Circle(10))
