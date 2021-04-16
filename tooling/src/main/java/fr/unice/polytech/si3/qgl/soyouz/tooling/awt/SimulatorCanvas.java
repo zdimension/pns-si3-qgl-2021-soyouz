@@ -337,14 +337,29 @@ public class SimulatorCanvas extends JPanel
 
     private void drawLegendText(Graphics2D g)
     {
+        g = (Graphics2D) g.create();
+
         var mouse = this.getMousePosition();
-        if (mouse == null)
+        if (mouse != null)
         {
-            return;
+            var p = mapToWorld(mouse);
+            g.drawString(String.format("X = %6.2f", p.getX()), 20, getHeight() - 40);
+            g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
         }
-        var p = mapToWorld(mouse);
-        g.drawString(String.format("X = %6.2f", p.getX()), 20, getHeight() - 40);
-        g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
+
+        if (np.getWind() != null)
+        {
+            g.setStroke(HISTORY);
+            g.setColor(Color.BLACK);
+            g.translate(getWidth() - 40, getHeight() - 55);
+
+            g.drawString("Vent", -12, 45);
+            g.scale(1, 1);
+            g.fillOval(-3, -3, 7, 7);
+            g.rotate(np.getWind().getOrientation() + Math.PI);
+            g.drawPolygon(new Polygon(new int[] { 0, -7, 7 }, new int[] { 28, 18, 18 }, 3));
+            g.drawPolygon(new Polygon(new int[] { -1, 1, 1, 7, 7, 0, -7, -7, -1, -1}, new int[] { 18, 18, -10, -16, -28, -22, -28, -16, -10, 14 }, 10));
+        }
     }
 
     private void drawEntity(Graphics2D g, ShapedEntity se)

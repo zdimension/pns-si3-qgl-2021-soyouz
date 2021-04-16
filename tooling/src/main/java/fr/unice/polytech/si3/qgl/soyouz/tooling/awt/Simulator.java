@@ -189,6 +189,9 @@ public class Simulator extends JFrame
 
                 model.getShip().setPosition(cur.add(linear).add(0, 0, rotIncrement));
                 System.out.println("Ship position : " + model.getShip().getPosition());
+
+                canvas.repaint();
+
                 if (++currentStep >= COMP_STEPS)
                 {
                     if (getCheckpoints()[currentCheckpoint].contains(model.getShip().getPosition()))
@@ -202,6 +205,8 @@ public class Simulator extends JFrame
                         }
                     }
 
+                    usedEntities.clear();
+
                     if (playMode)
                     {
                         computeRound();
@@ -213,9 +218,7 @@ public class Simulator extends JFrame
                     }
 
                     currentStep = 0;
-                    usedEntities.clear();
                 }
-                canvas.repaint();
             }
         });
 
