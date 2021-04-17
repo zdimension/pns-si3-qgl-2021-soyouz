@@ -2,8 +2,10 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.OarConfiguration;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
@@ -221,23 +223,15 @@ public class RowersConfigHelper
     private OarConfiguration resolveBasedOnSpeed()
     {
         trace();
-        OarConfiguration optimalConfiguration = forwardPossibilities.get(0);
-        double difference = distToCheckpoint - optimalConfiguration.getLinearSpeed();
-        for (OarConfiguration configuration : forwardPossibilities)
+        var minPair = forwardPossibilities.stream().map(
+            conf -> Pair.of(conf, distToCheckpoint - conf.getLinearSpeed())
+        ).min(Comparator.comparingDouble(pair -> Math.abs(pair.getSecond()))).get();
+        if (minPair.second < 0)
         {
-            double tempDiff = distToCheckpoint - configuration.getLinearSpeed();
-            if (Math.abs(tempDiff) < Math.abs(difference))
-            {
-                optimalConfiguration = configuration;
-                difference = tempDiff;
-            }
-        }
-        if (difference < 0)
-        {
-            optimalConfiguration = neededRotation > 0 ?
+            return neededRotation > 0 ?
                 new OarConfiguration(0, 1, totalNbOfOar) :
                 new OarConfiguration(1, 0, totalNbOfOar);
         }
-        return optimalConfiguration;
+        return minPair.first;
     }
 }
