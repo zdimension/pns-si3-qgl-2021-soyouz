@@ -47,7 +47,7 @@ public class RudderObjective implements OnBoardObjective
     {
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
-        if (!ship.hasAt(sailor.getPos(), Gouvernail.class))
+        if (sailor != null && !sailor.getPos().equals(rudder.getPos()))
         {
             movement.add(new SailorMovementObjective(sailor, rudder.getPos()));
         }
@@ -74,13 +74,16 @@ public class RudderObjective implements OnBoardObjective
     {
         trace();
         List<GameAction> actions = new ArrayList<>();
-        if (movement.size() == 1)
+        if (sailor != null)
         {
-            actions.addAll(movement.get(0).resolve());
-        }
-        if (isValidated())
-        {
-            actions.add(new TurnAction(sailor, rotation));
+            if (movement.size() == 1)
+            {
+                actions.addAll(movement.get(0).resolve());
+            }
+            if (isValidated())
+            {
+                actions.add(new TurnAction(sailor, rotation));
+            }
         }
         return actions;
     }

@@ -59,6 +59,7 @@ public class Simulator extends JFrame
     private final ArrayList<OnboardEntity> usedEntities;
     private final JButton btnNext;
     private final JButton btnPlay;
+    private final JComboBox<File> cbxFiles;
     private int speed = 0;
     private int currentStep = 0;
     private double rotIncrement;
@@ -70,7 +71,6 @@ public class Simulator extends JFrame
     private int currentCheckpoint;
     private LocalDateTime gameStart = null;
     private boolean vigie = false;
-    private final JComboBox<File> cbxFiles;
 
     public Simulator() throws IOException
     {
@@ -94,14 +94,7 @@ public class Simulator extends JFrame
         topcont.add(btnReset);
         btnReset.addActionListener(e ->
         {
-            try
-            {
-                reset();
-            }
-            catch (IOException ioException)
-            {
-                ioException.printStackTrace();
-            }
+            reset();
         });
 
         usedEntities = new ArrayList<>();
@@ -167,8 +160,11 @@ public class Simulator extends JFrame
                         }
                         counts.total++;
                     });
-                    Wind wind = np.getWind();
-                    linSpeed += ((double) counts.open / counts.total) * wind.getStrength() * Math.cos(wind.getOrientation() - np.getShip().getPosition().getOrientation()) / COMP_STEPS;
+                    if (counts.total > 0)
+                    {
+                        Wind wind = np.getWind();
+                        linSpeed += ((double) counts.open / counts.total) * wind.getStrength() * Math.cos(wind.getOrientation() - np.getShip().getPosition().getOrientation()) / COMP_STEPS;
+                    }
                 }
 
                 var cur = model.getShip().getPosition();
@@ -257,6 +253,8 @@ public class Simulator extends JFrame
 
         btnPlay.addActionListener(event ->
         {
+            if (gameStart == null)
+                reset();
             if (timer.isRunning())
             {
                 playMode = false;
@@ -302,7 +300,8 @@ public class Simulator extends JFrame
                 model = new RunnerParameters(
                     OBJECT_MAPPER.readValue(Files.readString(Path.of(filename)),
                         InitGameParameters.class),
-                    OBJECT_MAPPER.readValue(Files.readString(Path.of(filename.replace("_real", "_real_next")))
+                    OBJECT_MAPPER.readValue(Files.readString(Path.of(filename.replace("_real",
+                        "_real_next")))
                         , NextRoundParameters.class)
                 );
             }
@@ -335,7 +334,7 @@ public class Simulator extends JFrame
         return ((RegattaGoal) model.getGoal()).getCheckpoints();
     }
 
-    private void reset() throws IOException
+    private void reset()
     {
         loadFile(((File) Objects.requireNonNull(cbxFiles.getSelectedItem())).getAbsolutePath());
     }
@@ -373,6 +372,11 @@ public class Simulator extends JFrame
         var rudderRotate = 0d;
         for (GameAction act : res)
         {
+            /*if (act.getSailor() == null)
+            {
+                System.out.println("SAILOR IS NULL!");
+                continue;
+            }*/
             var sail = model.getSailors()[act.getSailorId()];
             var entType = act.entityNeeded;
             if (entType != null)

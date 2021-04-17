@@ -40,7 +40,7 @@ public class InitSailorPositionObjective implements MovingObjective
         this.sailors = getAllSailorsSortedByXPos(sailors);
         linesOnBoat = setLinesOnBoat(ship);
         lineWithRudder = linesOnBoat.stream().filter(line -> line.getRudder() != null)
-            .collect(Collectors.toList()).get(0);
+            .findFirst().orElse(null);
         linesWithSails = linesOnBoat.stream().filter(line -> line.getSail() != null)
             .collect(Collectors.toList());
         lineWithWatch = linesOnBoat.stream().filter(line -> line.getWatch() != null)
@@ -122,10 +122,13 @@ public class InitSailorPositionObjective implements MovingObjective
      */
     private void generateMovingToRudderObjective()
     {
-        Marin sailorCloseToRudder = findClosestSailorFromEntity(lineWithRudder.getRudder());
-        movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToRudder,
-            lineWithRudder.getRudder().getPos()));
-        sailors.remove(sailorCloseToRudder);
+        if (lineWithRudder != null)
+        {
+            Marin sailorCloseToRudder = findClosestSailorFromEntity(lineWithRudder.getRudder());
+            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToRudder,
+                lineWithRudder.getRudder().getPos()));
+            sailors.remove(sailorCloseToRudder);
+        }
     }
 
     /**

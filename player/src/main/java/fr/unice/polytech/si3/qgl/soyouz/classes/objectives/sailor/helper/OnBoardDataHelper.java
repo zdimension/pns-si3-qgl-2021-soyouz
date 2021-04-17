@@ -232,10 +232,13 @@ public class OnBoardDataHelper
     {
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
-        rudderSailor = sailors.stream()
-            .filter(sailor -> sailor.getPos().equals(rudder.getPos()))
-            .findFirst().get();
-        sailors.remove(rudderSailor);
+        if (rudder != null)
+        {
+            rudderSailor = sailors.stream()
+                .filter(sailor -> sailor.getPos().equals(rudder.getPos()))
+                .findFirst().get();
+            sailors.remove(rudderSailor);
+        }
     }
 
     /**
