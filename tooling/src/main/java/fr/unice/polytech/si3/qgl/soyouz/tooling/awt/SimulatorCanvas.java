@@ -296,11 +296,6 @@ public class SimulatorCanvas extends JPanel
 
     private void drawNodes(Graphics2D g)
     {
-        if (!drawPath)
-        {
-            return;
-        }
-
         g = (Graphics2D) g.create();
 
         var graph = CheckpointObjective.graph;
@@ -309,16 +304,18 @@ public class SimulatorCanvas extends JPanel
             return;
         }
 
-        var nodes = CheckpointObjective.nodes;
-        g.setColor(Color.ORANGE);
 
-        var lines = graph.getEdges();
-
-        for (Pair<Node, Node> line : lines)
+        if (drawPath)
         {
-            var sa = mapToScreen(line.first.position);
-            var sb = mapToScreen(line.second.position);
-            g.drawLine(sa.x, sa.y, sb.x, sb.y);
+            g.setColor(Color.ORANGE);
+            var lines = graph.getEdges();
+
+            for (Pair<Node, Node> line : lines)
+            {
+                var sa = mapToScreen(line.first.position);
+                var sb = mapToScreen(line.second.position);
+                g.drawLine(sa.x, sa.y, sb.x, sb.y);
+            }
         }
 
         g.setColor(Color.MAGENTA);
@@ -330,6 +327,7 @@ public class SimulatorCanvas extends JPanel
             g.drawLine(cur.x, cur.y, nex.x, nex.y);
         }
 
+        var nodes = CheckpointObjective.nodes;
         g.setColor(Color.BLACK);
         for (Point2d p : nodes)
         {
@@ -360,7 +358,7 @@ public class SimulatorCanvas extends JPanel
             g.drawString("Wind", -12, 45);
             g.scale(1, 1);
             g.fillOval(-3, -3, 7, 7);
-            g.rotate(np.getWind().getOrientation() + Math.PI);
+            g.rotate(np.getWind().getOrientation() - Math.PI / 2);
             g.drawPolygon(new Polygon(new int[] { 0, -7, 7 }, new int[] { 28, 18, 18 }, 3));
             g.drawPolygon(new Polygon(new int[] { -1, 1, 1, 7, 7, 0, -7, -7, -1, -1}, new int[] { 18, 18, -10, -16, -28, -22, -28, -16, -10, 14 }, 10));
         }

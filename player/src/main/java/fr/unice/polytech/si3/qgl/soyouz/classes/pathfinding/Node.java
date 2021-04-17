@@ -27,7 +27,6 @@ public class Node
         }
         var distance = neighbour.position.sub(this.position).norm();
         connections.put(neighbour, distance);
-        neighbour.connections.put(this, distance);
         return true;
     }
 }

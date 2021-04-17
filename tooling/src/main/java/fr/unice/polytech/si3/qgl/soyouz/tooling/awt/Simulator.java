@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
 
 public class Simulator extends JFrame
 {
@@ -41,22 +43,21 @@ public class Simulator extends JFrame
     private static final int[] DELAYS = { 50, 10, 0 };
     private static final java.util.List<Class<? extends GameAction>> ACTIONS_ORDER =
         java.util.List.of(
-        MoveAction.class,
-        OarAction.class,
-        LiftSailAction.class,
-        LowerSailAction.class,
-        TurnAction.class,
-        WatchAction.class
-        // turn cannon
-        // load cannon
-        // shoot cannon
-    );
+            MoveAction.class,
+            OarAction.class,
+            LiftSailAction.class,
+            LowerSailAction.class,
+            TurnAction.class,
+            WatchAction.class
+            // turn cannon
+            // load cannon
+            // shoot cannon
+        );
     private final Timer timer;
     private final int COMP_STEPS = 10;
     private final SimulatorCanvas canvas;
     private final ArrayList<OnboardEntity> usedEntities;
     private final JButton btnNext;
-    //private final JButton btnSlowNext;
     private final JButton btnPlay;
     private int speed = 0;
     private int currentStep = 0;
@@ -69,10 +70,10 @@ public class Simulator extends JFrame
     private int currentCheckpoint;
     private LocalDateTime gameStart = null;
     private boolean vigie = false;
+    private final JComboBox<File> cbxFiles;
 
     public Simulator() throws IOException
     {
-        //System.setProperty("sun.awt.noerasebackground", "true");
         setTitle("Soyouz Simulator");
         setLayout(new BorderLayout());
         setSize(600, 600);
@@ -85,9 +86,6 @@ public class Simulator extends JFrame
 
         btnNext = new JButton("Next");
         topcont.add(btnNext);
-
-        /*btnSlowNext = new JButton("Next slow");
-        topcont.add(btnSlowNext);*/
 
         btnPlay = new JButton("Play");
         topcont.add(btnPlay);
@@ -146,7 +144,7 @@ public class Simulator extends JFrame
             }
         });
 
-        timer = new Timer(10, new ActionListener()
+        timer = new Timer(0, new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent event)
@@ -223,20 +221,6 @@ public class Simulator extends JFrame
             }
         });
 
-        var btnSpeed = new JButton();
-        btnSpeed.addActionListener(e ->
-        {
-            this.speed++;
-            if (this.speed == 3)
-            {
-                this.speed = 0;
-            }
-            btnSpeed.setText("Speed : " + SPEEDS[this.speed]);
-            timer.setDelay(DELAYS[this.speed]);
-        });
-        btnSpeed.doClick();
-        topcont.add(btnSpeed);
-
         var btnCenter = new JButton("Center view");
         topcont.add(btnCenter);
         btnCenter.addActionListener(e ->
@@ -244,21 +228,32 @@ public class Simulator extends JFrame
             canvas.centerView(true);
         });
 
+        var cbxSpeed = new JComboBox<>(SPEEDS);
+        cbxSpeed.addItemListener(e ->
+        {
+            this.speed = cbxSpeed.getSelectedIndex();
+            timer.setDelay(DELAYS[this.speed]);
+        });
+        cbxSpeed.setSelectedIndex(2);
+        topcont.add(cbxSpeed);
+
+        cbxFiles = new JComboBox<>(Objects.requireNonNull(
+            new File("games").listFiles((dir, name) -> name.startsWith("Week") && !name.contains(
+                "_next"))));
+        cbxFiles.addItemListener(e ->
+        {
+            loadFile(e.getItem().toString());
+            canvas.centerView(true);
+        });
+        topcont.add(cbxFiles);
+
         reset();
 
         btnNext.addActionListener(event ->
         {
             playMode = false;
-            //timer.setDelay(5);
             playRound();
         });
-
-        /*btnSlowNext.addActionListener(event ->
-        {
-            playMode = false;
-            timer.setDelay(50);
-            playRound();
-        });*/
 
         btnPlay.addActionListener(event ->
         {
@@ -271,7 +266,6 @@ public class Simulator extends JFrame
             {
                 btnPlay.setText("Stop");
                 playMode = true;
-                //timer.setDelay(5);
                 playRound();
             }
         });
@@ -296,30 +290,32 @@ public class Simulator extends JFrame
         });
     }
 
-    private Checkpoint[] getCheckpoints()
-    {
-        return ((RegattaGoal) model.getGoal()).getCheckpoints();
-    }
-
-    private void reset() throws IOException
+    private void loadFile(String filename)
     {
         timer.stop();
         btnNext.setEnabled(true);
-        //btnSlowNext.setEnabled(true);
         btnPlay.setText("Play");
-        if (true)
+        try
         {
-            var ipt = Files.readString(Path.of("games/Week8p1.json"));
-            model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
+            if (filename.contains("_real"))
+            {
+                model = new RunnerParameters(
+                    OBJECT_MAPPER.readValue(Files.readString(Path.of(filename)),
+                        InitGameParameters.class),
+                    OBJECT_MAPPER.readValue(Files.readString(Path.of(filename.replace("_real", "_real_next")))
+                        , NextRoundParameters.class)
+                );
+            }
+            else
+            {
+                var ipt = Files.readString(Path.of(filename));
+                model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
+            }
         }
-        else
+        catch (IOException exc)
         {
-            model = new RunnerParameters(
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real.json")),
-                    InitGameParameters.class),
-                OBJECT_MAPPER.readValue(Files.readString(Path.of("games/Week10p_real_next.json"))
-                    , NextRoundParameters.class)
-            );
+            exc.printStackTrace();
+            return;
         }
 
         np = null;
@@ -332,6 +328,16 @@ public class Simulator extends JFrame
         canvas.reset();
         canvas.setCockpit(cockpit);
         loadNextRound();
+    }
+
+    private Checkpoint[] getCheckpoints()
+    {
+        return ((RegattaGoal) model.getGoal()).getCheckpoints();
+    }
+
+    private void reset() throws IOException
+    {
+        loadFile(((File) Objects.requireNonNull(cbxFiles.getSelectedItem())).getAbsolutePath());
     }
 
     private void playRound()
