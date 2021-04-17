@@ -3,7 +3,9 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
+import java.util.Arrays;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Circle shape.
@@ -12,6 +14,8 @@ public class Circle extends Polygon implements Shape
 {
     public static final int VERTEX_COUNT = 16;
     private final double radius;
+    private Point2d[] lastShell;
+    private double lastShipSize;
 
     /**
      * Constructor.
@@ -20,13 +24,18 @@ public class Circle extends Polygon implements Shape
      */
     public Circle(@JsonProperty("radius") double radius)
     {
-        super(0, IntStream.range(0, VERTEX_COUNT)
+        super(0, getPoints(radius));
+        this.radius = radius;
+    }
+
+    private static Point2d[] getPoints(double radius)
+    {
+        return IntStream.range(0, VERTEX_COUNT)
             .mapToObj(angle ->
             {
                 var rad = 2 * angle * Math.PI / VERTEX_COUNT;
                 return new Point2d(radius * Math.cos(rad), radius * Math.sin(rad));
-            }).toArray(Point2d[]::new));
-        this.radius = radius;
+            }).toArray(Point2d[]::new);
     }
 
     /**
@@ -83,5 +92,18 @@ public class Circle extends Polygon implements Shape
         }
 
         return false;
+    }
+
+    @Override
+    public Stream<Point2d> getShell(double shipSize)
+    {
+        if (shipSize != lastShipSize)
+        {
+            lastShell = getPoints(radius + shipSize);
+
+            lastShipSize = shipSize;
+        }
+
+        return Arrays.stream(lastShell);
     }
 }
