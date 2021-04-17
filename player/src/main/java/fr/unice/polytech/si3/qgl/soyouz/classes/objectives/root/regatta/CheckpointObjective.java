@@ -107,10 +107,23 @@ public class CheckpointObjective implements RootObjective
                     continue;
                 }
 
-                if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize)
-                    && (reef instanceof Collidable || reef instanceof Stream))
+
+                if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize))
                 {
-                    continue outer;
+                    if (reef instanceof Stream)
+                    {
+                        var stream = (Stream)reef;
+                        var proj = p.sub(node).dot(stream.getProjectedStrength());
+                        if (proj < 0)
+                        {
+                            continue outer;
+                        }
+                    }
+
+                    if (reef instanceof Collidable)
+                    {
+                        continue outer;
+                    }
                 }
             }
 
