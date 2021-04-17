@@ -349,13 +349,13 @@ public class SimulatorCanvas extends JPanel
             g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
         }
 
-        if (np.getWind() != null)
+        if (np.getWind() != null && np.getWind().getStrength() != 0)
         {
             g.setStroke(HISTORY);
             g.setColor(Color.BLACK);
             g.translate(getWidth() - 40, getHeight() - 55);
 
-            g.drawString("Wind", -12, 45);
+            g.drawString("Wind=" + np.getWind().getStrength(), -28, 45);
             g.scale(1, 1);
             g.fillOval(-3, -3, 7, 7);
             g.rotate(np.getWind().getOrientation() - Math.PI / 2);
