@@ -72,7 +72,7 @@ public class Simulator extends JFrame
 
     public Simulator() throws IOException
     {
-        System.setProperty("sun.awt.noerasebackground", "true");
+        //System.setProperty("sun.awt.noerasebackground", "true");
         setTitle("Soyouz Simulator");
         setLayout(new BorderLayout());
         setSize(600, 600);
@@ -118,17 +118,18 @@ public class Simulator extends JFrame
             canvas.clearHistory();
         });
 
-        var btnPath = new JButton("Hide path");
+        var btnPath = new JButton("Hide graph");
         btnPath.addActionListener(e ->
         {
             if (canvas.drawPath = !canvas.drawPath)
             {
-                btnPath.setText("Hide path");
+                btnPath.setText("Hide graph");
             }
             else
             {
-                btnPath.setText("Show path");
+                btnPath.setText("Show graph");
             }
+            canvas.repaint();
         });
         topcont.add(btnPath);
 
@@ -236,6 +237,13 @@ public class Simulator extends JFrame
         btnSpeed.doClick();
         topcont.add(btnSpeed);
 
+        var btnCenter = new JButton("Center view");
+        topcont.add(btnCenter);
+        btnCenter.addActionListener(e ->
+        {
+            canvas.centerView(true);
+        });
+
         reset();
 
         btnNext.addActionListener(event ->
@@ -276,6 +284,14 @@ public class Simulator extends JFrame
                 playMode = false;
 
                 super.windowClosing(e);
+            }
+
+            @Override
+            public void windowOpened(WindowEvent e)
+            {
+                super.windowOpened(e);
+
+                canvas.centerView(true);
             }
         });
     }

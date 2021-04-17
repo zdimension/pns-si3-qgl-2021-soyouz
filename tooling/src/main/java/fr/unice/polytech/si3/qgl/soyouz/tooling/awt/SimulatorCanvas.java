@@ -24,10 +24,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SimulatorCanvas extends JPanel
@@ -158,7 +156,7 @@ public class SimulatorCanvas extends JPanel
     public void setNp(NextRoundParameters np)
     {
         this.np = np;
-        centerView();
+        centerView(false);
     }
 
     private Collection<ShapedEntity> getVisibleShapes()
@@ -168,22 +166,31 @@ public class SimulatorCanvas extends JPanel
 
     private java.util.stream.Stream<Point2d> getEntitiesPositions()
     {
-        return java.util.stream.Stream.concat(getVisibleShapes().stream(),
-            java.util.stream.Stream.of(model.getShip()))
-            .map(ShapedEntity::getPosition);
+        var str = java.util.stream.Stream.concat(getVisibleShapes().stream(),
+            java.util.stream.Stream.of(model.getShip()));
+        var goal = model.getGoal();
+        if (goal instanceof RegattaGoal)
+        {
+            str = java.util.stream.Stream.concat(str, Arrays.stream(((RegattaGoal) goal).getCheckpoints()));
+        }
+        return str.map(ShapedEntity::getPosition);
     }
 
-    private void centerView()
+    public void centerView(boolean force)
     {
-        if (centered) return;
+        if (centered && !force) return;
+        if (getWidth() == 0) return; // initialization
 
         var min = getEntitiesPositions().reduce(Point2d::min).get();
         var max = getEntitiesPositions().reduce(Point2d::max).get();
-        cameraPos = max.sub(min).mul(0.5).add(min);
+        var diff = max.sub(min);
+        cameraPos = diff.mul(0.5).add(min);
 
-        scale = 0.1;
+        scale = Math.min(getWidth() / diff.x, getHeight() / diff.y) * 0.8;
 
         centered = true;
+
+        repaint();
     }
 
     void reset()
@@ -240,11 +247,6 @@ public class SimulatorCanvas extends JPanel
         g2d.setColor(BACKGROUND);
         g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        var center = mapToScreen(Position.ZERO);
-        g2d.setColor(Color.BLACK);
-        g2d.drawLine(center.x, 0, center.x, getHeight());
-        g2d.drawLine(0, center.y, getWidth(), center.y);
-
         drawGame(g2d);
     }
 
@@ -276,8 +278,6 @@ public class SimulatorCanvas extends JPanel
 
         drawEntity(g, model.getShip());
 
-        drawShipDeck(g, model.getShip(), model.getSailors());
-
         drawShipVision(g, model.getShip());
 
         drawNodes(g);
@@ -288,6 +288,8 @@ public class SimulatorCanvas extends JPanel
         {
             shipHistory.add(model.getShip().getPosition());
         }
+
+        drawShipDeck(g, model.getShip(), model.getSailors());
 
         drawLegendText(g);
     }
@@ -339,6 +341,8 @@ public class SimulatorCanvas extends JPanel
     {
         g = (Graphics2D) g.create();
 
+        g.setColor(Color.BLACK);
+
         var mouse = this.getMousePosition();
         if (mouse != null)
         {
@@ -353,7 +357,7 @@ public class SimulatorCanvas extends JPanel
             g.setColor(Color.BLACK);
             g.translate(getWidth() - 40, getHeight() - 55);
 
-            g.drawString("Vent", -12, 45);
+            g.drawString("Wind", -12, 45);
             g.scale(1, 1);
             g.fillOval(-3, -3, 7, 7);
             g.rotate(np.getWind().getOrientation() + Math.PI);
@@ -404,6 +408,9 @@ public class SimulatorCanvas extends JPanel
         g = (Graphics2D) g.create();
 
         g.translate(DECK_MARGIN, DECK_MARGIN);
+
+        g.setColor(ENTITY_COLORS.get(Bateau.class));
+        g.fillRect(0, 0, b.getDeck().getWidth() * DECK_GRID_SIZE, b.getDeck().getLength() * DECK_GRID_SIZE);
 
         for (OnboardEntity entity : b.getEntities())
         {
@@ -539,6 +546,7 @@ public class SimulatorCanvas extends JPanel
     public void clearHistory()
     {
         shipHistory.clear();
+        repaint();
     }
 
     public void setCockpit(Cockpit cockpit)
