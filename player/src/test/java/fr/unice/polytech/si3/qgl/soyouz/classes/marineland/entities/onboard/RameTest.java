@@ -37,19 +37,11 @@ class RameTest
     }
 
     @Test
-    void getPosCoord()
-    {
-        assertEquals(PosOnShip.of(1, 0), rame1.getPosCoord());
-        assertEquals(PosOnShip.of(1, 1), rame2.getPosCoord());
-        assertEquals(PosOnShip.of(2, 2), rame3.getPosCoord());
-    }
-
-    @Test
     void getPos()
     {
-        assertEquals(new PosOnShip(1, 0), rame1.getPos());
-        assertEquals(new PosOnShip(1, 1), rame2.getPos());
-        assertEquals(new PosOnShip(2, 2), rame3.getPos());
+        assertEquals(PosOnShip.of(1, 0), rame1.getPos());
+        assertEquals(PosOnShip.of(1, 1), rame2.getPos());
+        assertEquals(PosOnShip.of(2, 2), rame3.getPos());
     }
 
     @Test

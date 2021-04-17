@@ -159,7 +159,7 @@ public class Bateau extends AutreBateau
     public PosOnShip findFirstPosOfEntity(Class<? extends OnboardEntity> ent)
     {
         return Util.filterType(Arrays.stream(this.entities), ent).findFirst()
-            .map(OnboardEntity::getPosCoord).orElse(null);
+            .map(OnboardEntity::getPos).orElse(null);
     }
 
     /**

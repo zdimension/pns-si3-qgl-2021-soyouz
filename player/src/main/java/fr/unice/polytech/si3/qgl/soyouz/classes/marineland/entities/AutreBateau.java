@@ -3,7 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 /**
  * Ship entity.
  */
-public class AutreBateau extends ShapedEntity implements Entity
+public class AutreBateau extends ShapedEntity implements Entity, Collidable
 {
     private int life;
 

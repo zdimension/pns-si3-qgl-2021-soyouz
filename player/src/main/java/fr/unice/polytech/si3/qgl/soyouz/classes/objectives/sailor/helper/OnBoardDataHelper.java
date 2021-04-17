@@ -159,7 +159,7 @@ public class OnBoardDataHelper
             return;
         }
         Optional<Marin> potentialWatcher = sailors.stream()
-            .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
+            .filter(sailor -> sailor.getPos().equals(rudder.getPos()))
             .findFirst();
         potentialWatcher.ifPresent(sailor ->
         {
@@ -233,7 +233,7 @@ public class OnBoardDataHelper
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         rudderSailor = sailors.stream()
-            .filter(sailor -> sailor.getPos().equals(rudder.getPosCoord()))
+            .filter(sailor -> sailor.getPos().equals(rudder.getPos()))
             .findFirst().get();
         sailors.remove(rudderSailor);
     }
@@ -248,7 +248,7 @@ public class OnBoardDataHelper
         trace();
         Util.filterType(Arrays.stream(ship.getEntities()), Voile.class).forEach(ent ->
             sailors.stream()
-                .filter(sailor -> sailor.getPos().equals(ent.getPosCoord()))
+                .filter(sailor -> sailor.getPos().equals(ent.getPos()))
                 .findFirst().ifPresent(sailSailors::add)
         );
         sailors.removeAll(sailSailors);

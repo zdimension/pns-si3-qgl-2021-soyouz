@@ -7,10 +7,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Reef;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.SailorObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
@@ -111,7 +108,7 @@ public class CheckpointObjective implements RootObjective
                 }
 
                 if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize)
-                    && (reef instanceof Reef || reef instanceof Stream))
+                    && (reef instanceof Collidable || reef instanceof Stream))
                 {
                     continue outer;
                 }

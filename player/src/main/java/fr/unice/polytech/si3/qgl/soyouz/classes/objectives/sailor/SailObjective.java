@@ -96,7 +96,7 @@ public class SailObjective implements OnBoardObjective
             .sorted(Comparator.comparing(Marin::getX)).collect(Collectors.toList());
         sailsOpen.forEach(sail ->
         {
-            if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPosCoord())) && !sailor.isEmpty())
+            if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPos())) && !sailor.isEmpty())
             {
                 movement.add(new SailorMovementObjective(sailor.get(0), sail.getPos()));
                 sailor.remove(0);
@@ -104,7 +104,7 @@ public class SailObjective implements OnBoardObjective
         });
         sailsClose.forEach(sail ->
         {
-            if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPosCoord())))
+            if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPos())))
             {
                 movement.add(new SailorMovementObjective(sailor.get(0), sail.getPos()));
                 sailor.remove(0);
@@ -141,7 +141,7 @@ public class SailObjective implements OnBoardObjective
         sailsToOpen.forEach(sail ->
         {
             var sailorTemp =
-                sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst();
+                sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst();
             if (sailorTemp.isPresent())
             {
                 Marin sailor = sailorTemp.get();
@@ -152,7 +152,7 @@ public class SailObjective implements OnBoardObjective
         sailsToClose.forEach(sail ->
         {
             var sailorTemp =
-                sailors.stream().filter(s -> s.getPos().equals(sail.getPosCoord())).findFirst();
+                sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst();
             if (sailorTemp.isPresent())
             {
                 Marin sailor = sailorTemp.get();

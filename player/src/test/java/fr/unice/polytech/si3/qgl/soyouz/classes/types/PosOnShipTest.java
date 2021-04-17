@@ -50,7 +50,7 @@ class PosOnShipTest
     }
 
     @Test
-    void getPosCoord()
+    void getPos()
     {
         assertNotEquals(PosOnShip.of(0, 2), posByCoords);
         assertEquals(PosOnShip.of(1, 2), posByCoords);

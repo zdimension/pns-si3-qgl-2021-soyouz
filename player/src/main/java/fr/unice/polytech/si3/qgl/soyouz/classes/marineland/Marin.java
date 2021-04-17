@@ -155,8 +155,7 @@ public class Marin
     /**
      * Determine if a Cell is reachable.
      *
-     * @param xDist distance on X axis
-     * @param yDist distance on X axis
+     * @param pos relative position
      * @return if this sailor can move the number of cells specified
      */
     public boolean isRelPosReachable(PosOnShip pos)
