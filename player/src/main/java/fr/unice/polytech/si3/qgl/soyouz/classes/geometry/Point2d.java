@@ -136,4 +136,9 @@ public class Point2d
     {
         return sub(other).norm();
     }
+
+    public Point2d mid(Point2d cur)
+    {
+        return sub(cur).mul(0.5).add(cur);
+    }
 }

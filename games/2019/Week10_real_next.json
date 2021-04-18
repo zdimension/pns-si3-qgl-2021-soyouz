@@ -1,0 +1,309 @@
+{
+    "ship": {
+        "type": "ship",
+        "position": {
+            "x": 1008.4033613445396,
+            "y": 1818.7274909963983,
+            "orientation": 0.0
+        },
+        "name": "Galion",
+        "deck": {
+            "width": 5,
+            "length": 12
+        },
+        "entities": [
+            {
+                "x": 11,
+                "y": 2,
+                "type": "rudder"
+            },
+            {
+                "x": 0,
+                "y": 2,
+                "type": "watch"
+            },
+            {
+                "x": 7,
+                "y": 2,
+                "type": "sail",
+                "openned": false
+            },
+            {
+                "x": 2,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 5,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 6,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 7,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 8,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 9,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 2,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 4,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 5,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 6,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 7,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 8,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 9,
+                "y": 0,
+                "type": "oar"
+            }
+        ],
+        "life": 3000,
+        "shape": {
+            "type": "rectangle",
+            "width": 5.0,
+            "height": 12.0,
+            "orientation": 0.0
+        }
+    },
+    "visibleEntities": [
+        {
+            "type": "ship",
+            "position": {
+                "x": 1022.2222222222222,
+                "y": 2562.962962962962,
+                "orientation": 0.0
+            },
+            "life": 3000,
+            "shape": {
+                "type": "rectangle",
+                "width": 5.0,
+                "height": 12.0,
+                "orientation": 0.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 4169.183228847102,
+                "y": 3083.704592948289,
+                "orientation": 0.6108652381980153
+            },
+            "shape": {
+                "type": "polygon",
+                "vertices": [
+                    {
+                        "x": 200.0,
+                        "y": -350.0
+                    },
+                    {
+                        "x": 300.0,
+                        "y": 150.0
+                    },
+                    {
+                        "x": -300.0,
+                        "y": 150.0
+                    }
+                ],
+                "orientation": 0.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 4669.867947178872,
+                "y": 3109.2436974789935,
+                "orientation": 0.0
+            },
+            "shape": {
+                "type": "circle",
+                "radius": 100.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 3193.2773109243703,
+                "y": 2466.98679471789,
+                "orientation": 0.0
+            },
+            "shape": {
+                "type": "circle",
+                "radius": 250.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 4243.6974789916,
+                "y": 4063.625450180072,
+                "orientation": 0.6283185307179586
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 400.0,
+                "height": 500.0,
+                "orientation": 0.0
+            }
+        },
+        {
+            "type": "stream",
+            "position": {
+                "x": 4171.668667466992,
+                "y": 2286.914765906367,
+                "orientation": 0.0
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 200.0,
+                "height": 1000.0,
+                "orientation": 0.0
+            },
+            "strength": 10.0
+        },
+        {
+            "type": "stream",
+            "position": {
+                "x": 3805.5222088835535,
+                "y": 3151.2605042016826,
+                "orientation": 4.537856055185257
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 200.0,
+                "height": 1000.0,
+                "orientation": 0.0
+            },
+            "strength": 10.0
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 4261.7046818727495,
+                "y": 1788.7154861944798,
+                "orientation": 0.7330382858376184
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 500.0,
+                "height": 150.0,
+                "orientation": 0.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 5048.0192076830845,
+                "y": 2530.0120048019226,
+                "orientation": 0.8377580409572781
+            },
+            "shape": {
+                "type": "polygon",
+                "vertices": [
+                    {
+                        "x": 350.0,
+                        "y": 0.0
+                    },
+                    {
+                        "x": 250.0,
+                        "y": 250.0
+                    },
+                    {
+                        "x": -100.0,
+                        "y": 150.0
+                    },
+                    {
+                        "x": -150.0,
+                        "y": -150.0
+                    },
+                    {
+                        "x": 250.0,
+                        "y": -200.0
+                    }
+                ],
+                "orientation": 0.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 3481.392557022809,
+                "y": 3229.2917166866755,
+                "orientation": 0.6457718232379019
+            },
+            "shape": {
+                "type": "polygon",
+                "vertices": [
+                    {
+                        "x": 150.0,
+                        "y": 150.0
+                    },
+                    {
+                        "x": -150.0,
+                        "y": 50.0
+                    },
+                    {
+                        "x": 0.0,
+                        "y": -200.0
+                    }
+                ],
+                "orientation": 0.0
+            }
+        }
+    ],
+    "wind": {
+        "orientation": 0.0,
+        "strength": 0.0
+    }
+}

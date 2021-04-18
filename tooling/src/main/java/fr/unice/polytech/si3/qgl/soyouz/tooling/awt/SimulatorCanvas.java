@@ -84,6 +84,7 @@ public class SimulatorCanvas extends JPanel
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
     private Cockpit cockpit;
+    private boolean debugCollisions;
 
     public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
     {
@@ -112,16 +113,30 @@ public class SimulatorCanvas extends JPanel
             @Override
             public void mousePressed(MouseEvent e)
             {
-                moveOrigin = getPos(e)
-                    .sub(getViewCenter())
-                    .mul(1 / scale)
-                    .add(cameraPos);
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    moveOrigin = getPos(e)
+                        .sub(getViewCenter())
+                        .mul(1 / scale)
+                        .add(cameraPos);
+                }
+                else if (SwingUtilities.isRightMouseButton(e))
+                {
+                    debugCollisions = true;
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                moveOrigin = null;
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    moveOrigin = null;
+                }
+                else if (SwingUtilities.isRightMouseButton(e))
+                {
+                    debugCollisions = false;
+                }
             }
         });
 
@@ -136,6 +151,8 @@ public class SimulatorCanvas extends JPanel
                         moveOrigin.sub(((getPos(e).sub(getViewCenter()).mul(1 / scale))));
                     repaint();
                 }
+
+                super.mouseDragged(e);
             }
 
             @Override
@@ -304,7 +321,6 @@ public class SimulatorCanvas extends JPanel
             return;
         }
 
-
         if (drawPath)
         {
             g.setColor(Color.ORANGE);
@@ -331,7 +347,7 @@ public class SimulatorCanvas extends JPanel
         g.setColor(Color.BLACK);
         for (Point2d p : nodes)
         {
-            drawShape(g, new Circle(10), p.toPosition());
+            drawShape(g, new Circle(mapToWorld(3)), p.toPosition());
         }
     }
 
@@ -347,6 +363,22 @@ public class SimulatorCanvas extends JPanel
             var p = mapToWorld(mouse);
             g.drawString(String.format("X = %6.2f", p.getX()), 20, getHeight() - 40);
             g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
+
+            if (debugCollisions)
+            {
+                var sp = model.getShip().getPosition();
+                for (ShapedEntity shp : getVisibleShapes())
+                {
+                    if (shp.getShape().linePassesThrough(shp.toLocal(p), shp.toLocal(sp), 0))
+                    {
+                        g.setColor(Color.MAGENTA);
+                        drawShape(g, shp.getShape(), shp.getPosition());
+                    }
+                }
+                var sps = mapToScreen(sp);
+                g.setColor(Color.BLACK);
+                g.drawLine(mouse.x, mouse.y, sps.x, sps.y);
+            }
         }
 
         if (np.getWind() != null && np.getWind().getStrength() != 0)

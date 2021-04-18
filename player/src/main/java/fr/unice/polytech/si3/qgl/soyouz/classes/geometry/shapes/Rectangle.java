@@ -3,6 +3,11 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Stream;
+
 /**
  * Rectangle Shape.
  */
@@ -22,15 +27,20 @@ public class Rectangle extends Polygon implements Shape
                      @JsonProperty("height") double height,
                      @JsonProperty("orientation") double orientation)
     {
-        super(orientation, new Point2d[]
+        super(orientation, getPoints(width, height));
+        this.width = width;
+        this.height = height;
+    }
+
+    private static Point2d[] getPoints(double width, double height)
+    {
+        return new Point2d[]
             {
                 new Point2d(-height / 2, -width / 2),
                 new Point2d(height / 2, -width / 2),
                 new Point2d(height / 2, width / 2),
                 new Point2d(-height / 2, width / 2)
-            });
-        this.width = width;
-        this.height = height;
+            };
     }
 
     /**
@@ -63,5 +73,14 @@ public class Rectangle extends Polygon implements Shape
     public double getMaxDiameter()
     {
         return Math.hypot(width, height);
+    }
+
+    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
+
+    @Override
+    public Stream<Point2d> getShell(double shipSize)
+    {
+        return Arrays.stream(shellCache.computeIfAbsent((int) shipSize,
+            size -> getPoints(width + size, height + size)));
     }
 }

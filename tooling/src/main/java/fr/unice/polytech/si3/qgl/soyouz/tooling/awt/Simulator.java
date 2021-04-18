@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ public class Simulator extends JFrame
     private final ArrayList<OnboardEntity> usedEntities;
     private final JButton btnNext;
     private final JButton btnPlay;
-    private final JComboBox<File> cbxFiles;
+    private final JComboBox<Object> cbxFiles;
     private int speed = 0;
     private int currentStep = 0;
     private double rotIncrement;
@@ -233,9 +235,11 @@ public class Simulator extends JFrame
         cbxSpeed.setSelectedIndex(2);
         topcont.add(cbxSpeed);
 
-        cbxFiles = new JComboBox<>(Objects.requireNonNull(
-            new File("games").listFiles((dir, name) -> name.startsWith("Week") && !name.contains(
-                "_next"))));
+        cbxFiles = new JComboBox<Object>(Files.walk(Paths.get("games"))
+            .filter(Files::isRegularFile)
+            .map(Path::toString)
+            .filter(name -> name.contains("Week") && !name.contains("_next"))
+            .sorted().toArray());
         cbxFiles.addItemListener(e ->
         {
             loadFile(e.getItem().toString());
@@ -336,7 +340,7 @@ public class Simulator extends JFrame
 
     private void reset()
     {
-        loadFile(((File) Objects.requireNonNull(cbxFiles.getSelectedItem())).getAbsolutePath());
+        loadFile((String) Objects.requireNonNull(cbxFiles.getSelectedItem()));
     }
 
     private void playRound()
@@ -365,6 +369,14 @@ public class Simulator extends JFrame
 
         var time = System.currentTimeMillis();
         var res = cockpit.nextRoundInternal(np);
+        try
+        {
+            System.out.println(OBJECT_MAPPER.writeValueAsString(res));
+        }
+        catch (JsonProcessingException e)
+        {
+            e.printStackTrace();
+        }
         Arrays.sort(res, Comparator.comparingInt(act -> ACTIONS_ORDER.indexOf(act.getClass())));
         time -= System.currentTimeMillis();
         System.out.println("Next round took " + -time + "ms");
@@ -388,13 +400,14 @@ public class Simulator extends JFrame
 
                     if (!(entType.isInstance(ent)))
                     {
-                        return;
+                        System.err.println("INVALID ENTITY TYPE FOR " + act + ", EXPECTED " + entType + " GOT " + ent.getClass());
+                        continue;
                     }
 
                     if (usedEntities.contains(ent))
                     {
                         System.err.println("ENTITY ALREADY USED FOR ACTION " + act);
-                        return;
+                        continue;
                     }
 
                     //System.out.println("Entity " + ent + " used by sailor " + act

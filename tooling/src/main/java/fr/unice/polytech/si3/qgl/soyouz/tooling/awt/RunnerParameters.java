@@ -40,8 +40,7 @@ public class RunnerParameters
     public RunnerParameters(InitGameParameters pars, NextRoundParameters nps)
     {
         ip = pars;
-        sailors = Arrays.stream(pars.getSailors()).map(o -> new Marin(o.getId(), o.getX(),
-            o.getY(), o.getName())).toArray(Marin[]::new);
+        sailors = pars.getSailors();
         goal = pars.getGoal();
         ship = pars.getShip();
         seaEntities = nps.getVisibleEntities();

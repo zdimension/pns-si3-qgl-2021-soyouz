@@ -2,8 +2,11 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -13,8 +16,7 @@ public class Polygon implements Shape
 {
     private final double orientation;
     private final Point2d[] vertices;
-    private final Point2d[] lastShell;
-    private double lastShipSize = Double.NaN;
+    private final Point2d center;
 
     /**
      * Constructor.
@@ -27,7 +29,7 @@ public class Polygon implements Shape
     {
         this.orientation = orientation;
         this.vertices = vertices;
-        this.lastShell = new Point2d[vertices.length];
+        this.center = Arrays.stream(this.vertices).reduce(Point2d::add).get().mul(1d / vertices.length);
     }
 
     /**
@@ -127,33 +129,40 @@ public class Polygon implements Shape
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
 
+    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
+
     @Override
     public Stream<Point2d> getShell(double shipSize)
     {
-        if (shipSize != lastShipSize)
+        return Arrays.stream(shellCache.computeIfAbsent((int)shipSize, size ->
         {
-            System.arraycopy(vertices, 0, lastShell, 0, vertices.length);
+            var shell = vertices.clone();
 
-            for (int i = 0; i < lastShell.length; i++)
+            for (int i = 0; i < shell.length; i++)
             {
-                var cur = lastShell[i];
-                var ni = (i + 1) % lastShell.length;
-                var nex = lastShell[ni];
-                var dta = nex.sub(cur);
-
-                var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
-                if (cur.sub(change).normSquared() < cur.normSquared())
+                var cur = shell[i];
+                if (false)
                 {
-                    change = change.mul(-1);
+                    var ni = (i + 1) % shell.length;
+                    var nex = shell[ni];
+                    var dta = nex.sub(cur);
+                    var change = Point2d.fromPolar(size, dta.angle()).ortho();
+                    if (cur.sub(change).normSquared() < cur.normSquared())
+                    {
+                        change = change.mul(-1);
+                    }
+                    shell[i] = cur.sub(change);
+                    shell[ni] = nex.sub(change);
                 }
-                lastShell[i] = cur.sub(change);
-                lastShell[ni] = nex.sub(change);
+                else
+                {
+                    var rad = cur.sub(center);
+                    shell[i] = cur.add(Point2d.fromPolar(size, rad.angle()));
+                }
             }
 
-            lastShipSize = shipSize;
-        }
-
-        return Arrays.stream(lastShell);
+            return shell;
+        }));
     }
 
     @Override

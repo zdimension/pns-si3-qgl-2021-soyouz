@@ -107,7 +107,6 @@ public class CheckpointObjective implements RootObjective
                     continue;
                 }
 
-
                 if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize))
                 {
                     if (reef instanceof Stream)
@@ -152,7 +151,7 @@ public class CheckpointObjective implements RootObjective
 
             var reef = state.getNp().getVisibleEntities();
 
-            var diam = boat.getShape().getMaxDiameter();
+            var diam = 50;
             logger.info("Computing shells");
             for (ShapedEntity r : reef)
             {

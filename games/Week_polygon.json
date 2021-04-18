@@ -1,0 +1,123 @@
+[
+    {
+        "type": "MOVING",
+        "sailorId": 3,
+        "xdistance": 0,
+        "ydistance": -1,
+        "delta": {
+            "x": 0,
+            "y": -1,
+            "second": -1,
+            "first": 0
+        }
+    },
+    {
+        "type": "MOVING",
+        "sailorId": 7,
+        "xdistance": 0,
+        "ydistance": -1,
+        "delta": {
+            "x": 0,
+            "y": -1,
+            "second": -1,
+            "first": 0
+        }
+    },
+    {
+        "type": "MOVING",
+        "sailorId": 11,
+        "xdistance": 0,
+        "ydistance": -1,
+        "delta": {
+            "x": 0,
+            "y": -1,
+            "second": -1,
+            "first": 0
+        }
+    },
+    {
+        "type": "MOVING",
+        "sailorId": 13,
+        "xdistance": 0,
+        "ydistance": -3,
+        "delta": {
+            "x": 0,
+            "y": -3,
+            "second": -3,
+            "first": 0
+        }
+    },
+    {
+        "type": "OAR",
+        "sailorId": 0
+    },
+    {
+        "type": "OAR",
+        "sailorId": 5
+    },
+    {
+        "type": "OAR",
+        "sailorId": 10
+    },
+    {
+        "type": "OAR",
+        "sailorId": 15
+    },
+    {
+        "type": "OAR",
+        "sailorId": 1
+    },
+    {
+        "type": "OAR",
+        "sailorId": 6
+    },
+    {
+        "type": "OAR",
+        "sailorId": 9
+    },
+    {
+        "type": "OAR",
+        "sailorId": 16
+    },
+    {
+        "type": "OAR",
+        "sailorId": 4
+    },
+    {
+        "type": "OAR",
+        "sailorId": 8
+    },
+    {
+        "type": "OAR",
+        "sailorId": 12
+    },
+    {
+        "type": "OAR",
+        "sailorId": 14
+    },
+    {
+        "type": "OAR",
+        "sailorId": 3
+    },
+    {
+        "type": "OAR",
+        "sailorId": 7
+    },
+    {
+        "type": "OAR",
+        "sailorId": 11
+    },
+    {
+        "type": "OAR",
+        "sailorId": 13
+    },
+    {
+        "type": "TURN",
+        "sailorId": 17,
+        "rotation": 0.31613263597168717
+    },
+    {
+        "type": "USE_WATCH",
+        "sailorId": 2
+    }
+]

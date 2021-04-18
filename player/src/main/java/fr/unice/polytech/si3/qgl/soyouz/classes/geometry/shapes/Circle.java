@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -14,8 +16,6 @@ public class Circle extends Polygon implements Shape
 {
     public static final int VERTEX_COUNT = 16;
     private final double radius;
-    private Point2d[] lastShell;
-    private double lastShipSize;
 
     /**
      * Constructor.
@@ -94,16 +94,12 @@ public class Circle extends Polygon implements Shape
         return false;
     }
 
+    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
+
     @Override
     public Stream<Point2d> getShell(double shipSize)
     {
-        if (shipSize != lastShipSize)
-        {
-            lastShell = getPoints(radius + shipSize);
-
-            lastShipSize = shipSize;
-        }
-
-        return Arrays.stream(lastShell);
+        return Arrays.stream(shellCache.computeIfAbsent((int) shipSize,
+            size -> getPoints(radius + size)));
     }
 }
