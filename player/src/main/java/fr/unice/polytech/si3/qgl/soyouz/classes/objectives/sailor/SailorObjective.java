@@ -142,7 +142,10 @@ public class SailorObjective implements OnBoardObjective
     @Override
     public boolean isValidated()
     {
-        return rowersObjective.isValidated() && rudderObjective.isValidated() && sailObjective.isValidated() && (watchObjective == null || watchObjective.isValidated());
+        return rowersObjective.isValidated()
+            && rudderObjective.isValidated()
+            && sailObjective.isValidated()
+            && (watchObjective == null || watchObjective.isValidated());
     }
 
     /**

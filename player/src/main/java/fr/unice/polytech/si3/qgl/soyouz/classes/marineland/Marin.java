@@ -1,9 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 /**
@@ -11,18 +9,12 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id")
-public class Marin
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
+public class Marin extends OnboardEntity
 {
     public static final int MAX_MOVE = 5;
-    private int id;
-    private String name;
-    private int x;
-    private int y;
-
-    @JsonCreator
-    private Marin()
-    {
-    }
+    private final int id;
+    private final String name;
 
     /**
      * Constructor.
@@ -32,14 +24,14 @@ public class Marin
      * @param y    Its base y position.
      * @param name Its name.
      */
-    public Marin(int id,
-                 int x,
-                 int y,
-                 String name)
+    @JsonCreator
+    public Marin(@JsonProperty("id") int id,
+                 @JsonProperty("x") int x,
+                 @JsonProperty("y") int y,
+                 @JsonProperty("name") String name)
     {
+        super(x, y);
         this.id = id;
-        this.x = x;
-        this.y = y;
         this.name = name;
     }
 
@@ -51,48 +43,6 @@ public class Marin
     public int getId()
     {
         return id;
-    }
-
-    /**
-     * Getter.
-     *
-     * @return the x position of this on the
-     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
-     */
-    public int getX()
-    {
-        return x;
-    }
-
-    /**
-     * Setters.
-     *
-     * @param x The abscissa to set.
-     */
-    public void setX(int x)
-    {
-        this.x = x;
-    }
-
-    /**
-     * Getter.
-     *
-     * @return the y position of this on the
-     * {@link fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck}.
-     */
-    public int getY()
-    {
-        return y;
-    }
-
-    /**
-     * Setters.
-     *
-     * @param y The ordinate to set.
-     */
-    public void setY(int y)
-    {
-        this.y = y;
     }
 
     /**

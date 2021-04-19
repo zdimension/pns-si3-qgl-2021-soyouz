@@ -200,18 +200,9 @@ public class RowersConfigHelper
     private OarConfiguration resolveBasedOnRotation(List<OarConfiguration> turnPossibilities)
     {
         trace();
-        OarConfiguration optimalConfiguration = turnPossibilities.get(0);
-        double difference = Math.abs(neededRotation - optimalConfiguration.getAngleOfRotation());
-        for (OarConfiguration configuration : turnPossibilities)
-        {
-            double tempDiff = Math.abs(neededRotation - configuration.getAngleOfRotation());
-            if (tempDiff <= difference)
-            {
-                optimalConfiguration = configuration;
-                difference = tempDiff;
-            }
-        }
-        return optimalConfiguration;
+        return turnPossibilities.stream().min(Comparator.comparingDouble(
+            configuration -> Math.abs(neededRotation - configuration.getAngleOfRotation())
+        )).get();
     }
 
     /**

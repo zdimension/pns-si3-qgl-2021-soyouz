@@ -19,8 +19,8 @@ import java.util.Objects;
 })
 public abstract class OnboardEntity
 {
-    private final int x;
-    private final int y;
+    protected int x;
+    protected int y;
 
     /**
      * Constructor.
@@ -89,5 +89,15 @@ public abstract class OnboardEntity
     public int hashCode()
     {
         return Objects.hash(x, y);
+    }
+
+    public void setX(int x)
+    {
+        this.x = x;
+    }
+
+    public void setY(int y)
+    {
+        this.y = y;
     }
 }

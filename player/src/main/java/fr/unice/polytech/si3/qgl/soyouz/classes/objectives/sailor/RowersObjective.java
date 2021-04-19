@@ -212,14 +212,14 @@ public class RowersObjective implements OnBoardObjective
     {
         trace();
         List<GameAction> actions = new ArrayList<>();
-        movingRowers.forEach(obj ->
+        for (SailorYMovementObjective obj : movingRowers)
         {
             actions.addAll(obj.resolve());
             if (obj.isValidated())
             {
                 rowingSailors.add(obj.getSailor());
             }
-        });
+        }
         if (!isValidated())
         {
             return actions;

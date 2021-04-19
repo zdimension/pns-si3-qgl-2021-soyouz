@@ -1,5 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.utilities;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+
+import java.util.Comparator;
 import java.util.stream.Stream;
 
 public final class Util
@@ -21,5 +24,10 @@ public final class Util
         return str
             .filter(clazz::isInstance)
             .map(clazz::cast);
+    }
+
+    public static <T extends OnboardEntity> Stream<T> sortByX(Stream<T> str)
+    {
+        return str.sorted(Comparator.comparing(OnboardEntity::getX));
     }
 }

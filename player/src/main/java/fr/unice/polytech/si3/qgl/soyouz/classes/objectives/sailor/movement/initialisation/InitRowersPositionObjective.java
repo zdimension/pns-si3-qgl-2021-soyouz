@@ -134,14 +134,9 @@ public class InitRowersPositionObjective implements MovingObjective
     @Override
     public List<GameAction> resolve()
     {
-        List<GameAction> moveActions = new ArrayList<>();
-        sailorMoveObjectives.forEach(obj ->
-        {
-            if (!obj.isValidated())
-            {
-                moveActions.addAll(obj.resolve());
-            }
-        });
-        return moveActions;
+        return sailorMoveObjectives.stream()
+            .filter(obj -> !obj.isValidated())
+            .flatMap(obj -> obj.resolve().stream())
+            .collect(Collectors.toList());
     }
 }

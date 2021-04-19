@@ -55,16 +55,6 @@ public class NextRoundParameters
         return visibleEntities;
     }
 
-    public Stream<Reef> getReef()
-    {
-        return Util.filterType(Arrays.stream(visibleEntities), Reef.class);
-    }
-
-    public Stream<ShapedEntity> getVisibleShapes()
-    {
-        return Arrays.stream(visibleEntities);
-    }
-
     /**
      * Getter.
      *

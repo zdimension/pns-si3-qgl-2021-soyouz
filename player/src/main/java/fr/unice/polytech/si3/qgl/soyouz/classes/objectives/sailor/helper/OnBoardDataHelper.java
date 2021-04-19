@@ -133,16 +133,7 @@ public class OnBoardDataHelper
     private void setupUselessSailors(List<Marin> sailors)
     {
         trace();
-        List<Marin> uselessSailors = new ArrayList<>();
-        sailors.forEach(sailor ->
-        {
-            LineOnBoat line = new LineOnBoat(ship, sailor.getX());
-            if (line.getOars().isEmpty())
-            {
-                uselessSailors.add(sailor);
-            }
-        });
-        sailors.removeAll(uselessSailors);
+        sailors.removeIf(sailor -> new LineOnBoat(ship, sailor.getX()).getOars().isEmpty());
     }
 
     /**
@@ -180,20 +171,19 @@ public class OnBoardDataHelper
         List<Marin> sailorOnOar = sailors.stream()
             .filter(sailor -> ship.hasAt(sailor.getPos(), Rame.class))
             .collect(Collectors.toList());
-        sailorOnOar.forEach(sailor ->
+        for (Marin sailor : sailorOnOar)
         {
-            LineOnBoat line = new LineOnBoat(ship, sailor.getX());
-            if (line.getOars().size() == 1)
+            if (ship.hasAt(sailor.getPos(), Rame.class))
             {
-                immutableRowers.add(sailor);
+                int lineSize = new LineOnBoat(ship, sailor.getX()).getOars().size();
+                if (lineSize == 1 ||
+                    (lineSize == 2 && sailorOnOar.stream().filter(s -> s.getX() == sailor.getX()).count() == 2))
+                {
+                    immutableRowers.add(sailor);
+                    sailors.remove(sailor);
+                }
             }
-            if (line.getOars().size() == 2 &&
-                sailorOnOar.stream().filter(s -> s.getX() == line.getX()).count() == 2)
-            {
-                immutableRowers.add(sailor);
-            }
-        });
-        sailors.removeAll(immutableRowers);
+        }
         setupSideImmutableRowers();
     }
 
@@ -202,11 +192,12 @@ public class OnBoardDataHelper
      */
     private void setupSideImmutableRowers()
     {
-        leftImmutableRowers.addAll(immutableRowers.stream()
-            .filter(sailor -> sailor.getY() == 0).collect(Collectors.toList()));
-        rightImmutableRowers.addAll(immutableRowers.stream()
+        immutableRowers.stream()
+            .filter(sailor -> sailor.getY() == 0)
+            .forEach(leftImmutableRowers::add);
+        immutableRowers.stream()
             .filter(sailor -> sailor.getY() == ship.getDeck().getWidth() - 1)
-            .collect(Collectors.toList()));
+            .forEach(rightImmutableRowers::add);
     }
 
     /**
@@ -218,9 +209,9 @@ public class OnBoardDataHelper
     private boolean isImmutablePos(PosOnShip pos)
     {
         trace();
-        LineOnBoat line = new LineOnBoat(ship, pos.getX());
-        return line.getOars().size() == 1 || line.getOars().size() == 2 &&
-            immutableRowers.stream().anyMatch(s -> s.getX() == line.getX());
+        int size = new LineOnBoat(ship, pos.getX()).getOars().size();
+        return size == 1 ||
+            size == 2 && immutableRowers.stream().anyMatch(s -> s.getX() == pos.getX());
     }
 
     /**

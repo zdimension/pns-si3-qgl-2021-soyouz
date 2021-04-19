@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Initialise all sailors position on their dedicated entity based on their X position on the boat.
@@ -175,17 +176,10 @@ public class InitSailorPositionObjective implements MovingObjective
     {
         for (int i = 0; i < nbSailorToSail; i++)
         {
-            Marin sailorCloseToSail = sailors.get(0);
-            int dist = linesWithSails.get(i).getSail().getPos().dist(sailorCloseToSail.getPos());
-            for (Marin sailor : sailors)
-            {
-                int distance = linesWithSails.get(i).getSail().getPos().dist(sailor.getPos());
-                if (distance <= dist)
-                {
-                    dist = distance;
-                    sailorCloseToSail = sailor;
-                }
-            }
+            var sp = linesWithSails.get(i).getSail().getPos();
+            var sailorCloseToSail = sailors.stream().min(Comparator.comparingInt(
+                sailor -> sailor.getPos().dist(sp)
+            )).get();
             movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToSail,
                 linesWithSails.get(i).getSail().getPos()));
             sailors.remove(sailorCloseToSail);
@@ -213,13 +207,10 @@ public class InitSailorPositionObjective implements MovingObjective
      */
     private List<LineOnBoat> setLinesOnBoat(Bateau ship)
     {
-        List<LineOnBoat> lines = new ArrayList<>();
-        for (int i = 0; i < ship.getDeck().getLength(); i++)
-        {
-            lines.add(new LineOnBoat(ship, i));
-        }
-        Collections.sort(lines);
-        return lines;
+        return IntStream.range(0, ship.getDeck().getLength())
+            .mapToObj(i -> new LineOnBoat(ship, i))
+            .sorted()
+            .collect(Collectors.toList());
     }
 
     /**
@@ -241,14 +232,9 @@ public class InitSailorPositionObjective implements MovingObjective
     @Override
     public List<GameAction> resolve()
     {
-        List<GameAction> moveActions = new ArrayList<>();
-        movingSailorsObjectives.forEach(obj ->
-        {
-            if (!obj.isValidated())
-            {
-                moveActions.addAll(obj.resolve());
-            }
-        });
-        return moveActions;
+        return movingSailorsObjectives.stream()
+            .filter(obj -> !obj.isValidated())
+            .flatMap(obj -> obj.resolve().stream())
+            .collect(Collectors.toList());
     }
 }

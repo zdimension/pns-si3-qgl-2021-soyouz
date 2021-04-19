@@ -56,12 +56,10 @@ public class SailObjective implements OnBoardObjective
     private void setupSails(Bateau ship, int nbSailOpenedOpt)
     {
         trace();
-        List<Voile> sails = Util.filterType(Arrays.stream(ship.getEntities())
-            .filter(ent -> ent instanceof Voile), Voile.class).collect(Collectors.toList());
-        List<Voile> openedSails =
-            sails.stream().filter(Voile::isOpenned).collect(Collectors.toList());
-        List<Voile> closedSails =
-            sails.stream().filter(sail -> !sail.isOpenned()).collect(Collectors.toList());
+        var grouped = Util.filterType(Arrays.stream(ship.getEntities()), Voile.class)
+            .collect(Collectors.groupingBy(Voile::isOpenned));
+        var openedSails = grouped.getOrDefault(true, new ArrayList<>());
+        var closedSails = grouped.getOrDefault(false, new ArrayList<>());
         int diff = nbSailOpenedOpt - openedSails.size();
         while (diff != 0)
         {
@@ -88,13 +86,8 @@ public class SailObjective implements OnBoardObjective
     private void setMovement()
     {
         trace();
-        List<Voile> sailsOpen = sailsToOpen.stream()
-            .sorted(Comparator.comparing(OnboardEntity::getX)).collect(Collectors.toList());
-        List<Voile> sailsClose = sailsToClose.stream()
-            .sorted(Comparator.comparing(OnboardEntity::getX)).collect(Collectors.toList());
-        List<Marin> sailor = sailors.stream()
-            .sorted(Comparator.comparing(Marin::getX)).collect(Collectors.toList());
-        sailsOpen.forEach(sail ->
+        List<Marin> sailor = Util.sortByX(sailors.stream()).collect(Collectors.toList());
+        Util.sortByX(sailsToOpen.stream()).forEach(sail ->
         {
             if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPos())) && !sailor.isEmpty())
             {
@@ -102,7 +95,7 @@ public class SailObjective implements OnBoardObjective
                 sailor.remove(0);
             }
         });
-        sailsClose.forEach(sail ->
+        Util.sortByX(sailsToClose.stream()).forEach(sail ->
         {
             if (sailor.stream().noneMatch(s -> s.getPos().equals(sail.getPos())))
             {
@@ -140,25 +133,19 @@ public class SailObjective implements OnBoardObjective
         }
         sailsToOpen.forEach(sail ->
         {
-            var sailorTemp =
-                sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst();
-            if (sailorTemp.isPresent())
+            sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst().ifPresent(marin ->
             {
-                Marin sailor = sailorTemp.get();
-                actions.add(new LiftSailAction(sailor));
+                actions.add(new LiftSailAction(marin));
                 sail.setOpenned(true);
-            }
+            });
         });
         sailsToClose.forEach(sail ->
         {
-            var sailorTemp =
-                sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst();
-            if (sailorTemp.isPresent())
+            sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst().ifPresent(marin ->
             {
-                Marin sailor = sailorTemp.get();
-                actions.add(new LowerSailAction(sailor));
+                actions.add(new LowerSailAction(marin));
                 sail.setOpenned(false);
-            }
+            });
         });
         return actions;
     }
