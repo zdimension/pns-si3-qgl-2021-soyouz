@@ -9,6 +9,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
@@ -18,25 +19,23 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voil
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 
 public class Simulator extends JFrame
 {
@@ -101,7 +100,7 @@ public class Simulator extends JFrame
 
         usedEntities = new ArrayList<>();
 
-        canvas = new SimulatorCanvas(null, usedEntities);
+        canvas = new SimulatorCanvas(null, usedEntities, this);
         add(canvas, BorderLayout.CENTER);
 
         var btnClear = new JButton("Clear path");
@@ -111,21 +110,29 @@ public class Simulator extends JFrame
             canvas.clearHistory();
         });
 
-        var btnPath = new JButton("Hide graph");
-        btnPath.addActionListener(e ->
+        var cbxPath = new JCheckBox("Show graph", true);
+        cbxPath.addChangeListener(e ->
         {
-            if (canvas.drawPath = !canvas.drawPath)
-            {
-                btnPath.setText("Hide graph");
-            }
-            else
-            {
-                btnPath.setText("Show graph");
-            }
+            canvas.drawPath = cbxPath.isSelected();
             canvas.repaint();
         });
-        topcont.add(btnPath);
+        topcont.add(cbxPath);
 
+        var cbxNodes = new JCheckBox("Show nodes", true);
+        cbxNodes.addChangeListener(e ->
+        {
+            canvas.drawNodes = cbxNodes.isSelected();
+            canvas.repaint();
+        });
+        topcont.add(cbxNodes);
+
+        var cbxDebugColl = new JCheckBox("Debug collisions");
+        cbxDebugColl.addChangeListener(e ->
+        {
+            canvas.debugCollisions = cbxDebugColl.isSelected();
+            canvas.repaint();
+        });
+        topcont.add(cbxDebugColl);
 
         add(topcont, BorderLayout.NORTH);
 
@@ -258,7 +265,9 @@ public class Simulator extends JFrame
         btnPlay.addActionListener(event ->
         {
             if (gameStart == null)
+            {
                 reset();
+            }
             if (timer.isRunning())
             {
                 playMode = false;
@@ -331,6 +340,7 @@ public class Simulator extends JFrame
         canvas.reset();
         canvas.setCockpit(cockpit);
         loadNextRound();
+        sailorPositions.clear();
     }
 
     private Checkpoint[] getCheckpoints()
@@ -363,8 +373,11 @@ public class Simulator extends JFrame
         canvas.setNp(np);
     }
 
+    final HashMap<Marin, PosOnShip> sailorPositions = new HashMap<>();
+
     private void computeRound()
     {
+        sailorPositions.clear();
         loadNextRound();
 
         var time = System.currentTimeMillis();
@@ -446,6 +459,7 @@ public class Simulator extends JFrame
                 if (act instanceof MoveAction)
                 {
                     var mv = (MoveAction) act;
+                    sailorPositions.put(sail, sail.getPos());
                     sail.moveRelative(mv.getDelta());
                     if (sail.getX() < 0 || sail.getX() >= model.getShip().getDeck().getLength()
                         || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())

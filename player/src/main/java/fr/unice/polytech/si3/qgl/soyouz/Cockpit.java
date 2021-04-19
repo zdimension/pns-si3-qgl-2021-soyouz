@@ -158,11 +158,9 @@ public class Cockpit implements ICockpit
             }
             logger.info("Added " + added + " entities; total " + entityMemory.size());
             logger.info(OBJECT_MAPPER.writeValueAsString(entityMemory.values()));
-            var changed = added != 0;
-            changed = true;
             np = new NextRoundParameters(np.getShip(), np.getWind(),
                 entityMemory.values().toArray(new ShapedEntity[0]));
-            var actions = objective.resolve(new GameState(ip, np, changed));
+            var actions = objective.resolve(new GameState(ip, np, true));
             return actions.toArray(GameAction[]::new);
         }
         catch (Exception e)

@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.Checkpoi
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
+import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import javax.imageio.ImageIO;
@@ -69,6 +70,7 @@ public class SimulatorCanvas extends JPanel
     }
 
     private final ArrayList<OnboardEntity> usedEntities;
+    private final Simulator simulator;
     private final Stroke DASHED = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL
         , 0, new float[] { 9 }, 0);
     private final Stroke SHAPE_CROSS = new BasicStroke(3, BasicStroke.CAP_BUTT,
@@ -77,6 +79,7 @@ public class SimulatorCanvas extends JPanel
         BasicStroke.JOIN_BEVEL);
     private final List<Position> shipHistory = new ArrayList<>();
     public boolean drawPath = true;
+    public boolean drawNodes = true;
     private InitGameParameters model;
     private boolean centered = false;
     private NextRoundParameters np;
@@ -84,12 +87,14 @@ public class SimulatorCanvas extends JPanel
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
     private Cockpit cockpit;
-    private boolean debugCollisions;
+    public boolean debugCollisions;
 
-    public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities)
+    public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities,
+                           Simulator simulator)
     {
         this.model = model;
         this.usedEntities = usedEntities;
+        this.simulator = simulator;
 
         addMouseWheelListener(e ->
         {
@@ -120,10 +125,6 @@ public class SimulatorCanvas extends JPanel
                         .mul(1 / scale)
                         .add(cameraPos);
                 }
-                else if (SwingUtilities.isRightMouseButton(e))
-                {
-                    debugCollisions = true;
-                }
             }
 
             @Override
@@ -132,10 +133,6 @@ public class SimulatorCanvas extends JPanel
                 if (SwingUtilities.isLeftMouseButton(e))
                 {
                     moveOrigin = null;
-                }
-                else if (SwingUtilities.isRightMouseButton(e))
-                {
-                    debugCollisions = false;
                 }
             }
         });
@@ -343,11 +340,14 @@ public class SimulatorCanvas extends JPanel
             g.drawLine(cur.x, cur.y, nex.x, nex.y);
         }
 
-        var nodes = CheckpointObjective.nodes;
-        g.setColor(Color.BLACK);
-        for (Point2d p : nodes)
+        if (drawNodes)
         {
-            drawShape(g, new Circle(mapToWorld(3)), p.toPosition());
+            var nodes = CheckpointObjective.nodes;
+            g.setColor(Color.BLACK);
+            for (Point2d p : nodes)
+            {
+                drawShape(g, new Circle(mapToWorld(3)), p.toPosition(), false);
+            }
         }
     }
 
@@ -372,7 +372,7 @@ public class SimulatorCanvas extends JPanel
                     if (shp.getShape().linePassesThrough(shp.toLocal(p), shp.toLocal(sp), 0))
                     {
                         g.setColor(Color.MAGENTA);
-                        drawShape(g, shp.getShape(), shp.getPosition());
+                        drawShape(g, shp.getShape(), shp.getPosition(), false);
                     }
                 }
                 var sps = mapToScreen(sp);
@@ -401,7 +401,7 @@ public class SimulatorCanvas extends JPanel
         g = (Graphics2D) g.create();
 
         g.setColor(ENTITY_COLORS.get(se.getClass()));
-        drawShape(g, se.getShape(), se.getPosition());
+        drawShape(g, se.getShape(), se.getPosition(), !(se instanceof Reef));
     }
 
     private void drawShipHistory(Graphics2D g)
@@ -457,10 +457,19 @@ public class SimulatorCanvas extends JPanel
         var i = 0;
         for (Marin sailor : sailors)
         {
+            g.setColor(Color.getHSBColor((float) i / sailors.length, 1, 1));
+            var oldPos = simulator.sailorPositions.getOrDefault(sailor, null);
             var x = sailor.getY() * DECK_GRID_SIZE;
             var y = sailor.getX() * DECK_GRID_SIZE;
             var sh = DECK_GRID_SIZE / 2;
-            g.setColor(Color.getHSBColor((float) i / sailors.length, 1, 1));
+            if (oldPos != null && !Objects.equals(oldPos, sailor.getPos()))
+            {
+                var off = i - sailors.length / 2;
+                var sq = 3 * DECK_GRID_SIZE / 4;
+                var gt = (Graphics2D)g.create();
+                gt.translate(sq + off, sq + off);
+                gt.drawLine(oldPos.getY() * DECK_GRID_SIZE, oldPos.getX() * DECK_GRID_SIZE, x, y);
+            }
             g.fillOval(sh + x, sh + y, sh, sh);
             g.setColor(Color.BLACK);
             g.drawString(sailor.getId() + "", sh + x + 3, sh + y + 15);
@@ -494,7 +503,7 @@ public class SimulatorCanvas extends JPanel
     {
         g = (Graphics2D) g.create();
         g.setColor(Color.RED);
-        drawShape(g, c.getShape(), c.getPosition());
+        drawShape(g, c.getShape(), c.getPosition(), false);
         g.setColor(Color.BLACK);
         var p = mapToScreen(c.getPosition());
         g.drawString(i + "", p.x - 4, p.y + 4);
@@ -522,12 +531,7 @@ public class SimulatorCanvas extends JPanel
         return dist / scale;
     }
 
-    private void drawShape(Graphics2D g, Shape s, Position p)
-    {
-        drawShape(g, s, p, false);
-    }
-
-    private void drawShape(Graphics2D gt, Shape s, Position p, boolean noRot)
+    private void drawShape(Graphics2D gt, Shape s, Position p, boolean showRot)
     {
         gt = (Graphics2D) gt.create();
         var mp = mapToScreen(p);
@@ -542,10 +546,7 @@ public class SimulatorCanvas extends JPanel
             return;
         }
 
-        if (!noRot)
-        {
-            gtr.rotate(p.getOrientation(), 0, 0);
-        }
+        gtr.rotate(p.getOrientation(), 0, 0);
 
         if (s instanceof Rectangle)
         {
@@ -568,9 +569,12 @@ public class SimulatorCanvas extends JPanel
             gtr.fillPolygon(ap);
         }
 
-        gtr.setStroke(SHAPE_CROSS);
-        gtr.setColor(Color.BLACK);
-        gtr.drawPolygon(new Polygon(new int[] { -10, -10, 20 }, new int[] { -10, 10, 0 }, 3));
+        if (showRot)
+        {
+            gtr.setStroke(SHAPE_CROSS);
+            gtr.setColor(Color.BLACK);
+            gtr.drawPolygon(new Polygon(new int[] { -10, -10, 20 }, new int[] { -10, 10, 0 }, 3));
+        }
     }
 
     public void clearHistory()
