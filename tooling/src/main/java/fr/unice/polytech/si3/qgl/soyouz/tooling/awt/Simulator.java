@@ -35,6 +35,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
 import java.util.*;
 
 public class Simulator extends JFrame
@@ -110,6 +111,27 @@ public class Simulator extends JFrame
             canvas.clearHistory();
         });
 
+        var btnBenchmark = new JButton("Benchmark");
+        topcont.add(btnBenchmark);
+        btnBenchmark.addActionListener(e ->
+        {
+            long total = 0;
+            final int N = 5;
+            for (var i = 0; i < N; i++)
+            {
+                reset();
+                playMode = true;
+                computeRound();
+                currentStep = 0;
+                while (playMode)
+                {
+                    processRound(null);
+                }
+                total += nextRoundTime;
+            }
+            System.out.println("AVG = " + Duration.ofMillis(total / N));
+        });
+
         var cbxPath = new JCheckBox("Show graph", true);
         cbxPath.addChangeListener(e ->
         {
@@ -146,85 +168,7 @@ public class Simulator extends JFrame
             }
         });
 
-        timer = new Timer(0, new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent event)
-            {
-                var linSpeed = spdIncrement;
-                if (np.getWind() != null)
-                {
-                    var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()),
-                        Voile.class);
-                    var counts = new Object()
-                    {
-                        int open;
-                        int total;
-                    };
-                    sails.forEach(voile ->
-                    {
-                        if (voile.isOpenned())
-                        {
-                            counts.open++;
-                        }
-                        counts.total++;
-                    });
-                    if (counts.total > 0)
-                    {
-                        Wind wind = np.getWind();
-                        linSpeed += ((double) counts.open / counts.total) * wind.getStrength() * Math.cos(wind.getOrientation() - np.getShip().getPosition().getOrientation()) / COMP_STEPS;
-                    }
-                }
-
-                var cur = model.getShip().getPosition();
-                var linear = Point2d.fromPolar(linSpeed, cur.getOrientation());
-
-                for (ShapedEntity visibleEntity : np.getVisibleEntities())
-                {
-                    if (visibleEntity instanceof Stream)
-                    {
-                        var str = (Stream) visibleEntity;
-                        if (str.contains(model.getShip().getPosition()))
-                        {
-                            linear = linear.add(str.getProjectedStrength().mul(1d / COMP_STEPS));
-                        }
-                    }
-                }
-
-                model.getShip().setPosition(cur.add(linear).add(0, 0, rotIncrement));
-                System.out.println("Ship position : " + model.getShip().getPosition());
-
-                canvas.repaint();
-
-                if (++currentStep >= COMP_STEPS)
-                {
-                    if (getCheckpoints()[currentCheckpoint].contains(model.getShip().getPosition()))
-                    {
-                        currentCheckpoint++;
-                        if (currentCheckpoint >= getCheckpoints().length)
-                        {
-                            btnPlay.doClick();
-                            System.out.println(Duration.between(gameStart, LocalDateTime.now()));
-                            gameStart = null;
-                        }
-                    }
-
-                    usedEntities.clear();
-
-                    if (playMode)
-                    {
-                        computeRound();
-                    }
-                    else
-                    {
-                        timer.stop();
-                        btnNext.setEnabled(true);
-                    }
-
-                    currentStep = 0;
-                }
-            }
-        });
+        timer = new Timer(0, this::processRound);
 
         var btnCenter = new JButton("Center view");
         topcont.add(btnCenter);
@@ -264,11 +208,11 @@ public class Simulator extends JFrame
 
         btnPlay.addActionListener(event ->
         {
-            if (gameStart == null)
+            if (nextRoundTime == -1)
             {
                 reset();
             }
-            if (timer.isRunning())
+            if (playMode)
             {
                 playMode = false;
                 btnPlay.setText("Play");
@@ -299,6 +243,82 @@ public class Simulator extends JFrame
                 canvas.centerView(true);
             }
         });
+    }
+
+    public void processRound(ActionEvent ignored)
+    {
+        var linSpeed = spdIncrement;
+        if (np.getWind() != null)
+        {
+            var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()),
+                Voile.class);
+            var counts = new Object()
+            {
+                int open;
+                int total;
+            };
+            sails.forEach(voile ->
+            {
+                if (voile.isOpenned())
+                {
+                    counts.open++;
+                }
+                counts.total++;
+            });
+            if (counts.total > 0)
+            {
+                Wind wind = np.getWind();
+                linSpeed += ((double) counts.open / counts.total) * wind.getStrength() * Math.cos(wind.getOrientation() - np.getShip().getPosition().getOrientation()) / COMP_STEPS;
+            }
+        }
+
+        var cur = model.getShip().getPosition();
+        var linear = Point2d.fromPolar(linSpeed, cur.getOrientation());
+
+        for (ShapedEntity visibleEntity : np.getVisibleEntities())
+        {
+            if (visibleEntity instanceof Stream)
+            {
+                var str = (Stream) visibleEntity;
+                if (str.contains(model.getShip().getPosition()))
+                {
+                    linear = linear.add(str.getProjectedStrength().mul(1d / COMP_STEPS));
+                }
+            }
+        }
+
+        model.getShip().setPosition(cur.add(linear).add(0, 0, rotIncrement));
+        System.out.println("Ship position : " + model.getShip().getPosition());
+
+        canvas.repaint();
+
+        if (++currentStep >= COMP_STEPS)
+        {
+            if (getCheckpoints()[currentCheckpoint].contains(model.getShip().getPosition()))
+            {
+                currentCheckpoint++;
+                if (currentCheckpoint >= getCheckpoints().length)
+                {
+                    btnPlay.doClick();
+                    System.out.println(Duration.ofMillis(nextRoundTime));
+                    inGame = false;
+                }
+            }
+
+            usedEntities.clear();
+
+            if (playMode)
+            {
+                computeRound();
+            }
+            else
+            {
+                timer.stop();
+                btnNext.setEnabled(true);
+            }
+
+            currentStep = 0;
+        }
     }
 
     private void loadFile(String filename)
@@ -341,6 +361,8 @@ public class Simulator extends JFrame
         canvas.setCockpit(cockpit);
         loadNextRound();
         sailorPositions.clear();
+        nextRoundTime = -1;
+        inGame = true;
     }
 
     private Checkpoint[] getCheckpoints()
@@ -365,23 +387,28 @@ public class Simulator extends JFrame
 
     private void loadNextRound()
     {
-        if (gameStart == null)
-        {
-            gameStart = LocalDateTime.now();
-        }
         np = model.getNp(vigie);
         canvas.setNp(np);
     }
 
     final HashMap<Marin, PosOnShip> sailorPositions = new HashMap<>();
+    private long nextRoundTime = -1;
+    private boolean inGame = true;
 
     private void computeRound()
     {
+        if (!inGame)
+        {
+            reset();
+        }
+
         sailorPositions.clear();
         loadNextRound();
 
         var time = System.currentTimeMillis();
         var res = cockpit.nextRoundInternal(np);
+        time = System.currentTimeMillis() - time;
+        nextRoundTime += time;
         try
         {
             System.out.println(OBJECT_MAPPER.writeValueAsString(res));
@@ -391,8 +418,8 @@ public class Simulator extends JFrame
             e.printStackTrace();
         }
         Arrays.sort(res, Comparator.comparingInt(act -> ACTIONS_ORDER.indexOf(act.getClass())));
-        time -= System.currentTimeMillis();
-        System.out.println("Next round took " + -time + "ms");
+
+        System.out.println("Next round took " + time + "ms");
         var activeOars = new ArrayList<Rame>();
         var rudderRotate = 0d;
         for (GameAction act : res)

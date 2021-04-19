@@ -46,7 +46,7 @@ public class Graph
             queue.sort(Comparator.comparing(node -> node.minCostToStart + node.distanceToEnd));
             var node = queue.remove(0);
             node.connections.entrySet().stream().sorted(Comparator.comparingDouble(Map.Entry::getValue))
-                .forEach(entry ->
+                .forEachOrdered(entry ->
                 {
                     var child = entry.getKey();
                     if (child.visited)
@@ -82,32 +82,31 @@ public class Graph
     private void buildShortestPath(List<Node> path, Node end)
     {
         trace();
-        if (end.nearestToStart == null)
+        while(end.nearestToStart != null)
         {
-            return;
-        }
-
-        path.add(end.nearestToStart);
-        buildShortestPath(path, end.nearestToStart);
-    }
-
-    private void getEdges(Node node, Set<Pair<Integer, Integer>> lines)
-    {
-        var id = nodes.indexOf(node);
-        for (Node nb : node.connections.keySet())
-        {
-            var i = nodes.indexOf(nb);
-            if (lines.add(Pair.of(Math.min(i, id), Math.max(i, id))))
-            {
-                getEdges(nb, lines);
-            }
+            path.add(end.nearestToStart);
+            end = end.nearestToStart;
         }
     }
 
     public Set<Pair<Node, Node>> getEdges()
     {
         var res = new HashSet<Pair<Integer, Integer>>();
-        getEdges(start, res);
-        return res.stream().map(p -> Pair.of(nodes.get(p.first), nodes.get(p.second))).collect(Collectors.toSet());
+        var stack = new LinkedList<Node>();
+        stack.add(start);
+        while (!stack.isEmpty())
+        {
+            var node = stack.remove();
+            var id = nodes.indexOf(node);
+            for (Node nb : node.connections.keySet())
+            {
+                var i = nodes.indexOf(nb);
+                if (res.add(Pair.of(Math.min(i, id), Math.max(i, id))))
+                {
+                    stack.add(nb);
+                }
+            }
+        }
+        return res.parallelStream().map(p -> Pair.of(nodes.get(p.first), nodes.get(p.second))).collect(Collectors.toSet());
     }
 }
