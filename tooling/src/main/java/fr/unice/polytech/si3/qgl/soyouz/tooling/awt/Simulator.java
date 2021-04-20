@@ -19,7 +19,7 @@ public class Simulator extends JFrame
     private static final String[] SPEEDS = { "Slow", "Medium", "Fast" };
     private static final int[] DELAYS = { 50, 10, 0 };
     final SimulatorModel smodel = new SimulatorModel();
-    private final Timer timer;
+    public final Timer timer;
     private final SimulatorCanvas canvas;
     private final JButton btnNext;
     private final JButton btnPlay;
@@ -44,6 +44,13 @@ public class Simulator extends JFrame
         btnReset.addActionListener(e ->
         {
             smodel.reset();
+        });
+
+        var btnResetShuffle = new JButton("Reset & shuffle");
+        topcont.add(btnResetShuffle);
+        btnResetShuffle.addActionListener(e ->
+        {
+            smodel.reset(true);
         });
 
         canvas = new SimulatorCanvas(null, smodel.usedEntities, this);
@@ -223,7 +230,7 @@ public class Simulator extends JFrame
         timer.stop();
         btnNext.setEnabled(true);
         btnPlay.setText("Play");
-        smodel.loadFile(fn);
+        smodel.loadFile(fn, false);
         canvas.centerView(true);
     }
 }

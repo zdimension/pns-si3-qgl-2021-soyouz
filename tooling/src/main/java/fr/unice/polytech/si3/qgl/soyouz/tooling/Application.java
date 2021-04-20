@@ -14,7 +14,7 @@ public class Application
         {
             // mode benchmark
             var model = new SimulatorModel();
-            model.loadFile(args[0]);
+            model.loadFile(args[0], false);
             model.runBenchmark();
         }
         else

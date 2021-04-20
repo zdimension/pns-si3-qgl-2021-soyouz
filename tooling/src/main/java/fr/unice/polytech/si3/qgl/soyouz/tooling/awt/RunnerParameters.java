@@ -37,12 +37,21 @@ public class RunnerParameters
 
     }
 
-    public RunnerParameters(InitGameParameters pars, NextRoundParameters nps)
+    public RunnerParameters(InitGameParameters pars, NextRoundParameters nps, boolean shuffle)
     {
-        ip = pars;
-        sailors = pars.getSailors();
+        maximumCrewSize = minumumCrewSize = pars.getSailors().length;
         goal = pars.getGoal();
         ship = pars.getShip();
+        if (shuffle)
+        {
+            startingPositions = new Position[]{ship.getPosition()};
+            getIp(false);
+        }
+        else
+        {
+            ip = pars;
+            sailors = pars.getSailors();
+        }
         seaEntities = nps.getVisibleEntities();
         wind = nps.getWind();
     }

@@ -75,7 +75,7 @@ public class SimulatorModel
         OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
     }
 
-    public void loadFile(String filename)
+    public void loadFile(String filename, boolean shuffleSailors)
     {
         try
         {
@@ -86,7 +86,8 @@ public class SimulatorModel
                         InitGameParameters.class),
                     OBJECT_MAPPER.readValue(Files.readString(Path.of(filename.replace("_real",
                         "_real_next")))
-                        , NextRoundParameters.class)
+                        , NextRoundParameters.class),
+                    shuffleSailors
                 );
             }
             else
@@ -100,7 +101,6 @@ public class SimulatorModel
             exc.printStackTrace();
             return;
         }
-
 
         np = null;
         CheckpointObjective.graph = null;
@@ -124,14 +124,20 @@ public class SimulatorModel
         return ((RegattaGoal) model.getGoal()).getCheckpoints();
     }
 
+    void reset(boolean shuffleSailors)
+    {
+        loadFile(lastLoadedFile, shuffleSailors);
+    }
+
     void reset()
     {
-        loadFile(lastLoadedFile);
+        reset(false);
     }
 
     private void loadNextRound()
     {
         np = model.getNp(vigie);
+        vigie = false;
         if (listener != null)
         {
             listener.npChanged(np);

@@ -24,6 +24,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -263,6 +264,11 @@ public class SimulatorCanvas extends JPanel
         drawGame(g2d);
     }
 
+    private int frameCount = 0;
+    private Date frameLast = null;
+    private long fps = -1;
+    private static final int FRAME_MEASURE_INTERVAL = 10;
+
     /**
      * Dessine le jeu
      *
@@ -305,6 +311,18 @@ public class SimulatorCanvas extends JPanel
         drawShipDeck(g, model.getShip(), model.getSailors());
 
         drawLegendText(g);
+
+        if (++frameCount >= FRAME_MEASURE_INTERVAL)
+        {
+            var now = new Date();
+            if (frameLast != null)
+            {
+                var duration = Duration.between(frameLast.toInstant(), now.toInstant());
+                fps = FRAME_MEASURE_INTERVAL * 1000 / duration.toMillis();
+            }
+            frameLast = now;
+            frameCount = 0;
+        }
     }
 
     private void drawNodes(Graphics2D g)
@@ -380,10 +398,16 @@ public class SimulatorCanvas extends JPanel
             }
         }
 
+        g.setColor(Color.BLACK);
+
+        if (simulator.timer.isRunning())
+        {
+            g.drawString(fps + " FPS", 20, 20);
+        }
+
         if (np.getWind() != null && np.getWind().getStrength() != 0)
         {
             g.setStroke(HISTORY);
-            g.setColor(Color.BLACK);
             g.translate(getWidth() - 40, getHeight() - 55);
 
             g.drawString("Wind=" + np.getWind().getStrength(), -28, 45);
