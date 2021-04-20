@@ -82,6 +82,7 @@ public class Graph
     private void buildShortestPath(List<Node> path, Node end)
     {
         trace();
+
         while(end.nearestToStart != null)
         {
             path.add(end.nearestToStart);

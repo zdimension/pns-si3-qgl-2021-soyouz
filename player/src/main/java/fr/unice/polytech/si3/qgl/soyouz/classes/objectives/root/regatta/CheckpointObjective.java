@@ -6,8 +6,12 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Collidable;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.SailorObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
@@ -16,6 +20,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Graph;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -88,47 +93,54 @@ public class CheckpointObjective implements RootObjective
         return roundObjective.resolve();
     }
 
-    private void traverseNode(ShapedEntity[] arr, int elem, List<Node> lines, double shipSize)
+    private void traverseNode(ShapedEntity[] arr, List<Node> lines, double shipSize, Position shipPosition)
     {
-        var node = nodes.get(elem);
-        outer:
-        for (int i = 0; i < nodes.size(); i++)
+        var stack = new LinkedList<Integer>();
+        stack.add(0); // premier nœud = position du bateau
+        while (!stack.isEmpty())
         {
-            if (i == elem)
+            var elem = stack.remove();
+            var node = nodes.get(elem);
+            outer:
+            for (int i = 0; i < nodes.size(); i++)
             {
-                continue;
-            }
-            Point2d p = nodes.get(i);
-
-            for (ShapedEntity reef : arr)
-            {
-                if (reef.contains(onBoardDataHelper.getShip().getPosition()))
+                if (i == elem)
                 {
                     continue;
                 }
+                Point2d p = nodes.get(i);
 
-                if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p), shipSize))
+                for (ShapedEntity reef : arr)
                 {
-                    if (reef instanceof Stream)
+                    if (reef.contains(shipPosition))
                     {
-                        var stream = (Stream)reef;
-                        var proj = p.sub(node).dot(stream.getProjectedStrength());
-                        if (proj < 0)
+                        continue;
+                    }
+
+                    if (reef.getShape().linePassesThrough(reef.toLocal(node), reef.toLocal(p),
+                        shipSize))
+                    {
+                        if (reef instanceof Stream)
+                        {
+                            var stream = (Stream) reef;
+                            var proj = p.sub(node).dot(stream.getProjectedStrength());
+                            if (proj < 0)
+                            {
+                                continue outer;
+                            }
+                        }
+
+                        if (reef instanceof Collidable)
                         {
                             continue outer;
                         }
                     }
-
-                    if (reef instanceof Collidable)
-                    {
-                        continue outer;
-                    }
                 }
-            }
 
-            if (lines.get(elem).addNeighbour(lines.get(i)))
-            {
-                traverseNode(arr, i, lines, shipSize);
+                if (lines.get(elem).addNeighbour(lines.get(i)))
+                {
+                    stack.add(i);
+                }
             }
         }
     }
@@ -173,7 +185,7 @@ public class CheckpointObjective implements RootObjective
                 gnodes.add(new Node(node));
             }
 
-            traverseNode(state.getNp().getVisibleEntities(), 0, gnodes, diam);
+            traverseNode(state.getNp().getVisibleEntities(), gnodes, diam, onBoardDataHelper.getShip().getPosition());
 
             logger.info("Computing graph");
             graph = new Graph(gnodes, 0, 1);
