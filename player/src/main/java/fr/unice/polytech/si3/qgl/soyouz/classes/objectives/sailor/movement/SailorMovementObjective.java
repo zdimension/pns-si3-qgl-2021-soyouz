@@ -32,7 +32,7 @@ public class SailorMovementObjective implements MovingObjective
         this.sailor = sailor;
         this.xOnDeck = xOnDeck;
         this.yOnDeck = yOnDeck;
-        nbTurnToComplete = Math.abs((xOnDeck - sailor.getX()) + (yOnDeck
+        nbTurnToComplete = (Math.abs(xOnDeck - sailor.getX()) + Math.abs(yOnDeck
             - sailor.getY())) / 5 + 1;
     }
 
