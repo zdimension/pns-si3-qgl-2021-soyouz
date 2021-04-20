@@ -66,7 +66,7 @@ public class Rectangle extends Polygon implements Shape
     @Override
     public boolean contains(Point2d pos)
     {
-        return Math.abs(pos.getX()) <= height / 2 && Math.abs(pos.getY()) <= width / 2;
+        return Math.abs(pos.x) <= height / 2 && Math.abs(pos.y) <= width / 2;
     }
 
     @Override
@@ -78,7 +78,6 @@ public class Rectangle extends Polygon implements Shape
     @Override
     protected Point2d[] getShellInternal(double shipSize)
     {
-        System.out.println(shipSize);
         return getPoints(width + shipSize, height + shipSize);
     }
 }

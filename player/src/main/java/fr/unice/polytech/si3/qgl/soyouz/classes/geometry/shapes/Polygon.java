@@ -41,8 +41,8 @@ public class Polygon implements Shape
      */
     static double distanceToLine(Point2d a, Point2d b, Point2d p)
     {
-        return (b.getX() - a.getX()) * (p.getY() - a.getY())
-            - (p.getX() - a.getX()) * (b.getY() - a.getY());
+        return (b.x - a.x) * (p.y - a.y)
+            - (p.x - a.x) * (b.y - a.y);
     }
 
     /**

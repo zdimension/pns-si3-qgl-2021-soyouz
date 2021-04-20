@@ -34,19 +34,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-interface SimulatorListener
-{
-    void npChanged(NextRoundParameters np);
-
-    void fileLoaded(InitGameParameters ip, Cockpit cockpit);
-
-    void turnEnd();
-
-    void updateRequired();
-
-    void gameFinished();
-}
-
 public class SimulatorModel
 {
     private static final Logger logger = Logger.getLogger(SimulatorModel.class.getSimpleName());
@@ -267,7 +254,7 @@ public class SimulatorModel
     public void runBenchmark()
     {
         long total = 0;
-        final int N = 5;
+        final int N = 15;
         var results = new long[N];
         logger.log(Level.INFO, "Starting benchmark for " + N + " games");
         for (var i = 0; i < N; i++)

@@ -360,8 +360,8 @@ public class SimulatorCanvas extends JPanel
         if (mouse != null)
         {
             var p = mapToWorld(mouse);
-            g.drawString(String.format("X = %6.2f", p.getX()), 20, getHeight() - 40);
-            g.drawString(String.format("Y = %6.2f", p.getY()), 20, getHeight() - 20);
+            g.drawString(String.format("X = %6.2f", p.x), 20, getHeight() - 40);
+            g.drawString(String.format("Y = %6.2f", p.y), 20, getHeight() - 20);
 
             if (debugCollisions)
             {
@@ -512,8 +512,8 @@ public class SimulatorCanvas extends JPanel
 
     private Point mapToScreen(Point2d p)
     {
-        return new Point(getWidth() / 2 + mapToScreen(p.getX() - cameraPos.x),
-            this.getHeight() / 2 + mapToScreen(p.getY() - cameraPos.y));
+        return new Point(getWidth() / 2 + mapToScreen(p.x - cameraPos.x),
+            this.getHeight() / 2 + mapToScreen(p.y - cameraPos.y));
     }
 
     private Position mapToWorld(Point p)
