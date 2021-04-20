@@ -12,8 +12,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -69,7 +67,6 @@ public class SimulatorCanvas extends JPanel
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    private final ArrayList<OnboardEntity> usedEntities;
     private final Simulator simulator;
     private final Stroke DASHED = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL
         , 0, new float[] { 9 }, 0);
@@ -81,19 +78,16 @@ public class SimulatorCanvas extends JPanel
     public boolean drawPath = true;
     public boolean drawNodes = true;
     public boolean debugCollisions;
-    private InitGameParameters model;
+    private final SimulatorModel model;
     private boolean centered = false;
-    private NextRoundParameters np;
     private double scale = 1;
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
-    private Cockpit cockpit;
 
-    public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities,
+    public SimulatorCanvas(SimulatorModel model,
                            Simulator simulator)
     {
         this.model = model;
-        this.usedEntities = usedEntities;
         this.simulator = simulator;
 
         addMouseWheelListener(e ->
@@ -162,20 +156,9 @@ public class SimulatorCanvas extends JPanel
         });
     }
 
-    public void setModel(InitGameParameters model)
-    {
-        this.model = model;
-    }
-
-    public void setNp(NextRoundParameters np)
-    {
-        this.np = np;
-        centerView(false);
-    }
-
     private Collection<ShapedEntity> getVisibleShapes()
     {
-        return cockpit.entityMemory.values();
+        return model.cockpit.entityMemory.values();
     }
 
     private java.util.stream.Stream<Point2d> getEntitiesPositions()
@@ -287,7 +270,7 @@ public class SimulatorCanvas extends JPanel
             }
         }
 
-        if (np != null)
+        if (model.np != null)
         {
             for (ShapedEntity visibleEntity : getVisibleShapes())
             {
@@ -405,15 +388,15 @@ public class SimulatorCanvas extends JPanel
             g.drawString(fps + " FPS", 20, 20);
         }
 
-        if (np.getWind() != null && np.getWind().getStrength() != 0)
+        if (model.getWind() != null && model.getWind().getStrength() != 0)
         {
             g.setStroke(HISTORY);
             g.translate(getWidth() - 40, getHeight() - 55);
 
-            g.drawString("Wind=" + np.getWind().getStrength(), -28, 45);
+            g.drawString("Wind=" + model.getWind().getStrength(), -28, 45);
             g.scale(1, 1);
             g.fillOval(-3, -3, 7, 7);
-            g.rotate(np.getWind().getOrientation() - Math.PI / 2);
+            g.rotate(model.getWind().getOrientation() - Math.PI / 2);
             g.drawPolygon(new Polygon(new int[] { 0, -7, 7 }, new int[] { 28, 18, 18 }, 3));
             g.drawPolygon(new Polygon(new int[] { -1, 1, 1, 7, 7, 0, -7, -7, -1, -1 },
                 new int[] { 18, 18, -10, -16, -28, -22, -28, -16, -10, 14 }, 10));
@@ -477,7 +460,7 @@ public class SimulatorCanvas extends JPanel
             var img = ENTITY_ICONS.get(entity.getClass())[index];
             g.drawImage(img, entity.getY() * DECK_GRID_SIZE, entity.getX() * DECK_GRID_SIZE,
                 DECK_GRID_SIZE, DECK_GRID_SIZE,
-                usedEntities.contains(entity) ? Color.RED : new Color(0, true), null);
+                model.usedEntities.contains(entity) ? Color.RED : new Color(0, true), null);
         }
         var i = 0;
         for (Marin sailor : sailors)
@@ -606,10 +589,5 @@ public class SimulatorCanvas extends JPanel
     {
         shipHistory.clear();
         repaint();
-    }
-
-    public void setCockpit(Cockpit cockpit)
-    {
-        this.cockpit = cockpit;
     }
 }

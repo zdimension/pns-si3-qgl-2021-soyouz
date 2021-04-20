@@ -1,9 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
-import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -53,7 +49,7 @@ public class Simulator extends JFrame
             smodel.reset(true);
         });
 
-        canvas = new SimulatorCanvas(null, smodel.usedEntities, this);
+        canvas = new SimulatorCanvas(smodel, this);
         add(canvas, BorderLayout.CENTER);
 
         var btnClear = new JButton("Clear path");
@@ -135,16 +131,14 @@ public class Simulator extends JFrame
         smodel.listener = new SimulatorListener()
         {
             @Override
-            public void npChanged(NextRoundParameters np)
+            public void npChanged()
             {
-                canvas.setNp(np);
+                canvas.centerView(false);
             }
 
             @Override
-            public void fileLoaded(InitGameParameters ip, Cockpit cockpit)
+            public void fileLoaded()
             {
-                canvas.setModel(ip);
-                canvas.setCockpit(cockpit);
                 canvas.reset();
             }
 

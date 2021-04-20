@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
+import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.GameGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
@@ -114,7 +116,7 @@ public class SimulatorModel
         inGame = true;
         if (listener != null)
         {
-            listener.fileLoaded(model.getIp(false), cockpit);
+            listener.fileLoaded();
         }
         lastLoadedFile = filename;
     }
@@ -140,7 +142,7 @@ public class SimulatorModel
         vigie = false;
         if (listener != null)
         {
-            listener.npChanged(np);
+            listener.npChanged();
         }
     }
 
@@ -365,5 +367,25 @@ public class SimulatorModel
 
             currentStep = 0;
         }
+    }
+
+    public Bateau getShip()
+    {
+        return model.getShip();
+    }
+
+    public GameGoal getGoal()
+    {
+        return model.getGoal();
+    }
+
+    public Marin[] getSailors()
+    {
+        return model.getSailors();
+    }
+
+    public Wind getWind()
+    {
+        return np.getWind();
     }
 }
