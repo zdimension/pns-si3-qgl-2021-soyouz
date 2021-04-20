@@ -21,7 +21,7 @@ public class RudderObjective implements OnBoardObjective
 {
     private final double rotation;
     private final Marin sailor;
-    List<MovingObjective> movement;
+    private List<MovingObjective> movement;
 
     /**
      * Constructor.

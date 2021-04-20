@@ -32,7 +32,7 @@ public abstract class GameAction
      * @param sailor A Sailor.
      * @param ent    The wanted entity to make the boat progress (Optional).
      */
-    protected GameAction(Marin sailor, @Nullable Class<? extends OnboardEntity> ent)
+    GameAction(Marin sailor, @Nullable Class<? extends OnboardEntity> ent)
     {
         this.sailor = sailor;
         this.entityNeeded = ent;

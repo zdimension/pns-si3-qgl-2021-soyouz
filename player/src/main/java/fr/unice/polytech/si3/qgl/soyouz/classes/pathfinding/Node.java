@@ -1,17 +1,17 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class Node implements Comparable<Node>
 {
+    private static final Comparator<Node> COMPARATOR =
+        Comparator.comparingDouble(Node::getCost).thenComparingInt(Node::getId);
     public final Point2d position;
-    public final int id;
+    private final int id;
     public double minCostToStart = Double.NaN;
     public double distanceToEnd;
     public Map<Node, Double> connections = new HashMap<>();
@@ -35,31 +35,30 @@ public class Node implements Comparable<Node>
         return true;
     }
 
-    public double getCost()
+    private double getCost()
     {
         return minCostToStart + distanceToEnd;
     }
 
-    public int getId()
+    private int getId()
     {
         return id;
     }
 
-    private static final Comparator<Node> COMPARATOR =
-        Comparator.comparingDouble(Node::getCost).thenComparingInt(Node::getId);
-
     @Override
-    public int compareTo(@NotNull Node o)
+    public int compareTo(Node o)
     {
         if (this == o)
+        {
             return 0;
+        }
         return COMPARATOR.compare(this, o);
     }
 
     @Override
     public boolean equals(Object o)
     {
-        return o instanceof Node && ((Node)o).id == id;
+        return o instanceof Node && ((Node) o).id == id;
     }
 
     @Override

@@ -20,7 +20,7 @@ import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
 public class WatchObjective implements OnBoardObjective
 {
     private final Marin sailor;
-    List<MovingObjective> movement;
+    private List<MovingObjective> movement;
 
     /**
      * Constructor.

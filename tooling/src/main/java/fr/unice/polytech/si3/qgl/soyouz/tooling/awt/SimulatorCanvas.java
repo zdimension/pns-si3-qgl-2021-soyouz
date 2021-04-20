@@ -1,6 +1,5 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
-import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
@@ -27,7 +26,7 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SimulatorCanvas extends JPanel
+class SimulatorCanvas extends JPanel
 {
     private static final Color BACKGROUND = new Color(202, 219, 255);
     private static final Map<Class<?>, Image[]> ENTITY_ICONS;
@@ -41,6 +40,7 @@ public class SimulatorCanvas extends JPanel
         Stream.class, new Color(36, 36, 203),
         Reef.class, new Color(12, 191, 12)
     );
+    private static final int FRAME_MEASURE_INTERVAL = 10;
 
     static
     {
@@ -75,14 +75,17 @@ public class SimulatorCanvas extends JPanel
     private final Stroke HISTORY = new BasicStroke(1, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
     private final List<Position> shipHistory = new ArrayList<>();
-    public boolean drawPath = true;
-    public boolean drawNodes = true;
-    public boolean debugCollisions;
     private final SimulatorModel model;
+    private boolean drawPath = true;
+    private boolean drawNodes = true;
+    private boolean debugCollisions;
     private boolean centered = false;
     private double scale = 1;
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
+    private int frameCount = 0;
+    private Date frameLast = null;
+    private long fps = -1;
 
     public SimulatorCanvas(SimulatorModel model,
                            Simulator simulator)
@@ -154,6 +157,24 @@ public class SimulatorCanvas extends JPanel
                 super.mouseMoved(e);
             }
         });
+    }
+
+    public void setDrawPath(boolean drawPath)
+    {
+        this.drawPath = drawPath;
+        repaint();
+    }
+
+    public void setDrawNodes(boolean drawNodes)
+    {
+        this.drawNodes = drawNodes;
+        repaint();
+    }
+
+    public void setDebugCollisions(boolean debugCollisions)
+    {
+        this.debugCollisions = debugCollisions;
+        repaint();
     }
 
     private Collection<ShapedEntity> getVisibleShapes()
@@ -246,11 +267,6 @@ public class SimulatorCanvas extends JPanel
 
         drawGame(g2d);
     }
-
-    private int frameCount = 0;
-    private Date frameLast = null;
-    private long fps = -1;
-    private static final int FRAME_MEASURE_INTERVAL = 10;
 
     /**
      * Dessine le jeu

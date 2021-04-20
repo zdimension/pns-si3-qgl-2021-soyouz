@@ -39,7 +39,7 @@ public class Polygon implements Shape
      * @param p point
      * @return the distance between the point p and the line segment [a;b]
      */
-    static double distanceToLine(Point2d a, Point2d b, Point2d p)
+    private static double distanceToLine(Point2d a, Point2d b, Point2d p)
     {
         return (b.x - a.x) * (p.y - a.y)
             - (p.x - a.x) * (b.y - a.y);
@@ -51,7 +51,7 @@ public class Polygon implements Shape
      * @param p point
      * @return the side of the line segment [a;b] on which the point p lies
      */
-    static boolean side(Point2d a, Point2d b, Point2d p)
+    private static boolean side(Point2d a, Point2d b, Point2d p)
     {
         return distanceToLine(a, b, p) > 0;
     }
@@ -130,7 +130,7 @@ public class Polygon implements Shape
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
 
-    protected Point2d[] getShellInternal(double shipSize)
+    Point2d[] getShellInternal(double shipSize)
     {
         var shell = vertices.clone();
 
@@ -166,7 +166,7 @@ public class Polygon implements Shape
         return Arrays.stream(getShellArray(shipSize));
     }
 
-    public Point2d[] getShellArray(double shipSize)
+    private Point2d[] getShellArray(double shipSize)
     {
         return shellCache.computeIfAbsent((int) shipSize, this::getShellInternal);
     }

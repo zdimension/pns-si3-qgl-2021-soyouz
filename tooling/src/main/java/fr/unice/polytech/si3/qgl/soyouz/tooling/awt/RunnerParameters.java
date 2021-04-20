@@ -44,7 +44,7 @@ public class RunnerParameters
         ship = pars.getShip();
         if (shuffle)
         {
-            startingPositions = new Position[]{ship.getPosition()};
+            startingPositions = new Position[] { ship.getPosition() };
             getIp(false);
         }
         else

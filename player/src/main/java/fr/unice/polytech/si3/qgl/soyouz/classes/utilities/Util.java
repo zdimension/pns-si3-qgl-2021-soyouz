@@ -34,13 +34,22 @@ public final class Util
         return str.sorted(Comparator.comparing(OnboardEntity::getX));
     }
 
+    public static boolean logLevelUpdated = false;
+
     /**
      * Update the log level.
      */
     public static void updateLogLevel(Level logLevel)
     {
+        logLevelUpdated = true;
         var root = LogManager.getLogManager().getLogger("");
         root.setLevel(logLevel);
         Arrays.stream(root.getHandlers()).forEach(h -> h.setLevel(logLevel));
+    }
+
+    public static void configureLoggerFormat()
+    {
+        System.setProperty("java.util.logging.SimpleFormatter.format",
+            "%1$tF %1$tT:%1$tL %4$s %3$s : %5$s%6$s%n");
     }
 }

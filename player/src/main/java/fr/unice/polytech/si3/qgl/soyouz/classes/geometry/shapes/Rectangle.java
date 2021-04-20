@@ -3,11 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
-
 /**
  * Rectangle Shape.
  */

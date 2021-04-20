@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class SimulatorModel
@@ -57,16 +58,16 @@ public class SimulatorModel
     private final int COMP_STEPS = 10;
     public int speed = 0;
     public int currentStep = 0;
-    public double rotIncrement;
-    public double spdIncrement;
     public NextRoundParameters np;
-    public RunnerParameters model;
     public Cockpit cockpit;
     public boolean playMode = false;
-    public int currentCheckpoint;
-    public boolean vigie = false;
     public SimulatorListener listener = null;
     long nextRoundTime = -1;
+    private double rotIncrement;
+    private double spdIncrement;
+    private RunnerParameters model;
+    private int currentCheckpoint;
+    private boolean vigie = false;
     private boolean inGame = true;
     private String lastLoadedFile;
 
@@ -259,12 +260,12 @@ public class SimulatorModel
         spdIncrement = oarFactor / COMP_STEPS;
     }
 
-    public void runBenchmark()
+    public Duration runBenchmark(int N)
     {
         long total = 0;
-        final int N = 15;
         var results = new long[N];
-        logger.log(Level.INFO, "Starting benchmark for " + N + " games");
+        logger.log(Level.FINE, "Starting benchmark for " + N + " games");
+        var current = LogManager.getLogManager().getLogger("").getLevel();
         for (var i = 0; i < N; i++)
         {
             reset();
@@ -279,9 +280,10 @@ public class SimulatorModel
             results[i] = nextRoundTime;
             total += nextRoundTime;
         }
-        Util.updateLogLevel(Level.CONFIG);
-        logger.log(Level.INFO, "TIMES = " + Arrays.toString(results));
-        logger.log(Level.INFO, "AVG = " + Duration.ofMillis(total / N));
+        Util.updateLogLevel(current);
+        var avg = Duration.ofMillis(total / N);
+        logger.log(Level.INFO, "AVG = " + avg + "; TIMES = " + Arrays.toString(results));
+        return avg;
     }
 
     public void processRound(ActionEvent ignored)

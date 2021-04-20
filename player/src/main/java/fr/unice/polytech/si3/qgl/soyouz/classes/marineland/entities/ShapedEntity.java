@@ -23,7 +23,7 @@ public abstract class ShapedEntity
     private Position position;
     private Shape shape;
 
-    protected ShapedEntity()
+    ShapedEntity()
     {
 
     }
@@ -80,7 +80,7 @@ public abstract class ShapedEntity
         return pos.sub(position).rotate(-position.getOrientation());
     }
 
-    public Point2d toGlobal(Point2d pos)
+    private Point2d toGlobal(Point2d pos)
     {
         return pos.rotate(position.getOrientation()).add(position);
     }

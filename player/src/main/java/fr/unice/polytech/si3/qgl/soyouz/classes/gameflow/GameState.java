@@ -8,9 +8,9 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
  */
 public class GameState
 {
-    final InitGameParameters ip;
-    final NextRoundParameters np;
-    final boolean recalculatePathfinding;
+    private final InitGameParameters ip;
+    private final NextRoundParameters np;
+    private final boolean recalculatePathfinding;
 
     /**
      * Constructor.

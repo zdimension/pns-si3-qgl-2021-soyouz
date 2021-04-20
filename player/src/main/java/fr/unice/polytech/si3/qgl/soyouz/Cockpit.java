@@ -33,8 +33,8 @@ public class Cockpit implements ICockpit
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
-        System.setProperty("java.util.logging.SimpleFormatter.format",
-            "%1$tF %1$tT:%1$tL %4$s %3$s : %5$s%6$s%n");
+        if (!Util.logLevelUpdated)
+            Util.configureLoggerFormat();
 
         var fmt = new SimpleFormatter();
         logger.getParent().addHandler(new Handler()

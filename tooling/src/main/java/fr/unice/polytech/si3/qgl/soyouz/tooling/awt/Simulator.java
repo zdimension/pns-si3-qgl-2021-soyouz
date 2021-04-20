@@ -1,21 +1,20 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
+import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Simulator extends JFrame
 {
 
     private static final String[] SPEEDS = { "Slow", "Medium", "Fast" };
     private static final int[] DELAYS = { 50, 10, 0 };
-    final SimulatorModel smodel = new SimulatorModel();
     public final Timer timer;
+    final SimulatorModel smodel = new SimulatorModel();
     private final SimulatorCanvas canvas;
     private final JButton btnNext;
     private final JButton btnPlay;
@@ -63,30 +62,27 @@ public class Simulator extends JFrame
         topcont.add(btnBenchmark);
         btnBenchmark.addActionListener(e ->
         {
-            smodel.runBenchmark();
+            smodel.runBenchmark(5);
         });
 
         var cbxPath = new JCheckBox("Show graph", true);
         cbxPath.addChangeListener(e ->
         {
-            canvas.drawPath = cbxPath.isSelected();
-            canvas.repaint();
+            canvas.setDrawPath(cbxPath.isSelected());
         });
         topcont.add(cbxPath);
 
         var cbxNodes = new JCheckBox("Show nodes", true);
         cbxNodes.addChangeListener(e ->
         {
-            canvas.drawNodes = cbxNodes.isSelected();
-            canvas.repaint();
+            canvas.setDrawNodes(cbxNodes.isSelected());
         });
         topcont.add(cbxNodes);
 
         var cbxDebugColl = new JCheckBox("Debug collisions");
         cbxDebugColl.addChangeListener(e ->
         {
-            canvas.debugCollisions = cbxDebugColl.isSelected();
-            canvas.repaint();
+            canvas.setDebugCollisions(cbxDebugColl.isSelected());
         });
         topcont.add(cbxDebugColl);
 
@@ -120,11 +116,7 @@ public class Simulator extends JFrame
         cbxSpeed.setSelectedIndex(2);
         topcont.add(cbxSpeed);
 
-        JComboBox<Object> cbxFiles = new JComboBox<>(Files.walk(Paths.get("games"))
-            .filter(Files::isRegularFile)
-            .map(Path::toString)
-            .filter(name -> name.contains("Week") && !name.contains("_next"))
-            .sorted().toArray());
+        JComboBox<Object> cbxFiles = new JComboBox<>(Application.getWeeks());
         cbxFiles.addItemListener(e -> loadFile(e.getItem().toString()));
         topcont.add(cbxFiles);
 

@@ -12,7 +12,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public class Marin extends OnboardEntity
 {
-    public static final int MAX_MOVE = 5;
+    private static final int MAX_MOVE = 5;
     private final int id;
     private final String name;
 
