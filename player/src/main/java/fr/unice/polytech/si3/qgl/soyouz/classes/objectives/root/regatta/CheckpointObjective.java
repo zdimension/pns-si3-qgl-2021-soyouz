@@ -181,9 +181,10 @@ public class CheckpointObjective implements RootObjective
                 e.printStackTrace();
             }
             var gnodes = new ArrayList<Node>();
-            for (Point2d node : nodes)
+            for (int i = 0; i < nodes.size(); i++)
             {
-                gnodes.add(new Node(node));
+                Point2d node = nodes.get(i);
+                gnodes.add(new Node(node, i));
             }
 
             traverseNode(state.getNp().getVisibleEntities(), gnodes, diam,

@@ -15,7 +15,6 @@ public class Rectangle extends Polygon implements Shape
 {
     private final double width;
     private final double height;
-    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
 
     /**
      * Constructor.
@@ -77,9 +76,9 @@ public class Rectangle extends Polygon implements Shape
     }
 
     @Override
-    public Stream<Point2d> getShell(double shipSize)
+    protected Point2d[] getShellInternal(double shipSize)
     {
-        return Arrays.stream(shellCache.computeIfAbsent((int) shipSize,
-            size -> getPoints(width + size, height + size)));
+        System.out.println(shipSize);
+        return getPoints(width + shipSize, height + shipSize);
     }
 }

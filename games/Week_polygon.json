@@ -1,123 +1,122 @@
-[
-    {
-        "type": "MOVING",
-        "sailorId": 3,
-        "xdistance": 0,
-        "ydistance": -1,
-        "delta": {
-            "x": 0,
-            "y": -1,
-            "second": -1,
-            "first": 0
+{
+    "goal": {
+        "mode": "REGATTA",
+        "checkpoints": [{
+            "position": {
+                "x": 10000.0,
+                "y": 0.0
+            },
+            "shape": {
+                "type": "circle",
+                "radius": 50.0
+            }
+        }]
+    },
+    "ship": {
+        "name": "Les copaings d'abord!",
+        "life": 100,
+        "deck": {
+            "length": 1,
+            "width": 2
+        },
+        "entities": [
+            {
+                "type": "oar",
+                "x": 0,
+                "y": 0
+            },
+            {
+                "type": "oar",
+                "x": 0,
+                "y": 1
+            }
+        ]
+    },
+    "startingPositions": [
+        {
+            "x": -1000.0,
+            "y": 0.0,
+            "orientation": 0.0
         }
+    ],
+    "wind": {
+        "direction": 0,
+        "strenght": 0
     },
-    {
-        "type": "MOVING",
-        "sailorId": 7,
-        "xdistance": 0,
-        "ydistance": -1,
-        "delta": {
-            "x": 0,
-            "y": -1,
-            "second": -1,
-            "first": 0
+    "seaEntities": [
+        {
+            "position": {
+                "x": 100,
+                "y": 0,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": 500,
+                "height": 1000
+            }
+        },
+        {
+            "position": {
+                "x": 2000,
+                "y": 0,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "polygon",
+                "vertices": [
+                    {
+                        "x": -500,
+                        "y": -500
+                    },
+                    {
+                        "x": 500,
+                        "y": -500
+                    },
+                    {
+                        "x": 0,
+                        "y": 200
+                    }
+                ]
+            }
+        },
+        {
+            "position": {
+                "x": 4000,
+                "y": 0,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "polygon",
+                "vertices": [
+                    {
+                        "x": -136,
+                        "y": -596
+                    },
+                    {
+                        "x": 164,
+                        "y": -336
+                    },
+                    {
+                        "x": 324,
+                        "y": 64
+                    },
+                    {
+                        "x": 284,
+                        "y": 704
+                    },
+                    {
+                        "x": -636,
+                        "y": 164
+                    }
+                ]
+            }
         }
-    },
-    {
-        "type": "MOVING",
-        "sailorId": 11,
-        "xdistance": 0,
-        "ydistance": -1,
-        "delta": {
-            "x": 0,
-            "y": -1,
-            "second": -1,
-            "first": 0
-        }
-    },
-    {
-        "type": "MOVING",
-        "sailorId": 13,
-        "xdistance": 0,
-        "ydistance": -3,
-        "delta": {
-            "x": 0,
-            "y": -3,
-            "second": -3,
-            "first": 0
-        }
-    },
-    {
-        "type": "OAR",
-        "sailorId": 0
-    },
-    {
-        "type": "OAR",
-        "sailorId": 5
-    },
-    {
-        "type": "OAR",
-        "sailorId": 10
-    },
-    {
-        "type": "OAR",
-        "sailorId": 15
-    },
-    {
-        "type": "OAR",
-        "sailorId": 1
-    },
-    {
-        "type": "OAR",
-        "sailorId": 6
-    },
-    {
-        "type": "OAR",
-        "sailorId": 9
-    },
-    {
-        "type": "OAR",
-        "sailorId": 16
-    },
-    {
-        "type": "OAR",
-        "sailorId": 4
-    },
-    {
-        "type": "OAR",
-        "sailorId": 8
-    },
-    {
-        "type": "OAR",
-        "sailorId": 12
-    },
-    {
-        "type": "OAR",
-        "sailorId": 14
-    },
-    {
-        "type": "OAR",
-        "sailorId": 3
-    },
-    {
-        "type": "OAR",
-        "sailorId": 7
-    },
-    {
-        "type": "OAR",
-        "sailorId": 11
-    },
-    {
-        "type": "OAR",
-        "sailorId": 13
-    },
-    {
-        "type": "TURN",
-        "sailorId": 17,
-        "rotation": 0.31613263597168717
-    },
-    {
-        "type": "USE_WATCH",
-        "sailorId": 2
-    }
-]
+    ],
+    "maxRound": 50,
+    "minumumCrewSize": 2,
+    "maximumCrewSize": 2
+}

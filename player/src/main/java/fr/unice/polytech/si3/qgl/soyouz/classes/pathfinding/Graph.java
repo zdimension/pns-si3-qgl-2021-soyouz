@@ -39,12 +39,12 @@ public class Graph
     private void doAStar()
     {
         trace();
-        var queue = new ArrayList<Node>();
+        var queue = new TreeSet<Node>();
         queue.add(start);
         do
         {
-            queue.sort(Comparator.comparing(node -> node.minCostToStart + node.distanceToEnd));
-            var node = queue.remove(0);
+            var node = queue.first();
+            queue.remove(node);
             node.connections.entrySet().stream().sorted(Comparator.comparingDouble(Map.Entry::getValue))
                 .forEachOrdered(entry ->
                 {
@@ -57,12 +57,10 @@ public class Graph
                     if (Double.isNaN(child.minCostToStart)
                         || node.minCostToStart + cost < child.minCostToStart)
                     {
+                        queue.remove(child);
                         child.minCostToStart = node.minCostToStart + cost;
                         child.nearestToStart = node;
-                        if (!queue.contains(child))
-                        {
-                            queue.add(child);
-                        }
+                        queue.add(child);
                     }
                 });
             node.visited = true;
@@ -83,7 +81,7 @@ public class Graph
     {
         trace();
 
-        while(end.nearestToStart != null)
+        while (end.nearestToStart != null)
         {
             path.add(end.nearestToStart);
             end = end.nearestToStart;
@@ -108,6 +106,6 @@ public class Graph
                 }
             }
         }
-        return res.parallelStream().map(p -> Pair.of(nodes.get(p.first), nodes.get(p.second))).collect(Collectors.toSet());
+        return res.stream().map(p -> Pair.of(nodes.get(p.first), nodes.get(p.second))).collect(Collectors.toSet());
     }
 }

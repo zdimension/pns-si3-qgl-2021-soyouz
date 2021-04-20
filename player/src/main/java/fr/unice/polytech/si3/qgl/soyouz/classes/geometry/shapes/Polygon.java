@@ -130,44 +130,51 @@ public class Polygon implements Shape
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
 
+    protected Point2d[] getShellInternal(double shipSize)
+    {
+        var shell = vertices.clone();
+
+        for (int i = 0; i < shell.length; i++)
+        {
+            var cur = shell[i];
+            if (false)
+            {
+                var ni = (i + 1) % shell.length;
+                var nex = shell[ni];
+                var dta = nex.sub(cur);
+                var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
+                if (cur.sub(change).normSquared() < cur.normSquared())
+                {
+                    change = change.mul(-1);
+                }
+                shell[i] = cur.sub(change);
+                shell[ni] = nex.sub(change);
+            }
+            else
+            {
+                var rad = cur.sub(center);
+                shell[i] = cur.add(Point2d.fromPolar(shipSize, rad.angle()));
+            }
+        }
+
+        return shell;
+    }
+
     @Override
     public Stream<Point2d> getShell(double shipSize)
     {
-        return Arrays.stream(shellCache.computeIfAbsent((int) shipSize, size ->
-        {
-            var shell = vertices.clone();
+        return Arrays.stream(getShellArray(shipSize));
+    }
 
-            for (int i = 0; i < shell.length; i++)
-            {
-                var cur = shell[i];
-                if (false)
-                {
-                    var ni = (i + 1) % shell.length;
-                    var nex = shell[ni];
-                    var dta = nex.sub(cur);
-                    var change = Point2d.fromPolar(size, dta.angle()).ortho();
-                    if (cur.sub(change).normSquared() < cur.normSquared())
-                    {
-                        change = change.mul(-1);
-                    }
-                    shell[i] = cur.sub(change);
-                    shell[ni] = nex.sub(change);
-                }
-                else
-                {
-                    var rad = cur.sub(center);
-                    shell[i] = cur.add(Point2d.fromPolar(size, rad.angle()));
-                }
-            }
-
-            return shell;
-        }));
+    public Point2d[] getShellArray(double shipSize)
+    {
+        return shellCache.computeIfAbsent((int) shipSize, this::getShellInternal);
     }
 
     @Override
     public boolean linePassesThrough(Point2d a, Point2d b, double shipSize)
     {
-        var pts = getShell(shipSize).toArray(Point2d[]::new);
+        var pts = getShellArray(shipSize);
 
         for (int i = 0; i < pts.length; i++)
         {
