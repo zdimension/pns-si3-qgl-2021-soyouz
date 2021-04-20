@@ -209,7 +209,6 @@ public class SimulatorCanvas extends JPanel
 
     void reset()
     {
-        np = null;
         clearHistory();
         repaint();
     }
@@ -458,7 +457,7 @@ public class SimulatorCanvas extends JPanel
         for (Marin sailor : sailors)
         {
             g.setColor(Color.getHSBColor((float) i / sailors.length, 1, 1));
-            var oldPos = simulator.sailorPositions.getOrDefault(sailor, null);
+            var oldPos = simulator.smodel.sailorPositions.getOrDefault(sailor, null);
             var x = sailor.getY() * DECK_GRID_SIZE;
             var y = sailor.getX() * DECK_GRID_SIZE;
             var sh = DECK_GRID_SIZE / 2;

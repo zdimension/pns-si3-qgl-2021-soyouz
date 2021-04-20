@@ -12,6 +12,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -87,7 +88,7 @@ public class Cockpit implements ICockpit
         trace();
         try
         {
-            updateLogLevel();
+            Util.updateLogLevel(Level.CONFIG);
             initGameInternal(OBJECT_MAPPER.readValue(game, InitGameParameters.class));
         }
         catch (Exception e)
@@ -103,7 +104,7 @@ public class Cockpit implements ICockpit
         try
         {
             this.ip = ip;
-            updateLogLevel();
+            Util.updateLogLevel(Level.CONFIG);
             if (ip.getGoal() instanceof RegattaGoal)
             {
                 objective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
@@ -182,14 +183,4 @@ public class Cockpit implements ICockpit
         return new ArrayList<>(logList);
     }
 
-    /**
-     * Update the log level.
-     */
-    private void updateLogLevel()
-    {
-        var logLevel = Level.CONFIG;
-        var root = LogManager.getLogManager().getLogger("");
-        root.setLevel(logLevel);
-        Arrays.stream(root.getHandlers()).forEach(h -> h.setLevel(logLevel));
-    }
 }
