@@ -93,7 +93,8 @@ public class CheckpointObjective implements RootObjective
         return roundObjective.resolve();
     }
 
-    private void traverseNode(ShapedEntity[] arr, List<Node> lines, double shipSize, Position shipPosition)
+    private void traverseNode(ShapedEntity[] arr, List<Node> lines, double shipSize,
+                              Position shipPosition)
     {
         var stack = new LinkedList<Integer>();
         stack.add(0); // premier nœud = position du bateau
@@ -185,7 +186,8 @@ public class CheckpointObjective implements RootObjective
                 gnodes.add(new Node(node));
             }
 
-            traverseNode(state.getNp().getVisibleEntities(), gnodes, diam, onBoardDataHelper.getShip().getPosition());
+            traverseNode(state.getNp().getVisibleEntities(), gnodes, diam,
+                onBoardDataHelper.getShip().getPosition());
 
             logger.info("Computing graph");
             graph = new Graph(gnodes, 0, 1);

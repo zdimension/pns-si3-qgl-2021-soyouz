@@ -119,7 +119,7 @@ public class SailorObjective implements OnBoardObjective
         {
             WatchConfigHelper watchConfigHelper =
                 new WatchConfigHelper(seaDataHelper.getShip().getPosition(),
-                seaDataHelper.getLastWatchPos(), onBoardDataHelper.getOldWatchPosition());
+                    seaDataHelper.getLastWatchPos(), onBoardDataHelper.getOldWatchPosition());
             if (watchConfigHelper.findOptWatchConfiguration())
             {
                 onBoardDataHelper.switchRowerToWatch();

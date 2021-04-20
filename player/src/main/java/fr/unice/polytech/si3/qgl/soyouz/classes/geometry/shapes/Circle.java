@@ -16,6 +16,7 @@ public class Circle extends Polygon implements Shape
 {
     public static final int VERTEX_COUNT = 16;
     private final double radius;
+    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
 
     /**
      * Constructor.
@@ -93,8 +94,6 @@ public class Circle extends Polygon implements Shape
 
         return false;
     }
-
-    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
 
     @Override
     public Stream<Point2d> getShell(double shipSize)

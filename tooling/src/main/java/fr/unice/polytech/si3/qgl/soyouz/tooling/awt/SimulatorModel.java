@@ -24,12 +24,13 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,8 +50,6 @@ interface SimulatorListener
 public class SimulatorModel
 {
     private static final Logger logger = Logger.getLogger(SimulatorModel.class.getSimpleName());
-
-    private final int COMP_STEPS = 10;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final java.util.List<Class<? extends GameAction>> ACTIONS_ORDER =
         java.util.List.of(
@@ -66,6 +65,7 @@ public class SimulatorModel
         );
     final ArrayList<OnboardEntity> usedEntities;
     final HashMap<Marin, PosOnShip> sailorPositions = new HashMap<>();
+    private final int COMP_STEPS = 10;
     public int speed = 0;
     public int currentStep = 0;
     public double rotIncrement;
@@ -79,6 +79,7 @@ public class SimulatorModel
     public SimulatorListener listener = null;
     long nextRoundTime = -1;
     private boolean inGame = true;
+    private String lastLoadedFile;
 
     public SimulatorModel()
     {
@@ -113,7 +114,7 @@ public class SimulatorModel
             return;
         }
 
-        
+
         np = null;
         CheckpointObjective.graph = null;
         currentCheckpoint = 0;
@@ -125,7 +126,9 @@ public class SimulatorModel
         nextRoundTime = -1;
         inGame = true;
         if (listener != null)
+        {
             listener.fileLoaded(model.getIp(false), cockpit);
+        }
         lastLoadedFile = filename;
     }
 
@@ -138,8 +141,6 @@ public class SimulatorModel
     {
         loadFile(lastLoadedFile);
     }
-    
-    private String lastLoadedFile;
 
     private void loadNextRound()
     {
@@ -195,7 +196,8 @@ public class SimulatorModel
 
                     if (!(entType.isInstance(ent)))
                     {
-                        logger.log(Level.SEVERE, "INVALID ENTITY TYPE FOR " + act + ", EXPECTED " + entType + " GOT " + ent.getClass());
+                        logger.log(Level.SEVERE,
+                            "INVALID ENTITY TYPE FOR " + act + ", EXPECTED " + entType + " GOT " + ent.getClass());
                         continue;
                     }
 
@@ -246,7 +248,8 @@ public class SimulatorModel
                     if (sail.getX() < 0 || sail.getX() >= model.getShip().getDeck().getLength()
                         || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())
                     {
-                        logger.log(Level.SEVERE, "SAILOR " + sail.getId() + " MOVED OUTSIDE THE DECK");
+                        logger.log(Level.SEVERE, "SAILOR " + sail.getId() + " MOVED OUTSIDE THE " +
+                            "DECK");
                     }
                 }
             }
@@ -332,7 +335,9 @@ public class SimulatorModel
         logger.log(Level.CONFIG, "Ship position : " + model.getShip().getPosition());
 
         if (listener != null)
+        {
             listener.updateRequired();
+        }
 
         if (++currentStep >= COMP_STEPS)
         {
@@ -342,7 +347,9 @@ public class SimulatorModel
                 if (currentCheckpoint >= getCheckpoints().length)
                 {
                     if (listener != null)
+                    {
                         listener.gameFinished();
+                    }
                     playMode = false;
                     logger.log(Level.FINE, Duration.ofMillis(nextRoundTime).toString());
                     inGame = false;
@@ -358,7 +365,9 @@ public class SimulatorModel
             else
             {
                 if (listener != null)
+                {
                     listener.turnEnd();
+                }
             }
 
             currentStep = 0;

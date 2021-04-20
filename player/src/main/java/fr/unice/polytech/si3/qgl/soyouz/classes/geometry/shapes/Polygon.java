@@ -2,7 +2,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,6 +16,7 @@ public class Polygon implements Shape
     private final double orientation;
     private final Point2d[] vertices;
     private final Point2d center;
+    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
 
     /**
      * Constructor.
@@ -29,7 +29,8 @@ public class Polygon implements Shape
     {
         this.orientation = orientation;
         this.vertices = vertices;
-        this.center = Arrays.stream(this.vertices).reduce(Point2d::add).get().mul(1d / vertices.length);
+        this.center =
+            Arrays.stream(this.vertices).reduce(Point2d::add).get().mul(1d / vertices.length);
     }
 
     /**
@@ -129,12 +130,10 @@ public class Polygon implements Shape
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
 
-    private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
-
     @Override
     public Stream<Point2d> getShell(double shipSize)
     {
-        return Arrays.stream(shellCache.computeIfAbsent((int)shipSize, size ->
+        return Arrays.stream(shellCache.computeIfAbsent((int) shipSize, size ->
         {
             var shell = vertices.clone();
 

@@ -2,13 +2,8 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Reef;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
-
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 /**
  * Stock all current parameters to Play the next round.

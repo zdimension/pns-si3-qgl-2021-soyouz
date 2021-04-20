@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-import static java.lang.Math.abs;
-
 /**
  * Position of a Shape : Defined by the coords of its central Point and its orientation.
  */

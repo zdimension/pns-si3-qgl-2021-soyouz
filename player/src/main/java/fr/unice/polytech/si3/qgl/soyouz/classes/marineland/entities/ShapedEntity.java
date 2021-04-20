@@ -19,6 +19,7 @@ import java.util.Objects;
 })
 public abstract class ShapedEntity
 {
+    private final Map<Position, Point2d[]> shellCache = new HashMap<>();
     private Position position;
     private Shape shape;
 
@@ -89,11 +90,10 @@ public abstract class ShapedEntity
         return shape.contains(toLocal(pos));
     }
 
-    private final Map<Position, Point2d[]> shellCache = new HashMap<>();
-
     public java.util.stream.Stream<Point2d> getShell()
     {
-        return Arrays.stream(shellCache.computeIfAbsent(position, pos -> shape.getShell(80).map(this::toGlobal).toArray(Point2d[]::new)));
+        return Arrays.stream(shellCache.computeIfAbsent(position,
+            pos -> shape.getShell(80).map(this::toGlobal).toArray(Point2d[]::new)));
     }
 
     public boolean equals(Object obj)

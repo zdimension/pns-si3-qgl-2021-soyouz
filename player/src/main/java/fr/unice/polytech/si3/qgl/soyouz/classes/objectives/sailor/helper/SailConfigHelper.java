@@ -3,8 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
-import java.util.stream.IntStream;
-
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
 
 /**

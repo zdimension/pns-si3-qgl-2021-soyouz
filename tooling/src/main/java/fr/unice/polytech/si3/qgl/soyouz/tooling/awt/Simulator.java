@@ -1,63 +1,34 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
-import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
-import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Stream;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
-import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
 
 public class Simulator extends JFrame
 {
 
     private static final String[] SPEEDS = { "Slow", "Medium", "Fast" };
     private static final int[] DELAYS = { 50, 10, 0 };
-
+    final SimulatorModel smodel = new SimulatorModel();
     private final Timer timer;
-
     private final SimulatorCanvas canvas;
-
     private final JButton btnNext;
     private final JButton btnPlay;
-    private final JComboBox<Object> cbxFiles;
-    final SimulatorModel smodel = new SimulatorModel();
 
     public Simulator() throws IOException
     {
         setTitle("Soyouz Simulator");
         setLayout(new BorderLayout());
-        setSize(600, 600);
-
-
+        setSize(900, 600);
 
         var topcont = new Panel();
         topcont.setLayout(new BoxLayout(topcont, BoxLayout.X_AXIS));
@@ -146,7 +117,7 @@ public class Simulator extends JFrame
         cbxSpeed.setSelectedIndex(2);
         topcont.add(cbxSpeed);
 
-        cbxFiles = new JComboBox<Object>(Files.walk(Paths.get("games"))
+        JComboBox<Object> cbxFiles = new JComboBox<>(Files.walk(Paths.get("games"))
             .filter(Files::isRegularFile)
             .map(Path::toString)
             .filter(name -> name.contains("Week") && !name.contains("_next"))
@@ -191,7 +162,6 @@ public class Simulator extends JFrame
         };
 
         loadFile(cbxFiles.getSelectedItem().toString());
-        //smodel.reset();
 
         btnNext.addActionListener(event ->
         {
@@ -236,7 +206,7 @@ public class Simulator extends JFrame
                 canvas.centerView(true);
             }
         });
- }
+    }
 
     private void playRound()
     {

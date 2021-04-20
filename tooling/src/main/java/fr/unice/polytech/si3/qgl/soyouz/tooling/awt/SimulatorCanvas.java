@@ -15,7 +15,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.Checkpoi
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
-import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import javax.imageio.ImageIO;
@@ -25,8 +24,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SimulatorCanvas extends JPanel
@@ -80,6 +79,7 @@ public class SimulatorCanvas extends JPanel
     private final List<Position> shipHistory = new ArrayList<>();
     public boolean drawPath = true;
     public boolean drawNodes = true;
+    public boolean debugCollisions;
     private InitGameParameters model;
     private boolean centered = false;
     private NextRoundParameters np;
@@ -87,7 +87,6 @@ public class SimulatorCanvas extends JPanel
     private Point2d cameraPos = new Point2d(0, 0);
     private Point2d moveOrigin = null;
     private Cockpit cockpit;
-    public boolean debugCollisions;
 
     public SimulatorCanvas(InitGameParameters model, ArrayList<OnboardEntity> usedEntities,
                            Simulator simulator)
@@ -185,7 +184,8 @@ public class SimulatorCanvas extends JPanel
         var goal = model.getGoal();
         if (goal instanceof RegattaGoal)
         {
-            str = java.util.stream.Stream.concat(str, Arrays.stream(((RegattaGoal) goal).getCheckpoints()));
+            str = java.util.stream.Stream.concat(str,
+                Arrays.stream(((RegattaGoal) goal).getCheckpoints()));
         }
         return str.map(ShapedEntity::getPosition);
     }
@@ -391,7 +391,8 @@ public class SimulatorCanvas extends JPanel
             g.fillOval(-3, -3, 7, 7);
             g.rotate(np.getWind().getOrientation() - Math.PI / 2);
             g.drawPolygon(new Polygon(new int[] { 0, -7, 7 }, new int[] { 28, 18, 18 }, 3));
-            g.drawPolygon(new Polygon(new int[] { -1, 1, 1, 7, 7, 0, -7, -7, -1, -1}, new int[] { 18, 18, -10, -16, -28, -22, -28, -16, -10, 14 }, 10));
+            g.drawPolygon(new Polygon(new int[] { -1, 1, 1, 7, 7, 0, -7, -7, -1, -1 },
+                new int[] { 18, 18, -10, -16, -28, -22, -28, -16, -10, 14 }, 10));
         }
     }
 
@@ -439,7 +440,8 @@ public class SimulatorCanvas extends JPanel
         g.translate(DECK_MARGIN, DECK_MARGIN);
 
         g.setColor(ENTITY_COLORS.get(Bateau.class));
-        g.fillRect(0, 0, b.getDeck().getWidth() * DECK_GRID_SIZE, b.getDeck().getLength() * DECK_GRID_SIZE);
+        g.fillRect(0, 0, b.getDeck().getWidth() * DECK_GRID_SIZE,
+            b.getDeck().getLength() * DECK_GRID_SIZE);
 
         for (OnboardEntity entity : b.getEntities())
         {
@@ -465,7 +467,7 @@ public class SimulatorCanvas extends JPanel
             {
                 var off = i - sailors.length / 2;
                 var sq = 3 * DECK_GRID_SIZE / 4;
-                var gt = (Graphics2D)g.create();
+                var gt = (Graphics2D) g.create();
                 gt.translate(sq + off, sq + off);
                 gt.drawLine(oldPos.getY() * DECK_GRID_SIZE, oldPos.getX() * DECK_GRID_SIZE, x, y);
             }

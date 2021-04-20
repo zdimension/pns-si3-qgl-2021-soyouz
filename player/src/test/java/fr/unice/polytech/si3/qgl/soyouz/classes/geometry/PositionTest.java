@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class PositionTest
 {

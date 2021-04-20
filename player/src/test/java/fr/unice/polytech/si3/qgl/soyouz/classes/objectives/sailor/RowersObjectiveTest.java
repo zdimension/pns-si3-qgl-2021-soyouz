@@ -49,10 +49,10 @@ class RowersObjectiveTest
             .collect(Collectors.toList());
         List<Marin> immutableRower2Left =
             immutableRower2.stream().filter(rower -> rower.getY() == 0)
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
         List<Marin> immutableRower2Right =
             immutableRower2.stream().filter(rower -> rower.getY() > 0)
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
         mutableRower2.add(new Marin(5, 0, 1, "Tem"));
         roLeft = new RowersObjective(ship, mutableRower, immutableRowerLeft, immutableRowerRight,
             Pair.of(2, 1));
