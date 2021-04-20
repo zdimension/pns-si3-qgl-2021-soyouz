@@ -26,9 +26,8 @@ public class Application
                 Util.updateLogLevel(Level.OFF);
                 for (String week : getWeeks())
                 {
-                    System.out.println("TESTING " + week);
                     model.loadFile(week, false);
-                    model.runBenchmark(1);
+                    System.out.println("TESTING " + week + " = " + model.runBenchmark(1));
                 }
             }
             else

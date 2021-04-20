@@ -164,7 +164,7 @@ public class CheckpointObjective implements RootObjective
 
             var reef = state.getNp().getVisibleEntities();
 
-            var diam = 50;
+            var diam = 40;
             logger.info("Computing shells");
             for (ShapedEntity r : reef)
             {

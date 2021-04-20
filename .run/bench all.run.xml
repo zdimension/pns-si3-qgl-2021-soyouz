@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="bench all" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="fr.unice.polytech.si3.qgl.soyouz.tooling.Application" />
+    <module name="soyouz.tooling" />
+    <option name="PROGRAM_PARAMETERS" value="test" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="fr.unice.polytech.si3.qgl.soyouz.tooling.awt.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
