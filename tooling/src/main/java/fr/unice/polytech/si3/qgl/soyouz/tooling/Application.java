@@ -55,7 +55,8 @@ public class Application
         return Files.walk(Paths.get("games"))
             .filter(Files::isRegularFile)
             .map(Path::toString)
-            .filter(name -> name.contains("Week") && !name.contains("_next") && (!name.contains("_multi_") || name.contains("_1_")))
+            .filter(name -> name.contains("Week") && !name.contains("_next") && (!name.contains(
+                "_multi_") || name.contains("_1_")))
             .sorted().toArray(String[]::new);
     }
 }

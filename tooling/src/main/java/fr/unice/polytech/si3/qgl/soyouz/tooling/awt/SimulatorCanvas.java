@@ -10,7 +10,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
@@ -22,7 +21,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,8 +72,8 @@ class SimulatorCanvas extends JPanel
         BasicStroke.JOIN_BEVEL);
     private final Stroke HISTORY = new BasicStroke(1, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
-    private LinkedList<Position>[] shipHistory;
     private final SimulatorModel model;
+    private LinkedList<Position>[] shipHistory;
     private boolean drawPath = true;
     private boolean drawNodes = true;
     private boolean debugCollisions;

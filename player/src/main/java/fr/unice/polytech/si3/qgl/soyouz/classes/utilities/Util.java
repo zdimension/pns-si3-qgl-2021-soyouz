@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 public final class Util
 {
+    public static boolean logLevelUpdated = false;
+
     private Util()
     {
     }
@@ -33,8 +35,6 @@ public final class Util
     {
         return str.sorted(Comparator.comparing(OnboardEntity::getX));
     }
-
-    public static boolean logLevelUpdated = false;
 
     /**
      * Update the log level.

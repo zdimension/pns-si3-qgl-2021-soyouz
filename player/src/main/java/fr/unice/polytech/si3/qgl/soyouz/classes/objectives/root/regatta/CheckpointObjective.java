@@ -31,14 +31,14 @@ import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
  */
 public class CheckpointObjective implements RootObjective
 {
-    public final List<Point2d> nodes = new ArrayList<>();
     private static final Logger logger =
         Logger.getLogger(CheckpointObjective.class.getSimpleName());
-    public List<Node> path;
-    public Graph graph;
+    public final List<Point2d> nodes = new ArrayList<>();
     private final Checkpoint cp;
     private final OnBoardDataHelper onBoardDataHelper;
     private final SeaDataHelper seaDataHelper;
+    public List<Node> path;
+    public Graph graph;
     private SailorObjective roundObjective;
     private double angleToCp;
     private double distanceToCp;

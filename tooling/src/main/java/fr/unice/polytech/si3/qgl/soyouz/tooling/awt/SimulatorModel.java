@@ -1,8 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
@@ -82,7 +80,7 @@ public class SimulatorModel
             if (filename.contains("_multi_"))
             {
                 var pref = filename.substring(0, filename.indexOf('_'));
-                var count = (int)Files.walk(Paths.get("games"))
+                var count = (int) Files.walk(Paths.get("games"))
                     .map(Path::toString)
                     .filter(name -> name.contains(pref + "_multi") && name.contains("_next"))
                     .count();
@@ -91,10 +89,12 @@ public class SimulatorModel
                 for (int i = 0; i < count; i++)
                 {
                     var fn = pref + "_multi_" + (i + 1);
-                    ips[i] = Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(fn + "_real.json")),
+                    ips[i] = Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(fn +
+                            "_real.json")),
                         InitGameParameters.class);
-                    nps[i] = Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(fn + "_real_next.json"))
-                            , NextRoundParameters.class);
+                    nps[i] = Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(fn +
+                            "_real_next.json"))
+                        , NextRoundParameters.class);
                 }
                 model = new RunnerParameters(ips, nps, shuffleSailors);
             }
@@ -219,7 +219,8 @@ public class SimulatorModel
                         if (!(entType.isInstance(ent)))
                         {
                             logger.log(Level.SEVERE,
-                                "INVALID ENTITY TYPE FOR " + act + ", EXPECTED " + entType + " GOT " + ent.getClass());
+                                "INVALID ENTITY TYPE FOR " + act + ", EXPECTED " + entType + " " +
+                                    "GOT " + ent.getClass());
                             continue;
                         }
 
@@ -266,12 +267,15 @@ public class SimulatorModel
                     {
                         var mv = (MoveAction) act;
                         if (i == 0)
+                        {
                             sailorPositions.put(sail, sail.getPos());
+                        }
                         sail.moveRelative(mv.getDelta());
                         if (sail.getX() < 0 || sail.getX() >= ship.getDeck().getLength()
                             || sail.getY() < 0 || sail.getY() >= ship.getDeck().getWidth())
                         {
-                            logger.log(Level.SEVERE, "SAILOR " + sail.getId() + " MOVED OUTSIDE THE " +
+                            logger.log(Level.SEVERE, "SAILOR " + sail.getId() + " MOVED OUTSIDE " +
+                                "THE " +
                                 "DECK");
                         }
                     }
@@ -319,7 +323,9 @@ public class SimulatorModel
         for (int i = 0; i < cockpits.length; i++)
         {
             if (currentCheckpoints[i] >= getCheckpoints().length)
+            {
                 continue;
+            }
 
             var linSpeed = spdIncrement[i];
             Bateau ship = model.getShip(i);

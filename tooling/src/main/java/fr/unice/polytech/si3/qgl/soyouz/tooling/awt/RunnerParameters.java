@@ -33,14 +33,10 @@ public class RunnerParameters
     private final Wind wind;
     private final int minumumCrewSize;
     private final int maximumCrewSize;
-    private Position[] startingPositions;
     private final ShapedEntity[] seaEntities;
+    private Position[] startingPositions;
     private Marin[][] sailors;
     private InitGameParameters[] ip;
-    public int getShipCount()
-    {
-        return ships.length;
-    }
 
     @JsonCreator
     public RunnerParameters(
@@ -72,7 +68,7 @@ public class RunnerParameters
 
     public RunnerParameters(InitGameParameters pars, NextRoundParameters nps, boolean shuffle)
     {
-        this(new InitGameParameters[]{pars}, new NextRoundParameters[]{nps}, shuffle);
+        this(new InitGameParameters[] { pars }, new NextRoundParameters[] { nps }, shuffle);
     }
 
     public RunnerParameters(InitGameParameters[] pars, NextRoundParameters[] nps, boolean shuffle)
@@ -95,10 +91,16 @@ public class RunnerParameters
         else
         {
             ip = pars;
-            sailors = Arrays.stream(pars).map(InitGameParameters::getSailors).toArray(Marin[][]::new);
+            sailors =
+                Arrays.stream(pars).map(InitGameParameters::getSailors).toArray(Marin[][]::new);
         }
         seaEntities = nps[0].getVisibleEntities();
         wind = nps[0].getWind();
+    }
+
+    public int getShipCount()
+    {
+        return ships.length;
     }
 
     public Bateau getShip(int id)
@@ -183,7 +185,7 @@ public class RunnerParameters
 
             Stream.concat(Arrays.stream(seaEntities).filter(p -> p.getShell().anyMatch(
                 pt -> pt.sub(ships[id].getPosition()).norm() < (vigie ? 5000 : 1000)
-            )),
+                )),
                 otherShips).toArray(ShapedEntity[]::new)
         );
     }

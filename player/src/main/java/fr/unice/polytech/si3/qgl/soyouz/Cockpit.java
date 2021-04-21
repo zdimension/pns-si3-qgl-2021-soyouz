@@ -18,7 +18,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Control panel of the whole game. Here happens all the magic.
@@ -36,7 +37,9 @@ public class Cockpit implements ICockpit
         OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
         if (!Util.logLevelUpdated)
+        {
             Util.configureLoggerFormat();
+        }
 
         logger.getParent().addHandler(new ListLogHandler(logList));
     }
@@ -168,7 +171,7 @@ public class Cockpit implements ICockpit
 
     public CheckpointObjective getCurrentCheckpoint()
     {
-        return ((RegattaObjective)objective).getCurrentCheckpoint();
+        return ((RegattaObjective) objective).getCurrentCheckpoint();
     }
 
 }

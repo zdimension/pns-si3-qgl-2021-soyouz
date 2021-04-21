@@ -31,11 +31,6 @@ public class RegattaObjective implements RootObjective
     private SeaDataHelper seaDataHelper;
 
 
-    public CheckpointObjective getCurrentCheckpoint()
-    {
-        return currentCheckpoint;
-    }
-
     /**
      * Constructor.
      *
@@ -49,6 +44,11 @@ public class RegattaObjective implements RootObjective
         seaDataHelper = null;
         initialisationObjective = new InitSailorPositionObjective(ip.getShip(),
             new ArrayList<>(Arrays.asList(ip.getSailors())));
+    }
+
+    public CheckpointObjective getCurrentCheckpoint()
+    {
+        return currentCheckpoint;
     }
 
     /**
