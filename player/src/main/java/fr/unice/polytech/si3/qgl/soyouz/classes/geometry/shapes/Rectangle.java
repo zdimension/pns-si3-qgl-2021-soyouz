@@ -1,7 +1,9 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.BoundingBox;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 /**
  * Rectangle Shape.
@@ -22,7 +24,9 @@ public class Rectangle extends Polygon implements Shape
                      @JsonProperty("height") double height,
                      @JsonProperty("orientation") double orientation)
     {
-        super(orientation, getPoints(width, height));
+        super(orientation, getPoints(width / 2, height / 2), Pair.of(new BoundingBox(
+            -width / 2, width / 2, -height / 2, height / 2
+        ), Point2d.ZERO));
         this.width = width;
         this.height = height;
     }
@@ -31,10 +35,10 @@ public class Rectangle extends Polygon implements Shape
     {
         return new Point2d[]
             {
-                new Point2d(-height / 2, -width / 2),
-                new Point2d(height / 2, -width / 2),
-                new Point2d(height / 2, width / 2),
-                new Point2d(-height / 2, width / 2)
+                new Point2d(-height, -width),
+                new Point2d(height, -width),
+                new Point2d(height, width),
+                new Point2d(-height, width)
             };
     }
 
@@ -73,6 +77,6 @@ public class Rectangle extends Polygon implements Shape
     @Override
     protected Point2d[] getShellInternal(double shipSize)
     {
-        return getPoints(width + shipSize, height + shipSize);
+        return getPoints(width / 2 + shipSize, height / 2 + shipSize);
     }
 }

@@ -1,7 +1,9 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.BoundingBox;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ public class Polygon implements Shape
     private final Point2d[] vertices;
     private final Point2d center;
     private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
+    private final BoundingBox boundingBox;
 
     /**
      * Constructor.
@@ -27,10 +30,32 @@ public class Polygon implements Shape
     public Polygon(@JsonProperty("orientation") double orientation,
                    @JsonProperty("vertices") Point2d[] vertices)
     {
+        this(orientation, vertices, getPolygonBoundingBox(vertices));
+    }
+
+    public Polygon(double orientation, Point2d[] vertices, Pair<BoundingBox, Point2d> boundingBox)
+    {
         this.orientation = orientation;
         this.vertices = vertices;
-        this.center =
-            Arrays.stream(this.vertices).reduce(Point2d::add).get().mul(1d / vertices.length);
+        this.boundingBox = boundingBox.first;
+        this.center = boundingBox.second;
+    }
+
+    private static Pair<BoundingBox, Point2d> getPolygonBoundingBox(Point2d[] vertices)
+    {
+        var min = new Point2d(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        var max = new Point2d(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
+        var sum = new Point2d(0, 0);
+        for (Point2d vertex : vertices)
+        {
+            min = min.min(vertex);
+            max = max.max(vertex);
+            sum = sum.add(vertex);
+        }
+        return Pair.of(
+            new BoundingBox(min.x, max.x, min.y, max.y),
+            sum.mul(1d / vertices.length)
+        );
     }
 
     /**
@@ -43,17 +68,6 @@ public class Polygon implements Shape
     {
         return (b.x - a.x) * (p.y - a.y)
             - (p.x - a.x) * (b.y - a.y);
-    }
-
-    /**
-     * @param a start
-     * @param b end
-     * @param p point
-     * @return the side of the line segment [a;b] on which the point p lies
-     */
-    private static boolean side(Point2d a, Point2d b, Point2d p)
-    {
-        return distanceToLine(a, b, p) > 0;
     }
 
     /**
@@ -79,6 +93,11 @@ public class Polygon implements Shape
     @Override
     public boolean contains(Point2d p)
     {
+        if (!boundingBox.contains(p))
+        {
+            return false;
+        }
+
         // Copyright 2001, 2012, 2021 Dan Sunday
         // This code may be freely used and modified for any purpose
         // providing that this copyright notice is included with it.
@@ -132,13 +151,12 @@ public class Polygon implements Shape
 
     Point2d[] getShellInternal(double shipSize)
     {
-        var shell = vertices.clone();
+        var shell = new Point2d[vertices.length];
 
         for (int i = 0; i < shell.length; i++)
         {
-            var cur = shell[i];
-            var rad = cur.sub(center);
-            shell[i] = cur.add(Point2d.fromPolar(shipSize, rad.angle()));
+            shell[i] = vertices[i].add(Point2d.fromPolar(shipSize,
+                vertices[i].sub(center).angle()));
         }
 
         return shell;
@@ -158,14 +176,24 @@ public class Polygon implements Shape
     @Override
     public boolean linePassesThrough(Point2d a, Point2d b, double shipSize)
     {
+        if (a.x > boundingBox.maxX && b.x > boundingBox.maxX ||
+            a.x < boundingBox.minX && b.x < boundingBox.minX ||
+            a.y > boundingBox.maxY && b.y > boundingBox.maxY ||
+            a.y < boundingBox.minY && b.y < boundingBox.minY)
+        {
+            return false;
+        }
+
         var pts = getShellArray(shipSize);
 
-        for (int i = 0; i < pts.length; i++)
+        var j = vertices.length - 1;
+        for (int i = 0; i < pts.length; j = i++)
         {
             var cur = pts[i];
-            var nex = pts[(i + 1) % pts.length];
+            var nex = pts[j];
 
-            if (side(cur, a, b) != side(nex, a, b) && side(cur, nex, a) != side(cur, nex, b))
+            if (distanceToLine(cur, a, b) * distanceToLine(nex, a, b) < 0 &&
+                distanceToLine(cur, nex, a) * distanceToLine(cur, nex, b) < 0)
             {
                 return true;
             }

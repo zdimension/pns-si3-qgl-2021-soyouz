@@ -2,7 +2,7 @@
   <configuration default="false" name="bench w9" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="fr.unice.polytech.si3.qgl.soyouz.tooling.Application" />
     <module name="soyouz.tooling" />
-    <option name="PROGRAM_PARAMETERS" value="games\Week9.json" />
+    <option name="PROGRAM_PARAMETERS" value="games/Week9.json" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="fr.unice.polytech.si3.qgl.soyouz.tooling.awt.*" />

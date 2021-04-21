@@ -1,7 +1,9 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.BoundingBox;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 
 import java.util.stream.IntStream;
 
@@ -12,6 +14,8 @@ public class Circle extends Polygon implements Shape
 {
     private static final int VERTEX_COUNT = 16;
     private final double radius;
+    private final double radiusSquared;
+    private final double diameter;
 
     /**
      * Constructor.
@@ -20,8 +24,10 @@ public class Circle extends Polygon implements Shape
      */
     public Circle(@JsonProperty("radius") double radius)
     {
-        super(0, getPoints(radius));
+        super(0, getPoints(radius), Pair.of(new BoundingBox(-radius, radius, -radius, radius), Point2d.ZERO));
         this.radius = radius;
+        this.radiusSquared = radius * radius;
+        this.diameter = radius * 2;
     }
 
     private static Point2d[] getPoints(double radius)
@@ -47,13 +53,13 @@ public class Circle extends Polygon implements Shape
     @Override
     public boolean contains(Point2d pos)
     {
-        return pos.normSquared() <= Math.pow(radius, 2);
+        return pos.normSquared() <= radiusSquared;
     }
 
     @Override
     public double getMaxDiameter()
     {
-        return radius * 2;
+        return diameter;
     }
 
     @Override
@@ -81,10 +87,7 @@ public class Circle extends Polygon implements Shape
 
             double t2 = (-b + discriminant) / (2 * a);
 
-            if (t2 >= 0 && t2 <= 1)
-            {
-                return true;
-            }
+            return t2 >= 0 && t2 <= 1;
         }
 
         return false;

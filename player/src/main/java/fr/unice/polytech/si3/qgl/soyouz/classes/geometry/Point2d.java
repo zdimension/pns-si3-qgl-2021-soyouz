@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Point2d
 {
+    public static final Point2d ZERO = new Point2d(0, 0);
+
     public final double x;
     public final double y;
 
