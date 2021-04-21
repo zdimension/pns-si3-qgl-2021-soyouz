@@ -76,6 +76,8 @@ public class Point2d
 
     public Point2d rotate(double angle)
     {
+        if (angle == 0)
+            return this;
         var cos = Math.cos(angle);
         var sin = Math.sin(angle);
         return new Point2d(x * cos - y * sin, x * sin + y * cos);

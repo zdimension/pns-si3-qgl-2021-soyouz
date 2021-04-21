@@ -93,14 +93,25 @@ public class CheckpointObjective implements RootObjective
         return roundObjective.resolve();
     }
 
+    static class LinkedNode
+    {
+        final int value;
+        LinkedNode next;
+
+        public LinkedNode(int value)
+        {
+            this.value = value;
+        }
+    }
+
     private void traverseNode(ShapedEntity[] arr, List<Node> lines, double shipSize,
                               Position shipPosition)
     {
-        var stack = new LinkedList<Integer>();
-        stack.add(0); // premier nœud = position du bateau
-        while (!stack.isEmpty())
+        var stack = new LinkedNode(0); // premier nœud = position du bateau
+        var last = stack;
+        while (stack != null)
         {
-            var elem = stack.remove();
+            var elem = stack.value;
             var node = nodes.get(elem);
             outer:
             for (int i = 0; i < nodes.size(); i++)
@@ -140,9 +151,10 @@ public class CheckpointObjective implements RootObjective
 
                 if (lines.get(elem).addNeighbour(lines.get(i)))
                 {
-                    stack.add(i);
+                    last = (last.next = new LinkedNode(i));
                 }
             }
+            stack = stack.next;
         }
     }
 

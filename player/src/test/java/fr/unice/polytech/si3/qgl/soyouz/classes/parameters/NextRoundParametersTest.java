@@ -21,7 +21,7 @@ class NextRoundParametersTest
     {
         ShapedEntity[] ent = {
             new Reef(),
-            new Stream(),
+            new Stream(null, null, 0),
         };
         OnboardEntity[] onboardEntities = {
             new Rame(0, 0),

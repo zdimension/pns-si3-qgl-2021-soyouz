@@ -317,7 +317,7 @@ public class SimulatorModel
         Util.updateLogLevel(Level.CONFIG);
         Cockpit.defaultLogLevel = Level.CONFIG;
         var avg = total / N;
-        System.out.println("AVG = " + avg / 100.0 + "; TIMES = " + Arrays.toString(results));
+        System.out.println("AVG = " + avg / 1000.0 + "; TIMES = " + Arrays.toString(results));
         return Duration.ofMillis(avg);
     }
 
