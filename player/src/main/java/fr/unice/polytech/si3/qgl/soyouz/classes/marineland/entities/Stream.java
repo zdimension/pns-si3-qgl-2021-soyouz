@@ -24,4 +24,10 @@ public class Stream extends ShapedEntity implements Entity
     {
         return super.equals(obj) && obj instanceof Stream && ((Stream) obj).strength == strength;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
+    }
 }

@@ -137,24 +137,8 @@ public class Polygon implements Shape
         for (int i = 0; i < shell.length; i++)
         {
             var cur = shell[i];
-            if (false)
-            {
-                var ni = (i + 1) % shell.length;
-                var nex = shell[ni];
-                var dta = nex.sub(cur);
-                var change = Point2d.fromPolar(shipSize, dta.angle()).ortho();
-                if (cur.sub(change).normSquared() < cur.normSquared())
-                {
-                    change = change.mul(-1);
-                }
-                shell[i] = cur.sub(change);
-                shell[ni] = nex.sub(change);
-            }
-            else
-            {
-                var rad = cur.sub(center);
-                shell[i] = cur.add(Point2d.fromPolar(shipSize, rad.angle()));
-            }
+            var rad = cur.sub(center);
+            shell[i] = cur.add(Point2d.fromPolar(shipSize, rad.angle()));
         }
 
         return shell;

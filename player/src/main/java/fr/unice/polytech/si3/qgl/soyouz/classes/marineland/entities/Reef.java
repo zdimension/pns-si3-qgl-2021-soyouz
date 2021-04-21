@@ -7,4 +7,10 @@ public class Reef extends ShapedEntity implements Entity, Collidable
     {
         return super.equals(obj) && obj instanceof Reef;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
+    }
 }

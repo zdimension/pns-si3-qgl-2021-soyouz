@@ -98,10 +98,17 @@ public abstract class ShapedEntity
             pos -> shape.getShell(80).map(this::toGlobal).toArray(Point2d[]::new)));
     }
 
+    @Override
     public boolean equals(Object obj)
     {
         return obj instanceof ShapedEntity
             && Objects.equals(((ShapedEntity) obj).position, position)
             && Objects.equals(((ShapedEntity) obj).shape, shape);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
     }
 }

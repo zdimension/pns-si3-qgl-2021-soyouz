@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
@@ -17,9 +18,13 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoard
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.SeaDataHelper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CheckpointObjectiveTest
 {
@@ -55,7 +60,7 @@ class CheckpointObjectiveTest
         gs = new GameState(null, new NextRoundParameters(ship, new Wind(1, 100), entt));
     }
 
- /*   @Test
+    @Test
     void isValidated()
     {
         assertFalse(co.isValidated(gs));
@@ -79,11 +84,4 @@ class CheckpointObjectiveTest
         assertEquals(1, liftAct);
         assertEquals(0, lowerAct);
     }
-
-    @Test
-    void update()
-    {
-        //Not really meaning full to test + already tested in Regatta Objective Test
-        //co.update(gs);
-    }*/
 }

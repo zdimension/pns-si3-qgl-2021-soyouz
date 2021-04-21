@@ -33,6 +33,7 @@ public class Position extends Point2d
      *
      * @return the abscissa of the central Point.
      */
+    @Override
     public double getX()
     {
         return x;
@@ -43,6 +44,7 @@ public class Position extends Point2d
      *
      * @return the ordinate of the central Point.
      */
+    @Override
     public double getY()
     {
         return y;
@@ -116,6 +118,7 @@ public class Position extends Point2d
      * @param d factor
      * @return the scaled position
      */
+    @Override
     public Position mul(double d)
     {
         return new Position(this.x * d, this.y * d, this.orientation * d);
