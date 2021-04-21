@@ -1,7 +1,10 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.GameGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
@@ -12,54 +15,95 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class RunnerParameters
 {
     private static final Random RNG = new Random();
-    private GameGoal goal;
-    private Bateau ship;
-    private Wind wind;
-    private int minumumCrewSize;
-    private int maximumCrewSize;
+    private final GameGoal goal;
+    private final Bateau[] ships;
+    private final Wind wind;
+    private final int minumumCrewSize;
+    private final int maximumCrewSize;
     private Position[] startingPositions;
-    private ShapedEntity[] seaEntities;
-    private Marin[] sailors;
-    private int maxRound;
-    private InitGameParameters ip;
-
-    public RunnerParameters()
+    private final ShapedEntity[] seaEntities;
+    private Marin[][] sailors;
+    private InitGameParameters[] ip;
+    public int getShipCount()
     {
+        return ships.length;
+    }
 
+    @JsonCreator
+    public RunnerParameters(
+        @JsonProperty("goal") GameGoal goal,
+        @JsonProperty("wind") Wind wind,
+        @JsonProperty("minumumCrewSize") int minumumCrewSize,
+        @JsonProperty("maximumCrewSize") int maximumCrewSize,
+        @JsonProperty("startingPositions") Position[] startingPositions,
+        @JsonProperty("seaEntities") ShapedEntity[] seaEntities,
+        @JsonProperty("maxRound") int maxRound,
+        @JsonProperty("ship") Bateau ship) throws JsonProcessingException
+    {
+        this.ships = new Bateau[startingPositions.length];
+        for (int i = 0; i < this.ships.length; i++)
+        {
+            this.ships[i] = Application.OBJECT_MAPPER.readValue(
+                Application.OBJECT_MAPPER.writeValueAsString(ship), Bateau.class
+            );
+        }
+        this.goal = goal;
+        this.wind = wind;
+        this.minumumCrewSize = minumumCrewSize;
+        this.maximumCrewSize = maximumCrewSize;
+        this.startingPositions = startingPositions;
+        this.seaEntities = seaEntities;
+        this.ip = new InitGameParameters[startingPositions.length];
+        this.sailors = new Marin[startingPositions.length][];
     }
 
     public RunnerParameters(InitGameParameters pars, NextRoundParameters nps, boolean shuffle)
     {
-        maximumCrewSize = minumumCrewSize = pars.getSailors().length;
-        goal = pars.getGoal();
-        ship = pars.getShip();
+        this(new InitGameParameters[]{pars}, new NextRoundParameters[]{nps}, shuffle);
+    }
+
+    public RunnerParameters(InitGameParameters[] pars, NextRoundParameters[] nps, boolean shuffle)
+    {
+        maximumCrewSize = minumumCrewSize = pars[0].getSailors().length;
+        goal = pars[0].getGoal();
+        ships = Arrays.stream(pars).map(InitGameParameters::getShip).toArray(Bateau[]::new);
         if (shuffle)
         {
-            startingPositions = new Position[] { ship.getPosition() };
-            getIp(false);
+            startingPositions = Arrays.stream(pars)
+                .map(InitGameParameters::getShip)
+                .map(ShapedEntity::getPosition).toArray(Position[]::new);
+            for (int i = 0; i < pars.length; i++)
+            {
+                getIp(i, false);
+            }
+            sailors = new Marin[pars.length][];
+            ip = new InitGameParameters[pars.length];
         }
         else
         {
             ip = pars;
-            sailors = pars.getSailors();
+            sailors = Arrays.stream(pars).map(InitGameParameters::getSailors).toArray(Marin[][]::new);
         }
-        seaEntities = nps.getVisibleEntities();
-        wind = nps.getWind();
+        seaEntities = nps[0].getVisibleEntities();
+        wind = nps[0].getWind();
     }
 
-    public Bateau getShip()
+    public Bateau getShip(int id)
     {
-        return ship;
+        return ships[id];
     }
 
     public GameGoal getGoal()
@@ -67,40 +111,10 @@ public class RunnerParameters
         return goal;
     }
 
-    public Wind getWind()
-    {
-        return wind;
-    }
-
-    public int getMinumumCrewSize()
-    {
-        return minumumCrewSize;
-    }
-
-    public int getMaximumCrewSize()
-    {
-        return maximumCrewSize;
-    }
-
-    public Position[] getStartingPositions()
-    {
-        return startingPositions;
-    }
-
-    public ShapedEntity[] getSeaEntities()
-    {
-        return seaEntities;
-    }
-
-    public int getMaxRound()
-    {
-        return maxRound;
-    }
-
     @JsonIgnore
-    public Marin[] getSailors()
+    public Marin[] getSailors(int id)
     {
-        if (sailors == null)
+        if (sailors[id] == null)
         {
             var sailCount = RNG.nextInt(maximumCrewSize - minumumCrewSize + 1) + minumumCrewSize;
 
@@ -112,8 +126,8 @@ public class RunnerParameters
                 do
                 {
                     pos = new PosOnShip(
-                        RNG.nextInt(ship.getDeck().getLength()),
-                        RNG.nextInt(ship.getDeck().getWidth())
+                        RNG.nextInt(ships[id].getDeck().getLength()),
+                        RNG.nextInt(ships[id].getDeck().getWidth())
                     );
                 }
                 while (sails.contains(pos));
@@ -122,22 +136,23 @@ public class RunnerParameters
                 res[i] = sailor;
             }
 
-            sailors = res;
+            sailors[id] = res;
         }
 
-        return this.sailors;
+        return this.sailors[id];
     }
 
     @JsonIgnore
-    public InitGameParameters getIp(boolean cloneSailors)
+    public InitGameParameters getIp(int id, boolean cloneSailors)
     {
-        if (ip == null)
+        var ship = ships[id];
+        if (ip[id] == null)
         {
-            ship.setPosition(startingPositions[0]); // TODO
+            ship.setPosition(startingPositions[id]); // TODO
             ship.setShape(new Rectangle(ship.getDeck().getWidth(), ship.getDeck().getLength(),
                 ship.getPosition().getOrientation()));
 
-            ip = new InitGameParameters(goal, ship, getSailors());
+            ip[id] = new InitGameParameters(goal, ship, getSailors(id));
         }
 
         if (cloneSailors)
@@ -145,30 +160,46 @@ public class RunnerParameters
             return new InitGameParameters(
                 goal,
                 ship,
-                Arrays.stream(ip.getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(),
+                Arrays.stream(ip[id].getSailors()).map(o -> new Marin(o.getId(), o.getX(), o.getY(),
                     o.getName())).toArray(Marin[]::new)
             );
         }
         else
         {
-            return ip;
+            return ip[id];
         }
     }
 
     @JsonIgnore
-    public NextRoundParameters getNp(boolean vigie)
+    public NextRoundParameters getNp(int id, boolean vigie)
     {
+        var otherShips = IntStream.concat(
+            IntStream.range(0, id),
+            IntStream.range(id + 1, getShipCount())
+        ).mapToObj(i -> ships[i]);
         return new NextRoundParameters(
-            ship,
+            ships[id],
             wind,
-            Arrays.stream(seaEntities).filter(p -> p.getShell().anyMatch(
-                pt -> pt.sub(ship.getPosition()).norm() < (vigie ? 5000 : 1000)
-            )).toArray(ShapedEntity[]::new)
+
+            Stream.concat(Arrays.stream(seaEntities).filter(p -> p.getShell().anyMatch(
+                pt -> pt.sub(ships[id].getPosition()).norm() < (vigie ? 5000 : 1000)
+            )),
+                otherShips).toArray(ShapedEntity[]::new)
         );
     }
 
-    public Optional<Marin> getSailorById(int id)
+    public Wind getWind()
     {
-        return ip.getSailorById(id);
+        return wind;
+    }
+
+    public Optional<Marin> getSailorById(int i, int id)
+    {
+        return ip[i].getSailorById(id);
+    }
+
+    public Bateau[] getShips()
+    {
+        return ships;
     }
 }

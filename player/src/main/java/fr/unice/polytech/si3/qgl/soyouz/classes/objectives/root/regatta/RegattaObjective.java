@@ -31,6 +31,11 @@ public class RegattaObjective implements RootObjective
     private SeaDataHelper seaDataHelper;
 
 
+    public CheckpointObjective getCurrentCheckpoint()
+    {
+        return currentCheckpoint;
+    }
+
     /**
      * Constructor.
      *

@@ -1,5 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.Simulator;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.SimulatorModel;
@@ -13,8 +16,13 @@ import java.util.logging.Level;
 public class Application
 {
 
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     public static void main(String[] args) throws IOException
     {
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
+
         Util.configureLoggerFormat();
 
         if (args.length == 1)
@@ -47,7 +55,7 @@ public class Application
         return Files.walk(Paths.get("games"))
             .filter(Files::isRegularFile)
             .map(Path::toString)
-            .filter(name -> name.contains("Week") && !name.contains("_next"))
+            .filter(name -> name.contains("Week") && !name.contains("_next") && (!name.contains("_multi_") || name.contains("_1_")))
             .sorted().toArray(String[]::new);
     }
 }

@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
@@ -18,16 +17,17 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,6 @@ import java.util.logging.Logger;
 public class SimulatorModel
 {
     private static final Logger logger = Logger.getLogger(SimulatorModel.class.getSimpleName());
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final java.util.List<Class<? extends GameAction>> ACTIONS_ORDER =
         java.util.List.of(
             MoveAction.class,
@@ -58,36 +57,53 @@ public class SimulatorModel
     private final int COMP_STEPS = 10;
     public int speed = 0;
     public int currentStep = 0;
-    public NextRoundParameters np;
-    public Cockpit cockpit;
+    public NextRoundParameters[] nps;
+    public Cockpit[] cockpits;
     public boolean playMode = false;
     public SimulatorListener listener = null;
     long nextRoundTime = -1;
-    private double rotIncrement;
-    private double spdIncrement;
+    private double[] rotIncrement;
+    private double[] spdIncrement;
     private RunnerParameters model;
-    private int currentCheckpoint;
-    private boolean vigie = false;
+    private int[] currentCheckpoints;
+    private boolean[] vigies;
     private boolean inGame = true;
     private String lastLoadedFile;
 
     public SimulatorModel()
     {
         usedEntities = new ArrayList<>();
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
     }
 
     public void loadFile(String filename, boolean shuffleSailors)
     {
         try
         {
-            if (filename.contains("_real"))
+            if (filename.contains("_multi_"))
+            {
+                var pref = filename.substring(0, filename.indexOf('_'));
+                var count = (int)Files.walk(Paths.get("games"))
+                    .map(Path::toString)
+                    .filter(name -> name.contains(pref + "_multi") && name.contains("_next"))
+                    .count();
+                var ips = new InitGameParameters[count];
+                var nps = new NextRoundParameters[count];
+                for (int i = 0; i < count; i++)
+                {
+                    var fn = pref + "_multi_" + (i + 1);
+                    ips[i] = Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(fn + "_real.json")),
+                        InitGameParameters.class);
+                    nps[i] = Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(fn + "_real_next.json"))
+                            , NextRoundParameters.class);
+                }
+                model = new RunnerParameters(ips, nps, shuffleSailors);
+            }
+            else if (filename.contains("_real"))
             {
                 model = new RunnerParameters(
-                    OBJECT_MAPPER.readValue(Files.readString(Path.of(filename)),
+                    Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(filename)),
                         InitGameParameters.class),
-                    OBJECT_MAPPER.readValue(Files.readString(Path.of(filename.replace("_real",
+                    Application.OBJECT_MAPPER.readValue(Files.readString(Path.of(filename.replace("_real",
                         "_real_next")))
                         , NextRoundParameters.class),
                     shuffleSailors
@@ -96,7 +112,7 @@ public class SimulatorModel
             else
             {
                 var ipt = Files.readString(Path.of(filename));
-                model = OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
+                model = Application.OBJECT_MAPPER.readValue(ipt, RunnerParameters.class);
             }
         }
         catch (IOException exc)
@@ -105,11 +121,18 @@ public class SimulatorModel
             return;
         }
 
-        np = null;
-        CheckpointObjective.graph = null;
-        currentCheckpoint = 0;
-        cockpit = new Cockpit();
-        cockpit.initGameInternal(model.getIp(true));
+        cockpits = new Cockpit[model.getShipCount()];
+        for (int i = 0; i < model.getShipCount(); i++)
+        {
+            cockpits[i] = new Cockpit();
+            cockpits[i].initGameInternal(model.getIp(i, true));
+        }
+        currentCheckpoints = new int[cockpits.length];
+        nps = new NextRoundParameters[cockpits.length];
+        vigies = new boolean[cockpits.length];
+        rotIncrement = new double[cockpits.length];
+        spdIncrement = new double[cockpits.length];
+
         usedEntities.clear();
         loadNextRound();
         sailorPositions.clear();
@@ -139,8 +162,11 @@ public class SimulatorModel
 
     private void loadNextRound()
     {
-        np = model.getNp(vigie);
-        vigie = false;
+        for (int i = 0; i < cockpits.length; i++)
+        {
+            nps[i] = model.getNp(i, vigies[i]);
+            vigies[i] = false;
+        }
         if (listener != null)
         {
             listener.npChanged();
@@ -154,110 +180,112 @@ public class SimulatorModel
             reset();
         }
 
-        sailorPositions.clear();
         loadNextRound();
 
-        var time = System.currentTimeMillis();
-        var res = cockpit.nextRoundInternal(np);
-        time = System.currentTimeMillis() - time;
-        nextRoundTime += time;
-        try
+        sailorPositions.clear();
+        for (int i = 0; i < cockpits.length; i++)
         {
-            logger.log(Level.CONFIG, OBJECT_MAPPER.writeValueAsString(res));
-        }
-        catch (JsonProcessingException e)
-        {
-            e.printStackTrace();
-        }
-        Arrays.sort(res, Comparator.comparingInt(act -> ACTIONS_ORDER.indexOf(act.getClass())));
+            Cockpit cockpit = cockpits[i];
 
-        logger.log(Level.CONFIG, "Next round took " + time + "ms");
-        var activeOars = new ArrayList<Rame>();
-        var rudderRotate = 0d;
-        for (GameAction act : res)
-        {
-            /*if (act.getSailor() == null)
+            var time = System.currentTimeMillis();
+            var res = cockpit.nextRoundInternal(nps[i]);
+            time = System.currentTimeMillis() - time;
+            nextRoundTime += time;
+            try
             {
-                System.out.println("SAILOR IS NULL!");
-                continue;
-            }*/
-            var sail = model.getSailorById(act.getSailorId()).get();
-            var entType = act.entityNeeded;
-            if (entType != null)
+                logger.log(Level.CONFIG, Application.OBJECT_MAPPER.writeValueAsString(res));
+            }
+            catch (JsonProcessingException e)
             {
-                var entOpt = model.getShip().getEntityHere(act.getSailor().getPos());
-                if (entOpt.isPresent())
+                e.printStackTrace();
+            }
+            Arrays.sort(res, Comparator.comparingInt(act -> ACTIONS_ORDER.indexOf(act.getClass())));
+
+            logger.log(Level.CONFIG, "Next round took " + time + "ms");
+            var activeOars = new ArrayList<Rame>();
+            var rudderRotate = 0d;
+            Bateau ship = model.getShip(i);
+            for (GameAction act : res)
+            {
+                var sail = model.getSailorById(i, act.getSailorId()).get();
+                var entType = act.entityNeeded;
+                if (entType != null)
                 {
-                    var ent = entOpt.get();
+                    var entOpt = ship.getEntityHere(act.getSailor().getPos());
+                    if (entOpt.isPresent())
+                    {
+                        var ent = entOpt.get();
 
-                    if (!(entType.isInstance(ent)))
-                    {
-                        logger.log(Level.SEVERE,
-                            "INVALID ENTITY TYPE FOR " + act + ", EXPECTED " + entType + " GOT " + ent.getClass());
-                        continue;
-                    }
+                        if (!(entType.isInstance(ent)))
+                        {
+                            logger.log(Level.SEVERE,
+                                "INVALID ENTITY TYPE FOR " + act + ", EXPECTED " + entType + " GOT " + ent.getClass());
+                            continue;
+                        }
 
-                    if (usedEntities.contains(ent))
-                    {
-                        logger.log(Level.SEVERE, "ENTITY ALREADY USED FOR ACTION " + act);
-                        continue;
-                    }
+                        if (i == 0)
+                        {
+                            if (usedEntities.contains(ent))
+                            {
+                                logger.log(Level.SEVERE, "ENTITY ALREADY USED FOR ACTION " + act);
+                                continue;
+                            }
 
-                    //System.out.println("Entity " + ent + " used by sailor " + act
-                    // .getSailorId());
+                            usedEntities.add(ent);
+                        }
 
-                    usedEntities.add(ent);
-
-                    if (act instanceof OarAction)
-                    {
-                        activeOars.add((Rame) ent);
+                        if (act instanceof OarAction)
+                        {
+                            activeOars.add((Rame) ent);
+                        }
+                        else if (act instanceof TurnAction)
+                        {
+                            rudderRotate = ((TurnAction) act).getRotation();
+                        }
+                        else if (act instanceof LiftSailAction)
+                        {
+                            ((Voile) ent).setOpenned(true);
+                        }
+                        else if (act instanceof LowerSailAction)
+                        {
+                            ((Voile) ent).setOpenned(false);
+                        }
+                        else if (act instanceof WatchAction)
+                        {
+                            vigies[i] = true;
+                        }
                     }
-                    else if (act instanceof TurnAction)
+                    else
                     {
-                        rudderRotate = ((TurnAction) act).getRotation();
-                    }
-                    else if (act instanceof LiftSailAction)
-                    {
-                        ((Voile) ent).setOpenned(true);
-                    }
-                    else if (act instanceof LowerSailAction)
-                    {
-                        ((Voile) ent).setOpenned(false);
-                    }
-                    else if (act instanceof WatchAction)
-                    {
-                        vigie = true;
+                        logger.log(Level.SEVERE, "ENTITY MISSING FOR ACTION " + act);
                     }
                 }
                 else
                 {
-                    logger.log(Level.SEVERE, "ENTITY MISSING FOR ACTION " + act);
-                }
-            }
-            else
-            {
-                if (act instanceof MoveAction)
-                {
-                    var mv = (MoveAction) act;
-                    sailorPositions.put(sail, sail.getPos());
-                    sail.moveRelative(mv.getDelta());
-                    if (sail.getX() < 0 || sail.getX() >= model.getShip().getDeck().getLength()
-                        || sail.getY() < 0 || sail.getY() >= model.getShip().getDeck().getWidth())
+                    if (act instanceof MoveAction)
                     {
-                        logger.log(Level.SEVERE, "SAILOR " + sail.getId() + " MOVED OUTSIDE THE " +
-                            "DECK");
+                        var mv = (MoveAction) act;
+                        if (i == 0)
+                            sailorPositions.put(sail, sail.getPos());
+                        sail.moveRelative(mv.getDelta());
+                        if (sail.getX() < 0 || sail.getX() >= ship.getDeck().getLength()
+                            || sail.getY() < 0 || sail.getY() >= ship.getDeck().getWidth())
+                        {
+                            logger.log(Level.SEVERE, "SAILOR " + sail.getId() + " MOVED OUTSIDE THE " +
+                                "DECK");
+                        }
                     }
                 }
             }
+            var noars = ship.getNumberOar();
+            var oarFactor = 165.0 * activeOars.size() / noars;
+            var activeOarsLeft = activeOars.stream().filter(o -> o.getY() == 0).count();
+            var activeOarsRight = activeOars.size() - activeOarsLeft;
+            var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
+            var totalRot = oarRot + rudderRotate;
+            rotIncrement[i] = totalRot / COMP_STEPS;
+            spdIncrement[i] = oarFactor / COMP_STEPS;
         }
-        var noars = model.getShip().getNumberOar();
-        var oarFactor = 165.0 * activeOars.size() / noars;
-        var activeOarsLeft = activeOars.stream().filter(o -> o.getY() == 0).count();
-        var activeOarsRight = activeOars.size() - activeOarsLeft;
-        var oarRot = (activeOarsRight - activeOarsLeft) * Math.PI / noars;
-        var totalRot = oarRot + rudderRotate;
-        rotIncrement = totalRot / COMP_STEPS;
-        spdIncrement = oarFactor / COMP_STEPS;
     }
 
     public Duration runBenchmark(int N)
@@ -288,48 +316,60 @@ public class SimulatorModel
 
     public void processRound(ActionEvent ignored)
     {
-        var linSpeed = spdIncrement;
-        if (np.getWind() != null)
+        for (int i = 0; i < cockpits.length; i++)
         {
-            var sails = Util.filterType(Arrays.stream(np.getShip().getEntities()),
-                Voile.class);
-            var counts = new Object()
-            {
-                int open;
-                int total;
-            };
-            sails.forEach(voile ->
-            {
-                if (voile.isOpenned())
-                {
-                    counts.open++;
-                }
-                counts.total++;
-            });
-            if (counts.total > 0)
-            {
-                Wind wind = np.getWind();
-                linSpeed += ((double) counts.open / counts.total) * wind.getStrength() * Math.cos(wind.getOrientation() - np.getShip().getPosition().getOrientation()) / COMP_STEPS;
-            }
-        }
+            if (currentCheckpoints[i] >= getCheckpoints().length)
+                continue;
 
-        var cur = model.getShip().getPosition();
-        var linear = Point2d.fromPolar(linSpeed, cur.getOrientation());
-
-        for (ShapedEntity visibleEntity : np.getVisibleEntities())
-        {
-            if (visibleEntity instanceof Stream)
+            var linSpeed = spdIncrement[i];
+            Bateau ship = model.getShip(i);
+            if (model.getWind() != null)
             {
-                var str = (Stream) visibleEntity;
-                if (str.contains(model.getShip().getPosition()))
+                var sails = Util.filterType(Arrays.stream(ship.getEntities()),
+                    Voile.class);
+                var counts = new Object()
                 {
-                    linear = linear.add(str.getProjectedStrength().mul(1d / COMP_STEPS));
+                    int open;
+                    int total;
+                };
+                sails.forEach(voile ->
+                {
+                    if (voile.isOpenned())
+                    {
+                        counts.open++;
+                    }
+                    counts.total++;
+                });
+                if (counts.total > 0)
+                {
+                    Wind wind = model.getWind();
+                    linSpeed += ((double) counts.open / counts.total) * wind.getStrength() * Math.cos(wind.getOrientation() - ship.getPosition().getOrientation()) / COMP_STEPS;
                 }
             }
-        }
 
-        model.getShip().setPosition(cur.add(linear).add(0, 0, rotIncrement));
-        logger.log(Level.CONFIG, "Ship position : " + model.getShip().getPosition());
+            var cur = ship.getPosition();
+            var linear = Point2d.fromPolar(linSpeed, cur.getOrientation());
+
+            for (ShapedEntity visibleEntity : nps[i].getVisibleEntities())
+            {
+                if (visibleEntity instanceof Stream)
+                {
+                    var str = (Stream) visibleEntity;
+                    if (str.contains(ship.getPosition()))
+                    {
+                        linear = linear.add(str.getProjectedStrength().mul(1d / COMP_STEPS));
+                    }
+                }
+            }
+
+            ship.setPosition(cur.add(linear).add(0, 0, rotIncrement[i]));
+            logger.log(Level.CONFIG, "Ship position : " + ship.getPosition());
+
+            if (getCheckpoints()[currentCheckpoints[i]].contains(ship.getPosition()))
+            {
+                currentCheckpoints[i]++;
+            }
+        }
 
         if (listener != null)
         {
@@ -338,19 +378,15 @@ public class SimulatorModel
 
         if (++currentStep >= COMP_STEPS)
         {
-            if (getCheckpoints()[currentCheckpoint].contains(model.getShip().getPosition()))
+            if (Arrays.stream(currentCheckpoints).allMatch(cp -> cp >= getCheckpoints().length))
             {
-                currentCheckpoint++;
-                if (currentCheckpoint >= getCheckpoints().length)
+                if (listener != null)
                 {
-                    if (listener != null)
-                    {
-                        listener.gameFinished();
-                    }
-                    playMode = false;
-                    logger.log(Level.FINE, Duration.ofMillis(nextRoundTime).toString());
-                    inGame = false;
+                    listener.gameFinished();
                 }
+                playMode = false;
+                logger.log(Level.FINE, Duration.ofMillis(nextRoundTime).toString());
+                inGame = false;
             }
 
             usedEntities.clear();
@@ -373,7 +409,7 @@ public class SimulatorModel
 
     public Bateau getShip()
     {
-        return model.getShip();
+        return model.getShip(0);
     }
 
     public GameGoal getGoal()
@@ -383,11 +419,16 @@ public class SimulatorModel
 
     public Marin[] getSailors()
     {
-        return model.getSailors();
+        return model.getSailors(0);
     }
 
     public Wind getWind()
     {
-        return np.getWind();
+        return model.getWind();
+    }
+
+    public Bateau[] getShips()
+    {
+        return model.getShips();
     }
 }

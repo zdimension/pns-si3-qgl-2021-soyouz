@@ -93,7 +93,6 @@ public class Simulator extends JFrame
             @Override
             public void windowClosing(WindowEvent e)
             {
-                System.out.println(smodel.cockpit.getLogs());
                 dispose();
             }
         });

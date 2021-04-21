@@ -74,7 +74,7 @@ class SimulatorCanvas extends JPanel
         BasicStroke.JOIN_BEVEL);
     private final Stroke HISTORY = new BasicStroke(1, BasicStroke.CAP_BUTT,
         BasicStroke.JOIN_BEVEL);
-    private final List<Position> shipHistory = new ArrayList<>();
+    private LinkedList<Position>[] shipHistory;
     private final SimulatorModel model;
     private boolean drawPath = true;
     private boolean drawNodes = true;
@@ -179,7 +179,7 @@ class SimulatorCanvas extends JPanel
 
     private Collection<ShapedEntity> getVisibleShapes()
     {
-        return model.cockpit.entityMemory.values();
+        return model.cockpits[0].entityMemory.values();
     }
 
     private java.util.stream.Stream<Point2d> getEntitiesPositions()
@@ -286,12 +286,12 @@ class SimulatorCanvas extends JPanel
             }
         }
 
-        if (model.np != null)
+        if (model.nps[0] != null)
         {
-            for (ShapedEntity visibleEntity : getVisibleShapes())
-            {
-                drawEntity(g, visibleEntity);
-            }
+            getVisibleShapes()
+                .stream().sorted(Comparator.comparingInt(
+                obj -> obj instanceof Bateau ? 1 : -1
+            )).forEach(ent -> drawEntity(g, ent));
         }
 
         drawEntity(g, model.getShip());
@@ -302,9 +302,15 @@ class SimulatorCanvas extends JPanel
 
         drawShipHistory(g);
 
-        if (shipHistory.isEmpty() || !model.getShip().getPosition().equals(shipHistory.get(shipHistory.size() - 1)))
+        var ships = model.getShips();
+        for (int i = 0; i < ships.length; i++)
         {
-            shipHistory.add(model.getShip().getPosition());
+            var history = shipHistory[i];
+            var shipPos = ships[i].getPosition();
+            if (history.isEmpty() || !shipPos.equals(history.getLast()))
+            {
+                history.add(shipPos);
+            }
         }
 
         drawShipDeck(g, model.getShip(), model.getSailors());
@@ -328,7 +334,12 @@ class SimulatorCanvas extends JPanel
     {
         g = (Graphics2D) g.create();
 
-        var graph = CheckpointObjective.graph;
+        var cp = model.cockpits[0].getCurrentCheckpoint();
+        if (cp == null)
+        {
+            return;
+        }
+        var graph = cp.graph;
         if (graph == null)
         {
             return;
@@ -348,7 +359,7 @@ class SimulatorCanvas extends JPanel
         }
 
         g.setColor(Color.MAGENTA);
-        var path = CheckpointObjective.path;
+        var path = cp.path;
         for (int i = 0; i < path.size() - 1; i++)
         {
             var cur = mapToScreen(path.get(i).position);
@@ -358,7 +369,7 @@ class SimulatorCanvas extends JPanel
 
         if (drawNodes)
         {
-            var nodes = CheckpointObjective.nodes;
+            var nodes = cp.nodes;
             g.setColor(Color.BLACK);
             for (Point2d p : nodes)
             {
@@ -431,17 +442,22 @@ class SimulatorCanvas extends JPanel
     {
         g = (Graphics2D) g.create();
 
-        var x = new int[shipHistory.size()];
-        var y = new int[shipHistory.size()];
-        for (int i = 0; i < shipHistory.size(); i++)
-        {
-            var conv = mapToScreen(shipHistory.get(i));
-            x[i] = conv.x;
-            y[i] = conv.y;
-        }
         g.setStroke(HISTORY);
         g.setColor(Color.BLACK);
-        g.drawPolyline(x, y, x.length);
+
+        for (var history : shipHistory)
+        {
+            var x = new int[history.size()];
+            var y = new int[history.size()];
+            for (int i = 0; i < history.size(); i++)
+            {
+                var conv = mapToScreen(history.get(i));
+                x[i] = conv.x;
+                y[i] = conv.y;
+            }
+
+            g.drawPolyline(x, y, x.length);
+        }
     }
 
     private void drawShipVision(Graphics2D g, Bateau b)
@@ -603,7 +619,11 @@ class SimulatorCanvas extends JPanel
 
     public void clearHistory()
     {
-        shipHistory.clear();
+        shipHistory = new LinkedList[model.getShips().length];
+        for (int i = 0; i < shipHistory.length; i++)
+        {
+            shipHistory[i] = new LinkedList<>();
+        }
         repaint();
     }
 }

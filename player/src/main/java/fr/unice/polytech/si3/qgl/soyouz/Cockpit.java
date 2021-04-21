@@ -10,6 +10,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.AutreBateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.CheckpointObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
@@ -185,4 +186,8 @@ public class Cockpit implements ICockpit
         return new ArrayList<>(logList);
     }
 
+    public CheckpointObjective getCurrentCheckpoint()
+    {
+        return ((RegattaObjective)objective).getCurrentCheckpoint();
+    }
 }

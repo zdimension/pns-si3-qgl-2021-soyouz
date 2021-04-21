@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
@@ -90,6 +91,7 @@ public abstract class ShapedEntity
         return shape.contains(toLocal(pos));
     }
 
+    @JsonIgnore
     public java.util.stream.Stream<Point2d> getShell()
     {
         return Arrays.stream(shellCache.computeIfAbsent(position,
