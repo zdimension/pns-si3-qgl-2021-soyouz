@@ -181,7 +181,7 @@ public class SimulatorModel
                 System.out.println("SAILOR IS NULL!");
                 continue;
             }*/
-            var sail = model.getSailors()[act.getSailorId()];
+            var sail = model.getSailorById(act.getSailorId()).get();
             var entType = act.entityNeeded;
             if (entType != null)
             {

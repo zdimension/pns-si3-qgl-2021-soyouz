@@ -15,6 +15,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Random;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -164,5 +165,10 @@ public class RunnerParameters
                 pt -> pt.sub(ship.getPosition()).norm() < (vigie ? 5000 : 1000)
             )).toArray(ShapedEntity[]::new)
         );
+    }
+
+    public Optional<Marin> getSailorById(int id)
+    {
+        return ip.getSailorById(id);
     }
 }
