@@ -7,7 +7,10 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.Simulator;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.SimulatorModel;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,11 +34,19 @@ public class Application
             var model = new SimulatorModel();
             if (args[0].equals("test"))
             {
-                Util.updateLogLevel(Level.OFF);
-                for (String week : getWeeks())
+                try (var fw = new FileWriter("bench.csv", true);
+                     var bw = new BufferedWriter(fw);
+                     var writer = new PrintWriter(bw))
                 {
-                    model.loadFile(week, false);
-                    System.out.println("TESTING " + week + " = " + model.runBenchmark(1));
+                    Util.updateLogLevel(Level.OFF);
+                    for (String week : getWeeks())
+                    {
+                        model.loadFile(week, false);
+                        var bench = model.runBenchmark(1);
+                        System.out.println("TESTING " + week + " = " + bench);
+                        writer.append(String.valueOf(bench.toMillis() / 1000.0)).append(",");
+                    }
+                    writer.append('\n');
                 }
             }
             else

@@ -36,3 +36,4 @@ hs_err_pid*
 # MacOs files
 .DS_Store
 **/.DS_Store
+bench.csv
