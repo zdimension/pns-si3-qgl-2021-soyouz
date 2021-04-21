@@ -1,6 +1,10 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RowersConfigHelperTest
 {
@@ -24,21 +28,21 @@ class RowersConfigHelperTest
         notBalancedRight = new RowersConfigHelper(0, 500, 3, 1, 3, 8);
     }
 
- /*   @Test
+    @Test
     void findOptRowersConfiguration()
     {
-        assertEquals(Pair.of(1, 5), leftTurn.findOptRowersConfiguration().getSailorConfiguration());
+        assertEquals(Pair.of(0, 4), leftTurn.findOptRowersConfiguration().getSailorConfiguration());
         assertEquals(Pair.of(3, 3),
             straightForward.findOptRowersConfiguration().getSailorConfiguration());
         assertEquals(Pair.of(0, 1),
             smallLeft.findOptRowersConfiguration().getSailorConfiguration());
         assertEquals(Pair.of(1, 0),
             smallRight.findOptRowersConfiguration().getSailorConfiguration());
-        assertEquals(Pair.of(5, 1),
+        assertEquals(Pair.of(4, 0),
             rightTurn.findOptRowersConfiguration().getSailorConfiguration());
         assertEquals(Pair.of(3, 3),
             notBalancedLeft.findOptRowersConfiguration().getSailorConfiguration());
         assertEquals(Pair.of(3, 3),
             notBalancedRight.findOptRowersConfiguration().getSailorConfiguration());
-    }*/
+    }
 }

@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
@@ -10,13 +11,19 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.InitGameParameters;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegattaObjectiveTest
 {
@@ -39,7 +46,8 @@ class RegattaObjectiveTest
             new Rame(1, 0),
             new Rame(1, 2),
             new Voile(0, 1, false),
-            new Gouvernail(1, 1)
+            new Gouvernail(1, 1),
+            new Vigie(2, 0)
         };
         Bateau ship = new Bateau("Peqoq", new Deck(3, 4), ent);
         ship.setPosition(new Position(0, 0, 0));
@@ -50,6 +58,7 @@ class RegattaObjectiveTest
             new Marin(3, 1, 2, "d"),
             new Marin(4, 0, 1, "e"),
             new Marin(5, 1, 1, "f"),
+            new Marin(6, 2, 0, "g")
         };
         ip = new InitGameParameters(rg, ship, sailors);
     }
@@ -87,7 +96,7 @@ class RegattaObjectiveTest
         regattaObjective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
     }
 
-    void setupObjectiveOnLeft()
+    void setupObjectiveOnRight()
     {
         ShapedEntity[] ent = {};
         ip.getShip().setPosition(new Position(1000, -1000, -2));
@@ -96,7 +105,7 @@ class RegattaObjectiveTest
         regattaObjective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
     }
 
-    void setupObjectiveOnRight()
+    void setupObjectiveOnLeft()
     {
         ShapedEntity[] ent = {};
         ip.getShip().setPosition(new Position(1000, 1000, 2));
@@ -123,7 +132,7 @@ class RegattaObjectiveTest
         regattaObjective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
     }
 
-/*    @Test
+    @Test
     void resolveInitialisation()
     {
         InitGameParameters ip = setupInitObjective();
@@ -132,9 +141,7 @@ class RegattaObjectiveTest
         RegattaObjective rO = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
         ArrayList<GameAction> gameActions = new ArrayList<>(rO.resolve(gs));
         assertEquals(3, gameActions.size());
-        gameActions.forEach(act -> {
-            assertTrue(act instanceof MoveAction);
-        });
+        gameActions.forEach(act -> assertTrue(act instanceof MoveAction));
     }
 
     @Test
@@ -143,20 +150,14 @@ class RegattaObjectiveTest
         setupObjectiveInLine();
         Bateau ship = gameState.getIp().getShip();
         ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
-        assertEquals(6, gameActions.size());
-        List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction)
-        .collect(Collectors.toList());
-        List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction)
-        .collect(Collectors.toList());
-        List<GameAction> sailAction = gameActions.stream().filter(a -> a instanceof
-        LiftSailAction).collect(Collectors.toList());
-        assertEquals(4, oarAction.size());
-        assertEquals(1, rudderAction.size());
-        assertEquals(1, sailAction.size());
-        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size() - sailAction
-        .size());
-        List<Marin> sailorsOaring = oarAction.stream().map(GameAction::getSailor).collect
-        (Collectors.toList());
+        assertEquals(7, gameActions.size());
+        assertEquals(4, gameActions.stream().filter(a -> a instanceof OarAction).count());
+        assertEquals(1, gameActions.stream().filter(a -> a instanceof TurnAction).count());
+        assertEquals(1, gameActions.stream().filter(a -> a instanceof
+            LiftSailAction).count());
+        assertEquals(1, gameActions.stream().filter(a -> a instanceof WatchAction).count());
+        List<Marin> sailorsOaring = gameActions.stream().filter(a -> a instanceof OarAction)
+            .map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
         for (Marin sailor : sailorsOaring) {
@@ -166,38 +167,6 @@ class RegattaObjectiveTest
             oarUsedOnRight++;
         }
         assertEquals(2, oarUsedOnLeft);
-        assertEquals(2, oarUsedOnRight);
-    }
-
-    @Test
-    void resolveWhenCpOnLeft()
-    {
-        setupObjectiveOnLeft();
-        Bateau ship = gameState.getIp().getShip();
-        ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
-        assertEquals(4, gameActions.size());
-        List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction)
-        .collect(Collectors.toList());
-        List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction)
-        .collect(Collectors.toList());
-        List<GameAction> sailAction = gameActions.stream().filter(a -> a instanceof
-        LiftSailAction).collect(Collectors.toList());
-        assertEquals(2, oarAction.size());
-        assertEquals(1, rudderAction.size());
-        assertEquals(1, sailAction.size());
-        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size() - sailAction
-        .size());
-        List<Marin> sailorsOaring = oarAction.stream().map(GameAction::getSailor).collect
-        (Collectors.toList());
-        int oarUsedOnLeft = 0;
-        int oarUsedOnRight = 0;
-        for (Marin sailor : sailorsOaring) {
-            Optional<OnboardEntity> ent = ship.getEntityHere(sailor.getPos());
-            if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
-            if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
-            oarUsedOnRight++;
-        }
-        assertEquals(0, oarUsedOnLeft);
         assertEquals(2, oarUsedOnRight);
     }
 
@@ -208,29 +177,49 @@ class RegattaObjectiveTest
         Bateau ship = gameState.getIp().getShip();
         ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
         assertEquals(4, gameActions.size());
-        List<GameAction> oarAction = gameActions.stream().filter(a -> a instanceof OarAction)
-        .collect(Collectors.toList());
-        List<GameAction> rudderAction = gameActions.stream().filter(a -> a instanceof TurnAction)
-        .collect(Collectors.toList());
-        List<GameAction> sailAction = gameActions.stream().filter(a -> a instanceof
-        LiftSailAction).collect(Collectors.toList());
-        assertEquals(2, oarAction.size());
-        assertEquals(1, rudderAction.size());
-        assertEquals(1, sailAction.size());
-        assertEquals(0, gameActions.size() - oarAction.size() - rudderAction.size() - sailAction
-        .size());
-        List<Marin> sailorsOaring = oarAction.stream().map(GameAction::getSailor).collect
-        (Collectors.toList());
+        assertEquals(2, gameActions.stream().filter(a -> a instanceof OarAction).count());
+        assertEquals(1, gameActions.stream().filter(a -> a instanceof TurnAction).count());
+        assertEquals(0, gameActions.stream().filter(a -> a instanceof
+            LiftSailAction).count());
+        assertEquals(1, gameActions.stream().filter(a -> a instanceof WatchAction).count());
+        List<Marin> sailorsOaring = gameActions.stream().filter(a -> a instanceof OarAction)
+            .map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
         for (Marin sailor : sailorsOaring) {
             Optional<OnboardEntity> ent = ship.getEntityHere(sailor.getPos());
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
-            oarUsedOnRight++;
+                oarUsedOnRight++;
         }
         assertEquals(2, oarUsedOnLeft);
         assertEquals(0, oarUsedOnRight);
+    }
+
+    @Test
+    void resolveWhenCpOnLeft()
+    {
+        setupObjectiveOnLeft();
+        Bateau ship = gameState.getIp().getShip();
+        ArrayList<GameAction> gameActions = new ArrayList<>(regattaObjective.resolve(gameState));
+        assertEquals(4, gameActions.size());
+        assertEquals(2, gameActions.stream().filter(a -> a instanceof OarAction).count());
+        assertEquals(1, gameActions.stream().filter(a -> a instanceof TurnAction).count());
+        assertEquals(0, gameActions.stream().filter(a -> a instanceof
+            LiftSailAction).count());
+        assertEquals(1, gameActions.stream().filter(a -> a instanceof WatchAction).count());
+        List<Marin> sailorsOaring = gameActions.stream().filter(a -> a instanceof OarAction)
+            .map(GameAction::getSailor).collect(Collectors.toList());
+        int oarUsedOnLeft = 0;
+        int oarUsedOnRight = 0;
+        for (Marin sailor : sailorsOaring) {
+            Optional<OnboardEntity> ent = ship.getEntityHere(sailor.getPos());
+            if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
+            if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
+                oarUsedOnRight++;
+        }
+        assertEquals(0, oarUsedOnLeft);
+        assertEquals(2, oarUsedOnRight);
     }
 
     @Test
@@ -249,7 +238,6 @@ class RegattaObjectiveTest
         int numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(0, numCheckpoint);
         regattaObjective.resolve(gameState);
-        regattaObjective.update(gameState);
         numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(0, numCheckpoint);
     }
@@ -262,12 +250,12 @@ class RegattaObjectiveTest
         checkpointNumber.setAccessible(true);
         int numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(0, numCheckpoint);
-        regattaObjective.update(gameState);
+        regattaObjective.resolve(gameState);
         numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(1, numCheckpoint);
         setupSecondObjectiveOnBoat();
-        regattaObjective.update(gameState);
+        regattaObjective.resolve(gameState);
         numCheckpoint = checkpointNumber.getInt(regattaObjective);
         assertEquals(0, numCheckpoint);
-    }*/
+    }
 }

@@ -23,4 +23,10 @@ public class AutreBateau extends ShapedEntity implements Entity, Collidable
     {
         return super.equals(obj) && obj instanceof AutreBateau && ((AutreBateau) obj).life == life;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return super.hashCode();
+    }
 }
