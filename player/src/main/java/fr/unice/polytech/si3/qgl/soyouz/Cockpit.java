@@ -38,27 +38,7 @@ public class Cockpit implements ICockpit
         if (!Util.logLevelUpdated)
             Util.configureLoggerFormat();
 
-        var fmt = new SimpleFormatter();
-        logger.getParent().addHandler(new Handler()
-        {
-            @Override
-            public void publish(LogRecord record)
-            {
-                logList.add(fmt.format(record));
-            }
-
-            @Override
-            public void flush()
-            {
-                //Not necessary to implement but you know.. override..
-            }
-
-            @Override
-            public void close()
-            {
-                //Not necessary to implement but you know.. override..
-            }
-        });
+        logger.getParent().addHandler(new ListLogHandler(logList));
     }
 
     public final Map<String, ShapedEntity> entityMemory = new HashMap<>();
@@ -190,4 +170,5 @@ public class Cockpit implements ICockpit
     {
         return ((RegattaObjective)objective).getCurrentCheckpoint();
     }
+
 }

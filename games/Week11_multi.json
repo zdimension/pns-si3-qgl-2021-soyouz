@@ -3,145 +3,137 @@
         "mode": "REGATTA",
         "checkpoints": [
             {
+                "type": "checkpoint",
                 "position": {
                     "x": 4638.47203274215,
-                    "y": 2013.5135135135154,
-                    "orientation": 0.0
+                    "y": 2013.5135135135154
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 100.0
+                    "radius": 100
                 }
             },
             {
+                "type": "checkpoint",
                 "position": {
                     "x": 7203.27421555252,
-                    "y": 2013.513513513515,
-                    "orientation": 0.0
+                    "y": 2013.513513513515
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 100.0
+                    "radius": 100
                 }
             },
             {
+                "type": "checkpoint",
                 "position": {
                     "x": 1425.6480218281038,
-                    "y": 1689.1891891891892,
-                    "orientation": 0.0
+                    "y": 1689.1891891891892
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 100.0
+                    "radius": 100
                 }
             },
             {
+                "type": "checkpoint",
                 "position": {
                     "x": 4304.2291950886765,
-                    "y": 351.35135135135135,
-                    "orientation": 0.0
+                    "y": 351.35135135135135
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 100.0
+                    "radius": 100
                 }
             },
             {
+                "type": "checkpoint",
                 "position": {
                     "x": 1412.0054570259167,
-                    "y": 2581.0810810810794,
-                    "orientation": 0.0
+                    "y": 2581.0810810810794
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 100.0
+                    "radius": 100
                 }
             },
             {
+                "type": "checkpoint",
                 "position": {
                     "x": 4508.867667121416,
-                    "y": 4121.621621621623,
-                    "orientation": 0.0
+                    "y": 4121.621621621623
                 },
                 "shape": {
                     "type": "circle",
-                    "radius": 100.0
+                    "radius": 100
                 }
             }
         ]
     },
     "ship": {
-        "type": "ship",
-        "name": "onmkgl",
+        "name": "McBoatface",
         "deck": {
-            "width": 5,
-            "length": 9
+            "length": 9,
+            "width": 5
         },
         "entities": [
             {
+                "type": "oar",
                 "x": 1,
-                "y": 4,
-                "type": "oar"
+                "y": 4
             },
             {
+                "type": "oar",
                 "x": 3,
-                "y": 4,
-                "type": "oar"
+                "y": 4
             },
             {
+                "type": "oar",
                 "x": 5,
-                "y": 4,
-                "type": "oar"
+                "y": 4
             },
             {
+                "type": "oar",
                 "x": 7,
-                "y": 4,
-                "type": "oar"
+                "y": 4
             },
             {
+                "type": "oar",
                 "x": 1,
-                "y": 0,
-                "type": "oar"
+                "y": 0
             },
             {
+                "type": "oar",
                 "x": 3,
-                "y": 0,
-                "type": "oar"
+                "y": 0
             },
             {
+                "type": "oar",
                 "x": 5,
-                "y": 0,
-                "type": "oar"
+                "y": 0
             },
             {
+                "type": "oar",
                 "x": 7,
-                "y": 0,
-                "type": "oar"
+                "y": 0
             },
             {
+                "type": "watch",
                 "x": 1,
-                "y": 2,
-                "type": "watch"
+                "y": 2
             },
             {
+                "type": "rudder",
                 "x": 8,
-                "y": 2,
-                "type": "rudder"
+                "y": 2
             },
             {
-                "x": 5,
-                "y": 2,
                 "type": "sail",
-                "openned": false
+                "x": 5,
+                "y": 2
             }
         ],
-        "life": 2250,
-        "shape": {
-            "type": "rectangle",
-            "width": 5.0,
-            "height": 9.0,
-            "orientation": 0.0
-        }
+        "life": 2250
     },
     "wind": {
         "direction": 0,
@@ -149,118 +141,112 @@
     },
     "seaEntities": [
         {
-            "type": "reef",
-            "position": {
-                "x": 1903.137789904502,
-                "y": 3195.945945945951,
-                "orientation": 0.0
-            },
-            "shape": {
-                "type": "rectangle",
-                "width": 500.0,
-                "height": 1500.0,
-                "orientation": 0.0
-            }
-        },
-        {
-            "type": "reef",
-            "position": {
-                "x": 6377.899045020464,
-                "y": 3479.7297297297305,
-                "orientation": 0.0
-            },
-            "shape": {
-                "type": "circle",
-                "radius": 850.0
-            }
-        },
-        {
-            "type": "reef",
-            "position": {
-                "x": 5320.600272851309,
-                "y": 1986.4864864864885,
-                "orientation": 0.7853981633974483
-            },
-            "shape": {
-                "type": "rectangle",
-                "width": 500.0,
-                "height": 500.0,
-                "orientation": 0.0
-            }
-        },
-        {
-            "type": "stream",
             "position": {
                 "x": 3813.0968622100954,
                 "y": 3560.8108108108086,
                 "orientation": -2.1467549799530254
             },
+            "type": "stream",
             "shape": {
                 "type": "rectangle",
-                "width": 200.0,
-                "height": 1000.0,
-                "orientation": 0.0
+                "width": 200,
+                "height": 1000
             },
-            "strength": 10.0
+            "strength": 10
         },
         {
-            "type": "stream",
             "position": {
-                "x": 3874.488403819919,
-                "y": 2027.0270270270278,
-                "orientation": 0.0
+                "x": 1896.3165075034126,
+                "y": 1114.8648648648648,
+                "orientation": 0
             },
+            "type": "reef",
             "shape": {
                 "type": "rectangle",
-                "width": 300.0,
-                "height": 1000.0,
-                "orientation": 0.0
-            },
-            "strength": 10.0
+                "width": 500,
+                "height": "1500"
+            }
         },
         {
-            "type": "stream",
+            "position": {
+                "x": 6377.899045020464,
+                "y": 3479.7297297297305,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "circle",
+                "radius": "850"
+            }
+        },
+        {
             "position": {
                 "x": 6350.613915416099,
                 "y": 1655.4054054054059,
                 "orientation": 0.29670597283903605
             },
+            "type": "stream",
             "shape": {
                 "type": "rectangle",
-                "width": 200.0,
-                "height": 1000.0,
-                "orientation": 0.0
+                "width": 200,
+                "height": 1000
             },
-            "strength": 10.0
+            "strength": 10
         },
         {
-            "type": "reef",
             "position": {
-                "x": 1896.3165075034126,
-                "y": 1114.8648648648648,
-                "orientation": 0.0
+                "x": 5320.600272851309,
+                "y": 1986.4864864864885,
+                "orientation": 0.7853981633974483
             },
+            "type": "reef",
             "shape": {
                 "type": "rectangle",
-                "width": 500.0,
-                "height": 1500.0,
-                "orientation": 0.0
+                "width": 500,
+                "height": 500
             }
+        },
+        {
+            "position": {
+                "x": 1903.137789904502,
+                "y": 3195.945945945951,
+                "orientation": 0
+            },
+            "type": "reef",
+            "shape": {
+                "type": "rectangle",
+                "width": 500,
+                "height": "1500"
+            }
+        },
+        {
+            "position": {
+                "x": 3874.488403819919,
+                "y": 2027.0270270270278,
+                "orientation": 0
+            },
+            "type": "stream",
+            "shape": {
+                "type": "rectangle",
+                "width": "300",
+                "height": 1000
+            },
+            "strength": 10
         }
     ],
-    "maxRound": 460,
+    "maxRound": 500,
     "minumumCrewSize": 11,
     "maximumCrewSize": 11,
     "startingPositions": [
         {
             "x": 1903.1377899045021,
             "y": 2547.2972972972975,
-            "orientation": 0.0
+            "orientation": 0
         },
         {
             "x": 1903.1377899045021,
             "y": 1662.162162162162,
-            "orientation": 0.0
+            "orientation": 0
         }
     ]
 }
