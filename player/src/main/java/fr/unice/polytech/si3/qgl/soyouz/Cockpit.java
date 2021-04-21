@@ -30,17 +30,23 @@ public class Cockpit implements ICockpit
     private static final Queue<String> logList = new ConcurrentLinkedQueue<>();
     private static final Logger logger = Logger.getLogger(Cockpit.class.getSimpleName());
     private static final boolean ENABLE_TRACE = false;
+    public static Level defaultLogLevel = Level.CONFIG;
 
     static
     {
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
-        if (!Util.logLevelUpdated)
-        {
-            Util.configureLoggerFormat();
-        }
+        Util.configureLoggerFormat();
 
+        try
+        {
+            logger.getParent().removeHandler(logger.getParent().getHandlers()[0]);
+        }
+        catch(Exception e)
+        {
+            //
+        }
         logger.getParent().addHandler(new ListLogHandler(logList));
     }
 
@@ -73,7 +79,7 @@ public class Cockpit implements ICockpit
         trace();
         try
         {
-            Util.updateLogLevel(Level.CONFIG);
+            Util.updateLogLevel(defaultLogLevel);
             initGameInternal(OBJECT_MAPPER.readValue(game, InitGameParameters.class));
         }
         catch (Exception e)
@@ -89,7 +95,7 @@ public class Cockpit implements ICockpit
         try
         {
             this.ip = ip;
-            Util.updateLogLevel(Level.CONFIG);
+            Util.updateLogLevel(defaultLogLevel);
             if (ip.getGoal() instanceof RegattaGoal)
             {
                 objective = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);

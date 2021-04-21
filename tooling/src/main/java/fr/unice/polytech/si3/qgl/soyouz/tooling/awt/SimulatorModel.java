@@ -296,12 +296,13 @@ public class SimulatorModel
     {
         long total = 0;
         var results = new long[N];
-        logger.log(Level.FINE, "Starting benchmark for " + N + " games");
-        var current = LogManager.getLogManager().getLogger("").getLevel();
+        System.out.println("Starting benchmark for " + N + " games");
+        var old = Level.CONFIG;
         for (var i = 0; i < N; i++)
         {
-            reset();
+            Cockpit.defaultLogLevel = Level.OFF;
             Util.updateLogLevel(Level.OFF);
+            reset();
             playMode = true;
             computeRound();
             currentStep = 0;
@@ -311,11 +312,13 @@ public class SimulatorModel
             }
             results[i] = nextRoundTime;
             total += nextRoundTime;
+            System.out.println("End game " + (i + 1) + " - " + nextRoundTime / 1000.0);
         }
-        Util.updateLogLevel(current);
-        var avg = Duration.ofMillis(total / N);
-        logger.log(Level.INFO, "AVG = " + avg + "; TIMES = " + Arrays.toString(results));
-        return avg;
+        Util.updateLogLevel(Level.CONFIG);
+        Cockpit.defaultLogLevel = Level.CONFIG;
+        var avg = total / N;
+        System.out.println("AVG = " + avg / 100.0 + "; TIMES = " + Arrays.toString(results));
+        return Duration.ofMillis(avg);
     }
 
     public void processRound(ActionEvent ignored)

@@ -1,7 +1,10 @@
 package fr.unice.polytech.si3.qgl.soyouz;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
+
 import java.util.Queue;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
@@ -18,7 +21,11 @@ class ListLogHandler extends Handler
     @Override
     public void publish(LogRecord record)
     {
-        logList.add(fmt.format(record));
+        var str = fmt.format(record);
+        if (record.getLevel().intValue() < Util.currentLogLevel.intValue())
+            return;
+        System.out.print(str);
+        logList.add(str);
     }
 
     @Override

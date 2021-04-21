@@ -10,8 +10,6 @@ import java.util.stream.Stream;
 
 public final class Util
 {
-    public static boolean logLevelUpdated = false;
-
     private Util()
     {
     }
@@ -36,13 +34,15 @@ public final class Util
         return str.sorted(Comparator.comparing(OnboardEntity::getX));
     }
 
+    public static Level currentLogLevel;
+
     /**
      * Update the log level.
      */
     public static void updateLogLevel(Level logLevel)
     {
-        logLevelUpdated = true;
         var root = LogManager.getLogManager().getLogger("");
+        currentLogLevel = logLevel;
         root.setLevel(logLevel);
         Arrays.stream(root.getHandlers()).forEach(h -> h.setLevel(logLevel));
     }
