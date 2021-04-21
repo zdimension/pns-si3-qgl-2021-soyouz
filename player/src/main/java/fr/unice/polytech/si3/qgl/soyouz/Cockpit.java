@@ -7,6 +7,7 @@ import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.AutreBateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.RootObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.root.regatta.RegattaObjective;
@@ -146,8 +147,9 @@ public class Cockpit implements ICockpit
         trace();
         try
         {
-            logger.info("Next round input: " + np);
+            logger.info("Next round input: " + OBJECT_MAPPER.writeValueAsString(np));
             var added = 0;
+            entityMemory.entrySet().removeIf(pair -> pair.getValue() instanceof AutreBateau);
             for (ShapedEntity ent : np.getVisibleEntities())
             {
                 var json = OBJECT_MAPPER.writeValueAsString(ent);
