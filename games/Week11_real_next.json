@@ -1,0 +1,185 @@
+{
+    "ship": {
+        "type": "ship",
+        "position": {
+            "x": 1903.1377899045021,
+            "y": 2547.2972972972975,
+            "orientation": 0.0
+        },
+        "name": "onmkgl",
+        "deck": {
+            "width": 5,
+            "length": 9
+        },
+        "entities": [
+            {
+                "x": 1,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 5,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 7,
+                "y": 4,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 3,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 5,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 7,
+                "y": 0,
+                "type": "oar"
+            },
+            {
+                "x": 1,
+                "y": 2,
+                "type": "watch"
+            },
+            {
+                "x": 8,
+                "y": 2,
+                "type": "rudder"
+            },
+            {
+                "x": 5,
+                "y": 2,
+                "type": "sail",
+                "openned": false
+            }
+        ],
+        "life": 2250,
+        "shape": {
+            "type": "rectangle",
+            "width": 5.0,
+            "height": 9.0,
+            "orientation": 0.0
+        }
+    },
+    "visibleEntities": [
+        {
+            "type": "reef",
+            "position": {
+                "x": 1903.137789904502,
+                "y": 3195.945945945951,
+                "orientation": 0.0
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 500.0,
+                "height": 1500.0,
+                "orientation": 0.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 6377.899045020464,
+                "y": 3479.7297297297305,
+                "orientation": 0.0
+            },
+            "shape": {
+                "type": "circle",
+                "radius": 850.0
+            }
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 5320.600272851309,
+                "y": 1986.4864864864885,
+                "orientation": 0.7853981633974483
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 500.0,
+                "height": 500.0,
+                "orientation": 0.0
+            }
+        },
+        {
+            "type": "stream",
+            "position": {
+                "x": 3813.0968622100954,
+                "y": 3560.8108108108086,
+                "orientation": -2.1467549799530254
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 200.0,
+                "height": 1000.0,
+                "orientation": 0.0
+            },
+            "strength": 10.0
+        },
+        {
+            "type": "stream",
+            "position": {
+                "x": 3874.488403819919,
+                "y": 2027.0270270270278,
+                "orientation": 0.0
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 300.0,
+                "height": 1000.0,
+                "orientation": 0.0
+            },
+            "strength": 10.0
+        },
+        {
+            "type": "stream",
+            "position": {
+                "x": 6350.613915416099,
+                "y": 1655.4054054054059,
+                "orientation": 0.29670597283903605
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 200.0,
+                "height": 1000.0,
+                "orientation": 0.0
+            },
+            "strength": 10.0
+        },
+        {
+            "type": "reef",
+            "position": {
+                "x": 1896.3165075034126,
+                "y": 1114.8648648648648,
+                "orientation": 0.0
+            },
+            "shape": {
+                "type": "rectangle",
+                "width": 500.0,
+                "height": 1500.0,
+                "orientation": 0.0
+            }
+        }
+    ],
+    "wind": {
+        "orientation": 0.0,
+        "strength": 0.0
+    }
+}
