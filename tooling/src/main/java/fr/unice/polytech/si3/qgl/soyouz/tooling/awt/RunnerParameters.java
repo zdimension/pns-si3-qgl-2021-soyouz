@@ -35,8 +35,8 @@ public class RunnerParameters
     private final int maximumCrewSize;
     private final ShapedEntity[] seaEntities;
     private Position[] startingPositions;
-    private Marin[][] sailors;
-    private InitGameParameters[] ip;
+    private final Marin[][] sailors;
+    private final InitGameParameters[] ip;
 
     @JsonCreator
     public RunnerParameters(
@@ -81,12 +81,12 @@ public class RunnerParameters
             startingPositions = Arrays.stream(pars)
                 .map(InitGameParameters::getShip)
                 .map(ShapedEntity::getPosition).toArray(Position[]::new);
+            ip = new InitGameParameters[pars.length];
+            sailors = new Marin[pars.length][];
             for (int i = 0; i < pars.length; i++)
             {
                 getIp(i, false);
             }
-            sailors = new Marin[pars.length][];
-            ip = new InitGameParameters[pars.length];
         }
         else
         {

@@ -346,13 +346,12 @@ class SimulatorCanvas extends JPanel
         if (drawPath)
         {
             g.setColor(Color.ORANGE);
-            var lines = graph.getEdges();
 
-            for (Pair<Node, Node> line : lines)
+            for (Pair<Node, Node> line : graph.getEdges())
             {
-                var sa = mapToScreen(line.first.position);
-                var sb = mapToScreen(line.second.position);
-                g.drawLine(sa.x, sa.y, sb.x, sb.y);
+                drawLine(g,
+                    mapToScreen(line.first.position),
+                    mapToScreen(line.second.position));
             }
         }
 
@@ -360,20 +359,24 @@ class SimulatorCanvas extends JPanel
         var path = cp.path;
         for (int i = 0; i < path.size() - 1; i++)
         {
-            var cur = mapToScreen(path.get(i).position);
-            var nex = mapToScreen(path.get(i + 1).position);
-            g.drawLine(cur.x, cur.y, nex.x, nex.y);
+            drawLine(g,
+                mapToScreen(path.get(i).position),
+                mapToScreen(path.get(i + 1).position));
         }
 
         if (drawNodes)
         {
-            var nodes = cp.nodes;
             g.setColor(Color.BLACK);
-            for (Point2d p : nodes)
+            for (Point2d p : cp.nodes)
             {
                 drawShape(g, new Circle(mapToWorld(3)), p.toPosition(), false);
             }
         }
+    }
+
+    private void drawLine(Graphics2D g, Point a, Point b)
+    {
+        g.drawLine(a.x, a.y, b.x, b.y);
     }
 
     private void drawLegendText(Graphics2D g)
@@ -400,9 +403,8 @@ class SimulatorCanvas extends JPanel
                         drawShape(g, shp.getShape(), shp.getPosition(), false);
                     }
                 }
-                var sps = mapToScreen(sp);
                 g.setColor(Color.BLACK);
-                g.drawLine(mouse.x, mouse.y, sps.x, sps.y);
+                drawLine(g, mouse, mapToScreen(sp));
             }
         }
 

@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class SimulatorModel
@@ -334,8 +333,7 @@ public class SimulatorModel
             Bateau ship = model.getShip(i);
             if (model.getWind() != null)
             {
-                var sails = Util.filterType(Arrays.stream(ship.getEntities()),
-                    Voile.class);
+                var sails = ship.getSails();
                 var counts = new Object()
                 {
                     int open;

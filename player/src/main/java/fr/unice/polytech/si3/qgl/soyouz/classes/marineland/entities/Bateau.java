@@ -97,7 +97,7 @@ public class Bateau extends AutreBateau
     @JsonIgnore
     public int getNumberSail()
     {
-        return (int) Util.filterType(Arrays.stream(getEntities()), Voile.class).count();
+        return (int) getSails().count();
     }
 
     /**
@@ -238,5 +238,10 @@ public class Bateau extends AutreBateau
         int result = Objects.hash(super.hashCode(), name, deck);
         result = 31 * result + Arrays.hashCode(entities);
         return result;
+    }
+
+    public java.util.stream.Stream<Voile> getSails()
+    {
+        return Util.filterType(Arrays.stream(getEntities()), Voile.class);
     }
 }

@@ -11,8 +11,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.Sailo
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
@@ -54,7 +54,7 @@ public class SailObjective implements OnBoardObjective
     private void setupSails(Bateau ship, int nbSailOpenedOpt)
     {
         trace();
-        var grouped = Util.filterType(Arrays.stream(ship.getEntities()), Voile.class)
+        var grouped = ship.getSails()
             .collect(Collectors.groupingBy(Voile::isOpenned));
         var openedSails = grouped.getOrDefault(true, new ArrayList<>());
         var closedSails = grouped.getOrDefault(false, new ArrayList<>());
@@ -129,18 +129,26 @@ public class SailObjective implements OnBoardObjective
         {
             return actions;
         }
-        sailsToOpen.forEach(sail ->
-            sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst().ifPresent(marin ->
-            {
-                actions.add(new LiftSailAction(marin));
-                sail.setOpenned(true);
-            }));
-        sailsToClose.forEach(sail ->
-            sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst().ifPresent(marin ->
-            {
-                actions.add(new LowerSailAction(marin));
-                sail.setOpenned(false);
-            }));
+        processSails(sailsToOpen, (sail, marin) ->
+        {
+            actions.add(new LiftSailAction(marin));
+            sail.setOpenned(true);
+        });
+        processSails(sailsToClose, (sail, marin) ->
+        {
+            actions.add(new LowerSailAction(marin));
+            sail.setOpenned(false);
+        });
         return actions;
+    }
+
+    private void processSails(List<Voile> voiles, BiConsumer<Voile, Marin> action)
+    {
+        voiles.forEach(sail ->
+            sailors.stream()
+                .filter(s -> s.getPos().equals(sail.getPos()))
+                .findFirst()
+                .ifPresent(marin -> action.accept(sail, marin))
+        );
     }
 }

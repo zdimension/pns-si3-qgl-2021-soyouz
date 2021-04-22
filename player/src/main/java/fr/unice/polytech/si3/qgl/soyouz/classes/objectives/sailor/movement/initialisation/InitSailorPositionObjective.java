@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.CompositeObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -19,14 +20,13 @@ import java.util.stream.IntStream;
 /**
  * Initialise all sailors position on their dedicated entity based on their X position on the boat.
  */
-public class InitSailorPositionObjective implements MovingObjective
+public class InitSailorPositionObjective extends CompositeObjective<MovingObjective> implements MovingObjective
 {
     private final List<Marin> sailors;
     private final List<LineOnBoat> linesOnBoat;
     private final LineOnBoat lineWithRudder;
     private final List<LineOnBoat> linesWithSails;
     private final LineOnBoat lineWithWatch;
-    private final List<MovingObjective> movingSailorsObjectives;
 
     /**
      * Constructor.
@@ -36,7 +36,6 @@ public class InitSailorPositionObjective implements MovingObjective
      */
     public InitSailorPositionObjective(Bateau ship, List<Marin> sailors)
     {
-        movingSailorsObjectives = new ArrayList<>();
         this.sailors = getAllSailorsSortedByXPos(sailors);
         linesOnBoat = setLinesOnBoat(ship);
         lineWithRudder = linesOnBoat.stream().filter(line -> line.getRudder() != null)
@@ -59,7 +58,7 @@ public class InitSailorPositionObjective implements MovingObjective
         {
             LineOnBoat lineWithNothing = linesOnBoat.stream()
                 .filter(line -> line.getOars().isEmpty()).collect(Collectors.toList()).get(0);
-            movingSailorsObjectives.add(new SailorXMovementObjective(sailors.get(0),
+            children.add(new SailorXMovementObjective(sailors.get(0),
                 lineWithNothing.getX()));
             sailors.remove(0);
         }
@@ -76,7 +75,7 @@ public class InitSailorPositionObjective implements MovingObjective
         generateMovingToWatchObjective(ship);
         generateMovingToRudderObjective();
         generateMovingToSailsObjective(determineHowManySailorsToSail(ship));
-        movingSailorsObjectives.add(new InitRowersPositionObjective(sailors, linesOnBoat));
+        children.add(new InitRowersPositionObjective(sailors, linesOnBoat));
     }
 
     /**
@@ -89,7 +88,7 @@ public class InitSailorPositionObjective implements MovingObjective
         if (lineWithWatch != null && ship.getEntities().length <= sailors.size())
         {
             Marin sailorCloseToWatch = findClosestSailorFromEntity(lineWithWatch.getWatch());
-            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToWatch,
+            children.add(new SailorMovementObjective(sailorCloseToWatch,
                 lineWithWatch.getWatch().getPos()));
             sailors.remove(sailorCloseToWatch);
         }
@@ -125,7 +124,7 @@ public class InitSailorPositionObjective implements MovingObjective
         if (lineWithRudder != null)
         {
             Marin sailorCloseToRudder = findClosestSailorFromEntity(lineWithRudder.getRudder());
-            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToRudder,
+            children.add(new SailorMovementObjective(sailorCloseToRudder,
                 lineWithRudder.getRudder().getPos()));
             sailors.remove(sailorCloseToRudder);
         }
@@ -178,7 +177,7 @@ public class InitSailorPositionObjective implements MovingObjective
             var sp = linesWithSails.get(i).getSail().getPos();
             sailors.stream().min(Comparator.comparingInt(
                 sailor -> sailor.getPos().dist(sp))).ifPresent(sailor -> {
-                movingSailorsObjectives.add(new SailorMovementObjective(sailor, sp));
+                children.add(new SailorMovementObjective(sailor, sp));
                 sailors.remove(sailor);
             });
         }
@@ -208,31 +207,6 @@ public class InitSailorPositionObjective implements MovingObjective
         return IntStream.range(0, ship.getDeck().getLength())
             .mapToObj(i -> new LineOnBoat(ship, i))
             .sorted()
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Determine if the goal is reached.
-     *
-     * @return true if this objective is validated
-     */
-    @Override
-    public boolean isValidated()
-    {
-        return movingSailorsObjectives.stream().allMatch(OnBoardObjective::isValidated);
-    }
-
-    /**
-     * Defines actions to perform. The state of the game is being updated too
-     *
-     * @return a list of all actions to send to JSON
-     */
-    @Override
-    public List<GameAction> resolve()
-    {
-        return movingSailorsObjectives.stream()
-            .filter(obj -> !obj.isValidated())
-            .flatMap(obj -> obj.resolve().stream())
             .collect(Collectors.toList());
     }
 }

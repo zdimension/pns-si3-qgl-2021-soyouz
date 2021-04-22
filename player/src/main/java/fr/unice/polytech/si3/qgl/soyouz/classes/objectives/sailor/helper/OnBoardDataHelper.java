@@ -6,10 +6,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +24,7 @@ public class OnBoardDataHelper
     private final List<Marin> rightImmutableRowers;
     private final List<Marin> sailSailors;
     private final Bateau ship;
+    private final List<Marin> sailors;
     private List<Marin> mutableRowers;
     private Marin rudderSailor;
     private Marin watchSailor;
@@ -49,12 +48,13 @@ public class OnBoardDataHelper
         watchSailor = null;
         oldWatchPosition = null;
         this.ship = ship;
-        setupRudderSailor(sailors);
-        setupWatchSailor(sailors);
-        setupSailSailor(sailors);
-        setupImmutableRowers(sailors);
-        setupUselessSailors(sailors);
-        mutableRowers = sailors;
+        this.sailors = sailors;
+        setupRudderSailor();
+        setupWatchSailor();
+        setupSailSailor();
+        setupImmutableRowers();
+        setupUselessSailors();
+        mutableRowers = new ArrayList<>(sailors);
     }
 
     /**
@@ -127,10 +127,8 @@ public class OnBoardDataHelper
 
     /**
      * Determine which sailors are in exceed on an empty line.
-     *
-     * @param sailors The list of remaining sailors.
      */
-    private void setupUselessSailors(List<Marin> sailors)
+    private void setupUselessSailors()
     {
         trace();
         sailors.removeIf(sailor -> new LineOnBoat(ship, sailor.getX()).getOars().isEmpty());
@@ -138,10 +136,8 @@ public class OnBoardDataHelper
 
     /**
      * Determine which sailor is attached to the Watch, if there is one.
-     *
-     * @param sailors The remaining sailors.
      */
-    private void setupWatchSailor(List<Marin> sailors)
+    private void setupWatchSailor()
     {
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Vigie.class);
@@ -149,9 +145,7 @@ public class OnBoardDataHelper
         {
             return;
         }
-        Optional<Marin> potentialWatcher = sailors.stream()
-            .filter(sailor -> sailor.getPos().equals(rudder.getPos()))
-            .findFirst();
+        Optional<Marin> potentialWatcher = findSailor(rudder.getPos());
         potentialWatcher.ifPresent(sailor ->
         {
             watchSailor = sailor;
@@ -159,13 +153,18 @@ public class OnBoardDataHelper
         });
     }
 
+    private Optional<Marin> findSailor(PosOnShip pos)
+    {
+        return sailors.stream()
+            .filter(sailor -> sailor.getPos().equals(pos))
+            .findFirst();
+    }
+
     /**
      * Determine which rowers won't be able to move, aka, two rowers on the same line or
      * alone on a single oar line.
-     *
-     * @param sailors The remaining sailors.
      */
-    private void setupImmutableRowers(List<Marin> sailors)
+    private void setupImmutableRowers()
     {
         trace();
         List<Marin> sailorOnOar = sailors.stream()
@@ -216,18 +215,14 @@ public class OnBoardDataHelper
 
     /**
      * Determine which sailor is attached to the rudder.
-     *
-     * @param sailors The remaining sailors.
      */
-    private void setupRudderSailor(List<Marin> sailors)
+    private void setupRudderSailor()
     {
         trace();
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         if (rudder != null)
         {
-            sailors.stream()
-                .filter(sailor -> sailor.getPos().equals(rudder.getPos()))
-                .findFirst().ifPresent(sailor -> {
+            findSailor(rudder.getPos()).ifPresent(sailor -> {
                     rudderSailor = sailor;
                     sailors.remove(sailor);
             });
@@ -236,16 +231,12 @@ public class OnBoardDataHelper
 
     /**
      * Determine which sailors are attached to sails.
-     *
-     * @param sailors The remaining sailors.
      */
-    private void setupSailSailor(List<Marin> sailors)
+    private void setupSailSailor()
     {
         trace();
-        Util.filterType(Arrays.stream(ship.getEntities()), Voile.class).forEach(ent ->
-            sailors.stream()
-                .filter(sailor -> sailor.getPos().equals(ent.getPos()))
-                .findFirst().ifPresent(sailSailors::add)
+        ship.getSails().forEach(ent ->
+            findSailor(ent.getPos()).ifPresent(sailSailors::add)
         );
         sailors.removeAll(sailSailors);
     }

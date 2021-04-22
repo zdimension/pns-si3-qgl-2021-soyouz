@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.init
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.CompositeObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
@@ -17,9 +18,8 @@ import java.util.stream.Collectors;
 /**
  * Initialise the position of every rowers on their dedicated line or oar.
  */
-public class InitRowersPositionObjective implements MovingObjective
+public class InitRowersPositionObjective extends CompositeObjective<MovingObjective> implements MovingObjective
 {
-    private final List<MovingObjective> sailorMoveObjectives;
     private final List<Marin> sailors;
     private final List<LineOnBoat> linesOnBoatWithOars;
     private final List<LineOnBoat> linesOnBoatWithOneOars;
@@ -31,8 +31,6 @@ public class InitRowersPositionObjective implements MovingObjective
      */
     public InitRowersPositionObjective(List<Marin> rowers, List<LineOnBoat> linesOnBoat)
     {
-        sailorMoveObjectives = new ArrayList<>();
-
         linesOnBoatWithOars = new ArrayList<>();
         linesOnBoatWithOneOars = new ArrayList<>();
         setLinesOnBoatWithOars(linesOnBoat);
@@ -72,7 +70,7 @@ public class InitRowersPositionObjective implements MovingObjective
             if (nbSailorPlaced >= sailors.size()) return;
             if (linesOnBoatWithOneOars.contains(line))
             {
-                sailorMoveObjectives.add(new SailorMovementObjective(
+                children.add(new SailorMovementObjective(
                     sailors.get(nbSailorPlaced), line.getOars().get(0).getPos()));
                 nbSailorPlaced++;
             }
@@ -88,7 +86,7 @@ public class InitRowersPositionObjective implements MovingObjective
                 }
                 else
                 {
-                    sailorMoveObjectives.add(new SailorXMovementObjective(
+                    children.add(new SailorXMovementObjective(
                         sailors.get(nbSailorPlaced), line.getX()));
                     nbSailorPlaced++;
                 }
@@ -111,32 +109,7 @@ public class InitRowersPositionObjective implements MovingObjective
         List<Rame> oars = line.getOars();
         Rame oarLeft = oars.get(0).getY() == 0 ? oars.get(0) : oars.get(1);
         Rame oarRight = oarLeft.equals(oars.get(0)) ? oars.get(1) : oars.get(0);
-        sailorMoveObjectives.add(new SailorMovementObjective(sailorLeft, oarLeft.getPos()));
-        sailorMoveObjectives.add(new SailorMovementObjective(sailorRight, oarRight.getPos()));
-    }
-
-    /**
-     * Determine if the goal is reached.
-     *
-     * @return true if this objective is validated
-     */
-    @Override
-    public boolean isValidated()
-    {
-        return sailorMoveObjectives.stream().allMatch(OnBoardObjective::isValidated);
-    }
-
-    /**
-     * Defines actions to perform. The state of the game is being updated too
-     *
-     * @return a list of all actions to send to JSON
-     */
-    @Override
-    public List<GameAction> resolve()
-    {
-        return sailorMoveObjectives.stream()
-            .filter(obj -> !obj.isValidated())
-            .flatMap(obj -> obj.resolve().stream())
-            .collect(Collectors.toList());
+        children.add(new SailorMovementObjective(sailorLeft, oarLeft.getPos()));
+        children.add(new SailorMovementObjective(sailorRight, oarRight.getPos()));
     }
 }
