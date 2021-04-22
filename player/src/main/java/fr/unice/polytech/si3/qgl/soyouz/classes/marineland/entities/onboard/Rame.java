@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Oar entity.
  */
-public class Rame extends OnboardEntity
+public class Rame extends DeckEntity
 {
     private final boolean isLeft;
 
@@ -52,5 +52,11 @@ public class Rame extends OnboardEntity
     public int hashCode()
     {
         return super.hashCode();
+    }
+
+    @Override
+    public char getChar()
+    {
+        return 'R';
     }
 }

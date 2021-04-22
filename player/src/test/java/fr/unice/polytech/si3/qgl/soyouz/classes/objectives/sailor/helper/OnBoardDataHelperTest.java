@@ -19,7 +19,7 @@ class OnBoardDataHelperTest
     @BeforeEach
     void setUp()
     {
-        OnboardEntity[] ent = {
+        DeckEntity[] ent = {
             new Rame(0, 0),
             new Rame(0, 2),
             new Rame(1, 0),

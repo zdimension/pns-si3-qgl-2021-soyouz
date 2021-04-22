@@ -5,7 +5,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.DeckEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class InitRowersPositionObjectiveTest
             new Marin(1, 4, 1, "Tym"),
         };
         List<Marin> rowers = new ArrayList<>(Arrays.asList(sailors));
-        OnboardEntity[] ent = {
+        DeckEntity[] ent = {
             new Rame(0, 2),
             new Rame(1, 0),
             new Rame(2, 0),
