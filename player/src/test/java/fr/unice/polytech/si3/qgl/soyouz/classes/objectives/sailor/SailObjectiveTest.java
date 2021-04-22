@@ -7,7 +7,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.DeckEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class SailObjectiveTest
     @BeforeEach
     void setUp()
     {
-        OnboardEntity[] entClose = {
+        DeckEntity[] entClose = {
             new Voile(0, 1, false),
             new Voile(1, 1, false)
         };
@@ -33,7 +33,7 @@ class SailObjectiveTest
         List<Marin> sailors1 = new ArrayList<>();
         sailors1.add(new Marin(0, 0, 0, "Tom"));
         sailors1.add(new Marin(1, 1, 0, "Tim"));
-        OnboardEntity[] entOpen = {
+        DeckEntity[] entOpen = {
             new Voile(0, 1, true),
             new Voile(1, 1, true)
         };

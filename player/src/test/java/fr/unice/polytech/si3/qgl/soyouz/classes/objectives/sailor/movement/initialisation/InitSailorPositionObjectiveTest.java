@@ -32,7 +32,7 @@ class InitSailorPositionObjectiveTest
             new Marin(1, 2, 0, "Tm"),
         };
         List<Marin> sailors = new ArrayList<>(Arrays.asList(sailor));
-        OnboardEntity[] ent = {
+        DeckEntity[] ent = {
             new Rame(0, 2),
             new Rame(1, 0),
             new Gouvernail(1, 2),

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Rudder entity.
  */
-public class Gouvernail extends OnboardEntity
+public class Gouvernail extends DeckEntity
 {
     public static final double ALLOWED_ROTATION = Math.PI / 4;
 
@@ -18,6 +18,12 @@ public class Gouvernail extends OnboardEntity
     public Gouvernail(@JsonProperty("x") int x, @JsonProperty("y") int y)
     {
         super(x, y);
+    }
+
+    @Override
+    public char getChar()
+    {
+        return 'G';
     }
 
     public static boolean isValid(double rotation)

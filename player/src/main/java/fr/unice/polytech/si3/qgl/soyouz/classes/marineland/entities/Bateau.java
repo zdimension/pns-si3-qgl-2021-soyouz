@@ -23,11 +23,11 @@ public class Bateau extends AutreBateau
 {
     private final String name;
     private final Deck deck;
-    private final OnboardEntity[] entities;
+    private final DeckEntity[] entities;
 
     Bateau(@JsonProperty("name") String name,
            @JsonProperty("deck") Deck deck,
-           @JsonProperty("entities") OnboardEntity[] entities,
+           @JsonProperty("entities") DeckEntity[] entities,
            @JsonProperty("type") String type)
     {
         this(name, deck, entities);
@@ -40,12 +40,12 @@ public class Bateau extends AutreBateau
      * @param deck     The deck of the boat.
      * @param entities The entities on board.
      */
-    public Bateau(String name, Deck deck, OnboardEntity[] entities)
+    public Bateau(String name, Deck deck, DeckEntity[] entities)
     {
         this.name = name;
         this.deck = deck;
         this.entities =
-            Arrays.stream(entities).filter(Objects::nonNull).toArray(OnboardEntity[]::new);
+            Arrays.stream(entities).filter(Objects::nonNull).toArray(DeckEntity[]::new);
     }
 
     /**
@@ -73,7 +73,7 @@ public class Bateau extends AutreBateau
      *
      * @return the Entities around the ship.
      */
-    public OnboardEntity[] getEntities()
+    public DeckEntity[] getEntities()
     {
         return entities.clone();
     }
@@ -120,7 +120,7 @@ public class Bateau extends AutreBateau
      * @param pos The coords we want to analyse.
      * @return optional entity on the given cell.
      */
-    public Optional<OnboardEntity> getEntityHere(PosOnShip pos)
+    public Optional<DeckEntity> getEntityHere(PosOnShip pos)
     {
         return Arrays.stream(entities).filter(ent -> ent.getPos().equals(pos)).findFirst();
     }
@@ -201,29 +201,9 @@ public class Bateau extends AutreBateau
             }
         }
 
-        for (OnboardEntity ent : entities)
+        for (DeckEntity ent : entities)
         {
-            if (ent instanceof Rame)
-            {
-                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'R';
-            }
-            else if (ent instanceof Gouvernail)
-            {
-                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'G';
-            }
-            else if (ent instanceof Voile)
-            {
-                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'L';
-            }
-            else if (ent instanceof Vigie)
-            {
-                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'V';
-            }
-            else
-            {
-                str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = 'E';
-            }
-            //Canon
+            str[ent.getX() * 2 + 2][ent.getY() * 2 + 1] = ent.getChar();
         }
 
         var strBateau = Arrays.stream(str).map(String::new).collect(Collectors.joining("\n"));

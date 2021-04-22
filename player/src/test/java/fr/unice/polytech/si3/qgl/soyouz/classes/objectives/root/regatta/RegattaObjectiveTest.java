@@ -40,7 +40,7 @@ class RegattaObjectiveTest
             new Checkpoint(new Position(2000, 0, 0), new Circle(50))
         };
         RegattaGoal rg = new RegattaGoal(cp);
-        OnboardEntity[] ent = {
+        DeckEntity[] ent = {
             new Rame(0, 0),
             new Rame(0, 2),
             new Rame(1, 0),
@@ -70,7 +70,7 @@ class RegattaObjectiveTest
             new Checkpoint(new Position(2000, 0, 0), new Circle(50))
         };
         RegattaGoal rg = new RegattaGoal(cp);
-        OnboardEntity[] ent = {
+        DeckEntity[] ent = {
             new Rame(0, 0),
             new Rame(0, 2),
             new Rame(1, 0),
@@ -161,7 +161,7 @@ class RegattaObjectiveTest
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
         for (Marin sailor : sailorsOaring) {
-            Optional<OnboardEntity> ent = ship.getEntityHere(sailor.getPos());
+            Optional<DeckEntity> ent = ship.getEntityHere(sailor.getPos());
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
             oarUsedOnRight++;
@@ -187,7 +187,7 @@ class RegattaObjectiveTest
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
         for (Marin sailor : sailorsOaring) {
-            Optional<OnboardEntity> ent = ship.getEntityHere(sailor.getPos());
+            Optional<DeckEntity> ent = ship.getEntityHere(sailor.getPos());
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
                 oarUsedOnRight++;
@@ -213,7 +213,7 @@ class RegattaObjectiveTest
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
         for (Marin sailor : sailorsOaring) {
-            Optional<OnboardEntity> ent = ship.getEntityHere(sailor.getPos());
+            Optional<DeckEntity> ent = ship.getEntityHere(sailor.getPos());
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
                 oarUsedOnRight++;

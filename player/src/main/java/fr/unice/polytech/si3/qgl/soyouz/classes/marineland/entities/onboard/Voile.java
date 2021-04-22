@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Sail entity.
  */
-public class Voile extends OnboardEntity
+public class Voile extends DeckEntity
 {
     private boolean openned = false;
 
@@ -63,5 +63,11 @@ public class Voile extends OnboardEntity
     public int hashCode()
     {
         return super.hashCode();
+    }
+
+    @Override
+    public char getChar()
+    {
+        return 0;
     }
 }
