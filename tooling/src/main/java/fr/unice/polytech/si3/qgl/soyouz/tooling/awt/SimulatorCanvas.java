@@ -606,7 +606,7 @@ class SimulatorCanvas extends JPanel
 
             gtr.fillPolygon(ap);
         }
-
+        
         if (showRot)
         {
             gtr.setStroke(SHAPE_CROSS);

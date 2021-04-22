@@ -25,7 +25,7 @@ public class Rectangle extends Polygon implements Shape
                      @JsonProperty("orientation") double orientation)
     {
         super(orientation, getPoints(width / 2, height / 2), Pair.of(new BoundingBox(
-            -width / 2, width / 2, -height / 2, height / 2
+            -height / 2, height / 2, -width / 2, width / 2
         ), Point2d.ZERO));
         this.width = width;
         this.height = height;
