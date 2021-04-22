@@ -4,7 +4,7 @@
     <module name="soyouz.tooling" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="fr.unice.polytech.si3.qgl.soyouz.tooling.awt.*" />
+        <option name="PATTERN" value="fr.unice.polytech.si3.qgl.soyouz.tooling.model.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

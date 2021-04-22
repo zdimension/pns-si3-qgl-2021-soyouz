@@ -12,6 +12,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

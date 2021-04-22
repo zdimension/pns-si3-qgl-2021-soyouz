@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
+package fr.unice.polytech.si3.qgl.soyouz.tooling.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
@@ -21,7 +21,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,7 +57,7 @@ public class SimulatorModel
     public Cockpit[] cockpits;
     public boolean playMode = false;
     public SimulatorListener listener = null;
-    long nextRoundTime = -1;
+    public long nextRoundTime = -1;
     private double[] rotIncrement;
     private double[] spdIncrement;
     private RunnerParameters model;
@@ -149,12 +148,12 @@ public class SimulatorModel
         return ((RegattaGoal) model.getGoal()).getCheckpoints();
     }
 
-    void reset(boolean shuffleSailors)
+    public void reset(boolean shuffleSailors)
     {
         loadFile(lastLoadedFile, shuffleSailors);
     }
 
-    void reset()
+    public void reset()
     {
         reset(false);
     }
@@ -172,7 +171,7 @@ public class SimulatorModel
         }
     }
 
-    void computeRound()
+    public void computeRound()
     {
         if (!inGame)
         {
@@ -307,7 +306,7 @@ public class SimulatorModel
             currentStep = 0;
             while (playMode)
             {
-                processRound(null);
+                processRound();
             }
             results[i] = nextRoundTime;
             total += nextRoundTime;
@@ -320,7 +319,7 @@ public class SimulatorModel
         return Duration.ofMillis(avg);
     }
 
-    public void processRound(ActionEvent ignored)
+    public void processRound()
     {
         for (int i = 0; i < cockpits.length; i++)
         {

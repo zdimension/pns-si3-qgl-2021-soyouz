@@ -1,6 +1,8 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorListener;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -97,7 +99,7 @@ public class Simulator extends JFrame
             }
         });
 
-        timer = new Timer(0, smodel::processRound);
+        timer = new Timer(0, e1 -> smodel.processRound());
 
         var btnCenter = new JButton("Center view");
         topcont.add(btnCenter);

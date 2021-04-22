@@ -1,6 +1,6 @@
-package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
+package fr.unice.polytech.si3.qgl.soyouz.tooling.model;
 
-interface SimulatorListener
+public interface SimulatorListener
 {
     void npChanged();
 

@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
+package fr.unice.polytech.si3.qgl.soyouz.tooling.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
