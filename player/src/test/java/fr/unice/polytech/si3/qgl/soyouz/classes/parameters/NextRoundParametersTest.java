@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.parameters;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
@@ -21,7 +22,7 @@ class NextRoundParametersTest
     {
         ShapedEntity[] ent = {
             new Reef(),
-            new Stream(null, null, 0),
+            new Stream(new Position(10, 10, 2), new Rectangle(30, 20, 1), 0),
         };
         OnboardEntity[] onboardEntities = {
             new Rame(0, 0),

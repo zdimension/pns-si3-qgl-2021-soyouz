@@ -130,21 +130,17 @@ public class SailObjective implements OnBoardObjective
             return actions;
         }
         sailsToOpen.forEach(sail ->
-        {
             sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst().ifPresent(marin ->
             {
                 actions.add(new LiftSailAction(marin));
                 sail.setOpenned(true);
-            });
-        });
+            }));
         sailsToClose.forEach(sail ->
-        {
             sailors.stream().filter(s -> s.getPos().equals(sail.getPos())).findFirst().ifPresent(marin ->
             {
                 actions.add(new LowerSailAction(marin));
                 sail.setOpenned(false);
-            });
-        });
+            }));
         return actions;
     }
 }

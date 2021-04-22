@@ -202,7 +202,7 @@ public class RowersConfigHelper
         trace();
         return turnPossibilities.stream().min(Comparator.comparingDouble(
             configuration -> Math.abs(neededRotation - configuration.getAngleOfRotation())
-        )).get();
+        )).orElse(null);
     }
 
     /**
@@ -214,9 +214,9 @@ public class RowersConfigHelper
     private OarConfiguration resolveBasedOnSpeed()
     {
         trace();
-        var minPair = forwardPossibilities.stream().map(
-            conf -> Pair.of(conf, distToCheckpoint - conf.getLinearSpeed())
-        ).min(Comparator.comparingDouble(pair -> Math.abs(pair.getSecond()))).get();
+        var minPair = forwardPossibilities.stream().map( //NOSONAR
+            conf -> Pair.of(conf, distToCheckpoint - conf.getLinearSpeed()) //NOSONAR
+        ).min(Comparator.comparingDouble(pair -> Math.abs(pair.getSecond()))).get(); //NOSONAR
         if (minPair.second < 0)
         {
             return neededRotation > 0 ?

@@ -47,7 +47,7 @@ class SailorObjectiveTest
         ship.setPosition(new Position(10, 20, 1));
         OnBoardDataHelper obdh = new OnBoardDataHelper(ship,
             new ArrayList<>(Arrays.asList(sailors)));
-        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1.8, 100), new ShapedEntity[0]);
+        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1.8, 100));
         so = new SailorObjective(obdh, sdh, 1000, 2);
     }
 

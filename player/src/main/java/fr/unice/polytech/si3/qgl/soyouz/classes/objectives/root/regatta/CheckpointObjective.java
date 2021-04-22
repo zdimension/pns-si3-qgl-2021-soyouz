@@ -20,7 +20,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Graph;
 import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -104,7 +103,7 @@ public class CheckpointObjective implements RootObjective
         }
     }
 
-    private void traverseNode(ShapedEntity[] arr, List<Node> lines, double shipSize,
+    private void traverseNode(ShapedEntity[] arr, List<Node> lines, double shipSize, //NOSONAR
                               Position shipPosition)
     {
         var stack = new LinkedNode(0); // premier nœud = position du bateau
@@ -113,7 +112,7 @@ public class CheckpointObjective implements RootObjective
         {
             var elem = stack.value;
             var node = nodes.get(elem);
-            outer:
+            outer: //NOSONAR
             for (int i = 0; i < nodes.size(); i++)
             {
                 if (i == elem)

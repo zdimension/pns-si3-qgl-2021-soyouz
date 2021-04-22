@@ -28,7 +28,7 @@ public class Bateau extends AutreBateau
     Bateau(@JsonProperty("name") String name,
            @JsonProperty("deck") Deck deck,
            @JsonProperty("entities") OnboardEntity[] entities,
-           @JsonProperty("type") String type)
+           @JsonProperty("type") String type) //NOSONAR
     {
         this(name, deck, entities);
     }
@@ -230,5 +230,33 @@ public class Bateau extends AutreBateau
         String info = name + " | life : " + getLife() + " Position : " + getPosition() + "\n";
 
         return info + strBateau;
+    }
+
+    /**
+     * Generic equals method override.
+     *
+     * @return true if equals, false otherwise.
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Bateau bateau = (Bateau) o;
+        return Objects.equals(name, bateau.name) && Objects.equals(deck, bateau.deck) && Arrays.equals(entities, bateau.entities);
+    }
+
+    /**
+     * Generic hash method override.
+     *
+     * @return the hashcode.
+     */
+    @Override
+    public int hashCode()
+    {
+        int result = Objects.hash(super.hashCode(), name, deck);
+        result = 31 * result + Arrays.hashCode(entities);
+        return result;
     }
 }

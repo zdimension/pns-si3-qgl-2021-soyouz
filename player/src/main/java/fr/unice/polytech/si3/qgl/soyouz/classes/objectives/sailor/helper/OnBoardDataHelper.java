@@ -225,10 +225,12 @@ public class OnBoardDataHelper
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         if (rudder != null)
         {
-            rudderSailor = sailors.stream()
+            sailors.stream()
                 .filter(sailor -> sailor.getPos().equals(rudder.getPos()))
-                .findFirst().get();
-            sailors.remove(rudderSailor);
+                .findFirst().ifPresent(sailor -> {
+                    rudderSailor = sailor;
+                    sailors.remove(sailor);
+            });
         }
     }
 

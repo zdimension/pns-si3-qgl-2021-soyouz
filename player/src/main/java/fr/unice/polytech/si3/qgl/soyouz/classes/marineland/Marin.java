@@ -50,7 +50,7 @@ public class Marin extends OnboardEntity
      *
      * @return the position of the sailor.
      */
-    @JsonIgnore
+    @JsonIgnore @Override
     public PosOnShip getPos()
     {
         return PosOnShip.of(getX(), getY());
@@ -70,10 +70,9 @@ public class Marin extends OnboardEntity
      * Moves this sailor the number of cells specified. This sailor can move up to 5 cells.
      *
      * @param pos to move.
-     * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public PosOnShip moveRelative(PosOnShip pos)
+    public void moveRelative(PosOnShip pos)
     {
         if (!isRelPosReachable(pos))
         {
@@ -81,17 +80,15 @@ public class Marin extends OnboardEntity
         }
         this.x += pos.getX();
         this.y += pos.getY();
-        return this.getPos();
     }
 
     /**
      * Moves this sailor at the specified cell. This sailor can move up to 5 cells.
      *
      * @param pos to reach.
-     * @return new absolute position.
      * @throws IllegalArgumentException if it wants to move further than 5 cells.
      */
-    public PosOnShip moveAbsolute(PosOnShip pos)
+    public void moveAbsolute(PosOnShip pos)
     {
         if (!this.isAbsPosReachable(pos))
         {
@@ -99,7 +96,6 @@ public class Marin extends OnboardEntity
         }
         this.x = pos.getX();
         this.y = pos.getY();
-        return this.getPos();
     }
 
     /**

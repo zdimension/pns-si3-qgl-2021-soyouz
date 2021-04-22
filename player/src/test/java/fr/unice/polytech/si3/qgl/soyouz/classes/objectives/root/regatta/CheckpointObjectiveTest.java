@@ -53,7 +53,7 @@ class CheckpointObjectiveTest
         ship.setPosition(new Position(10, 10, 1));
         OnBoardDataHelper obdh = new OnBoardDataHelper(ship,
             new ArrayList<>(Arrays.asList(sailors)));
-        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1, 100), new ShapedEntity[] {});
+        SeaDataHelper sdh = new SeaDataHelper(ship, new Wind(1, 100));
         co = new CheckpointObjective(new Checkpoint(new Position(10, 1000, 0), new Circle(50)),
             obdh, sdh);
         ShapedEntity[] entt = {};

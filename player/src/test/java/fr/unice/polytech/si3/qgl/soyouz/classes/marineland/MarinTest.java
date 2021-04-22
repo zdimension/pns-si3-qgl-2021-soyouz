@@ -98,7 +98,7 @@ class MarinTest
         sailor.moveRelative(PosOnShip.of(2, 1));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(PosOnShip.of(4, 4)));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(PosOnShip.of(4, 4))); //NOSONAR
     }
 
     @Test
@@ -107,7 +107,7 @@ class MarinTest
         sailor.moveRelative(PosOnShip.of(2, 1));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(PosOnShip.of(4, 4)));
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveRelative(PosOnShip.of(4, 4))); //NOSONAR
     }
 
     @Test
@@ -116,7 +116,7 @@ class MarinTest
         sailor.moveAbsolute(PosOnShip.of(5, 3));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17,
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17, //NOSONAR
             6)));
     }
 
@@ -126,7 +126,7 @@ class MarinTest
         sailor.moveAbsolute(PosOnShip.of(5, 3));
         assertEquals(5, sailor.getX());
         assertEquals(3, sailor.getY());
-        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17,
+        assertThrows(IllegalArgumentException.class, () -> sailor.moveAbsolute(PosOnShip.of(17, //NOSONAR
             6)));
     }
 

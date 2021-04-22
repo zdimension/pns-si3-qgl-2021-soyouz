@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
@@ -15,7 +14,6 @@ public class SeaDataHelper
 {
     private Bateau ship;
     private Wind wind;
-    private ShapedEntity[] visibleEntities;
     private Position lastWatchPos;
 
     /**
@@ -23,13 +21,11 @@ public class SeaDataHelper
      *
      * @param ship            The ship.
      * @param wind            The wind.
-     * @param visibleEntities all visible entities in the sea
      */
-    public SeaDataHelper(Bateau ship, Wind wind, ShapedEntity[] visibleEntities)
+    public SeaDataHelper(Bateau ship, Wind wind)
     {
         this.ship = ship;
         this.wind = wind;
-        this.visibleEntities = visibleEntities;
         lastWatchPos = ship.getPosition();
     }
 
@@ -43,7 +39,6 @@ public class SeaDataHelper
         trace();
         this.wind = state.getNp().getWind();
         this.ship = state.getNp().getShip();
-        this.visibleEntities = state.getNp().getVisibleEntities();
     }
 
     /**

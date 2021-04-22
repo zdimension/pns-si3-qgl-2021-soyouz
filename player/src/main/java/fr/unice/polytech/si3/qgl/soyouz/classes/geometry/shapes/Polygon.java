@@ -91,7 +91,7 @@ public class Polygon implements Shape
     }
 
     @Override
-    public boolean contains(Point2d p)
+    public boolean contains(Point2d p) //NOSONAR
     {
         if (!boundingBox.contains(p))
         {
@@ -118,23 +118,21 @@ public class Polygon implements Shape
             if (vertices[i].getY() <= p.getY())
             {
                 // start y <= P.y
-                if (vertices[j].getY() > p.getY()) // an upward crossing
+                // an upward crossing
+                // P left of  edge
+                if (vertices[j].getY() > p.getY() && distanceToLine(vertices[i], vertices[j], p) > 0)
                 {
-                    if (distanceToLine(vertices[i], vertices[j], p) > 0) // P left of  edge
-                    {
-                        ++wn; // have  a valid up intersect
-                    }
+                    ++wn; // have  a valid up intersect
                 }
             }
             else
             {
                 // start y > P.y (no test needed)
-                if (vertices[j].getY() <= p.getY()) // a downward crossing
+                // a downward crossing
+                // P right of  edge
+                if (vertices[j].getY() <= p.getY() && distanceToLine(vertices[i], vertices[j], p) < 0)
                 {
-                    if (distanceToLine(vertices[i], vertices[j], p) < 0) // P right of  edge
-                    {
-                        --wn; // have  a valid down intersect
-                    }
+                    --wn; // have  a valid down intersect
                 }
             }
         }

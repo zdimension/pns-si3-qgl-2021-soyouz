@@ -176,12 +176,11 @@ public class InitSailorPositionObjective implements MovingObjective
         for (int i = 0; i < nbSailorToSail; i++)
         {
             var sp = linesWithSails.get(i).getSail().getPos();
-            var sailorCloseToSail = sailors.stream().min(Comparator.comparingInt(
-                sailor -> sailor.getPos().dist(sp)
-            )).get();
-            movingSailorsObjectives.add(new SailorMovementObjective(sailorCloseToSail,
-                linesWithSails.get(i).getSail().getPos()));
-            sailors.remove(sailorCloseToSail);
+            sailors.stream().min(Comparator.comparingInt(
+                sailor -> sailor.getPos().dist(sp))).ifPresent(sailor -> {
+                movingSailorsObjectives.add(new SailorMovementObjective(sailor, sp));
+                sailors.remove(sailor);
+            });
         }
     }
 

@@ -16,6 +16,7 @@ class ListLogHandler extends Handler
     public ListLogHandler(Queue<String> logList)
     {
         this.logList = logList;
+        Util.currentLogLevel = Level.CONFIG;
     }
 
     @Override

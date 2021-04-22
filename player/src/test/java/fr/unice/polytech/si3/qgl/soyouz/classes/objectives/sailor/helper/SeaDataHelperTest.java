@@ -20,8 +20,7 @@ class SeaDataHelperTest
     void setUp()
     {
         OnboardEntity[] ent = {};
-        sdh = new SeaDataHelper(new Bateau("Peqoq", new Deck(1, 2), ent), new Wind(1, 100),
-            new ShapedEntity[] {});
+        sdh = new SeaDataHelper(new Bateau("Peqoq", new Deck(1, 2), ent), new Wind(1, 100));
     }
 
     @Test

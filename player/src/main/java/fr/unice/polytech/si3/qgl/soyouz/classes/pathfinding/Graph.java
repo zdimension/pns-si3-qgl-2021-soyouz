@@ -29,11 +29,11 @@ public class Graph
 
         doAStar();
 
-        var path = new ArrayList<Node>();
-        path.add(this.end);
-        buildShortestPath(path, this.end);
-        Collections.reverse(path);
-        this.path = path;
+        var tmpPath = new ArrayList<Node>();
+        tmpPath.add(this.end);
+        buildShortestPath(tmpPath, this.end);
+        Collections.reverse(tmpPath);
+        this.path = tmpPath;
     }
 
     private void doAStar()

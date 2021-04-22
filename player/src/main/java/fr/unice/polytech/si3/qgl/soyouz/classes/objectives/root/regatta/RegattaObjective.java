@@ -81,8 +81,7 @@ public class RegattaObjective implements RootObjective
         }
         if (seaDataHelper == null)
         {
-            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind(),
-                state.getNp().getVisibleEntities());
+            seaDataHelper = new SeaDataHelper(state.getNp().getShip(), state.getNp().getWind());
         }
         else
         {
