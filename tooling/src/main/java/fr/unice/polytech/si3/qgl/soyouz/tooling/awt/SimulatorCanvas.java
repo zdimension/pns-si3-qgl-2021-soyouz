@@ -25,7 +25,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
-class SimulatorCanvas extends JPanel
+class SimulatorCanvas extends JPanel implements SimulatorView
 {
     private static final Color BACKGROUND = new Color(202, 219, 255);
     private static final Map<Class<?>, Image[]> ENTITY_ICONS;
@@ -211,7 +211,7 @@ class SimulatorCanvas extends JPanel
         repaint();
     }
 
-    void reset()
+    public void reset()
     {
         clearHistory();
         repaint();

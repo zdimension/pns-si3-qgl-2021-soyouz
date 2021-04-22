@@ -20,5 +20,11 @@
             <artifactId>soyouz</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>16</version>
+        </dependency>
     </dependencies>
 </project>

@@ -3,6 +3,7 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorListener;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
+import lombok.SneakyThrows;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,12 +18,14 @@ public class Simulator extends JFrame
     private static final int[] DELAYS = { 50, 10, 0 };
     public final Timer timer;
     final SimulatorModel smodel = new SimulatorModel();
-    private final SimulatorCanvas canvas;
+    private boolean threeD;
+    private SimulatorView canvas;
     private final JButton btnNext;
     private final JButton btnPlay;
 
     public Simulator() throws IOException
     {
+        this.threeD = false;
         setTitle("Soyouz Simulator");
         setLayout(new BorderLayout());
         setSize(900, 600);
@@ -50,8 +53,10 @@ public class Simulator extends JFrame
             smodel.reset(true);
         });
 
-        canvas = new SimulatorCanvas(smodel, this);
-        add(canvas, BorderLayout.CENTER);
+        canvas = threeD
+            ? new SimulatorCanvas3D(smodel, this)
+            : new SimulatorCanvas(smodel, this);
+        add((JComponent)canvas, BorderLayout.CENTER);
 
         var btnClear = new JButton("Clear path");
         topcont.add(btnClear);
@@ -106,6 +111,40 @@ public class Simulator extends JFrame
         btnCenter.addActionListener(e ->
         {
             canvas.centerView(true);
+        });
+
+        var btnThree = new JButton("3D Mode");
+        topcont.add(btnThree);
+        btnThree.addActionListener(e ->
+        {
+            var old = canvas;
+            this.threeD = !this.threeD;
+            var nc = this.threeD
+                ? new SimulatorCanvas3D(smodel, this)
+                : new SimulatorCanvas(smodel, this);
+            nc.clearHistory();
+            add(nc);
+            canvas = nc;
+            remove((JComponent)old);
+
+            /*addWindowListener(new WindowAdapter()
+            {
+                @Override
+                public void windowClosing(WindowEvent e)
+                {
+                    try
+                    {
+                        new Simulator(!threeD).setVisible(true);
+                    }
+                    catch (IOException ioException)
+                    {
+                        ioException.printStackTrace();
+                    }
+
+                    super.windowClosing(e);
+                }
+            });
+            dispose();*/
         });
 
         var cbxSpeed = new JComboBox<>(SPEEDS);

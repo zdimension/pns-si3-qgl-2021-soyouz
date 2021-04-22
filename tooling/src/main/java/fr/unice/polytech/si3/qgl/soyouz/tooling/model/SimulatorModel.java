@@ -48,8 +48,8 @@ public class SimulatorModel
             // load cannon
             // shoot cannon
         );
-    final ArrayList<OnboardEntity> usedEntities;
-    final HashMap<Marin, PosOnShip> sailorPositions = new HashMap<>();
+    public final ArrayList<OnboardEntity> usedEntities;
+    public final HashMap<Marin, PosOnShip> sailorPositions = new HashMap<>();
     private final int COMP_STEPS = 10;
     public int speed = 0;
     public int currentStep = 0;
