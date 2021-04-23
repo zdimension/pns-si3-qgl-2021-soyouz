@@ -34,9 +34,9 @@ public class RunnerParameters
     private final int minumumCrewSize;
     private final int maximumCrewSize;
     private final ShapedEntity[] seaEntities;
-    private Position[] startingPositions;
     private final Marin[][] sailors;
     private final InitGameParameters[] ip;
+    private Position[] startingPositions;
 
     @JsonCreator
     public RunnerParameters(

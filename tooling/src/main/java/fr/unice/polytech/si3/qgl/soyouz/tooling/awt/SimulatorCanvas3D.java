@@ -6,12 +6,8 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Voile;
-import fr.unice.polytech.si3.qgl.soyouz.classes.pathfinding.Node;
-import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Pair;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -27,19 +23,21 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
 import javafx.scene.transform.Rotate;
-import org.w3c.dom.css.Rect;
 
 import java.awt.*;
-import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 {
+    public static final PhongMaterial MAT_VIEW = new PhongMaterial(Color.rgb(32, 32, 32, 0.3));
     private static final Color BACKGROUND = Color.rgb(202, 219, 255);
     private static final Map<Class<? extends ShapedEntity>, Color> ENTITY_COLORS = Map.of(
         Bateau.class, Color.rgb(193, 169, 134),
         AutreBateau.class, Color.rgb(84, 72, 28),
-        Stream.class, Color.rgb(36, 36, 203),
+        Stream.class, Color.rgb(36, 36, 203, 0.5),
         Reef.class, Color.rgb(12, 191, 12)
     );
     private static final double CAMERA_INITIAL_DISTANCE = -450;
@@ -54,7 +52,8 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     private static final double SHIFT_MULTIPLIER = 10.0;
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 2.0;
-    private static final double TRACK_SPEED = 0.3;
+    private static final double TRACK_SPEED = 30;
+    private static final double SCALE_WHEEL_FACTOR = 0.1;
     final Group root = new Group();
     final Xform axisGroup = new Xform();
     final Xform moleculeGroup = new Xform();
@@ -63,18 +62,23 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     final Xform cameraXform = new Xform();
     final Xform cameraXform2 = new Xform();
     final Xform cameraXform3 = new Xform();
+    final Xform entities = new Xform();
     private final SimulatorModel model;
     private final Simulator simulator;
+    private final double DEFAULT_HEIGHT = 100;
+    private final PhongMaterial MAT_BLACK = new PhongMaterial(Color.BLACK);
     double mousePosX;
     double mousePosY;
     double mouseOldX;
     double mouseOldY;
     double mouseDeltaX;
     double mouseDeltaY;
-    final Xform entities = new Xform();
+    private boolean centered = false;
+    private LinkedList<Position>[] shipHistory;
+    private boolean drawPath = true;
+    private boolean drawNodes = true;
+    private boolean debugCollisions;
 
-
-    private static final double SCALE_WHEEL_FACTOR = 0.1;
     public SimulatorCanvas3D(SimulatorModel model,
                              Simulator simulator)
     {
@@ -109,7 +113,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
                 factor = 1 / factor;
             }
             camera.setTranslateZ(camera.getTranslateZ() * factor);
-            repaint();
+            repaintEx();
         });
 
         setScene(scene);
@@ -119,8 +123,8 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
     private void repaintEx()
     {
-        this.setSize(this.getWidth() - 1, this.getHeight());
-        this.setSize(this.getWidth() + 1, this.getHeight());
+        this.setSize(this.getWidth(), this.getHeight() - 1);
+        this.setSize(this.getWidth(), this.getHeight() + 1);
     }
 
     public void onDrag(MouseEvent me)
@@ -141,16 +145,9 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         }
         else if (me.isSecondaryButtonDown())
         {
-            double z = camera.getTranslateZ();
-            double newZ = z + mouseDeltaX * MOUSE_SPEED * modifier;
-            camera.setTranslateZ(newZ);
-        }
-        else if (me.isMiddleButtonDown())
-        {
             cameraXform2.t.setX(cameraXform2.t.getX() - mouseDeltaX * MOUSE_SPEED * modifier * TRACK_SPEED);
             cameraXform2.t.setY(cameraXform2.t.getY() - mouseDeltaY * MOUSE_SPEED * modifier * TRACK_SPEED);
         }
-        System.out.println(camera.getTranslateX() + ";" + camera.getTranslateY() + ";" + camera.getTranslateZ() + ";" + cameraXform.rx.getAngle()+ ";" + cameraXform.ry.getAngle()+ ";" + cameraXform.rz.getAngle()+ ";" + cameraXform.t.getX()+ ";" + cameraXform.t.getY());
         repaintEx();
     }
 
@@ -163,12 +160,9 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
         camera.setNearClip(CAMERA_NEAR_CLIP);
         camera.setFarClip(CAMERA_FAR_CLIP);
-        //camera.setTranslateZ(CAMERA_INITIAL_DISTANCE);
         cameraXform.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
         cameraXform.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
         cameraXform.rz.setAngle(CAMERA_INITIAL_Z_ANGLE);
-        /*camera.setTranslateX(3000);
-        camera.setTranslateY(-1000);*/
         camera.setTranslateZ(-14000);
         cameraXform.t.setX(3000);
         cameraXform.t.setY(5000);
@@ -210,28 +204,28 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         {
             shipHistory[i] = new LinkedList<>();
         }
-        repaint();
+        update();
     }
 
     @Override
     public void setDrawPath(boolean selected)
     {
         drawPath = selected;
-        repaint();
+        update();
     }
 
     @Override
     public void setDrawNodes(boolean selected)
     {
         drawNodes = selected;
-        repaint();
+        update();
     }
 
     @Override
     public void setDebugCollisions(boolean selected)
     {
         debugCollisions = selected;
-        repaint();
+        update();
     }
 
     private java.util.stream.Stream<Point2d> getEntitiesPositions()
@@ -247,8 +241,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         return str.map(ShapedEntity::getPosition);
     }
 
-    private boolean centered = false;
-
     @Override
     public void centerView(boolean force)
     {
@@ -263,46 +255,38 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         cameraXform.t.setX(pos.x);
         cameraXform.t.setY(pos.y);
 
+        System.out.println(camera.getFieldOfView());
+        camera.setTranslateZ(-Math.max(diff.x, diff.y) / (Math.tan(Math.toRadians(camera.getFieldOfView()))));
+
         //scale = Math.min(getWidth() / diff.x, getHeight() / diff.y) * 0.8;
 
         centered = true;
 
-        repaint();
+        repaintEx();
     }
 
     @Override
     public void reset()
     {
         clearHistory();
-        repaint();
+        update();
     }
 
     @Override
-    public void repaint()
+    public void update()
     {
         Platform.runLater(() ->
         {
             entities.getChildren().clear();
-            
             drawGame();
-            
-            /*
-
-            for (ShapedEntity visibleShape : getVisibleShapes())
-            {
-                var shp = visibleShape.getShape();
-                if (shp instanceof Rectangle)
-                {
-                    var r = (Rectangle)shp;
-                    var box = new Box(r.getWidth(), 10, r.getHeight());
-                    box.setTranslateX(visibleShape.getPosition().x);
-                    box.setTranslateY(visibleShape.getPosition().y);
-                    entities.getChildren().add(box);
-                }
-            }*/
+            repaintEx();
         });
+    }
 
-        super.repaint();
+    @Override
+    public SimulatorModel getModel()
+    {
+        return model;
     }
 
     private void drawGame()
@@ -318,41 +302,28 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
             }
         }
 
+        drawEntity(model.getShip());
+
+        drawShipHistory();
+
         if (model.nps[0] != null)
         {
             getVisibleShapes()
                 .stream().sorted(Comparator.comparingInt(
-                obj -> obj instanceof Bateau ? 1 : -1
-            )).forEach(ent -> drawEntity(ent));
+                obj -> obj instanceof Bateau ? -1 : 1
+            )).forEach(this::drawEntity);
         }
-
-        drawEntity(model.getShip());
-
-        drawShipVision(model.getShip());
 
         drawNodes();
 
-        drawShipHistory();
+        SimulatorView.updateHistory(model, shipHistory);
 
-        var ships = model.getShips();
-        for (int i = 0; i < ships.length; i++)
-        {
-            var history = shipHistory[i];
-            var shipPos = ships[i].getPosition();
-            if (history.isEmpty() || !shipPos.equals(history.getLast()))
-            {
-                history.add(shipPos);
-            }
-        }
-
-        drawShipDeck(model.getShip(), model.getSailors());
-
-        drawLegendText();
+        drawShipVision(model.getShip());
     }
 
     private void drawNodes()
     {
-        /*var cp = model.cockpits[0].getCurrentCheckpoint();
+        var cp = model.cockpits[0].getCurrentCheckpoint();
         if (cp == null)
         {
             return;
@@ -365,125 +336,79 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
         if (drawPath)
         {
-            g.setColor(java.awt.Color.ORANGE);
-
-            for (Pair<Node, Node> line : graph.getEdges())
+            for (var line : graph.getEdges())
             {
-                drawLine(g,
-                    mapToScreen(line.first.position),
-                    mapToScreen(line.second.position));
+                drawLine(line.first.position, line.second.position, Color.ORANGE);
             }
         }
 
-        g.setColor(java.awt.Color.MAGENTA);
         var path = cp.path;
         for (int i = 0; i < path.size() - 1; i++)
         {
-            drawLine(g,
-                mapToScreen(path.get(i).position),
-                mapToScreen(path.get(i + 1).position));
+            drawLine(path.get(i).position, path.get(i + 1).position, Color.MAGENTA);
         }
 
         if (drawNodes)
         {
-            g.setColor(java.awt.Color.BLACK);
             for (Point2d p : cp.nodes)
             {
-                drawShape(new Circle(mapToWorld(3)), p.toPosition(), false);
-            }
-        }*/
-    }
-
-    private LinkedList<Position>[] shipHistory;
-    private boolean drawPath = true;
-    private boolean drawNodes = true;
-    private boolean debugCollisions;
-
-    private void drawLine(Point a, Point b)
-    {
-        //g.drawLine(a.x, a.y, b.x, b.y);
-    }
-
-    private void drawLegendText()
-    {
-        /*g = (Graphics2D) g.create();
-
-        g.setColor(java.awt.Color.BLACK);
-
-        var mouse = this.getMousePosition();
-        if (mouse != null)
-        {
-            var p = mapToWorld(mouse);
-            g.drawString(String.format("X = %6.2f", p.x), 20, getHeight() - 40);
-            g.drawString(String.format("Y = %6.2f", p.y), 20, getHeight() - 20);
-
-            if (debugCollisions)
-            {
-                var sp = model.getShip().getPosition();
-                for (ShapedEntity shp : getVisibleShapes())
-                {
-                    if (shp.getShape().linePassesThrough(shp.toLocal(p), shp.toLocal(sp), 0))
-                    {
-                        g.setColor(java.awt.Color.MAGENTA);
-                        drawShape(shp.getShape(), shp.getPosition(), false);
-                    }
-                }
-                g.setColor(java.awt.Color.BLACK);
-                drawLine(mouse, mapToScreen(sp));
+                drawShape(new Circle(10), p.toPosition(), Color.BLACK, true);
             }
         }
+    }
 
-        g.setColor(java.awt.Color.BLACK);
-
-        if (simulator.timer.isRunning())
-        {
-            g.drawString(fps + " FPS", 20, 20);
-        }
-
-        if (model.getWind() != null && model.getWind().getStrength() != 0)
-        {
-            g.setStroke(HISTORY);
-            g.translate(getWidth() - 40, getHeight() - 55);
-
-            g.drawString("Wind=" + model.getWind().getStrength(), -28, 45);
-            g.scale(1, 1);
-            g.fillOval(-3, -3, 7, 7);
-            g.rotate(model.getWind().getOrientation() - Math.PI / 2);
-            g.drawPolygon(new Polygon(new int[] { 0, -7, 7 }, new int[] { 28, 18, 18 }, 3));
-            g.drawPolygon(new Polygon(new int[] { -1, 1, 1, 7, 7, 0, -7, -7, -1, -1 },
-                new int[] { 18, 18, -10, -16, -28, -22, -28, -16, -10, 14 }, 10));
-        }*/
+    private void drawLine(Point2d a, Point2d b, Color c)
+    {
+        var diff = b.sub(a);
+        var mid = b.mid(a);
+        var shp = new Box(diff.norm(), 10, 10);
+        shp.setMaterial(new PhongMaterial(c));
+        shp.setTranslateX(mid.x);
+        shp.setTranslateY(mid.y);
+        shp.setRotationAxis(Rotate.Z_AXIS);
+        shp.setRotate(Math.toDegrees(diff.angle()));
+        entities.getChildren().add(shp);
     }
 
     private void drawEntity(ShapedEntity se)
     {
-        /*g = (Graphics2D) g.create();
-
-        g.setColor(ENTITY_COLORS.get(se.getClass()));*/
-        drawShape(se.getShape(), se.getPosition(), !(se instanceof Reef), ENTITY_COLORS.get(se.getClass()));
+        drawShape(se.getShape(), se.getPosition(),
+            ENTITY_COLORS.get(se.getClass()), false);
     }
 
-    private void drawShape(fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape s, Position p, boolean showRot, Color color)
+    private void drawShape(Shape s,
+                           Position p, Color color, boolean useSphere)
     {
         var mat = new PhongMaterial(color);
 
         Shape3D shape = null;
         if (s instanceof Circle)
         {
-            shape = new Sphere(((Circle) s).getRadius());
+            var rad = ((Circle) s).getRadius();
+            shape = useSphere
+                ? new Sphere(rad)
+                : new Cylinder(rad, DEFAULT_HEIGHT);
         }
         else if (s instanceof Rectangle)
         {
-            var r = (Rectangle)s;
-            shape = new Box(r.getHeight(), r.getWidth(), 350);
+            var r = (Rectangle) s;
+            shape = new Box(r.getWidth(), r.getHeight(), DEFAULT_HEIGHT);
         }
         else if (s instanceof fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon)
         {
             return;
         }
 
-        shape.setRotationAxis(Rotate.Z_AXIS);
-        shape.setRotate(Math.toDegrees(p.getOrientation()));
+        if (shape instanceof Cylinder)
+        {
+            shape.setRotationAxis(Rotate.X_AXIS);
+            shape.setRotate(90);
+        }
+        else
+        {
+            shape.setRotationAxis(Rotate.Z_AXIS);
+            shape.setRotate(90 + Math.toDegrees(p.getOrientation()));
+        }
         shape.setTranslateX(p.getX());
         shape.setTranslateY(p.getY());
         shape.setMaterial(mat);
@@ -492,113 +417,37 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
     private void drawShipHistory()
     {
-        /*g = (Graphics2D) g.create();
-
-        g.setStroke(HISTORY);
-        g.setColor(java.awt.Color.BLACK);
-
         for (var history : shipHistory)
         {
-            var x = new int[history.size()];
-            var y = new int[history.size()];
-            for (int i = 0; i < history.size(); i++)
+            if (history.size() < 2)
             {
-                var conv = mapToScreen(history.get(i));
-                x[i] = conv.x;
-                y[i] = conv.y;
+                continue;
             }
-
-            g.drawPolyline(x, y, x.length);
-        }*/
+            var iter = history.iterator();
+            var prev = iter.next();
+            while (iter.hasNext())
+            {
+                var elem = iter.next();
+                drawLine(prev, elem, Color.BLACK);
+                prev = elem;
+            }
+        }
     }
 
     private void drawShipVision(Bateau b)
     {
-        /*g = (Graphics2D) g.create();
-
-        g.setStroke(DASHED);
-        g.setColor(java.awt.Color.BLACK);
-
-        var mp = mapToScreen(b.getPosition());
-        var md = mapToScreen(1000);
-        g.drawOval(mp.x - md, mp.y - md, 2 * md, 2 * md);*/
-    }
-
-    private void drawShipDeck(Bateau b, Marin[] sailors)
-    {
-        /*g = (Graphics2D) g.create();
-
-        g.translate(DECK_MARGIN, DECK_MARGIN);
-
-        g.setColor(ENTITY_COLORS.get(Bateau.class));
-        g.fillRect(0, 0, b.getDeck().getWidth() * DECK_GRID_SIZE,
-            b.getDeck().getLength() * DECK_GRID_SIZE);
-
-        for (OnboardEntity entity : b.getEntities())
-        {
-            var index = 0;
-            if (entity instanceof Voile && ((Voile) entity).isOpenned())
-            {
-                index = 1;
-            }
-            var img = ENTITY_ICONS.get(entity.getClass())[index];
-            g.drawImage(imentity.getY() * DECK_GRID_SIZE, entity.getX() * DECK_GRID_SIZE,
-                DECK_GRID_SIZE, DECK_GRID_SIZE,
-                model.usedEntities.contains(entity) ? java.awt.Color.RED : new java.awt.Color(0, true), null);
-        }
-        var i = 0;
-        for (Marin sailor : sailors)
-        {
-            g.setColor(java.awt.Color.getHSBColor((float) i / sailors.length, 1, 1));
-            var oldPos = simulator.smodel.sailorPositions.getOrDefault(sailor, null);
-            var x = sailor.getY() * DECK_GRID_SIZE;
-            var y = sailor.getX() * DECK_GRID_SIZE;
-            var sh = DECK_GRID_SIZE / 2;
-            if (oldPos != null && !Objects.equals(oldPos, sailor.getPos()))
-            {
-                var off = i - sailors.length / 2;
-                var sq = 3 * DECK_GRID_SIZE / 4;
-                var gt = (Graphics2D) g.create();
-                gt.translate(sq + off, sq + off);
-                gt.drawLine(oldPos.getY() * DECK_GRID_SIZE, oldPos.getX() * DECK_GRID_SIZE, x, y);
-            }
-            g.fillOval(sh + x, sh + y, sh, sh);
-            g.setColor(java.awt.Color.BLACK);
-            g.drawString(sailor.getId() + "", sh + x + 3, sh + y + 15);
-            i++;
-        }
-
-        drawDeckGrid(b);*/
-    }
-
-    private void drawDeckGrid(Bateau b)
-    {
-        /*g.setColor(java.awt.Color.BLACK);
-
-        var w = b.getDeck().getWidth();
-        var rw = w * DECK_GRID_SIZE;
-        var h = b.getDeck().getLength();
-        var rh = h * DECK_GRID_SIZE;
-        for (var x = 0; x <= w; x++)
-        {
-            int rx = x * DECK_GRID_SIZE;
-            g.drawLine(rx, 0, rx, rh);
-        }
-        for (var y = 0; y <= h; y++)
-        {
-            int ry = y * DECK_GRID_SIZE;
-            g.drawLine(0, ry, rw, ry);
-        }*/
+        var cyl = new Cylinder(1000, DEFAULT_HEIGHT * 1.1);
+        cyl.setMaterial(MAT_VIEW);
+        var pos = b.getPosition();
+        cyl.setRotationAxis(Rotate.X_AXIS);
+        cyl.setRotate(90);
+        cyl.setTranslateX(pos.x);
+        cyl.setTranslateY(pos.y);
+        entities.getChildren().add(cyl);
     }
 
     private void drawCheckpoint(Checkpoint c, int i)
     {
-        drawShape(c.getShape(), c.getPosition(), false, Color.RED);
-    }
-
-
-    private Collection<ShapedEntity> getVisibleShapes()
-    {
-        return model.cockpits[0].entityMemory.values();
+        drawShape(c.getShape(), c.getPosition(), Color.RED, true);
     }
 }

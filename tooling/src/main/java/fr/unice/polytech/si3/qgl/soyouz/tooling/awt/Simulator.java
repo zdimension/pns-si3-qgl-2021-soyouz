@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorListener;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
-import lombok.SneakyThrows;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,10 +17,10 @@ public class Simulator extends JFrame
     private static final int[] DELAYS = { 50, 10, 0 };
     public final Timer timer;
     final SimulatorModel smodel = new SimulatorModel();
-    private boolean threeD;
-    private SimulatorView canvas;
     private final JButton btnNext;
     private final JButton btnPlay;
+    private boolean threeD;
+    private SimulatorView canvas;
 
     public Simulator() throws IOException
     {
@@ -56,7 +55,7 @@ public class Simulator extends JFrame
         canvas = threeD
             ? new SimulatorCanvas3D(smodel, this)
             : new SimulatorCanvas(smodel, this);
-        add((JComponent)canvas, BorderLayout.CENTER);
+        add((JComponent) canvas, BorderLayout.CENTER);
 
         var btnClear = new JButton("Clear path");
         topcont.add(btnClear);
@@ -125,7 +124,7 @@ public class Simulator extends JFrame
             nc.clearHistory();
             add(nc);
             canvas = nc;
-            remove((JComponent)old);
+            remove((JComponent) old);
 
             /*addWindowListener(new WindowAdapter()
             {
@@ -184,7 +183,7 @@ public class Simulator extends JFrame
             @Override
             public void updateRequired()
             {
-                canvas.repaint();
+                canvas.update();
             }
 
             @Override

@@ -176,11 +176,6 @@ class SimulatorCanvas extends JPanel implements SimulatorView
         repaint();
     }
 
-    private Collection<ShapedEntity> getVisibleShapes()
-    {
-        return model.cockpits[0].entityMemory.values();
-    }
-
     private java.util.stream.Stream<Point2d> getEntitiesPositions()
     {
         var str = java.util.stream.Stream.concat(getVisibleShapes().stream(),
@@ -215,6 +210,18 @@ class SimulatorCanvas extends JPanel implements SimulatorView
     {
         clearHistory();
         repaint();
+    }
+
+    @Override
+    public void update()
+    {
+        repaint();
+    }
+
+    @Override
+    public SimulatorModel getModel()
+    {
+        return model;
     }
 
     private Point2d getViewCenter()
@@ -301,16 +308,7 @@ class SimulatorCanvas extends JPanel implements SimulatorView
 
         drawShipHistory(g);
 
-        var ships = model.getShips();
-        for (int i = 0; i < ships.length; i++)
-        {
-            var history = shipHistory[i];
-            var shipPos = ships[i].getPosition();
-            if (history.isEmpty() || !shipPos.equals(history.getLast()))
-            {
-                history.add(shipPos);
-            }
-        }
+        SimulatorView.updateHistory(model, shipHistory);
 
         drawShipDeck(g, model.getShip(), model.getSailors());
 
@@ -609,7 +607,7 @@ class SimulatorCanvas extends JPanel implements SimulatorView
 
             gtr.fillPolygon(ap);
         }
-        
+
         if (showRot)
         {
             gtr.setStroke(SHAPE_CROSS);
