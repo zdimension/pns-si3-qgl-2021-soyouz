@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.BoundingBox;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
@@ -17,6 +18,13 @@ public class Polygon implements Shape
 {
     private final double orientation;
     private final Point2d[] vertices;
+
+    @JsonIgnore
+    public Point2d getCenter()
+    {
+        return center;
+    }
+
     private final Point2d center;
     private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
     private final BoundingBox boundingBox;

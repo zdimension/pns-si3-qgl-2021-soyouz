@@ -5,30 +5,23 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Circle;
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.DepthTest;
-import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
+import javafx.geometry.Point3D;
+import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.shape.Cylinder;
-import javafx.scene.shape.Shape3D;
-import javafx.scene.shape.Sphere;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 
-import java.awt.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 {
@@ -44,7 +37,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     private static final double CAMERA_INITIAL_X_ANGLE = 0;
     private static final double CAMERA_INITIAL_Y_ANGLE = 0;
     private static final double CAMERA_INITIAL_Z_ANGLE = 0;
-    private static final double CAMERA_NEAR_CLIP = 0.1;
+    private static final double CAMERA_NEAR_CLIP = 10;
     private static final double CAMERA_FAR_CLIP = 100000.0;
     private static final double AXIS_LENGTH = 2000.0;
     private static final double HYDROGEN_ANGLE = 104.5;
@@ -54,6 +47,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 30;
     private static final double SCALE_WHEEL_FACTOR = 0.1;
+    public static final int AXIS_THICKNESS = 10;
     final Group root = new Group();
     final Xform axisGroup = new Xform();
     final Xform moleculeGroup = new Xform();
@@ -85,16 +79,20 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         this.model = model;
         this.simulator = simulator;
 
+        var sea = new Box(1e6, 1e6, 1000);
+        sea.setTranslateZ(500);
+        var mat = new PhongMaterial(Color.rgb(23, 23, 223, 0.6));
+        sea.setMaterial(mat);
         root.getChildren().add(world);
         root.getChildren().add(entities);
+        root.getChildren().add(sea);
         root.setDepthTest(DepthTest.ENABLE);
 
         buildCamera();
         buildAxes();
 
-        Scene scene = new Scene(root, 500, 300, true);
+        Scene scene = new Scene(root, 500, 300, true, SceneAntialiasing.BALANCED);
         scene.setFill(BACKGROUND);
-
         scene.setOnMousePressed(me ->
         {
             mousePosX = me.getSceneX();
@@ -183,9 +181,9 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         blueMaterial.setDiffuseColor(Color.DARKBLUE);
         blueMaterial.setSpecularColor(Color.BLUE);
 
-        final Box xAxis = new Box(AXIS_LENGTH, 100, 100);
-        final Box yAxis = new Box(100, AXIS_LENGTH, 100);
-        final Box zAxis = new Box(100, 100, AXIS_LENGTH);
+        final Box xAxis = new Box(AXIS_LENGTH, AXIS_THICKNESS, AXIS_THICKNESS);
+        final Box yAxis = new Box(AXIS_THICKNESS, AXIS_LENGTH, AXIS_THICKNESS);
+        final Box zAxis = new Box(AXIS_THICKNESS, AXIS_THICKNESS, AXIS_LENGTH);
 
         xAxis.setMaterial(redMaterial);
         yAxis.setMaterial(greenMaterial);
@@ -310,7 +308,9 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         {
             getVisibleShapes()
                 .stream().sorted(Comparator.comparingInt(
-                obj -> obj instanceof Bateau ? -1 : 1
+                obj -> IntStream.range(0, ENTITY_DRAW_ORDER.size())
+                    .filter(i -> ENTITY_DRAW_ORDER.get(i).isInstance(obj))
+                    .findFirst().getAsInt()
             )).forEach(this::drawEntity);
         }
 
@@ -320,6 +320,12 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
         drawShipVision(model.getShip());
     }
+
+    private static final List<Class<? extends ShapedEntity>> ENTITY_DRAW_ORDER = List.of(
+        Bateau.class,
+        ShapedEntity.class,
+        Stream.class
+    );
 
     private void drawNodes()
     {
@@ -381,7 +387,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     {
         var mat = new PhongMaterial(color);
 
-        Shape3D shape = null;
+        Shape3D shape;
         if (s instanceof Circle)
         {
             var rad = ((Circle) s).getRadius();
@@ -392,9 +398,39 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         else if (s instanceof Rectangle)
         {
             var r = (Rectangle) s;
-            shape = new Box(r.getWidth(), r.getHeight(), DEFAULT_HEIGHT);
+            shape = new Box(r.getHeight(), r.getWidth(), DEFAULT_HEIGHT);
         }
         else if (s instanceof fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon)
+        {
+            var msh = new TriangleMesh();
+            var poly = (Polygon)s;
+            var pts = poly.getVertices();
+            var ctr = poly.getCenter();
+            var mpts = msh.getPoints();
+            var fcs = msh.getFaces();
+            float[] var7 = new float[2 * pts.length + 4];
+            msh.getTexCoords().addAll(var7);
+            var ctop = pts.length;
+            var cbot = ctop + 1;
+            for (Point2d pt : pts)
+            {
+                mpts.addAll((float) pt.x, (float) pt.y, 0);
+            }
+            mpts.addAll((float)ctr.x, (float)ctr.y, (float)(DEFAULT_HEIGHT / 2));
+            mpts.addAll((float)ctr.x, (float)ctr.y, (float)(-DEFAULT_HEIGHT / 2));
+            var j = pts.length - 1;
+            for (int i = 0; i < pts.length; j = i++)
+            {
+                j = (i + 1) % pts.length;
+                fcs.addAll(i, 0, j, 0, ctop, 0);
+                fcs.addAll(ctop, 0, j, 0, i, 0);
+                fcs.addAll(i, 0, j, 0, cbot, 0);
+                fcs.addAll(cbot, 0, j, 0, i, 0);
+            }
+
+            shape = new MeshView(msh);
+        }
+        else
         {
             return;
         }
@@ -406,8 +442,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         }
         else
         {
-            shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(90 + Math.toDegrees(p.getOrientation()));
+            shape.getTransforms().add(new Rotate(Math.toDegrees(p.getOrientation()), Rotate.Z_AXIS));
         }
         shape.setTranslateX(p.getX());
         shape.setTranslateY(p.getY());
