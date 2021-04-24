@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.Simulator;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
+import javafx.embed.swing.JFXPanel;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -57,6 +58,7 @@ public class Application
         }
         else
         {
+            new JFXPanel(); // required to initialize JavaFX
             new Simulator().setVisible(true);
         }
     }

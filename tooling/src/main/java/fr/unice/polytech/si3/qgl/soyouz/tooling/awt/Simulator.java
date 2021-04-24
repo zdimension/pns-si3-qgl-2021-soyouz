@@ -131,6 +131,8 @@ public class Simulator extends JFrame
             add(nc);
             canvas = nc;
             remove((JComponent) old);
+            nc.centerView(true);
+            nc.update();
         });
 
         var cbxSpeed = new JComboBox<>(SPEEDS);
