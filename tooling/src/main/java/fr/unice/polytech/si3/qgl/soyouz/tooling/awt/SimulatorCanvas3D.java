@@ -12,7 +12,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -33,16 +32,10 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         Stream.class, Color.rgb(36, 36, 203, 0.5),
         Reef.class, Color.rgb(12, 191, 12)
     );
-    private static final double CAMERA_INITIAL_DISTANCE = -450;
-    private static final double CAMERA_INITIAL_X_ANGLE = 0;
-    private static final double CAMERA_INITIAL_Y_ANGLE = 0;
-    private static final double CAMERA_INITIAL_Z_ANGLE = 0;
+
     private static final double CAMERA_NEAR_CLIP = 10;
     private static final double CAMERA_FAR_CLIP = 100000.0;
     private static final double AXIS_LENGTH = 2000.0;
-    private static final double HYDROGEN_ANGLE = 104.5;
-    private static final double CONTROL_MULTIPLIER = 0.1;
-    private static final double SHIFT_MULTIPLIER = 10.0;
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 2.0;
     private static final double TRACK_SPEED = 30;
@@ -50,15 +43,11 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     public static final int AXIS_THICKNESS = 10;
     final Group root = new Group();
     final Xform axisGroup = new Xform();
-    final Xform moleculeGroup = new Xform();
-    final Xform world = new Xform();
+    final Xform world = new Xform(Xform.RotateOrder.YZX);
     final PerspectiveCamera camera = new PerspectiveCamera(true);
     final Xform cameraXform = new Xform();
-    final Xform cameraXform2 = new Xform();
-    final Xform cameraXform3 = new Xform();
     final Xform entities = new Xform();
     private final SimulatorModel model;
-    private final Simulator simulator;
     private final double DEFAULT_HEIGHT = 100;
     private final PhongMaterial MAT_BLACK = new PhongMaterial(Color.BLACK);
     double mousePosX;
@@ -73,23 +62,25 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     private boolean drawNodes = true;
     private boolean debugCollisions;
 
-    public SimulatorCanvas3D(SimulatorModel model,
-                             Simulator simulator)
+    public SimulatorCanvas3D(SimulatorModel model)
     {
         this.model = model;
-        this.simulator = simulator;
 
         var sea = new Box(1e6, 1e6, 1000);
         sea.setTranslateZ(500);
         var mat = new PhongMaterial(Color.rgb(23, 23, 223, 0.6));
         sea.setMaterial(mat);
+        buildAxes();
         root.getChildren().add(world);
-        root.getChildren().add(entities);
-        root.getChildren().add(sea);
+        world.getChildren().add(entities);
+        world.getChildren().add(sea);
         root.setDepthTest(DepthTest.ENABLE);
 
+        var b = new Box(100, 100, 100);
+        b.setTranslateZ(1000);
+        b.setMaterial(new PhongMaterial(Color.RED));
+        world.getChildren().add(b);
         buildCamera();
-        buildAxes();
 
         Scene scene = new Scene(root, 500, 300, true, SceneAntialiasing.BALANCED);
         scene.setFill(BACKGROUND);
@@ -138,13 +129,15 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
         if (me.isPrimaryButtonDown())
         {
-            cameraXform.rz.setAngle(cameraXform.rz.getAngle() + mouseDeltaX * MOUSE_SPEED * modifier * ROTATION_SPEED);
-            cameraXform.rx.setAngle(cameraXform.rx.getAngle() - mouseDeltaY * MOUSE_SPEED * modifier * ROTATION_SPEED);
+            world.setRx(world.rx.getAngle() + mouseDeltaY * MOUSE_SPEED * modifier * ROTATION_SPEED);
+            world.setRz(world.rz.getAngle() - mouseDeltaX * MOUSE_SPEED * modifier * ROTATION_SPEED);
         }
         else if (me.isSecondaryButtonDown())
         {
-            cameraXform2.t.setX(cameraXform2.t.getX() - mouseDeltaX * MOUSE_SPEED * modifier * TRACK_SPEED);
-            cameraXform2.t.setY(cameraXform2.t.getY() - mouseDeltaY * MOUSE_SPEED * modifier * TRACK_SPEED);
+            var p2d = new Point2d(mouseDeltaX, mouseDeltaY).rotate(Math.toRadians(-world.rz.getAngle()));
+            world.setTx(world.t.getX() + p2d.getX() * MOUSE_SPEED * modifier * TRACK_SPEED);
+            world.setTy(world.t.getY() + p2d.getY() * MOUSE_SPEED * modifier * TRACK_SPEED);
+            world.setPivot(-world.t.getX(), -world.t.getY(), 0);
         }
         repaintEx();
     }
@@ -152,18 +145,11 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     private void buildCamera()
     {
         root.getChildren().add(cameraXform);
-        cameraXform.getChildren().add(cameraXform2);
-        cameraXform2.getChildren().add(cameraXform3);
-        cameraXform3.getChildren().add(camera);
+        cameraXform.getChildren().add(camera);
 
         camera.setNearClip(CAMERA_NEAR_CLIP);
         camera.setFarClip(CAMERA_FAR_CLIP);
-        cameraXform.ry.setAngle(CAMERA_INITIAL_Y_ANGLE);
-        cameraXform.rx.setAngle(CAMERA_INITIAL_X_ANGLE);
-        cameraXform.rz.setAngle(CAMERA_INITIAL_Z_ANGLE);
         camera.setTranslateZ(-14000);
-        cameraXform.t.setX(3000);
-        cameraXform.t.setY(5000);
     }
 
     private void buildAxes()
@@ -250,8 +236,11 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         var diff = max.sub(min);
 
         var pos = diff.mul(0.5).add(min);
-        cameraXform.t.setX(pos.x);
-        cameraXform.t.setY(pos.y);
+        //cameraPos = diff.mul(0.5).add(min);
+        world.setTranslate(-pos.x, -pos.y, 0);
+        world.setPivot(pos.x, pos.y, 0);
+        /*cameraXform.t.setX(pos.x);
+        cameraXform.t.setY(pos.y);*/
 
         System.out.println(camera.getFieldOfView());
         camera.setTranslateZ(-Math.max(diff.x, diff.y) / (Math.tan(Math.toRadians(camera.getFieldOfView()))));
@@ -416,7 +405,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
             {
                 mpts.addAll((float) pt.x, (float) pt.y, 0);
             }
-            mpts.addAll((float)ctr.x, (float)ctr.y, (float)(DEFAULT_HEIGHT / 2));
+            mpts.addAll((float)ctr.x, (float)ctr.y, (float)(DEFAULT_HEIGHT * 2));
             mpts.addAll((float)ctr.x, (float)ctr.y, (float)(-DEFAULT_HEIGHT / 2));
             var j = pts.length - 1;
             for (int i = 0; i < pts.length; j = i++)

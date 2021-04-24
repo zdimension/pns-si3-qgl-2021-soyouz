@@ -56,7 +56,7 @@ public class Simulator extends JFrame
         });
 
         canvas = threeD
-            ? new SimulatorCanvas3D(smodel, this)
+            ? new SimulatorCanvas3D(smodel)
             : new SimulatorCanvas(smodel, this);
         add((JComponent) canvas, BorderLayout.CENTER);
 
@@ -125,7 +125,7 @@ public class Simulator extends JFrame
             var old = canvas;
             this.threeD = !this.threeD;
             var nc = this.threeD
-                ? new SimulatorCanvas3D(smodel, this)
+                ? new SimulatorCanvas3D(smodel)
                 : new SimulatorCanvas(smodel, this);
             nc.clearHistory();
             add(nc);
