@@ -289,17 +289,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
     private void drawGame()
     {
-        var goal = model.getGoal();
-        if (goal instanceof RegattaGoal)
-        {
-            var rg = (RegattaGoal) goal;
-            Checkpoint[] checkpoints = rg.getCheckpoints();
-            for (int i = 0; i < checkpoints.length; i++)
-            {
-                drawCheckpoint(checkpoints[i], i);
-            }
-        }
-
         drawEntity(model.getShip());
 
         drawShipHistory();
@@ -317,6 +306,17 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         drawNodes();
 
         SimulatorView.updateHistory(model, shipHistory);
+
+        var goal = model.getGoal();
+        if (goal instanceof RegattaGoal)
+        {
+            var rg = (RegattaGoal) goal;
+            Checkpoint[] checkpoints = rg.getCheckpoints();
+            for (int i = 0; i < checkpoints.length; i++)
+            {
+                drawCheckpoint(checkpoints[i], i);
+            }
+        }
 
         drawShipVision(model.getShip());
     }
@@ -483,6 +483,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
     private void drawCheckpoint(Checkpoint c, int i)
     {
-        drawShape(c.getShape(), c.getPosition(), Color.RED, true);
+        drawShape(c.getShape(), c.getPosition(), Color.rgb(255, 0, 0, 0.7), true);
     }
 }
