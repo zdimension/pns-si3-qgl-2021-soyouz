@@ -344,14 +344,14 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         {
             for (var line : graph.getEdges())
             {
-                drawLine(line.first.position, line.second.position, Color.ORANGE);
+                drawLine(line.first.position, line.second.position, Color.ORANGE, 11);
             }
         }
 
         var path = cp.path;
         for (int i = 0; i < path.size() - 1; i++)
         {
-            drawLine(path.get(i).position, path.get(i + 1).position, Color.MAGENTA);
+            drawLine(path.get(i).position, path.get(i + 1).position, Color.MAGENTA, 12);
         }
 
         if (drawNodes)
@@ -363,11 +363,11 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         }
     }
 
-    private void drawLine(Point2d a, Point2d b, Color c)
+    private void drawLine(Point2d a, Point2d b, Color c, double thickness)
     {
         var diff = b.sub(a);
         var mid = b.mid(a);
-        var shp = new Box(diff.norm(), 10, 10);
+        var shp = new Box(diff.norm(), thickness, thickness);
         shp.setMaterial(new PhongMaterial(c));
         shp.setTranslateX(mid.x);
         shp.setTranslateY(mid.y);
@@ -463,7 +463,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
             while (iter.hasNext())
             {
                 var elem = iter.next();
-                drawLine(prev, elem, Color.BLACK);
+                drawLine(prev, elem, Color.BLACK, 10);
                 prev = elem;
             }
         }
