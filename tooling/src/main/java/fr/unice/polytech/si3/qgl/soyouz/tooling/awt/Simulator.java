@@ -32,6 +32,9 @@ public class Simulator extends JFrame
         var topcont = new Panel();
         topcont.setLayout(new BoxLayout(topcont, BoxLayout.X_AXIS));
 
+        var topcont2 = new Panel();
+        topcont2.setLayout(new BoxLayout(topcont2, BoxLayout.X_AXIS));
+
         btnNext = new JButton("Next");
         topcont.add(btnNext);
 
@@ -76,23 +79,26 @@ public class Simulator extends JFrame
         {
             canvas.setDrawPath(cbxPath.isSelected());
         });
-        topcont.add(cbxPath);
+        topcont2.add(cbxPath);
 
         var cbxNodes = new JCheckBox("Show nodes", true);
         cbxNodes.addChangeListener(e ->
         {
             canvas.setDrawNodes(cbxNodes.isSelected());
         });
-        topcont.add(cbxNodes);
+        topcont2.add(cbxNodes);
 
         var cbxDebugColl = new JCheckBox("Debug collisions");
         cbxDebugColl.addChangeListener(e ->
         {
             canvas.setDebugCollisions(cbxDebugColl.isSelected());
         });
-        topcont.add(cbxDebugColl);
+        topcont2.add(cbxDebugColl);
 
-        add(topcont, BorderLayout.NORTH);
+        var top = new Panel(new BorderLayout());
+        top.add(topcont, BorderLayout.NORTH);
+        top.add(topcont2, BorderLayout.SOUTH);
+        add(top, BorderLayout.NORTH);
 
         addWindowListener(new WindowAdapter()
         {
@@ -125,25 +131,6 @@ public class Simulator extends JFrame
             add(nc);
             canvas = nc;
             remove((JComponent) old);
-
-            /*addWindowListener(new WindowAdapter()
-            {
-                @Override
-                public void windowClosing(WindowEvent e)
-                {
-                    try
-                    {
-                        new Simulator(!threeD).setVisible(true);
-                    }
-                    catch (IOException ioException)
-                    {
-                        ioException.printStackTrace();
-                    }
-
-                    super.windowClosing(e);
-                }
-            });
-            dispose();*/
         });
 
         var cbxSpeed = new JComboBox<>(SPEEDS);
@@ -153,11 +140,11 @@ public class Simulator extends JFrame
             timer.setDelay(DELAYS[smodel.speed]);
         });
         cbxSpeed.setSelectedIndex(2);
-        topcont.add(cbxSpeed);
+        topcont2.add(cbxSpeed);
 
         JComboBox<Object> cbxFiles = new JComboBox<>(Application.getWeeks());
         cbxFiles.addItemListener(e -> loadFile(e.getItem().toString()));
-        topcont.add(cbxFiles);
+        topcont2.add(cbxFiles);
 
         smodel.listener = new SimulatorListener()
         {
