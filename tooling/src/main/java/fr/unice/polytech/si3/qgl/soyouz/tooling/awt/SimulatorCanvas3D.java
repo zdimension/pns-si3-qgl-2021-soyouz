@@ -23,6 +23,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
@@ -95,6 +96,10 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     private final PhongMaterial MAT_MAGENTA = new PhongMaterial(Color.MAGENTA);
     private final PhongMaterial MAT_ORANGE = new PhongMaterial(Color.ORANGE);
     private final Map<Shape, Shape3D> shapeCache = new HashMap<>();
+    private final Group shipShape;
+    private final Rotate shipRotZ;
+    private final Rotate shipRotTransverse;
+    private final Translate lightPos;
     public boolean fpsView;
     double mousePosX;
     double mousePosY;
@@ -108,10 +113,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     private boolean drawNodes = true;
     private boolean debugCollisions;
     private double lastOrientation;
-    private final Group shipShape;
-    private final Rotate shipRotZ;
-    private final Rotate shipRotTransverse;
-    private final Translate lightPos;
 
     public SimulatorCanvas3D(SimulatorModel model)
     {
@@ -168,11 +169,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
             {
                 setFpsView(!fpsView);
             }
-            if (e.getCode() == KeyCode.P)
-            {
-                lit.setQuadraticAttenuation(lit.getQuadraticAttenuation() / 2);
-                System.out.println(lit.getQuadraticAttenuation());
-            }
         });
 
         setScene(scene);
@@ -186,8 +182,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
     private void repaintEx()
     {
-        this.setSize(this.getWidth(), this.getHeight() - 1);
-        this.setSize(this.getWidth(), this.getHeight() + 1);
+
     }
 
     public void onDrag(MouseEvent me)
@@ -203,7 +198,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         {
             cameraXform.setRx(cameraXform.rx.getAngle() - mouseDeltaY * MOUSE_SPEED * ROTATION_SPEED);
             cameraXform.setRz(cameraXform.rz.getAngle() + mouseDeltaX * MOUSE_SPEED * ROTATION_SPEED);
-            System.out.println(cameraXform);
         }
         else if (me.isSecondaryButtonDown())
         {
@@ -231,7 +225,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
     private void buildAxes()
     {
-        System.out.println("buildAxes()");
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);
         redMaterial.setSpecularColor(Color.RED);
@@ -319,7 +312,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         lightPos.setX(pos.x);
         lightPos.setY(pos.y);
 
-        System.out.println(camera.getFieldOfView());
         camera.setTranslateZ(-Math.max(diff.x, diff.y) / (Math.tan(Math.toRadians(camera.getFieldOfView()))));
 
         centered = true;
@@ -344,7 +336,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         {
             entities.getChildren().clear();
             drawGame();
-            repaintEx();
         });
     }
 
@@ -404,18 +395,23 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
             var diff = p.getOrientation() - lastOrientation;
             if (fpsView && diff != 0)
             {
-                System.out.println("Rotating " + diff);
                 cameraXform.setRz(cameraXform.rz.getAngle() + Math.toDegrees(diff));
             }
             if (Math.abs(diff) > 1e-5)
+            {
                 shipRotTransverse.setAngle(shipRotTransverse.getAngle() + diff * 100);
+            }
         }
 
         var clamped = shipRotTransverse.getAngle() * 0.9;
         if (clamped > 30)
+        {
             clamped = 30;
+        }
         if (clamped < -30)
+        {
             clamped = -30;
+        }
         shipRotTransverse.setAngle(clamped);
 
         lastOrientation = p.getOrientation();
@@ -433,7 +429,9 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         else
         {
             if (fpsView)
+            {
                 centerView(true);
+            }
         }
         fpsView = enable;
         update();
@@ -468,7 +466,12 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
         if (drawNodes)
         {
-            for (Point2d p : cp.nodes)
+            ArrayList<Point2d> copy;
+            synchronized (cp.nodes)
+            {
+                copy = new ArrayList<>(cp.nodes);
+            }
+            for (Point2d p : copy)
             {
                 drawShape(new Circle(10), p.toPosition(), MAT_BLACK, true);
             }

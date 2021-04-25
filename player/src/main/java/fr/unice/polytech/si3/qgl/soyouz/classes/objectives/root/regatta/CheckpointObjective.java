@@ -169,18 +169,22 @@ public class CheckpointObjective implements RootObjective
 
         if (state.isRecalculatePathfinding() || path == null)
         {
-            nodes.clear();
-            nodes.add(boat.getPosition());
-            nodes.add(cp.getPosition());
+            synchronized(nodes)
+            {
+                nodes.clear();
+                nodes.add(boat.getPosition());
+                nodes.add(cp.getPosition());
 
-            var reef = state.getNp().getVisibleEntities();
+                var reef = state.getNp().getVisibleEntities();
+
+                logger.info("Computing shells");
+                for (ShapedEntity r : reef)
+                {
+                    r.getShell().forEach(nodes::add);
+                }
+            }
 
             var diam = 40;
-            logger.info("Computing shells");
-            for (ShapedEntity r : reef)
-            {
-                r.getShell().forEach(nodes::add);
-            }
 
             logger.info(nodes.size() + " nodes; start traverse");
             try

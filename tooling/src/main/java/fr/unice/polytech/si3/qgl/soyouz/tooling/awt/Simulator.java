@@ -14,7 +14,7 @@ public class Simulator extends JFrame
 {
 
     private static final String[] SPEEDS = { "Slow", "Medium", "Fast" };
-    private static final int[] DELAYS = { 50, 10, 0 };
+    private static final int[] DELAYS = { 50, 10, 1 };
     public final Timer timer;
     final SimulatorModel smodel = new SimulatorModel();
     private final JButton btnNext;
@@ -109,7 +109,7 @@ public class Simulator extends JFrame
             }
         });
 
-        timer = new Timer(0, e1 -> smodel.processRound());
+        timer = new Timer(1, e1 -> smodel.processRound());
 
         var btnCenter = new JButton("Center view");
         topcont.add(btnCenter);
