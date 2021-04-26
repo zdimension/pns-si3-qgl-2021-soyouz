@@ -118,8 +118,8 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     {
         this.model = model;
 
-        var sea = new Box(1e6, 1e6, 1000);
-        sea.setTranslateZ(500);
+        var sea = new Box(1e6, 1e6, 0);
+        sea.setTranslateZ(0);
         var mat = new PhongMaterial(Color.rgb(23, 23, 223, 0.6));
         sea.setMaterial(mat);
         buildAxes();
@@ -506,66 +506,67 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
             if (s instanceof Circle)
             {
                 var rad = ((Circle) s).getRadius();
-                shape = useSphere
-                    ? new Sphere(rad)
-                    : new Cylinder(rad, DEFAULT_HEIGHT);
-            }
-            else if (s instanceof Rectangle)
-            {
-                var r = (Rectangle) s;
-                shape = new Box(r.getHeight(), r.getWidth(), DEFAULT_HEIGHT);
-            }
-            else if (s instanceof fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon)
-            {
-                var msh = new TriangleMesh();
-                var poly = (Polygon) s;
-                var pts = poly.getVertices();
-                var ctr = poly.getCenter();
-                var mpts = msh.getPoints();
-                var fcs = msh.getFaces();
-                float[] var7 = new float[2 * pts.length + 4];
-                msh.getTexCoords().addAll(var7);
-                var ctop = pts.length;
-                var cbot = ctop + 1;
-                for (Point2d pt : pts)
+                if (useSphere)
                 {
-                    mpts.addAll((float) pt.x, (float) pt.y, 0);
+                    shape = new Sphere(rad);
                 }
-                mpts.addAll((float) ctr.x, (float) ctr.y, (float) (DEFAULT_HEIGHT * 2));
-                mpts.addAll((float) ctr.x, (float) ctr.y, (float) (-DEFAULT_HEIGHT / 2));
-                var j = pts.length - 1;
-                for (int i = 0; i < pts.length; j = i++)
+                else
                 {
-                    j = (i + 1) % pts.length;
-                    fcs.addAll(i, 0, j, 0, ctop, 0);
-                    fcs.addAll(ctop, 0, j, 0, i, 0);
-                    fcs.addAll(i, 0, j, 0, cbot, 0);
-                    fcs.addAll(cbot, 0, j, 0, i, 0);
+                    shape = new Cylinder(rad, DEFAULT_HEIGHT);
+                    shape.setRotationAxis(Rotate.X_AXIS);
+                    shape.setRotate(90);
                 }
-
-                shape = new MeshView(msh);
             }
             else
             {
-                return;
+                if (s instanceof Rectangle)
+                {
+                    var r = (Rectangle) s;
+                    shape = new Box(r.getHeight(), r.getWidth(), DEFAULT_HEIGHT);
+                }
+                else if (s instanceof Polygon)
+                {
+                    var msh = new TriangleMesh();
+                    var poly = (Polygon) s;
+                    var pts = poly.getVertices();
+                    var ctr = poly.getCenter();
+                    var mpts = msh.getPoints();
+                    var fcs = msh.getFaces();
+                    float[] var7 = new float[2 * pts.length + 4];
+                    msh.getTexCoords().addAll(var7);
+                    var ctop = pts.length;
+                    var cbot = ctop + 1;
+                    for (Point2d pt : pts)
+                    {
+                        mpts.addAll((float) pt.x, (float) pt.y, 0);
+                    }
+                    mpts.addAll((float) ctr.x, (float) ctr.y, (float) (DEFAULT_HEIGHT * 2));
+                    mpts.addAll((float) ctr.x, (float) ctr.y, (float) (-DEFAULT_HEIGHT / 2));
+                    var j = pts.length - 1;
+                    for (int i = 0; i < pts.length; j = i++)
+                    {
+                        j = (i + 1) % pts.length;
+                        fcs.addAll(i, 0, j, 0, ctop, 0);
+                        fcs.addAll(ctop, 0, j, 0, i, 0);
+                        fcs.addAll(i, 0, j, 0, cbot, 0);
+                        fcs.addAll(cbot, 0, j, 0, i, 0);
+                    }
+
+                    shape = new MeshView(msh);
+                }
+                else
+                {
+                    return;
+                }
+
+                shape.getTransforms().clear();
+                shape.getTransforms().add(new Rotate(Math.toDegrees(p.getOrientation()),
+                    Rotate.Z_AXIS));
             }
         }
 
         shapeCache.put(s, shape);
 
-        if (shape instanceof Cylinder)
-        {
-            shape.setRotationAxis(Rotate.X_AXIS);
-            shape.setRotate(90);
-        }
-        else
-        {
-            /*shape.setRotationAxis(Rotate.Z_AXIS);
-            shape.setRotate(Math.toDegrees(p.getOrientation()));*/
-            shape.getTransforms().clear();
-            shape.getTransforms().add(new Rotate(Math.toDegrees(p.getOrientation()),
-                Rotate.Z_AXIS));
-        }
         shape.setTranslateX(p.getX());
         shape.setTranslateY(p.getY());
         shape.setMaterial(mat);
