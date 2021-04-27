@@ -296,7 +296,7 @@ public class SimulatorModel
         var results = new long[N];
         System.out.println("Starting benchmark for " + N + " games");
         var old = Level.CONFIG;
-        for (var i = 0; i < N; i++)
+        for (var i = -1; i < N; i++)
         {
             Cockpit.defaultLogLevel = Level.OFF;
             Util.updateLogLevel(Level.OFF);
@@ -308,8 +308,11 @@ public class SimulatorModel
             {
                 processRound();
             }
-            results[i] = nextRoundTime;
-            total += nextRoundTime;
+            if (i != -1) // to ignore first round
+            {
+                results[i] = nextRoundTime;
+                total += nextRoundTime;
+            }
             System.out.println("End game " + (i + 1) + " - " + nextRoundTime / 1000.0);
         }
         Util.updateLogLevel(Level.CONFIG);
