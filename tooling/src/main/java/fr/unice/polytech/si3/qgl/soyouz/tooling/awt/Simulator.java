@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
 import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.threed.SimulatorCanvas3D;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorListener;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 

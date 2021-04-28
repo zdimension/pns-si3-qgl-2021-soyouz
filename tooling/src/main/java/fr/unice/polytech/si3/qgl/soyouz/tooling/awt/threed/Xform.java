@@ -30,7 +30,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
+package fr.unice.polytech.si3.qgl.soyouz.tooling.awt.threed;
 
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;

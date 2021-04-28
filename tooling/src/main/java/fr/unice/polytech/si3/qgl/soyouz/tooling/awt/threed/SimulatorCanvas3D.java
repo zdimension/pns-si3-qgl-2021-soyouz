@@ -1,4 +1,4 @@
-package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
+package fr.unice.polytech.si3.qgl.soyouz.tooling.awt.threed;
 
 import com.interactivemesh.jfx.importer.tds.TdsModelImporter;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
@@ -10,10 +10,14 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Polygon;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Rectangle;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes.Shape;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.*;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.SimulatorView;
+import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.threed.cloth.ClothMesh;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -22,8 +26,9 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
+import javax.imageio.ImageIO;
+import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
@@ -38,7 +43,7 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         Reef.class, new PhongMaterial(Color.rgb(12, 191, 12))
     );
     private static final double CAMERA_NEAR_CLIP = 10;
-    private static final double CAMERA_FAR_CLIP = 100000.0;
+    private static final double CAMERA_FAR_CLIP = 300000.0;
     private static final double AXIS_LENGTH = 2000.0;
     private static final double MOUSE_SPEED = 0.1;
     private static final double ROTATION_SPEED = 2.0;
@@ -51,9 +56,10 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     );
     private static final PhongMaterial MAT_CHECKPOINT = new PhongMaterial(Color.rgb(255, 0, 0,
         0.7));
-    private final static Group shipMesh;
+    private Group shipMesh;
+    private Rotate clothRotate = new Rotate(0, Rotate.Y_AXIS);
 
-    static
+    void initShip()
     {
         var x = new TdsModelImporter();
         x.setResourceBaseUrl(SimulatorCanvas3D.class.getResource("ship/"));
@@ -77,9 +83,27 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         light.setMaxRange(1000);
         light.setConstantAttenuation(0.1);
         light.setLinearAttenuation(0.1);
-        var lightPos = new Translate(-180, -1090, 2010);
-        light.getTransforms().add(lightPos);
+        light.getTransforms().add(new Translate(-180, -1090, 2010));
         shipMesh.getChildren().addAll(light);
+
+        ClothMesh cloth = new ClothMesh(1200.0, 720.0);
+        cloth.setPerPointMass(10);
+        cloth.setBendStrength(0.5);
+        cloth.setStretchStrength(1);
+        cloth.setShearStrength(0.5);
+        cloth.setDrawMode(DrawMode.FILL);
+        cloth.setCullFace(CullFace.NONE);
+        cloth.setDiffuseMap(new Image("/fr/unice/polytech/si3/qgl/soyouz/tooling/awt/threed/ship/flag.png"));
+        cloth.setSpecularPower(5);
+        cloth.getTransforms().addAll(
+            new Rotate(-90, Rotate.Y_AXIS),
+            new Translate(110, -4080, 160),
+            new Translate(-600, 0),
+            clothRotate,
+            new Translate(600, 0));
+        cloth.startSimulation();
+
+        shipMesh.getChildren().add(cloth);
 
         x.close();
     }
@@ -118,11 +142,19 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     {
         this.model = model;
 
+        initShip();
+
         var sea = new Box(1e6, 1e6, 0);
         sea.setTranslateZ(0);
         var mat = new PhongMaterial(Color.rgb(23, 23, 223, 0.6));
         sea.setMaterial(mat);
         buildAxes();
+        /*var sb = new Skybox(new Image("/fr/unice/polytech/si3/qgl/soyouz/tooling/awt/threed/skybox.png"), 100000, camera);
+        sb.setRotationAxis(Rotate.X_AXIS);
+        sb.setRotate(90);
+        sb.setTranslateZ(-20000);
+        root.getChildren().add(sb);*/
+
         root.getChildren().add(world);
         world.getChildren().add(entities);
         world.getChildren().add(sea);
@@ -135,10 +167,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         world.getChildren().add(lit);
         root.setDepthTest(DepthTest.ENABLE);
 
-        var b = new Box(100, 100, 100);
-        b.setTranslateZ(1000);
-        b.setMaterial(new PhongMaterial(Color.RED));
-        world.getChildren().add(b);
         buildCamera();
 
         Scene scene = new Scene(root, 500, 300, true, SceneAntialiasing.BALANCED);
@@ -334,6 +362,8 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     {
         Platform.runLater(() ->
         {
+            clothRotate.setAngle(180 + Math.toDegrees(model.getWind().getOrientation() - model.getShip().getPosition().getOrientation()));
+            System.out.println(clothRotate.getAngle());
             entities.getChildren().clear();
             drawGame();
         });
