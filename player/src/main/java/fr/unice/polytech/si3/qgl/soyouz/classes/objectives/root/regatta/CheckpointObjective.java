@@ -92,17 +92,6 @@ public class CheckpointObjective implements RootObjective
         return roundObjective.resolve();
     }
 
-    static class LinkedNode
-    {
-        final int value;
-        LinkedNode next;
-
-        public LinkedNode(int value)
-        {
-            this.value = value;
-        }
-    }
-
     private void traverseNode(ShapedEntity[] arr, List<Node> lines, double shipSize, //NOSONAR
                               Position shipPosition)
     {
