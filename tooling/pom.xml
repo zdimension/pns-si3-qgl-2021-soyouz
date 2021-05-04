@@ -26,5 +26,13 @@
             <artifactId>javafx-swing</artifactId>
             <version>16</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.interactivemesh.jfx</groupId>
+            <artifactId>tdsimporter</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jim3dsModelImporterJFX.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
