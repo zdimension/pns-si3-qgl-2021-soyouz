@@ -1,1 +1,0 @@
-rule fr.unice.polytech.si3.qgl.soyouz.** fr.unice.polytech.si3.qgl.soyouz2.@1
