@@ -43,7 +43,7 @@ public final class Util
     {
         var root = LogManager.getLogManager().getLogger("");
         currentLogLevel = logLevel;
-        root.setLevel(logLevel);
+        root.setLevel(logLevel); //NOSONAR
         Arrays.stream(root.getHandlers()).forEach(h -> h.setLevel(logLevel));
     }
 

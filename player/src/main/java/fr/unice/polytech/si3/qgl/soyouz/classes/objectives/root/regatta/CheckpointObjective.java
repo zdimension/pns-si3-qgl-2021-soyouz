@@ -182,7 +182,7 @@ public class CheckpointObjective implements RootObjective
             }
             catch (JsonProcessingException e)
             {
-                e.printStackTrace();
+                e.printStackTrace(); //NOSONAR
             }
             var gnodes = new ArrayList<Node>();
             for (int i = 0; i < nodes.size(); i++)

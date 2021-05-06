@@ -47,7 +47,7 @@ public class Cockpit implements ICockpit
         {
             //
         }
-        logger.getParent().addHandler(new ListLogHandler(logList));
+        logger.getParent().addHandler(new ListLogHandler(logList)); //NOSONAR
     }
 
     public final Map<String, ShapedEntity> entityMemory = new HashMap<>();
@@ -85,7 +85,7 @@ public class Cockpit implements ICockpit
         catch (Exception e)
         {
             logger.severe(e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(); //NOSONAR
         }
     }
 
@@ -104,7 +104,7 @@ public class Cockpit implements ICockpit
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            e.printStackTrace(); //NOSONAR
         }
     }
 
@@ -127,7 +127,7 @@ public class Cockpit implements ICockpit
         catch (Exception e)
         {
             logger.severe("Error writing nextRound : " + e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(); //NOSONAR
             return "[]";
         }
     }
@@ -159,7 +159,7 @@ public class Cockpit implements ICockpit
         catch (Exception e)
         {
             logger.log(Level.SEVERE, "Error writing nextRound : " + e.getMessage());
-            e.printStackTrace();
+            e.printStackTrace(); //NOSONAR
             return new GameAction[0];
         }
     }
