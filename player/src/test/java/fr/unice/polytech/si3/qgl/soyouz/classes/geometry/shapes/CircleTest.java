@@ -33,4 +33,25 @@ class CircleTest
         assertFalse(circle.contains(new Point2d(1, 50)));
         assertTrue(circle.contains(new Point2d(25, 25)));
     }
+
+    @Test
+    void getMaxDiameterTest()
+    {
+        assertNotEquals(99.1, circle.getMaxDiameter());
+        assertEquals(100, circle.getMaxDiameter());
+        assertNotEquals(100.1, circle.getMaxDiameter());
+    }
+
+    @Test
+    void linePassThroughTest()
+    {
+        assertTrue(circle.linePassesThrough(new Point2d(-100, 5), new Point2d(100, 5), 10));
+        assertFalse(circle.linePassesThrough(new Point2d(-100, 70), new Point2d(100, 70), 10));
+    }
+    @Test
+    void getShellInternalTest()
+    {
+        assertEquals(16, circle.getShellInternal(10).length);
+        assertEquals(16, circle.getShellInternal(5).length);
+    }
 }

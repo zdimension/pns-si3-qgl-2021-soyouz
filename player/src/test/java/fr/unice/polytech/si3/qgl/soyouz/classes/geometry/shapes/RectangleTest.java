@@ -1,10 +1,10 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.geometry.shapes;
 
+import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RectangleTest
 {
@@ -39,5 +39,27 @@ class RectangleTest
         assertNotEquals(1.01, rectangle.getOrientation());
         assertEquals(1, rectangle.getOrientation());
         assertNotEquals(-1.01, rectangle.getOrientation());
+    }
+
+    @Test
+    void contains()
+    {
+        assertTrue(rectangle.contains(new Point2d(1, 1)));
+        assertTrue(rectangle.contains(new Point2d(2, 1)));
+        assertTrue(rectangle.contains(new Point2d(3, 1)));
+        assertFalse(rectangle.contains(new Point2d(4, 1)));
+        assertFalse(rectangle.contains(new Point2d(1, 2)));
+    }
+
+    @Test
+    void getMaxDiameter()
+    {
+        assertTrue(rectangle.getMaxDiameter() > 6.7 && rectangle.getMaxDiameter() < 6.8);
+    }
+
+    @Test
+    void getShellInternal()
+    {
+        assertEquals(4, rectangle.getShellInternal(10).length);
     }
 }

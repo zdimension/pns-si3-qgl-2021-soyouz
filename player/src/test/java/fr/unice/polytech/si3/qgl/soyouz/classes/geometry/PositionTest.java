@@ -93,4 +93,11 @@ class PositionTest
             " rad}";
         assertEquals(posToString, position.toString());
     }
+
+    @Test
+    void mulTest()
+    {
+        Position posTimesTwo = position.mul(2);
+        assertEquals(new Position(20, 40, 60), posTimesTwo);
+    }
 }
