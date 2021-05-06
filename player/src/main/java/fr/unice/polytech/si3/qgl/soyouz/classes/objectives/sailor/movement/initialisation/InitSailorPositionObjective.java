@@ -1,17 +1,14 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.initialisation;
 
-import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.CompositeObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorXMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -176,7 +173,8 @@ public class InitSailorPositionObjective extends CompositeObjective<MovingObject
         {
             var sp = linesWithSails.get(i).getSail().getPos();
             sailors.stream().min(Comparator.comparingInt(
-                sailor -> sailor.getPos().dist(sp))).ifPresent(sailor -> {
+                sailor -> sailor.getPos().dist(sp))).ifPresent(sailor ->
+            {
                 children.add(new SailorMovementObjective(sailor, sp));
                 sailors.remove(sailor);
             });

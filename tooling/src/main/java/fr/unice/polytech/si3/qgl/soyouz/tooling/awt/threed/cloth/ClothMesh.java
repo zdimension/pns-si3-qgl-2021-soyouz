@@ -55,8 +55,6 @@ import java.util.logging.Logger;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
-import static java.lang.Math.sqrt;
-
 /**
  * @author Jason Pollastrini aka jdub1581
  */
@@ -87,7 +85,6 @@ public class ClothMesh extends MeshView
     private final ClothTimer timer = new ClothTimer();
     private final PhongMaterial material = new PhongMaterial();
     private final List<WeightedPoint> points = new ArrayList<>();
-    private final Affine affine = new Affine();
     /*==========================================================================
      Properties
      *///=======================================================================
@@ -348,6 +345,7 @@ public class ClothMesh extends MeshView
         this.setBendStrength(bendStr);
         this.setShearStrength(shearStr);
 
+        Affine affine = new Affine();
         this.getTransforms().add(affine);
 
         this.buildMesh(getDivisionsX(), getDivisionsY(), getWidth(), getHeight(),
@@ -461,13 +459,13 @@ public class ClothMesh extends MeshView
                     if (X < (divsX - 1) && Y < (divsY - 1))
                     {
                         p.attatchTo((points.get(((Y + 1) * (divsX) + (X + 1)))),
-                            sqrt((xDist * xDist) + (yDist * yDist)), getShearStrength());
+                            Math.hypot(xDist, yDist), getShearStrength());
                     }
                     // index(xy) to left(x - 1(y + 1))
                     if (Y != 0 && X != (divsX - 1))
                     {
                         p.attatchTo((points.get(((Y - 1) * divsX + (X + 1)))),
-                            sqrt((xDist * xDist) + (yDist * yDist)), getShearStrength());
+                            Math.hypot(xDist, yDist), getShearStrength());
                     }
                 }
             }
@@ -905,9 +903,7 @@ public class ClothMesh extends MeshView
     {
 
         private final long ONE_NANO = 1000000000L;
-        private final double ONE_NANO_INV = 1f / 1000000000L;
         private final double fixedDeltaTime = 0.16;
-        private final NanoThreadFactory tf;
         private long startTime, previousTime;
         private double deltaTime;
         private int leftOverDeltaTime, timeStepAmt;
@@ -919,7 +915,7 @@ public class ClothMesh extends MeshView
 
             this.setPeriod(Duration.millis(16));
 
-            this.tf = new NanoThreadFactory();
+            NanoThreadFactory tf = new NanoThreadFactory();
             this.setExecutor(Executors.newSingleThreadExecutor(tf));
         }
 
@@ -928,6 +924,7 @@ public class ClothMesh extends MeshView
          */
         public double getTimeAsSeconds()
         {
+            double ONE_NANO_INV = 1f / 1000000000L;
             return getTime() * ONE_NANO_INV;
         }
 
@@ -970,10 +967,10 @@ public class ClothMesh extends MeshView
         @Override
         protected Task<Void> createTask()
         {
-            return new Task<Void>()
+            return new Task<>()
             {
                 @Override
-                protected Void call() throws Exception
+                protected Void call()
                 {
                     updateTimer();
 
@@ -983,9 +980,7 @@ public class ClothMesh extends MeshView
                     double T = 1;
                     points.parallelStream().filter(p ->
                         points.indexOf(p) % (getDivisionsX() - 1) == 0).forEach(p ->
-                    {
-                        p.applyForce(new Point3D(10, -T, T));
-                    });
+                        p.applyForce(new Point3D(10, -T, T)));
                     for (int i = 0; i < getConstraintAccuracy(); i++)
                     {
                         points.parallelStream().forEach(WeightedPoint::solveConstraints);

@@ -44,7 +44,9 @@ public class Application
                     for (String week : getWeeks())
                     {
                         if (week.contains("real") && !week.contains("2019"))
+                        {
                             continue;
+                        }
                         model.loadFile(week, false);
                         var bench = model.runBenchmark(1);
                         System.out.println("TESTING " + week + " = " + bench);

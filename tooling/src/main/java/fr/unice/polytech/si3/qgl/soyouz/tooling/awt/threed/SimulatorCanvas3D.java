@@ -15,7 +15,6 @@ import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.threed.cloth.ClothMesh;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -26,8 +25,6 @@ import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
-import javax.imageio.ImageIO;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -56,64 +53,13 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     );
     private static final PhongMaterial MAT_CHECKPOINT = new PhongMaterial(Color.rgb(255, 0, 0,
         0.7));
-    private Group shipMesh;
-    private Rotate clothRotate = new Rotate(0, Rotate.Y_AXIS);
-
-    void initShip()
-    {
-        var x = new TdsModelImporter();
-        x.setResourceBaseUrl(SimulatorCanvas3D.class.getResource("ship/"));
-        x.read(SimulatorCanvas3D.class.getResource("ship/ST_MARIA.3DS"));
-        var msh = x.getImport();
-        var mats = x.getNamedMaterials();
-        var gray = Color.rgb(199, 199, 199, 0.85);
-        mats.get("LEON").setDiffuseColor(gray);
-        mats.get("LARGE").setDiffuseColor(gray);
-        mats.get("GLASS").setDiffuseColor(Color.rgb(13, 50, 1, 0.5));
-        mats.get("BLUE").setDiffuseColor(gray);
-        shipMesh = new Group(msh);
-        shipMesh.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
-        shipMesh.setScaleX(0.1);
-        shipMesh.setScaleY(0.1);
-        shipMesh.setScaleZ(0.1);
-        shipMesh.setTranslateX(145.5);
-        shipMesh.setTranslateY(1900);
-        shipMesh.setTranslateZ(260);
-        var light = new PointLight(Color.ORANGE);
-        light.setMaxRange(1000);
-        light.setConstantAttenuation(0.1);
-        light.setLinearAttenuation(0.1);
-        light.getTransforms().add(new Translate(-180, -1090, 2010));
-        shipMesh.getChildren().addAll(light);
-
-        ClothMesh cloth = new ClothMesh(1200.0, 720.0);
-        cloth.setPerPointMass(10);
-        cloth.setBendStrength(0.5);
-        cloth.setStretchStrength(1);
-        cloth.setShearStrength(0.5);
-        cloth.setDrawMode(DrawMode.FILL);
-        cloth.setCullFace(CullFace.NONE);
-        cloth.setDiffuseMap(new Image("/fr/unice/polytech/si3/qgl/soyouz/tooling/awt/threed/ship/flag.png"));
-        cloth.setSpecularPower(5);
-        cloth.getTransforms().addAll(
-            new Rotate(-90, Rotate.Y_AXIS),
-            new Translate(110, -4080, 160),
-            new Translate(-600, 0),
-            clothRotate,
-            new Translate(600, 0));
-        cloth.startSimulation();
-
-        shipMesh.getChildren().add(cloth);
-
-        x.close();
-    }
-
     final Group root = new Group();
     final Xform axisGroup = new Xform();
     final Xform world = new Xform();
     final PerspectiveCamera camera = new PerspectiveCamera(true);
     final Xform cameraXform = new Xform();
     final Xform entities = new Xform();
+    private final Rotate clothRotate = new Rotate(0, Rotate.Y_AXIS);
     private final SimulatorModel model;
     private final double DEFAULT_HEIGHT = 100;
     private final PhongMaterial MAT_BLACK = new PhongMaterial(Color.BLACK);
@@ -131,13 +77,12 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     double mouseOldY;
     double mouseDeltaX;
     double mouseDeltaY;
+    private Group shipMesh;
     private boolean centered = false;
     private LinkedList<Position>[] shipHistory;
     private boolean drawPath = true;
     private boolean drawNodes = true;
-    private boolean debugCollisions;
     private double lastOrientation;
-
     public SimulatorCanvas3D(SimulatorModel model)
     {
         this.model = model;
@@ -149,11 +94,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         var mat = new PhongMaterial(Color.rgb(23, 23, 223, 0.6));
         sea.setMaterial(mat);
         buildAxes();
-        /*var sb = new Skybox(new Image("/fr/unice/polytech/si3/qgl/soyouz/tooling/awt/threed/skybox.png"), 100000, camera);
-        sb.setRotationAxis(Rotate.X_AXIS);
-        sb.setRotate(90);
-        sb.setTranslateZ(-20000);
-        root.getChildren().add(sb);*/
 
         root.getChildren().add(world);
         world.getChildren().add(entities);
@@ -206,6 +146,56 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
         shipRotZ = new Rotate(0, Rotate.Z_AXIS);
         shipRotTransverse = new Rotate(0, Rotate.Y_AXIS);
         shipShape.getTransforms().addAll(shipRotZ, shipRotTransverse);
+    }
+
+    void initShip()
+    {
+        var x = new TdsModelImporter();
+        x.setResourceBaseUrl(SimulatorCanvas3D.class.getResource("ship/"));
+        x.read(SimulatorCanvas3D.class.getResource("ship/ST_MARIA.3DS"));
+        var msh = x.getImport();
+        var mats = x.getNamedMaterials();
+        var gray = Color.rgb(199, 199, 199, 0.85);
+        mats.get("LEON").setDiffuseColor(gray);
+        mats.get("LARGE").setDiffuseColor(gray);
+        mats.get("GLASS").setDiffuseColor(Color.rgb(13, 50, 1, 0.5));
+        mats.get("BLUE").setDiffuseColor(gray);
+        shipMesh = new Group(msh);
+        shipMesh.getTransforms().add(new Rotate(90, Rotate.X_AXIS));
+        shipMesh.setScaleX(0.1);
+        shipMesh.setScaleY(0.1);
+        shipMesh.setScaleZ(0.1);
+        shipMesh.setTranslateX(145.5);
+        shipMesh.setTranslateY(1900);
+        shipMesh.setTranslateZ(260);
+        var light = new PointLight(Color.ORANGE);
+        light.setMaxRange(1000);
+        light.setConstantAttenuation(0.1);
+        light.setLinearAttenuation(0.1);
+        light.getTransforms().add(new Translate(-180, -1090, 2010));
+        shipMesh.getChildren().addAll(light);
+
+        ClothMesh cloth = new ClothMesh(1200.0, 720.0);
+        cloth.setPerPointMass(10);
+        cloth.setBendStrength(0.5);
+        cloth.setStretchStrength(1);
+        cloth.setShearStrength(0.5);
+        cloth.setDrawMode(DrawMode.FILL);
+        cloth.setCullFace(CullFace.NONE);
+        cloth.setDiffuseMap(new Image("/fr/unice/polytech/si3/qgl/soyouz/tooling/awt/threed/ship" +
+            "/flag.png"));
+        cloth.setSpecularPower(5);
+        cloth.getTransforms().addAll(
+            new Rotate(-90, Rotate.Y_AXIS),
+            new Translate(110, -4080, 160),
+            new Translate(-600, 0),
+            clothRotate,
+            new Translate(600, 0));
+        cloth.startSimulation();
+
+        shipMesh.getChildren().add(cloth);
+
+        x.close();
     }
 
     private void repaintEx()
@@ -306,7 +296,6 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
     @Override
     public void setDebugCollisions(boolean selected)
     {
-        debugCollisions = selected;
         update();
     }
 
@@ -575,11 +564,10 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
                     var j = pts.length - 1;
                     for (int i = 0; i < pts.length; j = i++)
                     {
-                        j = (i + 1) % pts.length;
-                        fcs.addAll(i, 0, j, 0, ctop, 0);
-                        fcs.addAll(ctop, 0, j, 0, i, 0);
-                        fcs.addAll(i, 0, j, 0, cbot, 0);
-                        fcs.addAll(cbot, 0, j, 0, i, 0);
+                        fcs.addAll(j, 0, i, 0, ctop, 0);
+                        fcs.addAll(ctop, 0, i, 0, j, 0);
+                        fcs.addAll(j, 0, i, 0, cbot, 0);
+                        fcs.addAll(cbot, 0, i, 0, j, 0);
                     }
 
                     shape = new MeshView(msh);

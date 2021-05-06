@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Voile extends DeckEntity
 {
-    private boolean openned = false;
+    private boolean openned;
 
     /**
      * Constructor.

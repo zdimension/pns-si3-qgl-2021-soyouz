@@ -48,6 +48,7 @@ class CircleTest
         assertTrue(circle.linePassesThrough(new Point2d(-100, 5), new Point2d(100, 5), 10));
         assertFalse(circle.linePassesThrough(new Point2d(-100, 70), new Point2d(100, 70), 10));
     }
+
     @Test
     void getShellInternalTest()
     {

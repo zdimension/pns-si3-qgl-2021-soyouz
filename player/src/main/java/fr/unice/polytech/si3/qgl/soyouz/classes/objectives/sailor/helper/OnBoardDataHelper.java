@@ -2,7 +2,10 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Gouvernail;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.OnboardEntity;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Rame;
+import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.Vigie;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.SailorMovementObjective;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.LineOnBoat;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
@@ -222,9 +225,10 @@ public class OnBoardDataHelper
         OnboardEntity rudder = ship.findFirstEntity(Gouvernail.class);
         if (rudder != null)
         {
-            findSailor(rudder.getPos()).ifPresent(sailor -> {
-                    rudderSailor = sailor;
-                    sailors.remove(sailor);
+            findSailor(rudder.getPos()).ifPresent(sailor ->
+            {
+                rudderSailor = sailor;
+                sailors.remove(sailor);
             });
         }
     }

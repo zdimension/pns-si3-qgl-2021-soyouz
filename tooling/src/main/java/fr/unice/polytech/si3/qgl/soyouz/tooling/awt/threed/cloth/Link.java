@@ -34,7 +34,6 @@ import javafx.geometry.Point3D;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Jason Pollastrini aka jdub1581
  */
 public class Link implements Constraint

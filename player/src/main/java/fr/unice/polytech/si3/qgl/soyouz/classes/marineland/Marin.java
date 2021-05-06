@@ -50,7 +50,8 @@ public class Marin extends OnboardEntity
      *
      * @return the position of the sailor.
      */
-    @JsonIgnore @Override
+    @JsonIgnore
+    @Override
     public PosOnShip getPos()
     {
         return PosOnShip.of(getX(), getY());

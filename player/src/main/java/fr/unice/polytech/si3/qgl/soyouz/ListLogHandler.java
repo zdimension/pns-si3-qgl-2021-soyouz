@@ -24,7 +24,9 @@ class ListLogHandler extends Handler
     {
         var str = fmt.format(record);
         if (record.getLevel().intValue() < Util.currentLogLevel.intValue())
+        {
             return;
+        }
         System.out.print(str);
         logList.add(str);
     }

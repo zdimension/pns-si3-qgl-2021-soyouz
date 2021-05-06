@@ -24,7 +24,8 @@ public class Circle extends Polygon implements Shape
      */
     public Circle(@JsonProperty("radius") double radius)
     {
-        super(0, getPoints(radius), Pair.of(new BoundingBox(-radius, radius, -radius, radius), Point2d.ZERO));
+        super(0, getPoints(radius), Pair.of(new BoundingBox(-radius, radius, -radius, radius),
+            Point2d.ZERO));
         this.radius = radius;
         this.radiusSquared = radius * radius;
         this.diameter = radius * 2;

@@ -43,7 +43,7 @@ public class Cockpit implements ICockpit
         {
             logger.getParent().removeHandler(logger.getParent().getHandlers()[0]);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             //
         }

@@ -89,17 +89,6 @@ public class MoveAction extends GameAction
     }
 
     /**
-     * Generic hash method override.
-     *
-     * @return the hashcode linked to the current object.
-     */
-    @Override
-    public int hashCode()
-    {
-        return super.hashCode();
-    }
-
-    /**
      * Generic toString method override.
      *
      * @return the string associated to the current object.

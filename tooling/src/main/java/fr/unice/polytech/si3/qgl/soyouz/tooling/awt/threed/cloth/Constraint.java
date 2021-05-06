@@ -32,7 +32,6 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling.awt.threed.cloth;
 import java.util.stream.IntStream;
 
 /**
- *
  * @author Jason Pollastrini aka jdub1581
  */
 @FunctionalInterface

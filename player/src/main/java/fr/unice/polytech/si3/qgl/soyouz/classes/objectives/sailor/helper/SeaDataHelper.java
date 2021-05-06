@@ -19,8 +19,8 @@ public class SeaDataHelper
     /**
      * Constructor.
      *
-     * @param ship            The ship.
-     * @param wind            The wind.
+     * @param ship The ship.
+     * @param wind The wind.
      */
     public SeaDataHelper(Bateau ship, Wind wind)
     {

@@ -18,17 +18,9 @@ public class Polygon implements Shape
 {
     private final double orientation;
     private final Point2d[] vertices;
-
-    @JsonIgnore
-    public Point2d getCenter()
-    {
-        return center;
-    }
-
     private final Point2d center;
     private final Map<Integer, Point2d[]> shellCache = new HashMap<>();
     private final BoundingBox boundingBox;
-
     /**
      * Constructor.
      *
@@ -76,6 +68,12 @@ public class Polygon implements Shape
     {
         return (b.x - a.x) * (p.y - a.y)
             - (p.x - a.x) * (b.y - a.y);
+    }
+
+    @JsonIgnore
+    public Point2d getCenter()
+    {
+        return center;
     }
 
     /**

@@ -4,6 +4,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.MoveAction;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.types.PosOnShip;
+import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,19 +55,7 @@ public class SailorYMovementObjective implements MovingObjective
         trace();
         List<GameAction> moveAction = new ArrayList<>();
         int distStillToParkour = yOnDeck - sailor.getY();
-        int yMove = 0;
-        if (distStillToParkour >= 5)
-        {
-            yMove = 5;
-        }
-        else if (distStillToParkour <= -5)
-        {
-            yMove = -5;
-        }
-        else
-        {
-            yMove = distStillToParkour;
-        }
+        int yMove = Util.clamp(distStillToParkour, -5, 5);
         sailor.moveRelative(PosOnShip.of(0, yMove));
         moveAction.add(new MoveAction(sailor, 0, yMove));
         nbTurnToComplete--;

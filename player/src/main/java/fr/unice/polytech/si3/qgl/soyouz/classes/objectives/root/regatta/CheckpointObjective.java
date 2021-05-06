@@ -101,7 +101,8 @@ public class CheckpointObjective implements RootObjective
         {
             var elem = stack.value;
             var node = nodes.get(elem);
-            outer: //NOSONAR
+            outer:
+            //NOSONAR
             for (int i = 0; i < nodes.size(); i++)
             {
                 if (i == elem)
@@ -158,7 +159,7 @@ public class CheckpointObjective implements RootObjective
 
         if (state.isRecalculatePathfinding() || path == null)
         {
-            synchronized(nodes)
+            synchronized (nodes)
             {
                 nodes.clear();
                 nodes.add(boat.getPosition());

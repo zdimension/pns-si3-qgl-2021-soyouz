@@ -3,7 +3,6 @@ package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.GameState;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.DeckEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.parameters.NextRoundParameters;

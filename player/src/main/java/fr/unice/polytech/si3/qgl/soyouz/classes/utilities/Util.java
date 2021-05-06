@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 public final class Util
 {
+    public static Level currentLogLevel;
+
     private Util()
     {
     }
@@ -34,8 +36,6 @@ public final class Util
         return str.sorted(Comparator.comparing(OnboardEntity::getX));
     }
 
-    public static Level currentLogLevel;
-
     /**
      * Update the log level.
      */
@@ -51,5 +51,16 @@ public final class Util
     {
         System.setProperty("java.util.logging.SimpleFormatter.format",
             "%1$tF %1$tT:%1$tL %4$s %3$s : %5$s%6$s%n");
+    }
+
+    public static int clamp(int value, int min, int max)
+    {
+        if (value < min)
+        {
+            return min;
+        }
+
+        return Math.min(value, max);
+
     }
 }

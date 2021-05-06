@@ -20,14 +20,14 @@ public class Gouvernail extends DeckEntity
         super(x, y);
     }
 
+    public static boolean isValid(double rotation)
+    {
+        return Math.abs(rotation) <= ALLOWED_ROTATION;
+    }
+
     @Override
     public char getChar()
     {
         return 'G';
-    }
-
-    public static boolean isValid(double rotation)
-    {
-        return Math.abs(rotation) <= ALLOWED_ROTATION;
     }
 }

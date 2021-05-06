@@ -1,9 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor;
 
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.GameAction;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.Objective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.OnBoardObjective;
-import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.movement.MovingObjective;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -34,7 +34,6 @@ import javafx.geometry.Point3D;
 import java.util.HashMap;
 
 /**
- *
  * @author Jason Pollastrini aka jdub1581
  */
 public class WeightedPoint

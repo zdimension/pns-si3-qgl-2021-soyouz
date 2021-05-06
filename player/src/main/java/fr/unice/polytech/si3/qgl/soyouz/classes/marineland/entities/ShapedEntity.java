@@ -105,10 +105,4 @@ public abstract class ShapedEntity
             && Objects.equals(((ShapedEntity) obj).position, position)
             && Objects.equals(((ShapedEntity) obj).shape, shape);
     }
-
-    @Override
-    public int hashCode()
-    {
-        return super.hashCode();
-    }
 }

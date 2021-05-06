@@ -31,29 +31,6 @@ public class Rame extends DeckEntity
         return isLeft;
     }
 
-    /**
-     * Generic equals override.
-     *
-     * @param o The second entity.
-     * @return if the entities are equal or not.
-     */
-    @Override
-    public boolean equals(Object o)
-    {
-        return super.equals(o);
-    }
-
-    /**
-     * Generic hash override.
-     *
-     * @return the code associated to the current object.
-     */
-    @Override
-    public int hashCode()
-    {
-        return super.hashCode();
-    }
-
     @Override
     public char getChar()
     {

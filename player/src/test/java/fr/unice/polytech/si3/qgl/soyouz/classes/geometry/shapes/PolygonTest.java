@@ -53,7 +53,7 @@ class PolygonTest
     @Test
     void getMaxDiameter()
     {
-        assertTrue(polygon.getMaxDiameter()>4.4 && polygon.getMaxDiameter()< 4.5);
+        assertTrue(polygon.getMaxDiameter() > 4.4 && polygon.getMaxDiameter() < 4.5);
     }
 
     @Test

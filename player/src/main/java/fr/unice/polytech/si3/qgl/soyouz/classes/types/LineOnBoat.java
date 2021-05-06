@@ -143,10 +143,4 @@ public class LineOnBoat implements Comparable<LineOnBoat>
         }
         return this.x < line.x ? -1 : 1;
     }
-
-    @Override
-    public int hashCode()
-    {
-        return super.hashCode();
-    }
 }

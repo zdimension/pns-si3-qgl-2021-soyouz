@@ -45,16 +45,12 @@ public class Simulator extends JFrame
         var btnReset = new JButton("Reset");
         topcont.add(btnReset);
         btnReset.addActionListener(e ->
-        {
-            smodel.reset();
-        });
+            smodel.reset());
 
         var btnResetShuffle = new JButton("Reset & shuffle");
         topcont.add(btnResetShuffle);
         btnResetShuffle.addActionListener(e ->
-        {
-            smodel.reset(true);
-        });
+            smodel.reset(true));
 
         canvas = threeD
             ? new SimulatorCanvas3D(smodel)
@@ -64,36 +60,26 @@ public class Simulator extends JFrame
         var btnClear = new JButton("Clear path");
         topcont.add(btnClear);
         btnClear.addActionListener(e ->
-        {
-            canvas.clearHistory();
-        });
+            canvas.clearHistory());
 
         var btnBenchmark = new JButton("Benchmark");
         topcont.add(btnBenchmark);
         btnBenchmark.addActionListener(e ->
-        {
-            smodel.runBenchmark(5);
-        });
+            smodel.runBenchmark(5));
 
         var cbxPath = new JCheckBox("Show graph", true);
         cbxPath.addChangeListener(e ->
-        {
-            canvas.setDrawPath(cbxPath.isSelected());
-        });
+            canvas.setDrawPath(cbxPath.isSelected()));
         topcont2.add(cbxPath);
 
         var cbxNodes = new JCheckBox("Show nodes", true);
         cbxNodes.addChangeListener(e ->
-        {
-            canvas.setDrawNodes(cbxNodes.isSelected());
-        });
+            canvas.setDrawNodes(cbxNodes.isSelected()));
         topcont2.add(cbxNodes);
 
         var cbxDebugColl = new JCheckBox("Debug collisions");
         cbxDebugColl.addChangeListener(e ->
-        {
-            canvas.setDebugCollisions(cbxDebugColl.isSelected());
-        });
+            canvas.setDebugCollisions(cbxDebugColl.isSelected()));
         topcont2.add(cbxDebugColl);
 
         var top = new Panel(new BorderLayout());
@@ -115,9 +101,7 @@ public class Simulator extends JFrame
         var btnCenter = new JButton("Center view");
         topcont.add(btnCenter);
         btnCenter.addActionListener(e ->
-        {
-            canvas.centerView(true);
-        });
+            canvas.centerView(true));
 
         var btnThree = new JButton("3D Mode");
         topcont.add(btnThree);

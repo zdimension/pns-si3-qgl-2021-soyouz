@@ -33,12 +33,12 @@ import java.util.Arrays;
 
 /**
  * Collector to generate a float[] array from a DoubleStream of floats
- *
+ * <p>
  * General use:
  * .collect(FloatCollector::new, FloatCollector::add, FloatCollector::join)
  * Known initial size:
  * .collect(()- new FloatCollector(size), FloatCollector::add, FloatCollector::join)
- *
+ * <p>
  * Generates a FloatCollector, use FloatCollector.toArray() to get the float[]
  *
  * @author JosÃ© Pereda Llamas

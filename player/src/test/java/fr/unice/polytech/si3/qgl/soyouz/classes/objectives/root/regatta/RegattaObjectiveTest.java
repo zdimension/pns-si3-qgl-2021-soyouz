@@ -138,7 +138,7 @@ class RegattaObjectiveTest
         InitGameParameters ip = setupInitObjective();
         GameState gs = new GameState(ip, new NextRoundParameters(
             ip.getShip(), new Wind(1, 1), null));
-        RegattaObjective rO = new RegattaObjective((RegattaGoal)ip.getGoal(), ip);
+        RegattaObjective rO = new RegattaObjective((RegattaGoal) ip.getGoal(), ip);
         ArrayList<GameAction> gameActions = new ArrayList<>(rO.resolve(gs));
         assertEquals(3, gameActions.size());
         gameActions.forEach(act -> assertTrue(act instanceof MoveAction));
@@ -160,11 +160,14 @@ class RegattaObjectiveTest
             .map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
-        for (Marin sailor : sailorsOaring) {
+        for (Marin sailor : sailorsOaring)
+        {
             Optional<DeckEntity> ent = ship.getEntityHere(sailor.getPos());
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
-            oarUsedOnRight++;
+            {
+                oarUsedOnRight++;
+            }
         }
         assertEquals(2, oarUsedOnLeft);
         assertEquals(2, oarUsedOnRight);
@@ -186,11 +189,14 @@ class RegattaObjectiveTest
             .map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
-        for (Marin sailor : sailorsOaring) {
+        for (Marin sailor : sailorsOaring)
+        {
             Optional<DeckEntity> ent = ship.getEntityHere(sailor.getPos());
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
+            {
                 oarUsedOnRight++;
+            }
         }
         assertEquals(2, oarUsedOnLeft);
         assertEquals(0, oarUsedOnRight);
@@ -212,11 +218,14 @@ class RegattaObjectiveTest
             .map(GameAction::getSailor).collect(Collectors.toList());
         int oarUsedOnLeft = 0;
         int oarUsedOnRight = 0;
-        for (Marin sailor : sailorsOaring) {
+        for (Marin sailor : sailorsOaring)
+        {
             Optional<DeckEntity> ent = ship.getEntityHere(sailor.getPos());
             if (ent.isPresent() && ent.get().getY() == 0) oarUsedOnLeft++;
             if (ent.isPresent() && ent.get().getY() == ship.getDeck().getWidth() - 1)
+            {
                 oarUsedOnRight++;
+            }
         }
         assertEquals(0, oarUsedOnLeft);
         assertEquals(2, oarUsedOnRight);

@@ -5,7 +5,6 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Deck;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.Marin;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Bateau;
-import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.Wind;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.objectives.sailor.helper.OnBoardDataHelper;
