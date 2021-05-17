@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import static fr.unice.polytech.si3.qgl.soyouz.Cockpit.trace;
 
+/**
+ * Computes a graph according to given nodes
+ */
 public class Graph
 {
     private final List<Node> path;
@@ -36,6 +39,9 @@ public class Graph
         this.path = tmpPath;
     }
 
+    /**
+     * Computes A* algorithm
+     */
     private void doAStar()
     {
         trace();
@@ -77,6 +83,12 @@ public class Graph
         return this.path;
     }
 
+    /**
+     * Builds the shortest path
+     *
+     * @param path
+     * @param end
+     */
     private void buildShortestPath(List<Node> path, Node end)
     {
         trace();
@@ -88,6 +100,10 @@ public class Graph
         }
     }
 
+    /**
+     *
+     * @return a set of all the edges connecting the nodes
+     */
     public Set<Pair<Node, Node>> getEdges()
     {
         var res = new HashSet<Pair<Integer, Integer>>();

@@ -54,6 +54,9 @@ public class Cockpit implements ICockpit
     private InitGameParameters ip;
     private RootObjective objective;
 
+    /**
+     * Logs data
+     */
     public static void trace()
     {
         if (!ENABLE_TRACE)
@@ -89,6 +92,11 @@ public class Cockpit implements ICockpit
         }
     }
 
+    /**
+     * Initializes the game
+     *
+     * @param ip
+     */
     public void initGameInternal(InitGameParameters ip)
     {
         trace();
@@ -132,6 +140,10 @@ public class Cockpit implements ICockpit
         }
     }
 
+    /**
+     * @param np
+     * @return actions to be performed during the next round
+     */
     public GameAction[] nextRoundInternal(NextRoundParameters np)
     {
         trace();

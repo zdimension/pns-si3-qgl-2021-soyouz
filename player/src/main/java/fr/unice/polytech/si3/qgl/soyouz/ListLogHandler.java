@@ -8,6 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * Handles logs
+ */
 class ListLogHandler extends Handler
 {
     private final SimpleFormatter fmt = new SimpleFormatter();

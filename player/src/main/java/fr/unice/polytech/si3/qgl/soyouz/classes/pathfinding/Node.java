@@ -6,6 +6,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Item representing a point of interest on the sea (boat, checkpoint, reef corner)
+ */
 public class Node implements Comparable<Node>
 {
     private static final Comparator<Node> COMPARATOR =
@@ -24,6 +27,12 @@ public class Node implements Comparable<Node>
         this.id = id;
     }
 
+    /**
+     * Adds a neighbour to the node
+     *
+     * @param neighbour
+     * @return success state, fails if the neighbour has been added previously
+     */
     public boolean addNeighbour(Node neighbour)
     {
         if (connections.containsKey(neighbour))
