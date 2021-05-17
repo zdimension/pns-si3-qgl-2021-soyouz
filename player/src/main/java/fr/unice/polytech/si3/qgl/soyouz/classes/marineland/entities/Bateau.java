@@ -28,6 +28,13 @@ public class Bateau extends AutreBateau
     private final Deck deck;
     private final DeckEntity[] entities;
 
+    /**
+     * Constructor.
+     *
+     * @param name     The name of the boat.
+     * @param deck     The deck of the boat.
+     * @param entities The entities on board.
+     */
     Bateau(@JsonProperty("name") String name,
            @JsonProperty("deck") Deck deck,
            @JsonProperty("entities") DeckEntity[] entities,

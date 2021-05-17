@@ -82,16 +82,32 @@ public class Point2d
         return new Point2d(d * x, d * y);
     }
 
+    /**
+     * Getter.
+     *
+     * @return the square of the norm of the point.
+     */
     public double normSquared()
     {
         return Math.pow(x, 2) + Math.pow(y, 2);
     }
 
+    /**
+     * Getter.
+     *
+     * @return the norm of the point.
+     */
     public double norm()
     {
         return Math.sqrt(normSquared());
     }
 
+    /**
+     * Rotate the point.
+     *
+     * @param angle The angle of rotation.
+     * @return the point after the rotation.
+     */
     public Point2d rotate(double angle)
     {
         if (angle == 0)
@@ -103,11 +119,24 @@ public class Point2d
         return new Point2d(x * cos - y * sin, x * sin + y * cos);
     }
 
+    /**
+     * Scalar product of two points.
+     *
+     * @param b The second point.
+     * @return the result.
+     */
     public double dot(Point2d b)
     {
         return x * b.x + y * b.y;
     }
 
+    /**
+     * Determine if the point is on a line or not.
+     *
+     * @param v A point of the line.
+     * @param w A second point of the line.
+     * @return true if the point is on the line, false otherwise.
+     */
     public boolean isOnLine(Point2d v, Point2d w)
     {
         final float tol = 1e-8f;
@@ -122,11 +151,23 @@ public class Point2d
         return (this.sub(projection)).norm() <= tol;
     }
 
+    /**
+     * Get a new point with the smallests coords from two other points.
+     *
+     * @param other The second point.
+     * @return a new point.
+     */
     public Point2d min(Point2d other)
     {
         return new Point2d(Math.min(x, other.x), Math.min(y, other.y));
     }
 
+    /**
+     * Get a new point with the greatest coords from two other points.
+     *
+     * @param other The second point.
+     * @return a new point.
+     */
     public Point2d max(Point2d other)
     {
         return new Point2d(Math.max(x, other.x), Math.max(y, other.y));
@@ -141,26 +182,53 @@ public class Point2d
             "}";
     }
 
+    /**
+     * Determine the angle between the point and the center.
+     *
+     * @return the angle.
+     */
     public double angle()
     {
         return Math.atan2(y, x);
     }
 
+    /**
+     * Transform a point into a position.
+     *
+     * @return the position.
+     */
     public Position toPosition()
     {
         return new Position(x, y, 0);
     }
 
+    /**
+     * Getter.
+     *
+     * @return the point at the opposite ordinate.
+     */
     public Point2d ortho()
     {
         return new Point2d(-y, x);
     }
 
+    /**
+     * Determine the distance between two points.
+     *
+     * @param other The second point.
+     * @return the distance.
+     */
     public double distance(Point2d other)
     {
         return sub(other).norm();
     }
 
+    /**
+     * Determine the point at the center of two points.
+     *
+     * @param cur The second point.
+     * @return the point in the middle.
+     */
     public Point2d mid(Point2d cur)
     {
         return sub(cur).mul(0.5).add(cur);
