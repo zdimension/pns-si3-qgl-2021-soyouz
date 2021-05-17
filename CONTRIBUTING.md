@@ -1,6 +1,6 @@
 # Contributing 
-Have fun browsing our code *(please choose a language)*   
-Bonne visite sur notre projet *(pensez bien à mettre ce document dans la bonne langue)*
+Have fun browsing our code  
+Bonne visite sur notre projet 
 ## Table of contents | Table des matières
 - [Branching Strategy | Stratégie de Branchage](#branchstrategy)
 - [Styleguides | Guide de Style](#style)
