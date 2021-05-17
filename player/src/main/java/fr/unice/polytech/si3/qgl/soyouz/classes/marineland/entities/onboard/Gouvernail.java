@@ -20,6 +20,12 @@ public class Gouvernail extends DeckEntity
         super(x, y);
     }
 
+    /**
+     * Determine if the rotation is in range of the rudder.
+     *
+     * @param rotation The rotation.
+     * @return true if it is, false otherwise.
+     */
     public static boolean isValid(double rotation)
     {
         return Math.abs(rotation) <= ALLOWED_ROTATION;

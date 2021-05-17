@@ -12,6 +12,13 @@ public class Stream extends ShapedEntity implements Entity
     private final double strength;
     private final Position projectedStrength;
 
+    /**
+     * Constructor.
+     *
+     * @param position The position of the stream.
+     * @param shape The shape of the stream.
+     * @param strength The strength of the stream.
+     */
     @JsonCreator
     public Stream(
         @JsonProperty("position") Position position,
@@ -24,11 +31,21 @@ public class Stream extends ShapedEntity implements Entity
         this.projectedStrength = Point2d.fromPolar(strength, getPosition().getOrientation());
     }
 
+    /**
+     * Getter.
+     *
+     * @return the strength of the stream.
+     */
     public double getStrength()
     {
         return strength;
     }
 
+    /**
+     * Getter.
+     *
+     * @return the projected strength on the boat.
+     */
     @JsonIgnore
     public Position getProjectedStrength()
     {

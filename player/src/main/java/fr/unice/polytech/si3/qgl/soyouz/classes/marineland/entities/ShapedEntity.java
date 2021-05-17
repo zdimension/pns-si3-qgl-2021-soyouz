@@ -71,26 +71,54 @@ public abstract class ShapedEntity
         return shape;
     }
 
+    /**
+     * Setters.
+     *
+     * @param shape The shape to set.
+     */
     public void setShape(Shape shape)
     {
         this.shape = shape;
     }
 
+    /**
+     * Transform a global point to a local point.
+     *
+     * @param pos The point.
+     * @return the point in the local dimension.
+     */
     public Point2d toLocal(Point2d pos)
     {
         return pos.sub(position).rotate(-position.getOrientation());
     }
 
+    /**
+     * Transform a local point to a global point.
+     *
+     * @param pos The point.
+     * @return the point in the global dimension.
+     */
     private Point2d toGlobal(Point2d pos)
     {
         return pos.rotate(position.getOrientation()).add(position);
     }
 
+    /**
+     * Determine if the shape contains a specific position.
+     *
+     * @param pos The position.
+     * @return true if the position is contained by the shape, false otherwise.
+     */
     public boolean contains(Position pos)
     {
         return shape.contains(toLocal(pos));
     }
 
+    /**
+     * Getter.
+     *
+     * @return a stream containing all the point that compose the shell of the shape.
+     */
     @JsonIgnore
     public java.util.stream.Stream<Point2d> getShell()
     {

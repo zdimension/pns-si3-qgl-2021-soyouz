@@ -15,6 +15,11 @@ public abstract class DeckEntity extends OnboardEntity
         super(x, y);
     }
 
+    /**
+     * For the boat ToString.
+     *
+     * @return the char associated to the entity.
+     */
     @JsonIgnore
     public char getChar()
     {
