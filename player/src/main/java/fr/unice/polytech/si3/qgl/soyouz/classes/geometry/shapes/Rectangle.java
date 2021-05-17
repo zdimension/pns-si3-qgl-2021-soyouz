@@ -31,6 +31,13 @@ public class Rectangle extends Polygon implements Shape
         this.height = height;
     }
 
+    /**
+     * Getter.
+     *
+     * @param width The Width.
+     * @param height The Height.
+     * @return the points that compose the rectangle.
+     */
     private static Point2d[] getPoints(double width, double height)
     {
         return new Point2d[]
@@ -62,18 +69,35 @@ public class Rectangle extends Polygon implements Shape
         return height;
     }
 
+    /**
+     * Determine if a point is inside the rectangle.
+     *
+     * @param pos The point.
+     * @return true if it is, false otherwise.
+     */
     @Override
     public boolean contains(Point2d pos)
     {
         return Math.abs(pos.x) <= height / 2 && Math.abs(pos.y) <= width / 2;
     }
 
+    /**
+     * Getter.
+     *
+     * @return an approximation of the diameter of the rectangle.
+     */
     @Override
     public double getMaxDiameter()
     {
         return Math.hypot(width, height);
     }
 
+    /**
+     * Getter.
+     *
+     * @param shipSize The size of the ship.
+     * @return a list of relative point that compose the rectangle shape.
+     */
     @Override
     protected Point2d[] getShellInternal(double shipSize)
     {

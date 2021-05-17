@@ -33,6 +33,13 @@ public class Polygon implements Shape
         this(orientation, vertices, getPolygonBoundingBox(vertices));
     }
 
+    /**
+     * Constructor.
+     *
+     * @param orientation The orientation of the polygon.
+     * @param vertices    All points that compose the shape.
+     * @param boundingBox The bounding box.
+     */
     public Polygon(double orientation, Point2d[] vertices, Pair<BoundingBox, Point2d> boundingBox)
     {
         this.orientation = orientation;
@@ -41,6 +48,12 @@ public class Polygon implements Shape
         this.center = boundingBox.second;
     }
 
+    /**
+     * Getters.
+     *
+     * @param vertices All points that compose the polygon.
+     * @return its bounding box.
+     */
     private static Pair<BoundingBox, Point2d> getPolygonBoundingBox(Point2d[] vertices)
     {
         var min = new Point2d(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
@@ -70,6 +83,12 @@ public class Polygon implements Shape
             - (p.x - a.x) * (b.y - a.y);
     }
 
+
+    /**
+     * Getter.
+     *
+     * @return the center of the polygon.
+     */
     @JsonIgnore
     public Point2d getCenter()
     {
@@ -96,6 +115,12 @@ public class Polygon implements Shape
         return vertices.clone();
     }
 
+    /**
+     * Determine if a point is inside the polygon.
+     *
+     * @param p The point.
+     * @return true if it is, false otherwise.
+     */
     @Override
     public boolean contains(Point2d p) //NOSONAR
     {
@@ -146,6 +171,11 @@ public class Polygon implements Shape
         return wn != 0;
     }
 
+    /**
+     * Getter.
+     *
+     * @return an approximation of the diameter of the polygon.
+     */
     @Override
     public double getMaxDiameter()
     {
@@ -153,6 +183,12 @@ public class Polygon implements Shape
         return Arrays.stream(vertices).mapToDouble(Point2d::norm).max().orElseThrow() * 2;
     }
 
+    /**
+     * Getter.
+     *
+     * @param shipSize The size of the ship.
+     * @return a list of relative point that compose the polygon shape.
+     */
     Point2d[] getShellInternal(double shipSize)
     {
         var shell = new Point2d[vertices.length];
@@ -166,17 +202,37 @@ public class Polygon implements Shape
         return shell;
     }
 
+    /**
+     * Getter.
+     *
+     * @param shipSize The size of the ship.
+     * @return a stream of points that compose the shell of the polygon.
+     */
     @Override
     public Stream<Point2d> getShell(double shipSize)
     {
         return Arrays.stream(getShellArray(shipSize));
     }
 
+    /**
+     * Getter.
+     *
+     * @param shipSize The size of the ship.
+     * @return an array of points that compose the shell of the polygon.
+     */
     private Point2d[] getShellArray(double shipSize)
     {
         return shellCache.computeIfAbsent((int) shipSize, this::getShellInternal);
     }
 
+    /**
+     * Determine if a line is cutting through the circle.
+     *
+     * @param a A point frome the line.
+     * @param b Another point from the line.
+     * @param shipSize The size of the ship.
+     * @return true if the line cross the circle, false otherwise.
+     */
     @Override
     public boolean linePassesThrough(Point2d a, Point2d b, double shipSize)
     {

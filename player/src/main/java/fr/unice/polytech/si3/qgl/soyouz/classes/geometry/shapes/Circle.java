@@ -31,6 +31,12 @@ public class Circle extends Polygon implements Shape
         this.diameter = radius * 2;
     }
 
+    /**
+     * Get a discretization of the circle.
+     *
+     * @param radius The radius of the Circle.
+     * @return a list of points.
+     */
     private static Point2d[] getPoints(double radius)
     {
         return IntStream.range(0, VERTEX_COUNT)
@@ -51,18 +57,37 @@ public class Circle extends Polygon implements Shape
         return radius;
     }
 
+    /**
+     * Determine if a point is inside the circle.
+     *
+     * @param pos The position of the point.
+     * @return true if the circle contains the point, false otherwise.
+     */
     @Override
     public boolean contains(Point2d pos)
     {
         return pos.normSquared() <= radiusSquared;
     }
 
+    /**
+     * Getters.
+     *
+     * @return the diameter of the circle.
+     */
     @Override
     public double getMaxDiameter()
     {
         return diameter;
     }
 
+    /**
+     * Determine if a line is cutting through the circle.
+     *
+     * @param e A point frome the line.
+     * @param l Another point from the line.
+     * @param shipSize The size of the ship.
+     * @return true if the line cross the circle, false otherwise.
+     */
     @Override
     public boolean linePassesThrough(Point2d e, Point2d l, double shipSize)
     {
@@ -94,6 +119,12 @@ public class Circle extends Polygon implements Shape
         return false;
     }
 
+    /**
+     * Getter.
+     *
+     * @param shipSize The size of the ship.
+     * @return a list of relative point that compose the circle shape.
+     */
     @Override
     protected Point2d[] getShellInternal(double shipSize)
     {

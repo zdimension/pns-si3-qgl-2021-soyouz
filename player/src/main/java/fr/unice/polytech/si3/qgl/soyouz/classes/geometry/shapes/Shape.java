@@ -19,13 +19,38 @@ import java.util.stream.Stream;
 })
 public interface Shape
 {
+    /**
+     * Determine if a point is inside the shape.
+     *
+     * @param p The point.
+     * @return true if it is, false otherwise.
+     */
     boolean contains(Point2d p);
 
+    /**
+     * Getter.
+     *
+     * @return an approximation of the diameter of the shape.
+     */
     @JsonIgnore
     double getMaxDiameter();
 
+    /**
+     * Getter.
+     *
+     * @param shipSize The size of the ship.
+     * @return a stream of points that compose the shell of the shape.
+     */
     @JsonIgnore
     Stream<Point2d> getShell(double shipSize);
 
+    /**
+     * Determine if a line is cutting through the shape.
+     *
+     * @param a A point frome the line.
+     * @param b Another point from the line.
+     * @param shipSize The size of the ship.
+     * @return true if the line cross the circle, false otherwise.
+     */
     boolean linePassesThrough(Point2d a, Point2d b, double shipSize);
 }

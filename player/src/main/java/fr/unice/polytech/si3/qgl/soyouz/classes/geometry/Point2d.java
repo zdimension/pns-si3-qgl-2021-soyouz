@@ -49,16 +49,34 @@ public class Point2d
         return y;
     }
 
+    /**
+     * Add two points together.
+     *
+     * @param other The second point.
+     * @return the sum of the two points.
+     */
     public Point2d add(Point2d other)
     {
         return new Point2d(x + other.x, y + other.y);
     }
 
+    /**
+     * Substract two points together.
+     *
+     * @param other The second point.
+     * @return the sub of the two points.
+     */
     public Point2d sub(Point2d other)
     {
         return new Point2d(x - other.x, y - other.y);
     }
 
+    /**
+     * Multiply a point by a value.
+     *
+     * @param d The multiplicator.
+     * @return the multiplication of the points by the value.
+     */
     public Point2d mul(double d)
     {
         return new Point2d(d * x, d * y);
