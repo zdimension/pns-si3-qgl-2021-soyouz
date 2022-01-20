@@ -3,19 +3,22 @@ package fr.unice.polytech.si3.qgl.soyouz.tooling;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.awt.Simulator;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 public class Application
@@ -23,12 +26,17 @@ public class Application
 
     public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public static void main(String[] args) throws IOException
-    {
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static void init()
+    { OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         OBJECT_MAPPER.configure(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL, true);
 
         Util.configureLoggerFormat();
+
+    }
+
+    public static void main(String[] args) throws IOException
+    {
+        init();
 
         if (args.length == 1)
         {
@@ -63,19 +71,47 @@ public class Application
         }
         else
         {
-            new JFXPanel(); // required to initialize JavaFX
-            Platform.runLater(() ->
+            if (args.length == 3 && args[0].equals("-cockpit"))
             {
+                URLClassLoader child = new URLClassLoader(
+                    new URL[] {new File(args[2]).toURI().toURL()},
+                    ClassLoader.getSystemClassLoader()
+                );
                 try
                 {
-                    new Simulator().setVisible(true);
+                    SimulatorModel.cockpitClass = child.loadClass("fr.unice.polytech.si3.qgl." + args[1] + ".Cockpit");
                 }
-                catch (IOException e)
+                catch (ClassNotFoundException e)
                 {
                     e.printStackTrace();
                 }
-            });
+            }
+            runSimulator();
         }
+    }
+
+    public static void runSimulator()
+    {
+        init();
+
+        new JFXPanel(); // required to initialize JavaFX
+        Platform.runLater(() ->
+        {
+            try
+            {
+                new Simulator().setVisible(true);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static <T extends ICockpit> void runSimulator(Class<T> cockpit)
+    {
+        SimulatorModel.cockpitClass = cockpit;
+        runSimulator();
     }
 
     public static String[] getWeeks() throws IOException

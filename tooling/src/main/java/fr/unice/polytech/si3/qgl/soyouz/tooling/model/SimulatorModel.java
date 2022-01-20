@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import fr.unice.polytech.si3.qgl.regatta.cockpit.ICockpit;
 import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.actions.*;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
@@ -22,6 +23,7 @@ import fr.unice.polytech.si3.qgl.soyouz.classes.utilities.Util;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.Application;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,7 +56,7 @@ public class SimulatorModel
     public int speed = 0;
     public int currentStep = 0;
     public NextRoundParameters[] nps;
-    public Cockpit[] cockpits;
+    public ICockpit[] cockpits;
     public boolean playMode = false;
     public SimulatorListener listener = null;
     public long nextRoundTime = -1;
@@ -65,6 +67,7 @@ public class SimulatorModel
     private boolean[] vigies;
     private boolean inGame = true;
     private String lastLoadedFile;
+    public static Class<?> cockpitClass = Cockpit.class;
 
     public SimulatorModel()
     {
@@ -119,11 +122,19 @@ public class SimulatorModel
             return;
         }
 
-        cockpits = new Cockpit[model.getShipCount()];
+        cockpits = new ICockpit[model.getShipCount()];
         for (int i = 0; i < model.getShipCount(); i++)
         {
-            cockpits[i] = new Cockpit();
-            cockpits[i].initGameInternal(model.getIp(i, true));
+            try
+            {
+                cockpits[i] = (ICockpit)cockpitClass.getConstructor().newInstance();
+                cockpits[i].initGame(Application.OBJECT_MAPPER.writeValueAsString(model.getIp(i,
+                    true)));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         currentCheckpoints = new int[cockpits.length];
         nps = new NextRoundParameters[cockpits.length];
@@ -171,6 +182,27 @@ public class SimulatorModel
         }
     }
 
+    static class JacksonBugfixUglyHack
+    {
+        InitGameParameters ip;
+        GameAction[] act;
+
+        public JacksonBugfixUglyHack()
+        {
+
+        }
+
+        public InitGameParameters getIp()
+        {
+            return ip;
+        }
+
+        public GameAction[] getAct()
+        {
+            return act;
+        }
+    }
+
     public void computeRound()
     {
         if (!inGame)
@@ -183,10 +215,19 @@ public class SimulatorModel
         sailorPositions.clear();
         for (int i = 0; i < cockpits.length; i++)
         {
-            Cockpit cockpit = cockpits[i];
+            ICockpit cockpit = cockpits[i];
 
             var time = System.currentTimeMillis();
-            var res = cockpit.nextRoundInternal(nps[i]);
+            GameAction[] res = new GameAction[0];
+            try
+            {
+                res = Application.OBJECT_MAPPER.readValue("{\"ip\":" + Application.OBJECT_MAPPER.writeValueAsString(model.getIp(i, true)) + ",\"act\":" +
+                    cockpit.nextRound(Application.OBJECT_MAPPER.writeValueAsString(nps[i]).replace("\"type\":\"Bateau\",", "")) + "}", JacksonBugfixUglyHack.class).act;
+            }
+            catch (JsonProcessingException e)
+            {
+                e.printStackTrace();
+            }
             time = System.currentTimeMillis() - time;
             nextRoundTime += time;
             try

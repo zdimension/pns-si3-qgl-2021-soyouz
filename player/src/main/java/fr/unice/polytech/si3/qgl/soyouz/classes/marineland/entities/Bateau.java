@@ -58,6 +58,8 @@ public class Bateau extends AutreBateau
             Arrays.stream(entities).filter(Objects::nonNull).toArray(DeckEntity[]::new);
     }
 
+    public String getType() { return "ship"; }
+
     /**
      * Getter.
      *
@@ -140,6 +142,7 @@ public class Bateau extends AutreBateau
      *
      * @return a Pair of oars (left, right).
      */
+    @JsonIgnore
     public Pair<Integer, Integer> getNbOfOarOnEachSide()
     {
         var oars =
@@ -250,6 +253,7 @@ public class Bateau extends AutreBateau
         return result;
     }
 
+    @JsonIgnore
     public java.util.stream.Stream<Voile> getSails()
     {
         return Util.filterType(Arrays.stream(getEntities()), Voile.class);

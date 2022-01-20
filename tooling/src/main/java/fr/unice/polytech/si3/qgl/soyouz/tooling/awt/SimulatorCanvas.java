@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
@@ -331,44 +332,48 @@ class SimulatorCanvas extends JPanel implements SimulatorView
     {
         g = (Graphics2D) g.create();
 
-        var cp = model.cockpits[0].getCurrentCheckpoint();
-        if (cp == null)
+        if (model.cockpits[0] instanceof Cockpit)
         {
-            return;
-        }
-        var graph = cp.graph;
-        if (graph == null)
-        {
-            return;
-        }
+            var cockpit = (Cockpit) model.cockpits[0];
+            var cp = cockpit.getCurrentCheckpoint();
+            if (cp == null)
+            {
+                return;
+            }
+            var graph = cp.graph;
+            if (graph == null)
+            {
+                return;
+            }
 
-        if (drawPath)
-        {
-            g.setColor(Color.ORANGE);
+            if (drawPath)
+            {
+                g.setColor(Color.ORANGE);
 
-            for (Pair<Node, Node> line : graph.getEdges())
+                for (Pair<Node, Node> line : graph.getEdges())
+                {
+                    drawLine(g,
+                        mapToScreen(line.first.position),
+                        mapToScreen(line.second.position));
+                }
+            }
+
+            g.setColor(Color.MAGENTA);
+            var path = cp.path;
+            for (int i = 0; i < path.size() - 1; i++)
             {
                 drawLine(g,
-                    mapToScreen(line.first.position),
-                    mapToScreen(line.second.position));
+                    mapToScreen(path.get(i).position),
+                    mapToScreen(path.get(i + 1).position));
             }
-        }
 
-        g.setColor(Color.MAGENTA);
-        var path = cp.path;
-        for (int i = 0; i < path.size() - 1; i++)
-        {
-            drawLine(g,
-                mapToScreen(path.get(i).position),
-                mapToScreen(path.get(i + 1).position));
-        }
-
-        if (drawNodes)
-        {
-            g.setColor(Color.BLACK);
-            for (Point2d p : cp.nodes)
+            if (drawNodes)
             {
-                drawShape(g, new Circle(mapToWorld(3)), p.toPosition(), false);
+                g.setColor(Color.BLACK);
+                for (Point2d p : cp.nodes)
+                {
+                    drawShape(g, new Circle(mapToWorld(3)), p.toPosition(), false);
+                }
             }
         }
     }

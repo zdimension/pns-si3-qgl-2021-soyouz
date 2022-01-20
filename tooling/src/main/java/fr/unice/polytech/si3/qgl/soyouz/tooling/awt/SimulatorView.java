@@ -1,11 +1,13 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt;
 
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Position;
 import fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.ShapedEntity;
 import fr.unice.polytech.si3.qgl.soyouz.tooling.model.SimulatorModel;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 public interface SimulatorView
 {
@@ -41,6 +43,9 @@ public interface SimulatorView
 
     default Collection<ShapedEntity> getVisibleShapes()
     {
-        return getModel().cockpits[0].entityMemory.values();
+        var cp = getModel().cockpits[0];
+        if (cp instanceof Cockpit)
+            return ((Cockpit)cp).entityMemory.values();
+        return List.of(getModel().nps[0].getVisibleEntities());
     }
 }

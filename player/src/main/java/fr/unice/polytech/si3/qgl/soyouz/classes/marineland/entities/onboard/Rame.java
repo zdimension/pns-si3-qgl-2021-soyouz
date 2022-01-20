@@ -1,5 +1,6 @@
 package fr.unice.polytech.si3.qgl.soyouz.classes.marineland.entities.onboard;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -26,6 +27,7 @@ public class Rame extends DeckEntity
      *
      * @return if the oar is on the left side of the boat.
      */
+    @JsonIgnore
     public boolean isLeft()
     {
         return isLeft;

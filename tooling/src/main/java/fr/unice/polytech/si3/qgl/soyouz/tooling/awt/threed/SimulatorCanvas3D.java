@@ -1,6 +1,7 @@
 package fr.unice.polytech.si3.qgl.soyouz.tooling.awt.threed;
 
 import com.interactivemesh.jfx.importer.tds.TdsModelImporter;
+import fr.unice.polytech.si3.qgl.soyouz.Cockpit;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.Checkpoint;
 import fr.unice.polytech.si3.qgl.soyouz.classes.gameflow.goals.RegattaGoal;
 import fr.unice.polytech.si3.qgl.soyouz.classes.geometry.Point2d;
@@ -458,41 +459,46 @@ public class SimulatorCanvas3D extends JFXPanel implements SimulatorView
 
     private void drawNodes()
     {
-        var cp = model.cockpits[0].getCurrentCheckpoint();
-        if (cp == null)
+        if (model.cockpits[0] instanceof Cockpit)
         {
-            return;
-        }
-        var graph = cp.graph;
-        if (graph == null)
-        {
-            return;
-        }
+            var cockpit = (Cockpit) model.cockpits[0];
 
-        if (drawPath)
-        {
-            for (var line : graph.getEdges())
+            var cp = cockpit.getCurrentCheckpoint();
+            if (cp == null)
             {
-                drawLine(line.first.position, line.second.position, MAT_ORANGE, 11);
+                return;
             }
-        }
-
-        var path = cp.path;
-        for (int i = 0; i < path.size() - 1; i++)
-        {
-            drawLine(path.get(i).position, path.get(i + 1).position, MAT_MAGENTA, 12);
-        }
-
-        if (drawNodes)
-        {
-            ArrayList<Point2d> copy;
-            synchronized (cp.nodes)
+            var graph = cp.graph;
+            if (graph == null)
             {
-                copy = new ArrayList<>(cp.nodes);
+                return;
             }
-            for (Point2d p : copy)
+
+            if (drawPath)
             {
-                drawShape(new Circle(10), p.toPosition(), MAT_BLACK, true);
+                for (var line : graph.getEdges())
+                {
+                    drawLine(line.first.position, line.second.position, MAT_ORANGE, 11);
+                }
+            }
+
+            var path = cp.path;
+            for (int i = 0; i < path.size() - 1; i++)
+            {
+                drawLine(path.get(i).position, path.get(i + 1).position, MAT_MAGENTA, 12);
+            }
+
+            if (drawNodes)
+            {
+                ArrayList<Point2d> copy;
+                synchronized (cp.nodes)
+                {
+                    copy = new ArrayList<>(cp.nodes);
+                }
+                for (Point2d p : copy)
+                {
+                    drawShape(new Circle(10), p.toPosition(), MAT_BLACK, true);
+                }
             }
         }
     }
