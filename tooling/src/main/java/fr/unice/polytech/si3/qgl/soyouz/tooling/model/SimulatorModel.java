@@ -250,7 +250,7 @@ public class SimulatorModel
                 var entType = act.entityNeeded;
                 if (entType != null)
                 {
-                    var entOpt = ship.getEntityHere(act.getSailor().getPos());
+                    var entOpt = ship.getEntityHere(sail.getPos());
                     if (entOpt.isPresent())
                     {
                         var ent = entOpt.get();
