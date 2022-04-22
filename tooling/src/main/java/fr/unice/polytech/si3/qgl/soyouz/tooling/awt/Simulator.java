@@ -26,6 +26,7 @@ public class Simulator extends JFrame
     public Simulator() throws IOException
     {
         this.threeD = false;
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Soyouz Simulator");
         setLayout(new BorderLayout());
         setSize(900, 600);
